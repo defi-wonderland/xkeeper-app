@@ -5,15 +5,13 @@ import { ScrollToTop } from '~/hooks';
 import { AppLayout } from '~/containers';
 import { Themable } from '~/components';
 import GlobalStyle from '~/GlobalStyle';
+import { StateProvider } from './providers';
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route element={<AppLayout />}>
         <Route path='/' element={<Landing />} />
-        {/* <Route path='/requests' element={<Requests />} /> */}
-        {/* <Route path='/faq' element={<Faq />} /> */}
-        {/* <Route path='/about' element={<About />} /> */}
       </Route>
     </Routes>
   );
@@ -21,10 +19,12 @@ const AppRouter = () => {
 
 export const App = () => {
   return (
-    <Themable>
-      <GlobalStyle />
-      <ScrollToTop />
-      <AppRouter />
-    </Themable>
+    <StateProvider>
+      <Themable>
+        <GlobalStyle />
+        <ScrollToTop />
+        <AppRouter />
+      </Themable>
+    </StateProvider>
   );
 };
