@@ -28,6 +28,10 @@
     "src/**/*.{js,jsx,ts,tsx,css,scss,md,html}": "prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@emotion/react": "11.11.1",
+    "@emotion/styled": "11.11.0",
+    "@mui/icons-material": "5.14.8",
+    "@mui/material": "5.14.8",
     "@rainbow-me/rainbowkit": "1.0.9",
     "react": "18.2.0",
     "react-dom": "18.2.0",

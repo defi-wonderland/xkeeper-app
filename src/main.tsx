@@ -11,6 +11,7 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { localhost } from 'wagmi/chains';
 
+import { StateProvider } from './providers';
 import { customTheme } from '~/components';
 import { App } from '~/App';
 
@@ -55,7 +56,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider theme={customTheme} chains={chains}>
         <HashRouter>
-          <App />
+          <StateProvider>
+            <App />
+          </StateProvider>
         </HashRouter>
       </RainbowKitProvider>
     </WagmiConfig>

@@ -1,30 +1,50 @@
+import { useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
-import { Landing } from '~/pages';
-import { ScrollToTop } from '~/hooks';
+import { ScrollToTop, useStateContext } from '~/hooks';
+import { Landing, Vault } from '~/pages';
 import { AppLayout } from '~/containers';
-import { Themable } from '~/components';
-import GlobalStyle from '~/GlobalStyle';
-import { StateProvider } from './providers';
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route element={<AppLayout />}>
         <Route path='/' element={<Landing />} />
+        <Route path='/vault/:address' element={<Vault />} />
       </Route>
     </Routes>
   );
 };
 
 export const App = () => {
+  const { theme: mode } = useStateContext();
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+        components: {
+          MuiCssBaseline: {
+            styleOverrides: {
+              html: {
+                fontSize: '62.5%',
+              },
+            },
+          },
+        },
+      }),
+    [mode],
+  );
+
   return (
-    <StateProvider>
-      <Themable>
-        <GlobalStyle />
-        <ScrollToTop />
-        <AppRouter />
-      </Themable>
-    </StateProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <ScrollToTop />
+      <AppRouter />
+    </ThemeProvider>
   );
 };
