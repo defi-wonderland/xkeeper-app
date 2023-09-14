@@ -3,6 +3,8 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { Box, Typography } from '@mui/material';
 
+import { useStateContext } from '~/hooks';
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -47,6 +49,7 @@ interface BasicTabsProps {
 
 export const BasicTabs = ({ sections }: BasicTabsProps) => {
   const [value, setValue] = React.useState(0);
+  const { currentTheme } = useStateContext();
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -55,9 +58,23 @@ export const BasicTabs = ({ sections }: BasicTabsProps) => {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label='basic tabs example'>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          textColor='inherit'
+          sx={{
+            '& .MuiTabs-indicator': {
+              backgroundColor: currentTheme.tabColor,
+            },
+          }}
+        >
           {sections.map((section, index) => (
-            <Tab label={section.title} {...a11yProps(index)} sx={{ fontSize: '1.4rem' }} key={section.title} />
+            <Tab
+              label={section.title}
+              {...a11yProps(index)}
+              sx={{ fontSize: '1.6rem', textTransform: 'none' }}
+              key={section.title}
+            />
           ))}
         </Tabs>
       </Box>

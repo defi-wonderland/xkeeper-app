@@ -1,19 +1,31 @@
-import { Button, Typography, Box } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { styled } from '@mui/material/styles';
 
 import { SearchInput, VaultCard, BasicTabs, NavigationLink } from '~/components';
+import { useStateContext } from '~/hooks';
+import { getTheme } from '~/utils';
+import { VaultData } from '~/types';
 
 export const Landing = () => {
-  const vaults = [
+  const { theme } = useStateContext();
+  const currentTheme = getTheme(theme);
+
+  const vaults: VaultData[] = [
     {
       name: 'Connext One',
-      address: '0x48268230fda49480579f8843c368e5f7138f4767',
+      address: '0x1234567890123456789012345678901234567890',
+      balance: '$1,000,000',
       relays: ['GelatoRelay', 'OpenRelay'],
+      chain: 'ethereum',
+      owned: true,
     },
     {
       name: 'Connext Two',
-      address: '0x48268230fda49480579f8843c368e5f7138f4767',
+      address: '0x1234567890123456789012345678901234567891',
+      balance: '$41,000,000',
       relays: ['GelatoRelay', 'OpenRelay'],
+      chain: 'optimism',
     },
   ];
 
@@ -21,49 +33,78 @@ export const Landing = () => {
     {
       title: 'Explore Vaults',
       items: vaults.map((vault, index) => (
-        <NavigationLink to={'/vault/' + vault.address} key={vault.name + '-' + index}>
-          <VaultCard name={vault.name} address={vault.address} relays={vault.relays} />
+        <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
+          <VaultCard vaultData={vault} />
         </NavigationLink>
       )),
     },
     {
       title: 'My Vaults',
-      items: null,
+      items: (
+        <NavigationLink to={'/vault/' + '0x1234567890123456789012345678901234567890'}>
+          <VaultCard
+            vaultData={{
+              name: 'Connext One',
+              address: '0x1234567890123456789012345678901234567890',
+              balance: '$1,000,000',
+              relays: ['GelatoRelay', 'OpenRelay'],
+              chain: 'ethereum',
+              owned: true,
+            }}
+          />
+        </NavigationLink>
+      ),
     },
   ];
 
   return (
-    <Box
-      sx={{
-        maxWidth: '72rem',
-        margin: '8rem auto 0',
-      }}
-    >
-      <Typography variant='body1' data-testid='boilerplate-title'>
-        Landing
-      </Typography>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          gap: '2rem',
-        }}
-      >
+    <HomeContainer>
+      <FirstSection>
+        {/* Search Input */}
         <SearchInput placeholder='Vault name or address' />
 
-        <Button
+        {/* Create Vault Button */}
+        <CreateVaultBtn
           variant='contained'
           size='large'
           startIcon={<AddIcon />}
-          sx={{ fontSize: 14, height: '5.2rem', minWidth: '20rem' }}
+          data-testid='create-vault-btn'
+          sx={{
+            borderRadius: currentTheme.borderRadius,
+            backgroundColor: currentTheme.actionButton,
+          }}
         >
           Create Vault
-        </Button>
-      </Box>
+        </CreateVaultBtn>
+      </FirstSection>
 
+      {/* Explore Vault Tabs */}
       <BasicTabs sections={sections} />
-    </Box>
+    </HomeContainer>
   );
 };
+
+const HomeContainer = styled(Box)({
+  maxWidth: '60rem',
+  margin: '0 auto',
+  padding: '15rem 0',
+  backgroundColor: 'inherit',
+});
+
+const FirstSection = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  gap: '2rem',
+  padding: '1rem 0rem',
+});
+
+const CreateVaultBtn = styled(Button)({
+  fontSize: 16,
+  height: '4.8rem',
+  minWidth: '18.3rem',
+  boxShadow: 'none',
+  px: '1rem',
+  textTransform: 'none',
+});

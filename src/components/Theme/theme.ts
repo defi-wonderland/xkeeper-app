@@ -2,56 +2,32 @@ import { Theme } from '~/types';
 
 export const darkTheme: Theme = {
   type: 'dark',
-  titleColor: '#ff0420',
   textPrimary: '#ffffff',
   textSecondary: '#99A4B8',
+  textDisabled: '#667085', // '#667085
   backgroundPrimary: '#000000',
   backgroundSecondary: '#1A191F',
-  backgroundActive: '#1d1d23',
-  backgroundActiveSecondary: '#1d1d23',
-  pillBackground: 'transparent',
-  detailsBackground: 'rgba(153, 164, 184, 0.10)',
-  headerBackground: '#1A191F',
-  iconBackground: '#000000',
-  cardBackground: '#1A191F',
-  tableHeaderBackground: '#24262F',
-  titleFontFamily: 'Open Sans',
-  textFontFamily: 'Open Sans',
   borderRadius: '8px',
   secondaryBorderRadius: '4px',
   border: '1px solid rgba(153, 164, 184, 0.1)',
-  green: '#00cb6a',
-  red: '#ff0420',
-  yellow: '#efbe24',
-  close: '#26262E',
-  baseColor: '#313236',
-  highlightColor: '#656871',
+  actionButton: '#ffffff',
+  tabColor: '#444CE7',
+  relayChipColor: '#05603A',
+  relayChipBackground: '#ECFDF3',
 };
 
 export const lightTheme: Theme = {
   type: 'light',
-  titleColor: '#ff0420',
-  textPrimary: '#000000',
-  textSecondary: '#717171',
-  backgroundPrimary: '#ffffff',
-  backgroundSecondary: '#f1f1f1',
-  backgroundActive: 'rgba(252, 252, 252, 1)',
-  backgroundActiveSecondary: 'rgba(232, 232, 232, 1)',
-  pillBackground: '#ffffff',
-  detailsBackground: '#F4F4F5',
-  headerBackground: '#ffffff',
-  iconBackground: '#F4F4F5',
-  cardBackground: '#ffffff',
-  tableHeaderBackground: '#F9F9FA',
-  titleFontFamily: 'Open Sans',
-  textFontFamily: 'Open Sans',
+  textPrimary: '#101828', // gray-900
+  textSecondary: '#344054', // gray-700
+  textDisabled: '#667085', // gray-400
+  backgroundPrimary: '#ffffff', // gray-100
+  backgroundSecondary: '#FCFCFD', // gray-25
   borderRadius: '8px',
   secondaryBorderRadius: '4px',
-  border: '1px solid rgba(153, 164, 184, 0.3)',
-  green: '#00cb6a',
-  red: '#ff0420',
-  yellow: '#efbe24',
-  close: '#ffffff',
-  baseColor: '', // use default value
-  highlightColor: '', // use default value
+  border: '1px solid #F2F4F7',
+  actionButton: '#444CE7',
+  tabColor: '#344054',
+  relayChipColor: '#05603A',
+  relayChipBackground: '#ECFDF3',
 };

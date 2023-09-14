@@ -48,7 +48,7 @@ export const customTheme = merge(darkTheme(), {
     // modalMobile: '...',
   },
   shadows: {
-    // connectButton: '...',
+    connectButton: 'none',
     // dialog: '...',
     // profileDetailsAction: '...',
     // selectedOption: '...',

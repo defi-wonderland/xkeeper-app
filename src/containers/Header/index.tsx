@@ -2,14 +2,14 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Box, IconButton } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { styled } from '@mui/material/styles';
 
 import { useStateContext } from '~/hooks';
-import { THEME_KEY, getTheme } from '~/utils';
 import { NavigationLink } from '~/components';
+import { THEME_KEY } from '~/utils';
 
 export const Header = () => {
-  const { setTheme, theme } = useStateContext();
-  const currentTheme = getTheme(theme);
+  const { setTheme, theme, currentTheme } = useStateContext();
 
   const handleThemeChange = () => {
     if (theme === 'light') {
@@ -22,29 +22,53 @@ export const Header = () => {
   };
 
   return (
-    <Box
-      component='div'
+    <HeaderContainer
       sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%',
-        height: '8rem',
-        padding: '0 8rem',
         borderBottom: currentTheme.border,
-        maxWidth: '100vw',
-        fontSize: '1.2rem',
-        zIndex: 100,
+        backgroundColor: currentTheme.backgroundPrimary,
       }}
     >
-      <NavigationLink to='/' text='Keep3r Framework' variant='h5' />
+      <Navbar>
+        <NavigationLink to='/' text='Keep3r Framework' variant='h5' sx={{ fontWeight: '500', fontSize: '2rem' }} />
+        <NavigationLink to='/' text='Docs' variant='h5' sx={{ fontWeight: '500', color: currentTheme.textDisabled }} />
+      </Navbar>
 
-      <IconButton onClick={handleThemeChange} color='inherit'>
-        {theme === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-      </IconButton>
+      <RightSection>
+        <IconButton onClick={handleThemeChange} color='inherit'>
+          {theme === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+        </IconButton>
 
-      <ConnectButton />
-    </Box>
+        <ConnectButton />
+      </RightSection>
+    </HeaderContainer>
   );
 };
+
+const HeaderContainer = styled(Box)({
+  position: 'fixed',
+  top: 0,
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  width: '100%',
+  height: '8rem',
+  padding: '0 8rem',
+  maxWidth: '100vw',
+  fontSize: '1.2rem',
+  zIndex: 100,
+});
+
+const Navbar = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: '4rem',
+});
+
+const RightSection = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: '4.2rem',
+});

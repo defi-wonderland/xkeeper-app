@@ -10,13 +10,20 @@ export const SearchInput = ({ placeholder }: SearchInputProps) => {
     <FormControl sx={{ my: '2rem' }} fullWidth>
       <OutlinedInput
         fullWidth
+        type='search'
         placeholder={placeholder}
         startAdornment={
           <InputAdornment position='start'>
             <SearchIcon fontSize='large' />
           </InputAdornment>
         }
-        sx={{ fontSize: 14 }}
+        sx={{
+          fontSize: 16,
+          borderRadius: '0.8rem',
+          input: {
+            py: '1.25rem',
+          },
+        }}
       />
     </FormControl>
   );

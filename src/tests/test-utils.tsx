@@ -9,6 +9,7 @@ import { localhost } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { injectedWallet } from '@rainbow-me/rainbowkit/wallets';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import { StateProvider } from '~/providers';
 
 // testing
 import { cleanup, render } from '@testing-library/react';
@@ -39,7 +40,9 @@ const AllTheProviders = ({ children }: { children: React.ReactElement }) => {
   return (
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains}>
-        <HashRouter>{children}</HashRouter>
+        <StateProvider>
+          <HashRouter>{children}</HashRouter>
+        </StateProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

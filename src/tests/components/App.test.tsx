@@ -9,6 +9,6 @@ describe('Renders every component', () => {
       render(<App />);
     });
 
-    expect(screen.getByTestId('boilerplate-title')).toBeInTheDocument();
+    expect(screen.getByTestId('create-vault-btn')).toBeInTheDocument();
   });
 });

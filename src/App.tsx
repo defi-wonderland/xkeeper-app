@@ -36,6 +36,21 @@ export const App = () => {
             },
           },
         },
+        typography: {
+          fontFamily: [
+            'Inter',
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+          ].join(','),
+        },
       }),
     [mode],
   );
