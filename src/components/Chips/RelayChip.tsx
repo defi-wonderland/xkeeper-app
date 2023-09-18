@@ -9,11 +9,11 @@ export const RelayChip = ({ text }: { text: string }) => {
       label={text}
       size='medium'
       sx={{
-        fontSize: '1.4rem',
-        fontWeight: '500',
         color: currentTheme.relayChipColor,
         backgroundColor: currentTheme.relayChipBackground,
         borderRadius: currentTheme.secondaryBorderRadius,
+        fontSize: '1.4rem',
+        fontWeight: '500',
         span: {
           padding: '0 0.8rem',
         },

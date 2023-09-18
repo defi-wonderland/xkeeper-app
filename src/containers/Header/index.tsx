@@ -53,7 +53,7 @@ const HeaderContainer = styled(Box)({
   justifyContent: 'space-between',
   width: '100%',
   height: '8rem',
-  padding: '0 8rem',
+  padding: '0 4.8rem',
   maxWidth: '100vw',
   fontSize: '1.2rem',
   zIndex: 100,
