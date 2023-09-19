@@ -66,6 +66,7 @@ const SCard = styled(Card)({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
+  boxShadow: '0px 2px 10px 0px rgba(16, 24, 40, 0.02)',
 });
 
 const TitleContainer = styled(Box)({

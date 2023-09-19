@@ -5,6 +5,8 @@ export const darkTheme: Theme = {
   textPrimary: '#ffffff',
   textSecondary: '#99A4B8',
   textDisabled: '#667085', // '#667085
+  textSecondaryDisabled: '#475467', // gray-600
+
   backgroundPrimary: '#000000',
   backgroundSecondary: '#1A191F',
   borderRadius: '8px',
@@ -31,6 +33,7 @@ export const lightTheme: Theme = {
   textPrimary: '#101828', // gray-900
   textSecondary: '#344054', // gray-700
   textDisabled: '#667085', // gray-400
+  textSecondaryDisabled: '#D0D5DD', // gray-300
   backgroundPrimary: '#ffffff', // gray-100
   backgroundSecondary: '#FCFCFD', // gray-25
   borderRadius: '8px',

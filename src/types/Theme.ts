@@ -4,7 +4,10 @@ export interface Theme {
   type: ThemeName;
   textPrimary: string;
   textSecondary: string;
+
   textDisabled: string;
+  textSecondaryDisabled: string;
+
   backgroundPrimary: string;
   backgroundSecondary: string;
   borderRadius: string;

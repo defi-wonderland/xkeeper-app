@@ -5,6 +5,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import { AddressChip, BasicTabs, BreadCrumbs, InfoChip } from '~/components';
 import { truncateAddress } from '~/utils';
 import { useStateContext } from '~/hooks';
+import { Tokens } from './Tokens';
+import { EnabledRelays } from './EnabledRelays';
+import { EnabledJobs } from './EnabledJobs';
+import { Activity } from './Activity';
 
 export const Vault = () => {
   const { currentTheme } = useStateContext();
@@ -19,11 +23,21 @@ export const Vault = () => {
   const sections = [
     {
       title: 'Vault Overview',
-      items: null,
+      items: (
+        <>
+          <Tokens />
+          <EnabledRelays />
+          <EnabledJobs />
+        </>
+      ),
     },
     {
       title: 'Activity',
-      items: null,
+      items: (
+        <>
+          <Activity />
+        </>
+      ),
     },
   ];
 
@@ -93,7 +107,7 @@ const Header = styled(Box)({
   justifyContent: 'center',
   width: '100%',
   marginTop: '2.8rem',
-  marginBottom: '3.2rem',
+  marginBottom: '2rem',
 });
 
 const TitleContainer = styled(Box)({
