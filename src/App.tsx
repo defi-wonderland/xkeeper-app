@@ -4,7 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { ScrollToTop, useStateContext } from '~/hooks';
-import { Landing, Vault } from '~/pages';
+import { CreateVault, Landing, Vault } from '~/pages';
 import { AppLayout } from '~/containers';
 
 const AppRouter = () => {
@@ -13,6 +13,7 @@ const AppRouter = () => {
       <Route element={<AppLayout />}>
         <Route path='/' element={<Landing />} />
         <Route path='/vault/:address' element={<Vault />} />
+        <Route path='/create' element={<CreateVault />} />
       </Route>
     </Routes>
   );

@@ -4,13 +4,9 @@ import { styled } from '@mui/material/styles';
 
 import { SearchInput, VaultCard, BasicTabs, NavigationLink } from '~/components';
 import { useStateContext } from '~/hooks';
-import { getTheme } from '~/utils';
 import { VaultData } from '~/types';
 
 export const Landing = () => {
-  const { theme } = useStateContext();
-  const currentTheme = getTheme(theme);
-
   const vaults: VaultData[] = [
     {
       name: 'Connext One',
@@ -64,18 +60,11 @@ export const Landing = () => {
         <SearchInput placeholder='Vault name or address' />
 
         {/* Create Vault Button */}
-        <CreateVaultBtn
-          variant='contained'
-          size='large'
-          startIcon={<AddIcon />}
-          data-testid='create-vault-btn'
-          sx={{
-            borderRadius: currentTheme.borderRadius,
-            backgroundColor: currentTheme.actionButton,
-          }}
-        >
-          Create Vault
-        </CreateVaultBtn>
+        <NavigationLink to='/create'>
+          <CreateVaultBtn variant='contained' size='large' startIcon={<AddIcon />} data-testid='create-vault-btn'>
+            Create Vault
+          </CreateVaultBtn>
+        </NavigationLink>
       </FirstSection>
 
       {/* Explore Vault Tabs */}
@@ -100,11 +89,21 @@ const FirstSection = styled(Box)({
   padding: '1rem 0rem',
 });
 
-const CreateVaultBtn = styled(Button)({
-  fontSize: 16,
-  height: '4.8rem',
-  minWidth: '18.3rem',
-  boxShadow: 'none',
-  px: '1rem',
-  textTransform: 'none',
+const CreateVaultBtn = styled(Button)(() => {
+  const {
+    currentTheme: { borderRadius, actionButton },
+  } = useStateContext();
+  return {
+    fontSize: '1.6rem',
+    height: '4.8rem',
+    minWidth: '18.3rem',
+    boxShadow: 'none',
+    px: '1rem',
+    textTransform: 'none',
+    borderRadius: borderRadius,
+    backgroundColor: actionButton,
+    '&:hover': {
+      backgroundColor: actionButton,
+    },
+  };
 });

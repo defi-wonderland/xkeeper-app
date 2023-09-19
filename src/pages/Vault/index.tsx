@@ -44,14 +44,14 @@ export const Vault = () => {
   return (
     <PageContainer>
       {/* Navigation */}
-      <BreadCrumbs currentPage='Vault' previousPage='Home' />
+      <BreadCrumbs previousPage='Home' currentPage='Vault' />
 
       <VaultContainer>
         <Header>
           {/* Vault Address | Vault Alias */}
           <TitleContainer>
             <TitleBox>
-              <Typography variant='h3'>{title}</Typography>
+              <Title>{title}</Title>
 
               <STooltip text='Edit vault alias'>
                 <EditIcon />
@@ -99,12 +99,12 @@ const PageContainer = styled(Box)({
   backgroundColor: 'inherit',
 });
 
-const VaultContainer = styled(Box)({
+export const VaultContainer = styled(Box)({
   maxWidth: '80rem',
   margin: '0 auto',
 });
 
-const Header = styled(Box)({
+export const Header = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   gap: '1.2rem',
@@ -115,7 +115,7 @@ const Header = styled(Box)({
   marginBottom: '2rem',
 });
 
-const TitleContainer = styled(Box)({
+export const TitleContainer = styled(Box)({
   width: '100%',
   display: 'flex',
   alignItems: 'center',
@@ -123,7 +123,7 @@ const TitleContainer = styled(Box)({
   flexDirection: 'row',
 });
 
-const TitleBox = styled(Box)({
+export const TitleBox = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -131,7 +131,13 @@ const TitleBox = styled(Box)({
   gap: '0.8rem',
 });
 
-const DataSection = styled(Box)({
+export const Title = styled(Typography)({
+  fontSize: '3rem',
+  lineHeight: '3.8rem',
+  fontWeight: 600,
+});
+
+export const DataSection = styled(Box)({
   width: '100%',
   display: 'flex',
   alignItems: 'center',
@@ -139,7 +145,7 @@ const DataSection = styled(Box)({
   flexDirection: 'row',
 });
 
-const DataContainer = styled(Box)({
+export const DataContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',

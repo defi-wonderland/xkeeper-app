@@ -4,7 +4,8 @@ export const darkTheme: Theme = {
   type: 'dark',
   textPrimary: '#ffffff',
   textSecondary: '#99A4B8',
-  textDisabled: '#667085', // '#667085
+  textTertiary: '#667085',
+  textDisabled: '#667085',
   textSecondaryDisabled: '#475467', // gray-600
 
   backgroundPrimary: '#000000',
@@ -35,7 +36,8 @@ export const lightTheme: Theme = {
   type: 'light',
   textPrimary: '#101828', // gray-900
   textSecondary: '#344054', // gray-700
-  textDisabled: '#667085', // gray-400
+  textTertiary: '#667085', // gray-500
+  textDisabled: '#98A2B3', // gray-400
   textSecondaryDisabled: '#D0D5DD', // gray-300
   backgroundPrimary: '#ffffff', // gray-100
   backgroundSecondary: '#FCFCFD', // gray-25

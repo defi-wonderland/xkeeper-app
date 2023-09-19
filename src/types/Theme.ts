@@ -4,6 +4,7 @@ export interface Theme {
   type: ThemeName;
   textPrimary: string;
   textSecondary: string;
+  textTertiary: string;
 
   textDisabled: string;
   textSecondaryDisabled: string;
