@@ -26,6 +26,9 @@ export const darkTheme: Theme = {
   infoChipBackground: '#1B1F52', // indigo-950
 
   backButtonBorderColor: '#344054', // gray-700
+
+  tooltipColor: '#ffffff',
+  tooltipBackground: '#1D2939',
 };
 
 export const lightTheme: Theme = {
@@ -53,4 +56,7 @@ export const lightTheme: Theme = {
   infoChipBackground: '#EEF4FF', // indigo-50
 
   backButtonBorderColor: '#EAECF0', // gray-200
+
+  tooltipColor: '#ffffff',
+  tooltipBackground: '#1D2939',
 };

@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { AddressChip, BasicTabs, BreadCrumbs, InfoChip } from '~/components';
+import { AddressChip, BasicTabs, BreadCrumbs, InfoChip, STooltip } from '~/components';
 import { truncateAddress } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { Tokens } from './Tokens';
@@ -52,18 +52,23 @@ export const Vault = () => {
           <TitleContainer>
             <TitleBox>
               <Typography variant='h3'>{title}</Typography>
-              <EditIcon />
+
+              <STooltip text='Edit vault alias'>
+                <EditIcon />
+              </STooltip>
             </TitleBox>
 
             {/* Owner Icon */}
-            <SInfoChip
-              sx={{
-                color: currentTheme.infoChipColor,
-                backgroundColor: currentTheme.infoChipBackground,
-              }}
-            >
-              <EditIcon sx={{ fontSize: '1.8rem' }} />
-            </SInfoChip>
+            <STooltip text='You own this vault'>
+              <SInfoChip
+                sx={{
+                  color: currentTheme.infoChipColor,
+                  backgroundColor: currentTheme.infoChipBackground,
+                }}
+              >
+                <EditIcon sx={{ fontSize: '1.8rem' }} />
+              </SInfoChip>
+            </STooltip>
           </TitleContainer>
 
           <DataSection>

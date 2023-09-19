@@ -2,6 +2,7 @@ import { TableBody, TableContainer, TableHead, TableRow } from '@mui/material';
 
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
 import { SButton } from './EnabledRelays';
+import { STooltip } from '~/components';
 
 function createJobsData(alias: string, contractAddress: string, functionSignature: string) {
   return { alias, contractAddress, functionSignature };
@@ -37,10 +38,17 @@ export const EnabledJobs = () => {
             {rows.map((row) => (
               <STableRow key={row.contractAddress}>
                 <RowText component='th' scope='row'>
-                  {row.alias}
+                  <STooltip text='Edit alias'>{row.alias}</STooltip>
                 </RowText>
-                <RowText align='right'>{row.contractAddress}</RowText>
-                <RowText align='right'>{row.functionSignature}</RowText>
+
+                <RowText align='right'>
+                  <STooltip text={row.contractAddress}>{row.contractAddress}</STooltip>
+                </RowText>
+
+                <RowText align='right'>
+                  <STooltip text={row.functionSignature}>{row.functionSignature}</STooltip>
+                </RowText>
+
                 <RowText align='right'>test</RowText>
               </STableRow>
             ))}

@@ -16,17 +16,24 @@ export interface Theme {
   actionButton: string;
   tabColor: string;
 
+  // Relays Chip
   relayChipColor: string;
   relayChipBackground: string;
 
+  // Address Chip
   addressChipColor: string;
   addressChipBackground: string;
   addressChipIconColor: string;
 
+  // Info Chip
   infoChipColor: string;
   infoChipBackground: string;
 
   backButtonBorderColor: string;
+
+  // Tooltips
+  tooltipColor: string;
+  tooltipBackground: string;
 }
 
 export interface PropTheme {

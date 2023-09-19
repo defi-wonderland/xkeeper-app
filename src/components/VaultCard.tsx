@@ -2,7 +2,7 @@ import { Box, Card, Typography } from '@mui/material';
 import EastIcon from '@mui/icons-material/East';
 import { styled } from '@mui/material/styles';
 
-import { RelayChip } from '~/components';
+import { RelayChip, STooltip } from '~/components';
 import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
 
@@ -19,7 +19,9 @@ export const VaultCard = ({ vaultData }: VaultCardProps) => {
         <Box>
           <TitleContainer>
             {/* Vault Alias | Vault Address */}
-            <CardTitle sx={{ color: currentTheme.textPrimary }}>{name ? name : address}</CardTitle>
+            <STooltip text='Custom Alias (only you can see this)'>
+              <CardTitle sx={{ color: currentTheme.textPrimary }}>{name ? name : address}</CardTitle>
+            </STooltip>
 
             <Box>
               {/* TODO: Owned Chip */}
