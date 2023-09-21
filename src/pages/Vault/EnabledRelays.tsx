@@ -2,7 +2,7 @@ import { TableBody, TableContainer, TableHead, TableRow, Button, styled } from '
 
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { useStateContext } from '~/hooks';
-import { STooltip } from '~/components';
+import { STooltip, OptionsMenu } from '~/components';
 import { RelayModal } from '~/containers';
 
 function createRelaysData(alias: string, contractAddress: string, enabledCallers: string) {
@@ -43,11 +43,16 @@ export const EnabledRelays = () => {
                 <RowText component='th' scope='row'>
                   <STooltip text='Edit alias'>{row.alias}</STooltip>
                 </RowText>
+
                 <RowText align='right'>
                   <STooltip text={row.contractAddress}>{row.contractAddress}</STooltip>
                 </RowText>
+
                 <RowText align='right'>{row.enabledCallers}</RowText>
-                <RowText align='right'>Test</RowText>
+
+                <RowText align='right'>
+                  <OptionsMenu type='relay' value={row.contractAddress} />
+                </RowText>
               </STableRow>
             ))}
           </TableBody>

@@ -1,4 +1,4 @@
-import { BaseModal } from '~/components';
+import { BaseModal, ModalTitle } from '~/components';
 
 interface DepositModalProps {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ export const DepositModal = ({ children }: DepositModalProps) => {
   return (
     <div>
       <BaseModal triggerButton={children}>
-        <h2>Deposit Modal</h2>
+        <ModalTitle>Deposit Modal</ModalTitle>
         <p>Aliquid amet deserunt earum!</p>
       </BaseModal>
     </div>

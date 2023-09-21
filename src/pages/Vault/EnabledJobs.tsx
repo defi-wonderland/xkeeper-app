@@ -1,9 +1,9 @@
 import { TableBody, TableContainer, TableHead, TableRow } from '@mui/material';
 
+import { JobModal } from '~/containers';
+import { OptionsMenu, STooltip } from '~/components';
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
 import { SButton } from './EnabledRelays';
-import { STooltip } from '~/components';
-import { JobModal } from '~/containers';
 
 function createJobsData(alias: string, contractAddress: string, functionSignature: string) {
   return { alias, contractAddress, functionSignature };
@@ -52,7 +52,9 @@ export const EnabledJobs = () => {
                   <STooltip text={row.functionSignature}>{row.functionSignature}</STooltip>
                 </RowText>
 
-                <RowText align='right'>test</RowText>
+                <RowText align='right'>
+                  <OptionsMenu type='job' value={row.contractAddress} />
+                </RowText>
               </STableRow>
             ))}
           </TableBody>

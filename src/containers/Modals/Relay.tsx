@@ -1,4 +1,4 @@
-import { BaseModal } from '~/components';
+import { BaseModal, ModalTitle } from '~/components';
 
 interface RelayModalProps {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ export const RelayModal = ({ children }: RelayModalProps) => {
   return (
     <div>
       <BaseModal triggerButton={children}>
-        <h2>Relay Modal</h2>
+        <ModalTitle>Relay Modal</ModalTitle>
         <p>Aliquid amet deserunt earum!</p>
       </BaseModal>
     </div>

@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { useStateContext } from '~/hooks';
 
-export default function ChainDropdown() {
+export function ChainDropdown() {
   const [selectedChain, setSelectedChain] = useState('Ethereum Mainnet');
 
   const createHandleMenuClick = (menuItem: string) => {

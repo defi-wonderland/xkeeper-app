@@ -22,7 +22,7 @@ export const BaseModal = ({ triggerButton, children }: BaseModalProps) => {
         {triggerButton}
       </TriggerButton>
       <StyledModal open={open} onClose={handleClose} slots={{ backdrop: StyledBackdrop }}>
-        <SBox>{children}</SBox>
+        <SModal>{children}</SModal>
       </StyledModal>
     </div>
   );
@@ -34,7 +34,7 @@ const Backdrop = React.forwardRef<HTMLDivElement, { open?: boolean; className: s
   return <div className={clsx({ 'MuiBackdrop-open': open }, className)} ref={ref} {...other} />;
 });
 
-const StyledModal = styled(Modal)`
+export const StyledModal = styled(Modal)`
   position: fixed;
   z-index: 1300;
   inset: 0;
@@ -43,7 +43,7 @@ const StyledModal = styled(Modal)`
   justify-content: center;
 `;
 
-const StyledBackdrop = styled(Backdrop)`
+export const StyledBackdrop = styled(Backdrop)`
   z-index: -1;
   position: fixed;
   inset: 0;
@@ -51,20 +51,48 @@ const StyledBackdrop = styled(Backdrop)`
   -webkit-tap-highlight-color: transparent;
 `;
 
-const SBox = styled(Box)(() => {
+export const SModal = styled(Box)(() => {
   const {
     currentTheme: { backgroundPrimary },
   } = useStateContext();
 
   return {
-    width: 400,
-    borderRadius: '12px',
-    padding: '16px 32px 24px 32px',
+    width: '40rem',
+    borderRadius: '1.2rem',
+    padding: '2.4rem',
     backgroundColor: backgroundPrimary,
-    boxShadow: '0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08)',
+    boxShadow: '0 0.8rem 0.8rem -0.4rem rgba(16, 24, 40, 0.03), 0 2rem 2.4rem -0.4rem rgba(16, 24, 40, 0.08)',
   };
 });
 
 const TriggerButton = styled(Button)({
   padding: '0',
+});
+
+export const ModalTitle = styled('h1')(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    textTransform: 'capitalize',
+    fontSize: '2rem',
+    lineHeight: '2.8rem',
+    margin: 0,
+    padding: 0,
+    fontWeight: 'bold',
+    color: currentTheme.textPrimary,
+  };
+});
+
+export const ModalText = styled('p')(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    fontSize: '1.4rem',
+    lineHeight: '2rem',
+    margin: 0,
+    padding: 0,
+    fontWeight: 400,
+    color: currentTheme.textTertiary,
+    span: {
+      fontWeight: 500,
+    },
+  };
 });

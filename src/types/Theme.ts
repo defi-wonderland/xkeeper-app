@@ -2,6 +2,8 @@ export type ThemeName = 'light' | 'dark';
 
 export interface Theme {
   type: ThemeName;
+  red: string;
+
   textPrimary: string;
   textSecondary: string;
   textTertiary: string;

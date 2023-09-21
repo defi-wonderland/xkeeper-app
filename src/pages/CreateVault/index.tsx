@@ -1,11 +1,15 @@
-import { Box, Button, FormControl, OutlinedInput, Typography, styled } from '@mui/material';
+import { useState } from 'react';
+import { Box, Button, Typography, styled } from '@mui/material';
 
 import { DataSection as DescriptionContainer, Title, Header } from '~/pages/Vault';
-import { BreadCrumbs, VersionChip } from '~/components';
+import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput } from '~/components';
 import { useStateContext } from '~/hooks';
-import ChainDropdown from '~/components/Dropdown';
 
 export const CreateVault = () => {
+  const [vaultName, setVaultName] = useState('');
+  const [vaultOwner, setVaultOwner] = useState('');
+  // const [chain, setChain] = useState('');
+
   return (
     <PageContainer>
       <BreadCrumbs previousPage='Home' currentPage='Create Vault' />
@@ -25,23 +29,19 @@ export const CreateVault = () => {
           </DescriptionContainer>
         </Header>
 
-        <InputContainer>
-          <InputLabel>Vault name</InputLabel>
-          <FormControl fullWidth>
-            <SOutlinedInput fullWidth />
-          </FormControl>
-          <InputDescription>Your vault name will only be visible to you.</InputDescription>
-        </InputContainer>
+        <StyledInput
+          label='Vault name'
+          description='Your vault name will only be visible to you.'
+          value={vaultName}
+          setValue={setVaultName}
+        />
 
-        <InputContainer>
-          <InputLabel>Vault owner</InputLabel>
-          <FormControl fullWidth>
-            <SOutlinedInput fullWidth />
-          </FormControl>
-          <InputDescription>
-            The vault owner will be able to withdraw funds and make changes to the vault.
-          </InputDescription>
-        </InputContainer>
+        <StyledInput
+          label='Vault owner'
+          description='The vault owner will be able to withdraw funds and make changes to the vault.'
+          value={vaultOwner}
+          setValue={setVaultOwner}
+        />
 
         <InputContainer>
           <InputLabel>Chain</InputLabel>
@@ -102,33 +102,6 @@ const InputLabel = styled(Typography)(() => {
     fontSize: '1.4rem',
     lineHeight: '2rem',
     fontWeight: 500,
-  };
-});
-
-const InputDescription = styled(Typography)(() => {
-  const { currentTheme } = useStateContext();
-  return {
-    color: currentTheme.textDisabled,
-    fontSize: '1.2rem',
-    lineHeight: '1.6rem',
-    fontWeight: 400,
-  };
-});
-
-const SOutlinedInput = styled(OutlinedInput)(() => {
-  const { currentTheme } = useStateContext();
-
-  return {
-    fontSize: '1.6rem',
-    borderRadius: currentTheme.borderRadius,
-    boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
-    padding: 0,
-    div: {
-      border: `1px solid ${currentTheme.textSecondaryDisabled}`,
-    },
-    input: {
-      padding: '1rem 1.4rem',
-    },
   };
 });
 
