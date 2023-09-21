@@ -11,6 +11,7 @@ import {
   Typography,
   Button,
 } from '@mui/material';
+import { WithdrawtModal, DepositModal } from '~/containers';
 import { useStateContext } from '~/hooks';
 
 function createTokenData(tokenName: string, amount: string, value: string) {
@@ -38,8 +39,13 @@ export const Tokens = () => {
         </Box>
 
         <ButtonsContainer>
-          <SWithdrawButton variant='outlined'>Withdraw funds</SWithdrawButton>
-          <SDepositButton variant='contained'>Deposit funds</SDepositButton>
+          <WithdrawtModal>
+            <SWithdrawButton variant='outlined'>Withdraw funds</SWithdrawButton>
+          </WithdrawtModal>
+
+          <DepositModal>
+            <SDepositButton variant='contained'>Deposit funds</SDepositButton>
+          </DepositModal>
         </ButtonsContainer>
       </SectionHeader>
 
@@ -119,12 +125,6 @@ const ButtonsContainer = styled(Box)({
   alignItems: 'center',
   justifyContent: 'flex-end',
   gap: '0.8rem',
-  button: {
-    fontSize: '1.4rem',
-    textTransform: 'none',
-    padding: '1rem 1.6rem',
-    boxShadow: 'none',
-  },
 });
 
 export const ColumnTitle = styled(TableCell)(() => {
@@ -169,6 +169,10 @@ const SWithdrawButton = styled(Button)(() => {
     color: 'inherit',
     borderColor: textSecondaryDisabled,
     borderRadius: borderRadius,
+    fontSize: '1.4rem',
+    textTransform: 'none',
+    padding: '1rem 1.6rem',
+    boxShadow: 'none',
     '&:hover': {
       borderColor: textSecondaryDisabled,
     },
@@ -183,6 +187,10 @@ const SDepositButton = styled(Button)(() => {
   return {
     borderRadius: borderRadius,
     backgroundColor: actionButton,
+    fontSize: '1.4rem',
+    textTransform: 'none',
+    padding: '1rem 1.6rem',
+    boxShadow: 'none',
     '&:hover': {
       backgroundColor: actionButton,
     },

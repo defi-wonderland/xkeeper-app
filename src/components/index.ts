@@ -1,5 +1,6 @@
-export * from './Dropdown';
+export * from './BaseModal';
 export * from './BreadCrumbs';
+export * from './Dropdown';
 export * from './NavigationLink';
 export * from './Theme';
 export * from './Chips';

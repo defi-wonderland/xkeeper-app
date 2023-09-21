@@ -3,6 +3,7 @@ import { TableBody, TableContainer, TableHead, TableRow, Button, styled } from '
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { useStateContext } from '~/hooks';
 import { STooltip } from '~/components';
+import { RelayModal } from '~/containers';
 
 function createRelaysData(alias: string, contractAddress: string, enabledCallers: string) {
   return { alias, contractAddress, enabledCallers };
@@ -20,7 +21,9 @@ export const EnabledRelays = () => {
       <SectionHeader>
         <Title>Enabled Relays</Title>
 
-        <SButton variant='contained'>Add New Relay</SButton>
+        <RelayModal>
+          <SButton variant='contained'>Add New Relay</SButton>
+        </RelayModal>
       </SectionHeader>
 
       <TableContainer>

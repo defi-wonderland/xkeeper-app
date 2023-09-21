@@ -3,6 +3,7 @@ import { TableBody, TableContainer, TableHead, TableRow } from '@mui/material';
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
 import { SButton } from './EnabledRelays';
 import { STooltip } from '~/components';
+import { JobModal } from '~/containers';
 
 function createJobsData(alias: string, contractAddress: string, functionSignature: string) {
   return { alias, contractAddress, functionSignature };
@@ -20,7 +21,9 @@ export const EnabledJobs = () => {
       <SectionHeader>
         <Title>Enabled Jobs</Title>
 
-        <SButton variant='contained'>Add New Job</SButton>
+        <JobModal>
+          <SButton variant='contained'>Add New Job</SButton>
+        </JobModal>
       </SectionHeader>
 
       <TableContainer>
