@@ -1,20 +1,29 @@
 import { styled, Box } from '@mui/material';
 
-import { SModal, OptionsMenuProps, ModalTitle, ModalText, CancelButton, RevokeButton } from '~/components';
+import { SModal, OptionsMenuProps, StyledTitle, StyledText, CancelButton, RevokeButton } from '~/components';
+import { useStateContext } from '~/hooks';
 
 interface RevokeModalProps extends OptionsMenuProps {
   close: () => void;
 }
 
 export const RevokeModal = ({ type, value, close }: RevokeModalProps) => {
+  const { setNotificationOpen } = useStateContext();
+
+  const handleConfirm = () => {
+    console.log('Revoke', type, value);
+    close();
+    setNotificationOpen(true);
+  };
+
   return (
     <SModal>
       <SBox>
-        <ModalTitle>Revoke {type}</ModalTitle>
+        <StyledTitle>Revoke {type}</StyledTitle>
 
-        <ModalText>
+        <StyledText>
           Are you sure you want to revoke <span>{value}</span>? This action cannot be undone.
-        </ModalText>
+        </StyledText>
       </SBox>
 
       <ButtonsContainer>
@@ -22,7 +31,9 @@ export const RevokeModal = ({ type, value, close }: RevokeModalProps) => {
           Cancel
         </CancelButton>
 
-        <RevokeButton variant='contained'>Revoke {type}</RevokeButton>
+        <RevokeButton variant='contained' onClick={handleConfirm}>
+          Revoke {type}
+        </RevokeButton>
       </ButtonsContainer>
     </SModal>
   );

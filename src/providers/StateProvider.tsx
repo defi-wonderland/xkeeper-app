@@ -13,6 +13,9 @@ type ContextType = {
 
   isError: boolean;
   setIsError: (val: boolean) => void;
+
+  notificationOpen: boolean;
+  setNotificationOpen: (val: boolean) => void;
 };
 
 interface StateProps {
@@ -24,6 +27,7 @@ export const StateContext = createContext({} as ContextType);
 export const StateProvider = ({ children }: StateProps) => {
   const [theme, setTheme] = useState<ThemeName>('dark');
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
+  const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -48,6 +52,8 @@ export const StateProvider = ({ children }: StateProps) => {
         isError,
         setIsError,
         currentTheme,
+        notificationOpen,
+        setNotificationOpen,
       }}
     >
       {children}

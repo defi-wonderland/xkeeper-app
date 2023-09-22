@@ -5,6 +5,7 @@ import { Modal } from '@mui/base/Modal';
 import { Button } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
+import { zIndex } from '~/utils';
 
 interface BaseModalProps {
   triggerButton: React.ReactNode;
@@ -36,7 +37,7 @@ const Backdrop = React.forwardRef<HTMLDivElement, { open?: boolean; className: s
 
 export const StyledModal = styled(Modal)`
   position: fixed;
-  z-index: 1300;
+  z-index: ${zIndex.MODAL};
   inset: 0;
   display: flex;
   align-items: center;
@@ -44,7 +45,7 @@ export const StyledModal = styled(Modal)`
 `;
 
 export const StyledBackdrop = styled(Backdrop)`
-  z-index: -1;
+  z-index: ${zIndex.BACKDROP};
   position: fixed;
   inset: 0;
   background-color: rgb(0 0 0 / 0.5);
@@ -67,32 +68,4 @@ export const SModal = styled(Box)(() => {
 
 const TriggerButton = styled(Button)({
   padding: '0',
-});
-
-export const ModalTitle = styled('h1')(() => {
-  const { currentTheme } = useStateContext();
-  return {
-    textTransform: 'capitalize',
-    fontSize: '2rem',
-    lineHeight: '2.8rem',
-    margin: 0,
-    padding: 0,
-    fontWeight: 'bold',
-    color: currentTheme.textPrimary,
-  };
-});
-
-export const ModalText = styled('p')(() => {
-  const { currentTheme } = useStateContext();
-  return {
-    fontSize: '1.4rem',
-    lineHeight: '2rem',
-    margin: 0,
-    padding: 0,
-    fontWeight: 400,
-    color: currentTheme.textTertiary,
-    span: {
-      fontWeight: 500,
-    },
-  };
 });

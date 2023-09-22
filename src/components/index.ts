@@ -1,3 +1,4 @@
+export * from './Text';
 export * from './BaseModal';
 export * from './BreadCrumbs';
 export * from './ChainDropdown';
@@ -7,6 +8,7 @@ export * from './OptionsMenu';
 export * from './Theme';
 export * from './Chips';
 export * from './SearchInput';
+export * from './Snackbar';
 export * from './Tabs';
 export * from './Tooltip';
 export * from './VaultCard';

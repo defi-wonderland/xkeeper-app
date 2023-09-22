@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 
 import { useStateContext } from '~/hooks';
 import { NavigationLink } from '~/components';
-import { THEME_KEY } from '~/utils';
+import { THEME_KEY, zIndex } from '~/utils';
 
 export const Header = () => {
   const { setTheme, theme, currentTheme } = useStateContext();
@@ -56,7 +56,7 @@ const HeaderContainer = styled(Box)({
   padding: '0 4.8rem',
   maxWidth: '100vw',
   fontSize: '1.2rem',
-  zIndex: 100,
+  zIndex: zIndex.HEADER,
 });
 
 const Navbar = styled(Box)({

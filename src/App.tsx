@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ScrollToTop, useStateContext } from '~/hooks';
 import { CreateVault, Landing, Vault } from '~/pages';
 import { AppLayout } from '~/containers';
+import { UseSnackbar } from './components';
 
 const AppRouter = () => {
   return (
@@ -61,6 +62,7 @@ export const App = () => {
       <CssBaseline />
       <ScrollToTop />
       <AppRouter />
+      <UseSnackbar />
     </ThemeProvider>
   );
 };
