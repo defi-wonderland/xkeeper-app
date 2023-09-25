@@ -3,8 +3,7 @@ import { Box, styled } from '@mui/material';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { BaseModal, StyledText, StyledTitle, StyledInput, CancelButton, ActiveButton, WarningChip } from '~/components';
-import { BigModal } from './Job';
-import { ButtonsContainer } from './Revoke';
+import { BigModal } from '~/containers';
 
 interface DepositModalProps {
   children: React.ReactNode;
@@ -45,4 +44,9 @@ const SBox = styled(Box)({
   marginBottom: '2.4rem',
 });
 
-const SButtonsContainer = styled(ButtonsContainer)({ marginTop: '5.6rem' });
+const SButtonsContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: '1.2rem',
+  marginTop: '5.6rem',
+});

@@ -7,15 +7,16 @@ interface InputProps {
   setValue: (value: string) => void;
   label: string;
   description?: string;
+  placeholder?: string;
 }
 
-export const StyledInput = ({ value, setValue, label, description }: InputProps) => {
+export const StyledInput = ({ value, setValue, label, description, placeholder }: InputProps) => {
   return (
     <InputContainer>
       <InputLabel>{label}</InputLabel>
 
       <FormControl fullWidth>
-        <SOutlinedInput fullWidth value={value} onChange={(e) => setValue(e.target.value)} />
+        <SOutlinedInput fullWidth value={value} onChange={(e) => setValue(e.target.value)} placeholder={placeholder} />
       </FormControl>
 
       {!!description && <InputDescription>{description}</InputDescription>}
@@ -28,6 +29,7 @@ const InputContainer = styled(Box)({
   flexDirection: 'column',
   gap: '0.6rem',
   marginBottom: '2.4rem',
+  width: '100%',
 });
 
 export const InputLabel = styled(Typography)(() => {

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Box, styled, Radio } from '@mui/material';
+
 import { ActiveButton, BaseModal, CancelButton, InputLabel, STextarea, StyledInput, StyledTitle } from '~/components';
-import { ButtonsContainer } from '~/containers/Modals';
+import { ButtonsContainer } from '~/containers';
 
 interface JobModalProps {
   children: React.ReactNode;

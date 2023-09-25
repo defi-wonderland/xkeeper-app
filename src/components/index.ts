@@ -10,6 +10,7 @@ export * from './Theme';
 export * from './Chips';
 export * from './SearchInput';
 export * from './Snackbar';
+export * from './Switch';
 export * from './Tabs';
 export * from './Tooltip';
 export * from './VaultCard';
