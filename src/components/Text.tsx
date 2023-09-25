@@ -22,7 +22,7 @@ export const StyledText = styled('p')(() => {
     margin: 0,
     padding: 0,
     fontWeight: 400,
-    color: currentTheme.textTertiary,
+    color: currentTheme.textSecondary,
     span: {
       fontWeight: 500,
     },

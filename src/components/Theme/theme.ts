@@ -20,6 +20,9 @@ export const darkTheme: Theme = {
   relayChipColor: '#05603A',
   relayChipBackground: '#ECFDF3',
 
+  warningChipColor: '#93370D',
+  warningChipBackground: '#FFFAEB',
+
   addressChipColor: '#D0D5DD', // gray-300
   addressChipBackground: '#1D2939', // gray-800
   addressChipIconColor: '#667085', // gray-500
@@ -52,6 +55,9 @@ export const lightTheme: Theme = {
 
   relayChipColor: '#05603A',
   relayChipBackground: '#ECFDF3',
+
+  warningChipColor: '#93370D',
+  warningChipBackground: '#FFFAEB',
 
   addressChipColor: '#475467', // gray-600
   addressChipBackground: '#F2F4F7', // gray-100

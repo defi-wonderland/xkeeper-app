@@ -1,4 +1,5 @@
 export * from './Text';
+export * from './TextArea';
 export * from './BaseModal';
 export * from './BreadCrumbs';
 export * from './ChainDropdown';

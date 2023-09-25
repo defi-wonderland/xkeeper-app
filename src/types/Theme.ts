@@ -28,6 +28,10 @@ export interface Theme {
   addressChipBackground: string;
   addressChipIconColor: string;
 
+  // Warning Chip
+  warningChipColor: string;
+  warningChipBackground: string;
+
   // Info Chip
   infoChipColor: string;
   infoChipBackground: string;

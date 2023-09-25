@@ -44,6 +44,7 @@ export const SBox = styled(Box)({
   flexDirection: 'column',
   gap: '0.8rem',
   marginBottom: '2.4rem',
+  width: '40rem',
 });
 
 export const ButtonsContainer = styled(Box)({

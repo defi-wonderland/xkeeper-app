@@ -42,6 +42,7 @@ export const StyledModal = styled(Modal)`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
 `;
 
 export const StyledBackdrop = styled(Backdrop)`
@@ -58,7 +59,7 @@ export const SModal = styled(Box)(() => {
   } = useStateContext();
 
   return {
-    width: '40rem',
+    minWidth: '40rem',
     borderRadius: '1.2rem',
     padding: '2.4rem',
     backgroundColor: backgroundPrimary,

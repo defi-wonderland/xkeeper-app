@@ -30,13 +30,14 @@ const InputContainer = styled(Box)({
   marginBottom: '2.4rem',
 });
 
-const InputLabel = styled(Typography)(() => {
+export const InputLabel = styled(Typography)(() => {
   const { currentTheme } = useStateContext();
   return {
     color: currentTheme.textSecondary,
     fontSize: '1.4rem',
     lineHeight: '2rem',
     fontWeight: 500,
+    cursor: 'default',
   };
 });
 
@@ -62,6 +63,7 @@ const SOutlinedInput = styled(OutlinedInput)(() => {
     },
     input: {
       padding: '1rem 1.4rem',
+      color: currentTheme.textPrimary,
     },
   };
 });
