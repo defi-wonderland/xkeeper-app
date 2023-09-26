@@ -12,6 +12,7 @@ export const STextarea = styled('textarea')(() => {
     border-radius: ${currentTheme.borderRadius};
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     border: 1px solid ${currentTheme.textSecondaryDisabled};
+    background-color: inherit;
     padding: 1rem 1.4rem;
     width: 100%;
     height: 18rem;
@@ -42,6 +43,10 @@ export const STextarea = styled('textarea')(() => {
 
     &:disabled {
       opacity: 1;
+    }
+
+    &:hover {
+      border-color: ${currentTheme.textPrimary};
     }
   `;
 });

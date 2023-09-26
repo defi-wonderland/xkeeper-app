@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Box, Button, Typography, styled } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 
 import { DataSection as DescriptionContainer, Title, Header } from '~/pages/Vault';
-import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput } from '~/components';
+import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton } from '~/components';
 import { useStateContext } from '~/hooks';
 
 export const CreateVault = () => {
@@ -113,15 +113,8 @@ const ButtonContainer = styled(Box)({
   marginTop: '3.2rem',
 });
 
-const CreateButton = styled(Button)(() => {
-  const { currentTheme } = useStateContext();
+const CreateButton = styled(ActiveButton)(() => {
   return {
-    fontSize: '1.4rem',
-    textTransform: 'none',
-    padding: '1rem 1.6rem',
-    boxShadow: 'none',
-    borderRadius: currentTheme.borderRadius,
-    backgroundColor: currentTheme.actionButton,
     width: '18.3rem',
   };
 });

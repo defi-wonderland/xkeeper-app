@@ -1,15 +1,15 @@
-import { useState } from 'react';
 import { Dropdown, Menu, MenuButton, MenuItem } from '@mui/base';
 import { styled } from '@mui/system';
-import { Button } from '@mui/material';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CreateIcon from '@mui/icons-material/Create';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 import { useStateContext } from '~/hooks';
-import { StyledModal, StyledBackdrop } from './BaseModal';
+import { Backdrop, StyledModal } from './BaseModal';
 import { EditAliasModal, RevokeModal } from '~/containers';
+import { ModalType } from '~/types';
+import { zIndex } from '~/utils';
 
 export interface OptionsMenuProps {
   value: string;
@@ -17,13 +17,11 @@ export interface OptionsMenuProps {
 }
 
 export function OptionsMenu({ type, value }: OptionsMenuProps) {
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const handleOpenEditModal = () => setOpenEditModal(true);
-  const handleCloseEditModal = () => setOpenEditModal(false);
+  const { modalOpen, setModalOpen } = useStateContext();
 
-  const [openRevokeModal, setOpenRevokeModal] = useState(false);
-  const handleOpenRevokeModal = () => setOpenRevokeModal(true);
-  const handleCloseRevokeModal = () => setOpenRevokeModal(false);
+  const handleOpenEditModal = () => setModalOpen(ModalType.EDIT_ALIAS);
+  const handleOpenRevokeModal = () => setModalOpen(ModalType.REVOQUE);
+  const handleClose = () => setModalOpen(ModalType.NONE);
 
   return (
     <Dropdown>
@@ -50,12 +48,12 @@ export function OptionsMenu({ type, value }: OptionsMenuProps) {
         </StyledMenuItem>
       </Menu>
 
-      <StyledModal open={openEditModal} onClose={handleCloseEditModal} slots={{ backdrop: StyledBackdrop }}>
-        <EditAliasModal type={type} value={value} close={handleCloseEditModal} />
+      <StyledModal open={modalOpen === ModalType.EDIT_ALIAS} onClose={handleClose} slots={{ backdrop: StyledBackdrop }}>
+        <EditAliasModal type={type} value={value} close={handleClose} />
       </StyledModal>
 
-      <StyledModal open={openRevokeModal} onClose={handleCloseRevokeModal} slots={{ backdrop: StyledBackdrop }}>
-        <RevokeModal type={type} value={value} close={handleCloseRevokeModal} />
+      <StyledModal open={modalOpen === ModalType.REVOQUE} onClose={handleClose} slots={{ backdrop: StyledBackdrop }}>
+        <RevokeModal type={type} value={value} close={handleClose} />
       </StyledModal>
     </Dropdown>
   );
@@ -135,49 +133,10 @@ const RevokeContainer = styled(OptionContainer)(() => {
   };
 });
 
-export const CancelButton = styled(Button)(() => {
-  const {
-    currentTheme: { borderRadius, textSecondaryDisabled },
-  } = useStateContext();
-  return {
-    color: 'inherit',
-    borderColor: textSecondaryDisabled,
-    borderRadius: borderRadius,
-    fontSize: '1.4rem',
-    textTransform: 'none',
-    padding: '1rem 1.6rem',
-    boxShadow: 'none',
-    width: '100%',
-    '&:hover': {
-      borderColor: textSecondaryDisabled,
-    },
-  };
-});
-
-export const ActiveButton = styled(Button)(() => {
-  const {
-    currentTheme: { borderRadius, actionButton },
-  } = useStateContext();
-  return {
-    borderRadius: borderRadius,
-    backgroundColor: actionButton,
-    textTransform: 'capitalize',
-    fontSize: '1.4rem',
-    padding: '1rem 1.6rem',
-    boxShadow: 'none',
-    width: '100%',
-    '&:hover': {
-      backgroundColor: actionButton,
-    },
-  };
-});
-
-export const RevokeButton = styled(ActiveButton)(() => {
-  const { currentTheme } = useStateContext();
-  return {
-    backgroundColor: currentTheme.red,
-    '&:hover': {
-      backgroundColor: currentTheme.red,
-    },
-  };
-});
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${zIndex.BACKDROP};
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  -webkit-tap-highlight-color: transparent;
+`;

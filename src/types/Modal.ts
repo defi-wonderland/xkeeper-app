@@ -1,0 +1,9 @@
+export enum ModalType {
+  EDIT_ALIAS = 'EDIT_ALIAS',
+  REVOQUE = 'REVOQUE',
+  WITHDRAW = 'WITHDRAW',
+  DEPOSIT = 'DEPOSIT',
+  ADD_JOB = 'ADD_JOB',
+  ADD_RELAY = 'ADD_RELAY',
+  NONE = 'NONE',
+}

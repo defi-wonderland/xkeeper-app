@@ -3,6 +3,7 @@ export type ThemeName = 'light' | 'dark';
 export interface Theme {
   type: ThemeName;
   red: string;
+  white: string;
 
   textPrimary: string;
   textSecondary: string;
@@ -17,6 +18,8 @@ export interface Theme {
   secondaryBorderRadius: string;
   border: string;
   actionButton: string;
+  actionButtonHover: string;
+  actionButtonDisabled: string;
   tabColor: string;
 
   // Relays Chip

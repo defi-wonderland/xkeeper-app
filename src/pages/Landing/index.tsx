@@ -1,8 +1,8 @@
-import { Button, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/material/styles';
 
-import { SearchInput, VaultCard, BasicTabs, NavigationLink } from '~/components';
+import { SearchInput, VaultCard, BasicTabs, NavigationLink, ActiveButton } from '~/components';
 import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
 
@@ -89,7 +89,7 @@ const FirstSection = styled(Box)({
   padding: '1rem 0rem',
 });
 
-const CreateVaultBtn = styled(Button)(() => {
+const CreateVaultBtn = styled(ActiveButton)(() => {
   const {
     currentTheme: { borderRadius, actionButton },
   } = useStateContext();
@@ -97,13 +97,9 @@ const CreateVaultBtn = styled(Button)(() => {
     fontSize: '1.6rem',
     height: '4.8rem',
     minWidth: '18.3rem',
-    boxShadow: 'none',
     px: '1rem',
     textTransform: 'none',
     borderRadius: borderRadius,
     backgroundColor: actionButton,
-    '&:hover': {
-      backgroundColor: actionButton,
-    },
   };
 });

@@ -1,14 +1,29 @@
 import { useState } from 'react';
 import { Box, styled, Radio } from '@mui/material';
 
-import { ActiveButton, BaseModal, CancelButton, InputLabel, STextarea, StyledInput, StyledTitle } from '~/components';
-import { ButtonsContainer } from '~/containers';
+import {
+  ActiveButton,
+  BaseModal,
+  CancelButton,
+  CloseButton,
+  InputLabel,
+  STextarea,
+  StyledInput,
+  StyledTitle,
+} from '~/components';
+import { ButtonsContainer, SCloseIcon, TitleContainer } from '~/containers';
+import { ModalType } from '~/types';
+import { useStateContext } from '~/hooks';
 
 interface JobModalProps {
   children: React.ReactNode;
 }
 
 export const JobModal = ({ children }: JobModalProps) => {
+  const { modalOpen, setModalOpen } = useStateContext();
+  const handleOpen = () => setModalOpen(ModalType.ADD_JOB);
+  const handleClose = () => setModalOpen(ModalType.NONE);
+
   const [jobAddress, setJobAddress] = useState('');
   const [jobAbi, setJobAbi] = useState('');
 
@@ -23,9 +38,20 @@ export const JobModal = ({ children }: JobModalProps) => {
   };
 
   return (
-    <BaseModal triggerButton={children}>
+    <BaseModal
+      triggerButton={children}
+      open={modalOpen === ModalType.ADD_JOB}
+      handleOpen={handleOpen}
+      handleClose={handleClose}
+    >
       <BigModal>
-        <STitle>Add New Job</STitle>
+        <TitleContainer>
+          <STitle>Add New Job</STitle>
+
+          <CloseButton variant='text' onClick={handleClose}>
+            <SCloseIcon />
+          </CloseButton>
+        </TitleContainer>
 
         <StyledInput label='Job address' value={jobAddress} setValue={setJobAddress} />
 
@@ -70,7 +96,7 @@ export const JobModal = ({ children }: JobModalProps) => {
         />
 
         <ButtonsContainer>
-          <CancelButton variant='outlined' onClick={close}>
+          <CancelButton variant='outlined' onClick={handleClose}>
             Cancel
           </CancelButton>
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
 
+import { TitleContainer, SCloseIcon, ButtonsContainer } from '~/containers';
 import {
   ActiveButton,
   CancelButton,
@@ -9,8 +10,8 @@ import {
   OptionsMenuProps,
   SModal,
   StyledInput,
+  CloseButton,
 } from '~/components';
-import { ButtonsContainer, SBox } from './Revoke';
 
 interface EditAliasModalProps extends OptionsMenuProps {
   close: () => void;
@@ -22,7 +23,13 @@ export const EditAliasModal = ({ type, value, close }: EditAliasModalProps) => {
   return (
     <BigModal>
       <SBox>
-        <StyledTitle>Edit {type} Alias</StyledTitle>
+        <TitleContainer>
+          <StyledTitle>Edit {type} Alias</StyledTitle>
+          <CloseButton variant='text' onClick={close}>
+            <SCloseIcon />
+          </CloseButton>
+        </TitleContainer>
+
         <Text>
           {type} address: <span>{value}</span>
         </Text>
@@ -45,6 +52,14 @@ export const EditAliasModal = ({ type, value, close }: EditAliasModalProps) => {
 
 const BigModal = styled(SModal)({
   width: '59.6rem',
+});
+
+const SBox = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.8rem',
+  marginBottom: '2.4rem',
+  width: '100%',
 });
 
 const InputContainer = styled(Box)({

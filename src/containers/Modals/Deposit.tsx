@@ -1,21 +1,49 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-
-import { BaseModal, StyledText, StyledTitle, StyledInput, CancelButton, ActiveButton, WarningChip } from '~/components';
+import CloseIcon from '@mui/icons-material/Close';
+import {
+  BaseModal,
+  StyledText,
+  StyledTitle,
+  StyledInput,
+  CancelButton,
+  ActiveButton,
+  WarningChip,
+  CloseButton,
+} from '~/components';
 import { BigModal } from '~/containers';
+import { ModalType } from '~/types';
+import { useStateContext } from '~/hooks';
 
 interface DepositModalProps {
   children: React.ReactNode;
 }
 
 export const DepositModal = ({ children }: DepositModalProps) => {
+  const { modalOpen, setModalOpen } = useStateContext();
+  const handleOpen = () => setModalOpen(ModalType.DEPOSIT);
+  const handleClose = () => setModalOpen(ModalType.NONE);
+
   const [depositAddress, setDepositAddress] = useState('');
+
   return (
-    <BaseModal triggerButton={children}>
+    <BaseModal
+      triggerButton={children}
+      open={modalOpen === ModalType.DEPOSIT}
+      handleOpen={handleOpen}
+      handleClose={handleClose}
+    >
       <BigModal>
         <SBox>
-          <StyledTitle>Deposit Modal</StyledTitle>
+          <TitleContainer>
+            <StyledTitle>Deposit Funds</StyledTitle>
+
+            <CloseButton variant='text' onClick={handleClose}>
+              <SCloseIcon />
+            </CloseButton>
+          </TitleContainer>
+
           <StyledText>You can send ETH or any ERC-20 token on the Ethereum network to this adddress.</StyledText>
         </SBox>
 
@@ -26,7 +54,7 @@ export const DepositModal = ({ children }: DepositModalProps) => {
         </WarningChip>
 
         <SButtonsContainer>
-          <CancelButton variant='outlined' onClick={close}>
+          <CancelButton variant='outlined' onClick={handleClose}>
             Cancel
           </CancelButton>
 
@@ -49,4 +77,17 @@ const SButtonsContainer = styled(Box)({
   flexDirection: 'row',
   gap: '1.2rem',
   marginTop: '5.6rem',
+});
+
+export const TitleContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  width: '100%',
+});
+
+export const SCloseIcon = styled(CloseIcon)({
+  fontSize: '2.4rem',
+  opacity: 0.6,
 });

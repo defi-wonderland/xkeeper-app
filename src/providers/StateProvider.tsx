@@ -1,6 +1,6 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
 
-import { Theme, ThemeName } from '~/types';
+import { Theme, ThemeName, ModalType } from '~/types';
 import { THEME_KEY, getTheme } from '~/utils';
 
 type ContextType = {
@@ -16,6 +16,9 @@ type ContextType = {
 
   notificationOpen: boolean;
   setNotificationOpen: (val: boolean) => void;
+
+  modalOpen: ModalType;
+  setModalOpen: (val: ModalType) => void;
 };
 
 interface StateProps {
@@ -29,6 +32,7 @@ export const StateProvider = ({ children }: StateProps) => {
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
 
+  const [modalOpen, setModalOpen] = useState<ModalType>(ModalType.NONE);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -54,6 +58,8 @@ export const StateProvider = ({ children }: StateProps) => {
         currentTheme,
         notificationOpen,
         setNotificationOpen,
+        modalOpen,
+        setModalOpen,
       }}
     >
       {children}

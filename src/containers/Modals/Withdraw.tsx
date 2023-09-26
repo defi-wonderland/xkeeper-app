@@ -1,15 +1,29 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
 
-import { ActiveButton, BaseModal, CancelButton, InfoChip, StyledInput, StyledText, StyledTitle } from '~/components';
-import { BigModal } from '~/containers';
+import {
+  ActiveButton,
+  BaseModal,
+  CancelButton,
+  CloseButton,
+  InfoChip,
+  StyledInput,
+  StyledText,
+  StyledTitle,
+} from '~/components';
+import { BigModal, SCloseIcon, TitleContainer as Header } from '~/containers';
 import { useStateContext } from '~/hooks';
+import { ModalType } from '~/types';
 
 interface WithdrawModalProps {
   children: React.ReactNode;
 }
 
 export const WithdrawtModal = ({ children }: WithdrawModalProps) => {
+  const { modalOpen, setModalOpen } = useStateContext();
+  const handleOpen = () => setModalOpen(ModalType.WITHDRAW);
+  const handleClose = () => setModalOpen(ModalType.NONE);
+
   const [widthdrawalAddress, setWithdrawalAddress] = useState('');
   const [token, setToken] = useState('');
   const [amount, setAmount] = useState('');
@@ -19,10 +33,21 @@ export const WithdrawtModal = ({ children }: WithdrawModalProps) => {
   const network = 'Ethereum';
 
   return (
-    <BaseModal triggerButton={children}>
+    <BaseModal
+      triggerButton={children}
+      open={modalOpen === ModalType.WITHDRAW}
+      handleOpen={handleOpen}
+      handleClose={handleClose}
+    >
       <BigModal>
         <TitleContainer>
-          <StyledTitle>Withdraw Modal</StyledTitle>
+          <Header>
+            <StyledTitle>Withdraw Funds</StyledTitle>
+
+            <CloseButton variant='text' onClick={handleClose}>
+              <SCloseIcon />
+            </CloseButton>
+          </Header>
 
           <InfoContainer>
             <VaultText>
@@ -50,7 +75,7 @@ export const WithdrawtModal = ({ children }: WithdrawModalProps) => {
         />
 
         <SButtonsContainer>
-          <CancelButton variant='outlined' onClick={close}>
+          <CancelButton variant='outlined' onClick={handleClose}>
             Cancel
           </CancelButton>
 

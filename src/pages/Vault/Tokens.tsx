@@ -9,8 +9,8 @@ import {
   TableRow,
   Box,
   Typography,
-  Button,
 } from '@mui/material';
+import { ActiveButton, CancelButton } from '~/components';
 import { WithdrawtModal, DepositModal } from '~/containers';
 import { useStateContext } from '~/hooks';
 
@@ -40,11 +40,11 @@ export const Tokens = () => {
 
         <ButtonsContainer>
           <WithdrawtModal>
-            <SWithdrawButton variant='outlined'>Withdraw funds</SWithdrawButton>
+            <CancelButton variant='outlined'>Withdraw funds</CancelButton>
           </WithdrawtModal>
 
           <DepositModal>
-            <SDepositButton variant='contained'>Deposit funds</SDepositButton>
+            <ActiveButton variant='contained'>Deposit funds</ActiveButton>
           </DepositModal>
         </ButtonsContainer>
       </SectionHeader>
@@ -159,42 +159,6 @@ export const STableRow = styled(TableRow)({
   '&:last-child td, &:last-child th': {
     border: 0,
   },
-});
-
-const SWithdrawButton = styled(Button)(() => {
-  const {
-    currentTheme: { borderRadius, textSecondaryDisabled },
-  } = useStateContext();
-  return {
-    color: 'inherit',
-    borderColor: textSecondaryDisabled,
-    borderRadius: borderRadius,
-    fontSize: '1.4rem',
-    textTransform: 'none',
-    padding: '1rem 1.6rem',
-    boxShadow: 'none',
-    '&:hover': {
-      borderColor: textSecondaryDisabled,
-    },
-  };
-});
-
-const SDepositButton = styled(Button)(() => {
-  const {
-    currentTheme: { borderRadius, actionButton },
-  } = useStateContext();
-
-  return {
-    borderRadius: borderRadius,
-    backgroundColor: actionButton,
-    fontSize: '1.4rem',
-    textTransform: 'none',
-    padding: '1rem 1.6rem',
-    boxShadow: 'none',
-    '&:hover': {
-      backgroundColor: actionButton,
-    },
-  };
 });
 
 const SColumnTitle = styled(TableCell)({

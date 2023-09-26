@@ -10,13 +10,12 @@ import { zIndex } from '~/utils';
 interface BaseModalProps {
   triggerButton: React.ReactNode;
   children: React.ReactNode;
+  handleOpen: () => void;
+  handleClose: () => void;
+  open: boolean;
 }
 
-export const BaseModal = ({ triggerButton, children }: BaseModalProps) => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+export const BaseModal = ({ triggerButton, children, handleOpen, handleClose, open }: BaseModalProps) => {
   return (
     <div>
       <TriggerButton type='button' onClick={handleOpen}>
@@ -30,7 +29,7 @@ export const BaseModal = ({ triggerButton, children }: BaseModalProps) => {
 };
 
 // eslint-disable-next-line react/display-name
-const Backdrop = React.forwardRef<HTMLDivElement, { open?: boolean; className: string }>((props, ref) => {
+export const Backdrop = React.forwardRef<HTMLDivElement, { open?: boolean; className: string }>((props, ref) => {
   const { open, className, ...other } = props;
   return <div className={clsx({ 'MuiBackdrop-open': open }, className)} ref={ref} {...other} />;
 });
@@ -43,6 +42,7 @@ export const StyledModal = styled(Modal)`
   align-items: center;
   justify-content: center;
   width: 100%;
+  box-shadow: none;
 `;
 
 export const StyledBackdrop = styled(Backdrop)`
@@ -63,10 +63,11 @@ export const SModal = styled(Box)(() => {
     borderRadius: '1.2rem',
     padding: '2.4rem',
     backgroundColor: backgroundPrimary,
-    boxShadow: '0 0.8rem 0.8rem -0.4rem rgba(16, 24, 40, 0.03), 0 2rem 2.4rem -0.4rem rgba(16, 24, 40, 0.08)',
+    boxShadow: 'none',
   };
 });
 
 const TriggerButton = styled(Button)({
   padding: '0',
+  cursor: 'default',
 });

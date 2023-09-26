@@ -1,8 +1,7 @@
-import { TableBody, TableContainer, TableHead, TableRow, Button, styled } from '@mui/material';
+import { TableBody, TableContainer, TableHead, TableRow } from '@mui/material';
 
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
-import { useStateContext } from '~/hooks';
-import { STooltip, OptionsMenu } from '~/components';
+import { STooltip, OptionsMenu, ActiveButton } from '~/components';
 import { RelayModal } from '~/containers';
 
 function createRelaysData(alias: string, contractAddress: string, enabledCallers: string) {
@@ -22,7 +21,7 @@ export const EnabledRelays = () => {
         <Title>Enabled Relays</Title>
 
         <RelayModal>
-          <SButton variant='contained'>Add New Relay</SButton>
+          <ActiveButton variant='contained'>Add New Relay</ActiveButton>
         </RelayModal>
       </SectionHeader>
 
@@ -61,20 +60,3 @@ export const EnabledRelays = () => {
     </SCard>
   );
 };
-
-export const SButton = styled(Button)(() => {
-  const {
-    currentTheme: { borderRadius, actionButton },
-  } = useStateContext();
-  return {
-    fontSize: '1.4rem',
-    textTransform: 'none',
-    padding: '1rem 1.6rem',
-    boxShadow: 'none',
-    borderRadius: borderRadius,
-    backgroundColor: actionButton,
-    '&:hover': {
-      backgroundColor: actionButton,
-    },
-  };
-});

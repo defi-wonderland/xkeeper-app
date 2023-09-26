@@ -8,13 +8,18 @@ export const darkTheme: Theme = {
   textDisabled: '#667085',
   textSecondaryDisabled: '#475467', // gray-600
   red: '#D92D20',
+  white: '#ffffff',
 
   backgroundPrimary: '#000000',
   backgroundSecondary: '#1A191F',
   borderRadius: '8px',
   secondaryBorderRadius: '4px',
   border: '1px solid rgba(153, 164, 184, 0.1)',
-  actionButton: '#ffffff',
+
+  actionButton: '#444CE7',
+  actionButtonHover: '#3538CD',
+  actionButtonDisabled: '#A4BCFD',
+
   tabColor: '#444CE7',
 
   relayChipColor: '#05603A',
@@ -44,13 +49,18 @@ export const lightTheme: Theme = {
   textDisabled: '#98A2B3', // gray-400
   textSecondaryDisabled: '#D0D5DD', // gray-300
   red: '#D92D20',
+  white: '#ffffff',
 
   backgroundPrimary: '#ffffff', // gray-100
   backgroundSecondary: '#FCFCFD', // gray-25
   borderRadius: '8px',
   secondaryBorderRadius: '4px',
   border: '1px solid #F2F4F7',
+
   actionButton: '#444CE7',
+  actionButtonHover: '#3538CD',
+  actionButtonDisabled: '#A4BCFD',
+
   tabColor: '#344054',
 
   relayChipColor: '#05603A',

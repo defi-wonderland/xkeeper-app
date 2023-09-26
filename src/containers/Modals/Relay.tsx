@@ -2,15 +2,29 @@ import { useState } from 'react';
 import { Button, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-import { ActiveButton, BaseModal, CancelButton, SSwitch, StyledInput, StyledTitle, StyledText } from '~/components';
-import { ButtonsContainer, BigModal } from '~/containers';
+import {
+  ActiveButton,
+  BaseModal,
+  CancelButton,
+  SSwitch,
+  StyledInput,
+  StyledTitle,
+  StyledText,
+  CloseButton,
+} from '~/components';
+import { ButtonsContainer, BigModal, TitleContainer, SCloseIcon } from '~/containers';
 import { useStateContext } from '~/hooks';
+import { ModalType } from '~/types';
 
 interface RelayModalProps {
   children: React.ReactNode;
 }
 
 export const RelayModal = ({ children }: RelayModalProps) => {
+  const { modalOpen, setModalOpen } = useStateContext();
+  const handleOpen = () => setModalOpen(ModalType.ADD_RELAY);
+  const handleClose = () => setModalOpen(ModalType.NONE);
+
   const [relayAddress, setRelayAddress] = useState('');
   const [callers, setCallers] = useState('');
   const [relayAlias, setRelayAlias] = useState('');
@@ -22,9 +36,20 @@ export const RelayModal = ({ children }: RelayModalProps) => {
   };
 
   return (
-    <BaseModal triggerButton={children}>
+    <BaseModal
+      triggerButton={children}
+      open={modalOpen === ModalType.ADD_RELAY}
+      handleOpen={handleOpen}
+      handleClose={handleClose}
+    >
       <BigModal>
-        <StyledTitle>Add New Relay</StyledTitle>
+        <TitleContainer>
+          <StyledTitle>Add New Relay</StyledTitle>
+
+          <CloseButton variant='text' onClick={handleClose}>
+            <SCloseIcon />
+          </CloseButton>
+        </TitleContainer>
 
         <InputsContainer>
           <StyledInput
@@ -61,7 +86,7 @@ export const RelayModal = ({ children }: RelayModalProps) => {
         </InputsContainer>
 
         <ButtonsContainer>
-          <CancelButton variant='outlined' onClick={close}>
+          <CancelButton variant='outlined' onClick={handleClose}>
             Cancel
           </CancelButton>
 

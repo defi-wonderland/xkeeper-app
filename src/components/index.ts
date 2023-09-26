@@ -2,6 +2,7 @@ export * from './Text';
 export * from './TextArea';
 export * from './BaseModal';
 export * from './BreadCrumbs';
+export * from './Button';
 export * from './ChainDropdown';
 export * from './Input';
 export * from './NavigationLink';
