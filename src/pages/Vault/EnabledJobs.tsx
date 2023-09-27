@@ -1,8 +1,9 @@
-import { TableBody, TableContainer, TableHead, TableRow } from '@mui/material';
+import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
-import { JobModal } from '~/containers';
 import { ActiveButton, OptionsMenu, STooltip } from '~/components';
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
+import { useStateContext } from '~/hooks';
+import { ModalType } from '~/types';
 
 function createJobsData(alias: string, contractAddress: string, functionSignature: string) {
   return { alias, contractAddress, functionSignature };
@@ -15,23 +16,25 @@ const rows = [
 ];
 
 export const EnabledJobs = () => {
+  const { userAddress, setModalOpen } = useStateContext();
+
   return (
     <SCard variant='outlined'>
       <SectionHeader>
         <Title>Enabled Jobs</Title>
 
-        <JobModal>
-          <ActiveButton variant='contained'>Add New Job</ActiveButton>
-        </JobModal>
+        <ActiveButton variant='contained' disabled={!userAddress} onClick={() => setModalOpen(ModalType.ADD_JOB)}>
+          Add New Job
+        </ActiveButton>
       </SectionHeader>
 
       <TableContainer>
         <STable aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <ColumnTitle>Alias</ColumnTitle>
-              <ColumnTitle align='right'>ContractAddress</ColumnTitle>
-              <ColumnTitle align='right'>Function Signature</ColumnTitle>
+              <SColumnTitle>Alias</SColumnTitle>
+              <ColumnTitle align='left'>ContractAddress</ColumnTitle>
+              <ColumnTitle align='left'>Function Signature</ColumnTitle>
               <ColumnTitle align='right'></ColumnTitle>
             </TableRow>
           </TableHead>
@@ -43,11 +46,11 @@ export const EnabledJobs = () => {
                   <STooltip text='Edit alias'>{row.alias}</STooltip>
                 </RowText>
 
-                <RowText align='right'>
+                <RowText align='left'>
                   <STooltip text={row.contractAddress}>{row.contractAddress}</STooltip>
                 </RowText>
 
-                <RowText align='right'>
+                <RowText align='left'>
                   <STooltip text={row.functionSignature}>{row.functionSignature}</STooltip>
                 </RowText>
 
@@ -62,3 +65,7 @@ export const EnabledJobs = () => {
     </SCard>
   );
 };
+
+const SColumnTitle = styled(ColumnTitle)({
+  width: '28rem',
+});

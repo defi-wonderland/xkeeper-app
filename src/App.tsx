@@ -5,8 +5,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { ScrollToTop, useStateContext } from '~/hooks';
 import { CreateVault, Landing, Vault } from '~/pages';
-import { AppLayout } from '~/containers';
-import { UseSnackbar } from './components';
+import { AppLayout, DepositModal, JobModal, RelayModal, WithdrawtModal } from '~/containers';
+import { UseSnackbar } from '~/components';
 
 const AppRouter = () => {
   return (
@@ -20,8 +20,19 @@ const AppRouter = () => {
   );
 };
 
+const Modals = () => {
+  return (
+    <>
+      <DepositModal />
+      <JobModal />
+      <RelayModal />
+      <WithdrawtModal />
+    </>
+  );
+};
+
 export const App = () => {
-  const { theme: mode } = useStateContext();
+  const { theme: mode, currentTheme } = useStateContext();
 
   const theme = useMemo(
     () =>
@@ -34,6 +45,7 @@ export const App = () => {
             styleOverrides: {
               html: {
                 fontSize: '62.5%',
+                backgroundColor: currentTheme.backgroundSecondary,
               },
             },
           },
@@ -54,11 +66,12 @@ export const App = () => {
           ].join(','),
         },
       }),
-    [mode],
+    [currentTheme.backgroundSecondary, mode],
   );
 
   return (
     <ThemeProvider theme={theme}>
+      <Modals />
       <CssBaseline />
       <ScrollToTop />
       <AppRouter />

@@ -11,12 +11,14 @@ interface NavigationLinkProps {
   variant?: OverridableStringUnion<Variant | 'inherit', TypographyPropsVariantOverrides>;
   children?: React.ReactNode;
   sx?: SxProps<Theme>;
+  disabled?: boolean;
 }
 
-export const NavigationLink = ({ to, text, variant, children, sx }: NavigationLinkProps) => {
+export const NavigationLink = ({ to, text, variant, children, sx, disabled }: NavigationLinkProps) => {
   return (
     <Typography variant={variant} sx={{ ...sx, a: { textDecoration: 'none', color: 'inherit' } }}>
-      <Link to={to}>{children ? children : text}</Link>
+      {disabled && <>{children ? children : text}</>}
+      {!disabled && <Link to={to}>{children ? children : text}</Link>}
     </Typography>
   );
 };

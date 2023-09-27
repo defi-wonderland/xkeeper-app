@@ -2,17 +2,14 @@ import { styled, Box } from '@mui/material';
 
 import { SModal, OptionsMenuProps, StyledTitle, StyledText, CancelButton, RevokeButton } from '~/components';
 import { useStateContext } from '~/hooks';
+import { ModalType } from '~/types';
 
-interface RevokeModalProps extends OptionsMenuProps {
-  close: () => void;
-}
-
-export const RevokeModal = ({ type, value, close }: RevokeModalProps) => {
-  const { setNotificationOpen } = useStateContext();
+export const RevokeModal = ({ type, value }: OptionsMenuProps) => {
+  const { setNotificationOpen, setModalOpen } = useStateContext();
 
   const handleConfirm = () => {
     console.log('Revoke', type, value);
-    close();
+    setModalOpen(ModalType.NONE);
     setNotificationOpen(true);
   };
 
@@ -27,7 +24,7 @@ export const RevokeModal = ({ type, value, close }: RevokeModalProps) => {
       </SBox>
 
       <ButtonsContainer>
-        <CancelButton variant='outlined' onClick={close}>
+        <CancelButton variant='outlined' onClick={() => setModalOpen(ModalType.NONE)}>
           Cancel
         </CancelButton>
 
@@ -51,4 +48,7 @@ export const ButtonsContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   gap: '1.2rem',
+  button: {
+    width: '100%',
+  },
 });

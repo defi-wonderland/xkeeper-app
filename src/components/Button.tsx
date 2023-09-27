@@ -33,7 +33,7 @@ export const ActiveButton = styled(Button)(() => {
     textTransform: 'capitalize',
     fontSize: '1.4rem',
     padding: '1rem 1.6rem',
-    width: '100%',
+    width: 'max-content',
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     '&:hover': {
       backgroundColor: currentTheme.actionButtonHover,

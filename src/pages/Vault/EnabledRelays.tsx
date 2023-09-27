@@ -1,8 +1,9 @@
-import { TableBody, TableContainer, TableHead, TableRow } from '@mui/material';
+import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { STooltip, OptionsMenu, ActiveButton } from '~/components';
-import { RelayModal } from '~/containers';
+import { useStateContext } from '~/hooks';
+import { ModalType } from '~/types';
 
 function createRelaysData(alias: string, contractAddress: string, enabledCallers: string) {
   return { alias, contractAddress, enabledCallers };
@@ -15,24 +16,26 @@ const rows = [
 ];
 
 export const EnabledRelays = () => {
+  const { userAddress, setModalOpen } = useStateContext();
+
   return (
     <SCard variant='outlined'>
       <SectionHeader>
         <Title>Enabled Relays</Title>
 
-        <RelayModal>
-          <ActiveButton variant='contained'>Add New Relay</ActiveButton>
-        </RelayModal>
+        <ActiveButton variant='contained' disabled={!userAddress} onClick={() => setModalOpen(ModalType.ADD_RELAY)}>
+          Add New Relay
+        </ActiveButton>
       </SectionHeader>
 
       <TableContainer>
         <STable aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <ColumnTitle>Alias</ColumnTitle>
-              <ColumnTitle align='right'>Contract Address</ColumnTitle>
-              <ColumnTitle align='right'>Enabled Callers</ColumnTitle>
-              <ColumnTitle align='right'></ColumnTitle>
+              <SColumnTitle>Alias</SColumnTitle>
+              <ColumnTitle align='left'>Contract Address</ColumnTitle>
+              <ColumnTitle align='left'>Enabled Callers</ColumnTitle>
+              <ColumnTitle align='left'></ColumnTitle>
             </TableRow>
           </TableHead>
 
@@ -43,11 +46,11 @@ export const EnabledRelays = () => {
                   <STooltip text='Edit alias'>{row.alias}</STooltip>
                 </RowText>
 
-                <RowText align='right'>
+                <RowText align='left'>
                   <STooltip text={row.contractAddress}>{row.contractAddress}</STooltip>
                 </RowText>
 
-                <RowText align='right'>{row.enabledCallers}</RowText>
+                <RowText align='left'>{row.enabledCallers}</RowText>
 
                 <RowText align='right'>
                   <OptionsMenu type='relay' value={row.contractAddress} />
@@ -60,3 +63,7 @@ export const EnabledRelays = () => {
     </SCard>
   );
 };
+
+const SColumnTitle = styled(ColumnTitle)({
+  width: '28rem',
+});

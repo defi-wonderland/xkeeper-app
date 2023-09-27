@@ -10,13 +10,15 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import { ActiveButton, CancelButton } from '~/components';
-import { WithdrawtModal, DepositModal } from '~/containers';
+import { ActiveButton, CancelButton, StyledText, TokenIcon } from '~/components';
 import { useStateContext } from '~/hooks';
+import { ModalType } from '~/types';
 
 function createTokenData(tokenName: string, amount: string, value: string) {
   return { tokenName, amount, value };
 }
+const tokenAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
+const currentChain = 'ethereum';
 
 const rows = [
   createTokenData('ETH', '12.26 ETH', '$12,000'),
@@ -25,6 +27,7 @@ const rows = [
 ];
 
 export const Tokens = () => {
+  const { userAddress, setModalOpen } = useStateContext();
   const totalValueInUsd = '$12,000';
 
   return (
@@ -39,13 +42,13 @@ export const Tokens = () => {
         </Box>
 
         <ButtonsContainer>
-          <WithdrawtModal>
-            <CancelButton variant='outlined'>Withdraw funds</CancelButton>
-          </WithdrawtModal>
+          <CancelButton variant='outlined' disabled={!userAddress} onClick={() => setModalOpen(ModalType.WITHDRAW)}>
+            Withdraw funds
+          </CancelButton>
 
-          <DepositModal>
-            <ActiveButton variant='contained'>Deposit funds</ActiveButton>
-          </DepositModal>
+          <ActiveButton variant='contained' disabled={!userAddress} onClick={() => setModalOpen(ModalType.DEPOSIT)}>
+            Deposit funds
+          </ActiveButton>
         </ButtonsContainer>
       </SectionHeader>
 
@@ -53,9 +56,17 @@ export const Tokens = () => {
         <STable aria-label='tokens table'>
           <TableHead>
             <TableRow>
-              <SColumnTitle>Token Name</SColumnTitle>
-              <ColumnTitle align='left'>Amount</ColumnTitle>
-              <ColumnTitle align='left'>Value (USD)</ColumnTitle>
+              <SColumnTitle>
+                <ColumnText>Token Name</ColumnText>
+              </SColumnTitle>
+
+              <ColumnTitle align='left'>
+                <ColumnText>Amount</ColumnText>
+              </ColumnTitle>
+
+              <ColumnTitle align='left'>
+                <ColumnText>Value (USD)</ColumnText>
+              </ColumnTitle>
             </TableRow>
           </TableHead>
 
@@ -63,9 +74,18 @@ export const Tokens = () => {
             {rows.map((row) => (
               <STableRow key={row.tokenName}>
                 <SRowText component='th' scope='row'>
-                  {row.tokenName}
+                  {/* Token Info */}
+                  <TokenContainer>
+                    <TokenIcon chainName={currentChain} tokenAddress={tokenAddress} />
+                    <TokenSymbol>{row.tokenName}</TokenSymbol>
+                    <TokenName>{'Dai Stablecoin'}</TokenName>
+                  </TokenContainer>
                 </SRowText>
+
+                {/* Token amount */}
                 <RowText align='left'>{row.amount}</RowText>
+
+                {/* Token amount in USD */}
                 <RowText align='left'>{row.value}</RowText>
               </STableRow>
             ))}
@@ -125,16 +145,19 @@ const ButtonsContainer = styled(Box)({
   alignItems: 'center',
   justifyContent: 'flex-end',
   gap: '0.8rem',
+  button: {
+    width: 'max-content',
+  },
 });
 
 export const ColumnTitle = styled(TableCell)(() => {
   const {
-    currentTheme: { textDisabled },
+    currentTheme: { textTertiary },
   } = useStateContext();
   return {
     fontSize: '1.2rem',
-    padding: '2.4rem 1.6rem',
-    color: textDisabled,
+    padding: '1.2rem 2.4rem',
+    color: textTertiary,
   };
 });
 
@@ -150,7 +173,7 @@ export const RowText = styled(TableCell)(() => {
     fontSize: '1.4rem',
     height: '3.2rem',
     fontWeight: 500,
-    padding: '2.4rem 1.6rem',
+    padding: '1.6rem 2.4rem',
     color: textSecondary,
   };
 });
@@ -167,4 +190,31 @@ const SColumnTitle = styled(TableCell)({
 
 const SRowText = styled(TableCell)({
   width: '33rem',
+});
+
+const TokenSymbol = styled(StyledText)({});
+
+const TokenName = styled(StyledText)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    color: currentTheme.textDisabled,
+    fontSize: '1.2rem',
+  };
+});
+
+const TokenContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'start',
+  gap: '1.2rem',
+});
+
+const ColumnText = styled(StyledText)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    fontSize: '1.2rem',
+    fontWeight: 500,
+    color: currentTheme.textTertiary,
+  };
 });

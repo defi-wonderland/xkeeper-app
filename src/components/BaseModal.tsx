@@ -2,26 +2,21 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled, Box } from '@mui/system';
 import { Modal } from '@mui/base/Modal';
-import { Button } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
 import { zIndex } from '~/utils';
+import { ModalType } from '~/types';
 
 interface BaseModalProps {
-  triggerButton: React.ReactNode;
   children: React.ReactNode;
-  handleOpen: () => void;
-  handleClose: () => void;
   open: boolean;
 }
 
-export const BaseModal = ({ triggerButton, children, handleOpen, handleClose, open }: BaseModalProps) => {
+export const BaseModal = ({ children, open }: BaseModalProps) => {
+  const { setModalOpen } = useStateContext();
   return (
     <div>
-      <TriggerButton type='button' onClick={handleOpen}>
-        {triggerButton}
-      </TriggerButton>
-      <StyledModal open={open} onClose={handleClose} slots={{ backdrop: StyledBackdrop }}>
+      <StyledModal open={open} onClose={() => setModalOpen(ModalType.NONE)} slots={{ backdrop: StyledBackdrop }}>
         <SModal>{children}</SModal>
       </StyledModal>
     </div>
@@ -65,9 +60,4 @@ export const SModal = styled(Box)(() => {
     backgroundColor: backgroundPrimary,
     boxShadow: 'none',
   };
-});
-
-const TriggerButton = styled(Button)({
-  padding: '0',
-  cursor: 'default',
 });

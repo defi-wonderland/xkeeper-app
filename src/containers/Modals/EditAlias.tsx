@@ -12,12 +12,11 @@ import {
   StyledInput,
   CloseButton,
 } from '~/components';
+import { useStateContext } from '~/hooks';
+import { ModalType } from '~/types';
 
-interface EditAliasModalProps extends OptionsMenuProps {
-  close: () => void;
-}
-
-export const EditAliasModal = ({ type, value, close }: EditAliasModalProps) => {
+export const EditAliasModal = ({ type, value }: OptionsMenuProps) => {
+  const { setModalOpen } = useStateContext();
   const [alias, setAlias] = useState<string>(`My Custom ${type}`);
 
   return (
@@ -40,7 +39,7 @@ export const EditAliasModal = ({ type, value, close }: EditAliasModalProps) => {
       </InputContainer>
 
       <ButtonsContainer>
-        <CancelButton variant='outlined' onClick={close}>
+        <CancelButton variant='outlined' onClick={() => setModalOpen(ModalType.NONE)}>
           Cancel
         </CancelButton>
 

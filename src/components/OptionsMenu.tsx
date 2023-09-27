@@ -17,7 +17,7 @@ export interface OptionsMenuProps {
 }
 
 export function OptionsMenu({ type, value }: OptionsMenuProps) {
-  const { modalOpen, setModalOpen } = useStateContext();
+  const { modalOpen, setModalOpen, userAddress } = useStateContext();
 
   const handleOpenEditModal = () => setModalOpen(ModalType.EDIT_ALIAS);
   const handleOpenRevokeModal = () => setModalOpen(ModalType.REVOQUE);
@@ -40,20 +40,23 @@ export function OptionsMenu({ type, value }: OptionsMenuProps) {
           </EditContainer>
         </StyledMenuItem>
 
-        <StyledMenuItem onClick={handleOpenRevokeModal}>
-          <RevokeContainer>
-            <HighlightOffIcon />
-            <p>Revoke {type}</p>
-          </RevokeContainer>
-        </StyledMenuItem>
+        {/* TODO: add isOwner condition */}
+        {userAddress && (
+          <StyledMenuItem onClick={handleOpenRevokeModal}>
+            <RevokeContainer>
+              <HighlightOffIcon />
+              <p>Revoke {type}</p>
+            </RevokeContainer>
+          </StyledMenuItem>
+        )}
       </Menu>
 
       <StyledModal open={modalOpen === ModalType.EDIT_ALIAS} onClose={handleClose} slots={{ backdrop: StyledBackdrop }}>
-        <EditAliasModal type={type} value={value} close={handleClose} />
+        <EditAliasModal type={type} value={value} />
       </StyledModal>
 
       <StyledModal open={modalOpen === ModalType.REVOQUE} onClose={handleClose} slots={{ backdrop: StyledBackdrop }}>
-        <RevokeModal type={type} value={value} close={handleClose} />
+        <RevokeModal type={type} value={value} />
       </StyledModal>
     </Dropdown>
   );

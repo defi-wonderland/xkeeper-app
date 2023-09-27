@@ -7,6 +7,8 @@ import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
 
 export const Landing = () => {
+  const { userAddress } = useStateContext();
+
   const vaults: VaultData[] = [
     {
       name: 'Connext One',
@@ -60,8 +62,14 @@ export const Landing = () => {
         <SearchInput placeholder='Vault name or address' />
 
         {/* Create Vault Button */}
-        <NavigationLink to='/create'>
-          <CreateVaultBtn variant='contained' size='large' startIcon={<AddIcon />} data-testid='create-vault-btn'>
+        <NavigationLink to='/create' disabled={!userAddress}>
+          <CreateVaultBtn
+            variant='contained'
+            size='large'
+            startIcon={<AddIcon />}
+            data-testid='create-vault-btn'
+            disabled={!userAddress}
+          >
             Create Vault
           </CreateVaultBtn>
         </NavigationLink>

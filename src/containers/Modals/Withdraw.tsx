@@ -15,13 +15,8 @@ import { BigModal, SCloseIcon, TitleContainer as Header } from '~/containers';
 import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
 
-interface WithdrawModalProps {
-  children: React.ReactNode;
-}
-
-export const WithdrawtModal = ({ children }: WithdrawModalProps) => {
+export const WithdrawtModal = () => {
   const { modalOpen, setModalOpen } = useStateContext();
-  const handleOpen = () => setModalOpen(ModalType.WITHDRAW);
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [widthdrawalAddress, setWithdrawalAddress] = useState('');
@@ -33,12 +28,7 @@ export const WithdrawtModal = ({ children }: WithdrawModalProps) => {
   const network = 'Ethereum';
 
   return (
-    <BaseModal
-      triggerButton={children}
-      open={modalOpen === ModalType.WITHDRAW}
-      handleOpen={handleOpen}
-      handleClose={handleClose}
-    >
+    <BaseModal open={modalOpen === ModalType.WITHDRAW}>
       <BigModal>
         <TitleContainer>
           <Header>
@@ -129,4 +119,7 @@ const SButtonsContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   gap: '1.2rem',
+  button: {
+    width: '100%',
+  },
 });

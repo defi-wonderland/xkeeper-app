@@ -1,8 +1,8 @@
-import { Box, Card, Typography } from '@mui/material';
+import { Box, Card } from '@mui/material';
 import EastIcon from '@mui/icons-material/East';
 import { styled } from '@mui/material/styles';
 
-import { RelayChip, STooltip } from '~/components';
+import { ChainIcon, InfoChip, RelayChip, STooltip, StyledText, StyledTitle } from '~/components';
 import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
 
@@ -23,13 +23,12 @@ export const VaultCard = ({ vaultData }: VaultCardProps) => {
               <CardTitle sx={{ color: currentTheme.textPrimary }}>{name ? name : address}</CardTitle>
             </STooltip>
 
-            <Box>
-              {/* TODO: Owned Chip */}
-              {owned && 'Owned'}
+            <SBox>
+              {/* TODO: add Owned Icon */}
+              {owned && <InfoChip>Vault Owned</InfoChip>}
 
-              {/* TODO: Chain Icon */}
-              {chain}
-            </Box>
+              <ChainIcon chainName={chain} />
+            </SBox>
           </TitleContainer>
 
           {/* Vault total balance */}
@@ -81,16 +80,25 @@ const TitleContainer = styled(Box)({
   width: '100%',
 });
 
-const CardTitle = styled(Typography)({
+const CardTitle = styled(StyledTitle)({
   fontSize: '2rem',
   fontWeight: '600',
   lineHeight: '3rem',
 });
 
-const Balance = styled(Typography)({
+const SBox = styled('div')({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '0.8rem',
+});
+
+const Balance = styled(StyledText)({
   fontSize: '1.6rem',
   fontWeight: '400',
   lineHeight: '2rem',
+  marginTop: '0.4rem',
 });
 
 const RelayContainer = styled(Box)({

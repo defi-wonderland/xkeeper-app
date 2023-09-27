@@ -15,13 +15,8 @@ import { ButtonsContainer, SCloseIcon, TitleContainer } from '~/containers';
 import { ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
 
-interface JobModalProps {
-  children: React.ReactNode;
-}
-
-export const JobModal = ({ children }: JobModalProps) => {
+export const JobModal = () => {
   const { modalOpen, setModalOpen } = useStateContext();
-  const handleOpen = () => setModalOpen(ModalType.ADD_JOB);
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [jobAddress, setJobAddress] = useState('');
@@ -38,12 +33,7 @@ export const JobModal = ({ children }: JobModalProps) => {
   };
 
   return (
-    <BaseModal
-      triggerButton={children}
-      open={modalOpen === ModalType.ADD_JOB}
-      handleOpen={handleOpen}
-      handleClose={handleClose}
-    >
+    <BaseModal open={modalOpen === ModalType.ADD_JOB}>
       <BigModal>
         <TitleContainer>
           <STitle>Add New Job</STitle>

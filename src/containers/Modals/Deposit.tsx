@@ -16,24 +16,14 @@ import { BigModal } from '~/containers';
 import { ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
 
-interface DepositModalProps {
-  children: React.ReactNode;
-}
-
-export const DepositModal = ({ children }: DepositModalProps) => {
+export const DepositModal = () => {
   const { modalOpen, setModalOpen } = useStateContext();
-  const handleOpen = () => setModalOpen(ModalType.DEPOSIT);
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [depositAddress, setDepositAddress] = useState('');
 
   return (
-    <BaseModal
-      triggerButton={children}
-      open={modalOpen === ModalType.DEPOSIT}
-      handleOpen={handleOpen}
-      handleClose={handleClose}
-    >
+    <BaseModal open={modalOpen === ModalType.DEPOSIT}>
       <BigModal>
         <SBox>
           <TitleContainer>
@@ -77,6 +67,9 @@ const SButtonsContainer = styled(Box)({
   flexDirection: 'row',
   gap: '1.2rem',
   marginTop: '5.6rem',
+  button: {
+    width: '100%',
+  },
 });
 
 export const TitleContainer = styled(Box)({

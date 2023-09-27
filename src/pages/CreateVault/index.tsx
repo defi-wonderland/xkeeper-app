@@ -10,6 +10,8 @@ export const CreateVault = () => {
   const [vaultOwner, setVaultOwner] = useState('');
   // const [chain, setChain] = useState('');
 
+  const chains = ['ethereum', 'optimism', 'arbitrum', 'polygon'];
+
   return (
     <PageContainer>
       <BreadCrumbs previousPage='Home' currentPage='Create Vault' />
@@ -45,7 +47,7 @@ export const CreateVault = () => {
 
         <InputContainer>
           <InputLabel>Chain</InputLabel>
-          <ChainDropdown />
+          <ChainDropdown chains={chains} />
         </InputContainer>
 
         {/* Create Button */}

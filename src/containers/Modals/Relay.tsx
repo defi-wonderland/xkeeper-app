@@ -16,13 +16,8 @@ import { ButtonsContainer, BigModal, TitleContainer, SCloseIcon } from '~/contai
 import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
 
-interface RelayModalProps {
-  children: React.ReactNode;
-}
-
-export const RelayModal = ({ children }: RelayModalProps) => {
+export const RelayModal = () => {
   const { modalOpen, setModalOpen } = useStateContext();
-  const handleOpen = () => setModalOpen(ModalType.ADD_RELAY);
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [relayAddress, setRelayAddress] = useState('');
@@ -36,12 +31,7 @@ export const RelayModal = ({ children }: RelayModalProps) => {
   };
 
   return (
-    <BaseModal
-      triggerButton={children}
-      open={modalOpen === ModalType.ADD_RELAY}
-      handleOpen={handleOpen}
-      handleClose={handleClose}
-    >
+    <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
       <BigModal>
         <TitleContainer>
           <StyledTitle>Add New Relay</StyledTitle>

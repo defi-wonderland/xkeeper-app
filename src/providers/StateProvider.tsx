@@ -1,4 +1,5 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 import { Theme, ThemeName, ModalType } from '~/types';
 import { THEME_KEY, getTheme } from '~/utils';
@@ -19,6 +20,8 @@ type ContextType = {
 
   modalOpen: ModalType;
   setModalOpen: (val: ModalType) => void;
+
+  userAddress?: string;
 };
 
 interface StateProps {
@@ -31,6 +34,7 @@ export const StateProvider = ({ children }: StateProps) => {
   const [theme, setTheme] = useState<ThemeName>('dark');
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
+  const { address } = useAccount();
 
   const [modalOpen, setModalOpen] = useState<ModalType>(ModalType.NONE);
   const [loading, setLoading] = useState<boolean>(false);
@@ -60,6 +64,7 @@ export const StateProvider = ({ children }: StateProps) => {
         setNotificationOpen,
         modalOpen,
         setModalOpen,
+        userAddress: address,
       }}
     >
       {children}

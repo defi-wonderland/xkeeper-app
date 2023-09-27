@@ -9,7 +9,7 @@ import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
-import { localhost } from 'wagmi/chains';
+import { goerli } from 'wagmi/chains';
 
 import { StateProvider } from './providers';
 import { customTheme } from '~/components';
@@ -21,7 +21,7 @@ import { getConfig } from './config';
 const { PROJECT_ID, ALCHEMY_KEY } = getConfig();
 
 const { chains, publicClient } = configureChains(
-  [localhost],
+  [goerli],
   [alchemyProvider({ apiKey: ALCHEMY_KEY }), publicProvider()],
   { batch: { multicall: true } },
 );
