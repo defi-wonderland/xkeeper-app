@@ -1,16 +1,34 @@
 import { useState } from 'react';
 import { Box, Typography, styled } from '@mui/material';
+import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
 
-import { DataSection as DescriptionContainer, Title, Header } from '~/pages/Vault';
+import { DataSection as DescriptionContainer, Title, Header } from '~/pages';
 import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton } from '~/components';
 import { useStateContext } from '~/hooks';
+import { vaultFactoryABI } from '~/generated';
 
 export const CreateVault = () => {
+  const { addresses, availableChains } = useStateContext();
   const [vaultName, setVaultName] = useState('');
   const [vaultOwner, setVaultOwner] = useState('');
-  // const [chain, setChain] = useState('');
+  const [selectedChain, setSelectedChain] = useState(Object.keys(availableChains)[0]);
 
-  const chains = ['ethereum', 'optimism', 'arbitrum', 'polygon'];
+  const { config } = usePrepareContractWrite({
+    address: addresses.AutomationVaultFactory,
+    abi: vaultFactoryABI,
+    functionName: 'deployAutomationVault',
+    args: [vaultOwner as Address, vaultName],
+    chainId: Number(selectedChain),
+  });
+
+  const { isLoading, write } = useContractWrite(config);
+
+  const handleCreateVault = () => {
+    console.log('creating vault...');
+    if (write) {
+      write();
+    }
+  };
 
   return (
     <PageContainer>
@@ -47,12 +65,14 @@ export const CreateVault = () => {
 
         <InputContainer>
           <InputLabel>Chain</InputLabel>
-          <ChainDropdown chains={chains} />
+          <ChainDropdown chains={availableChains} value={selectedChain} setValue={setSelectedChain} />
         </InputContainer>
 
         {/* Create Button */}
         <ButtonContainer>
-          <CreateButton variant='contained'>Create Vault</CreateButton>
+          <CreateButton variant='contained' disabled={!write || isLoading || !vaultName} onClick={handleCreateVault}>
+            Create Vault
+          </CreateButton>
         </ButtonContainer>
       </CreateContainer>
     </PageContainer>

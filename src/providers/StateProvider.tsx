@@ -1,7 +1,8 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
 import { useAccount } from 'wagmi';
 
-import { Theme, ThemeName, ModalType } from '~/types';
+import { Theme, ThemeName, ModalType, Addresses, Chains } from '~/types';
+import { getConstants } from '~/config/constants';
 import { THEME_KEY, getTheme } from '~/utils';
 
 type ContextType = {
@@ -22,6 +23,8 @@ type ContextType = {
   setModalOpen: (val: ModalType) => void;
 
   userAddress?: string;
+  addresses: Addresses;
+  availableChains: Chains;
 };
 
 interface StateProps {
@@ -39,6 +42,8 @@ export const StateProvider = ({ children }: StateProps) => {
   const [modalOpen, setModalOpen] = useState<ModalType>(ModalType.NONE);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+
+  const { addresses, availableChains } = getConstants();
 
   // Load theme from local storage
   useEffect(() => {
@@ -65,6 +70,8 @@ export const StateProvider = ({ children }: StateProps) => {
         modalOpen,
         setModalOpen,
         userAddress: address,
+        addresses,
+        availableChains,
       }}
     >
       {children}

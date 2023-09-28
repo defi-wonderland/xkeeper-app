@@ -2,16 +2,17 @@ import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { AddressChip, BasicTabs, BreadCrumbs, InfoChip, STooltip } from '~/components';
+import { AddressChip, BasicTabs, BreadCrumbs, CloseButton as EditAliasButton, InfoChip, STooltip } from '~/components';
 import { truncateAddress } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
+import { ModalType } from '~/types';
 
 export const Vault = () => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme, setModalOpen } = useStateContext();
 
   // temporary
   const title = 'Connext One';
@@ -54,7 +55,9 @@ export const Vault = () => {
               <Title>{title}</Title>
 
               <STooltip text='Edit vault alias'>
-                <EditIcon />
+                <EditAliasButton variant='text' onClick={() => setModalOpen(ModalType.EDIT_ALIAS)}>
+                  <EditIcon />
+                </EditAliasButton>
               </STooltip>
             </TitleBox>
 

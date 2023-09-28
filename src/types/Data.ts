@@ -1,8 +1,11 @@
+import { Address } from 'wagmi';
+
 export interface VaultData {
-  name: string;
-  address: string;
-  balance: string;
-  relays: string[];
+  address: Address;
   chain: string;
-  owned?: boolean;
+  balance: string;
+  owner: Address | undefined;
+  name: string | undefined;
+  relays: readonly Address[];
+  jobs: readonly Address[];
 }

@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 
 import { ChainIcon, InfoChip, RelayChip, STooltip, StyledText, StyledTitle } from '~/components';
 import { useStateContext } from '~/hooks';
+import { getRelayName } from '~/utils';
 import { VaultData } from '~/types';
 
 interface VaultCardProps {
@@ -11,8 +12,9 @@ interface VaultCardProps {
 }
 
 export const VaultCard = ({ vaultData }: VaultCardProps) => {
-  const { currentTheme } = useStateContext();
-  const { name, balance, relays, chain, owned, address } = vaultData;
+  const { currentTheme, userAddress } = useStateContext();
+  const { name, balance, relays, chain, owner, address } = vaultData;
+
   return (
     <SContainer>
       <SCard variant='outlined' sx={{ borderRadius: currentTheme.borderRadius }}>
@@ -25,7 +27,7 @@ export const VaultCard = ({ vaultData }: VaultCardProps) => {
 
             <SBox>
               {/* TODO: add Owned Icon */}
-              {owned && <InfoChip>Vault Owned</InfoChip>}
+              {owner === userAddress && <InfoChip>Vault Owned</InfoChip>}
 
               <ChainIcon chainName={chain} />
             </SBox>
@@ -38,13 +40,11 @@ export const VaultCard = ({ vaultData }: VaultCardProps) => {
         {/* Active Relays */}
         <RelayContainer>
           <ChipsContainer>
-            {relays.map((relayName) => (
-              <RelayChip text={relayName} key={relayName} />
-            ))}
+            {relays?.map((relayName) => <RelayChip text={getRelayName(relayName)} key={relayName} />)}
           </ChipsContainer>
 
           {/* See more icon */}
-          {/* TODO: get te correct icon */}
+          {/* TODO: get tHe correct icon */}
           <EastIcon fontSize='large' sx={{ color: currentTheme.textDisabled, opacity: '0.5', fontSize: '2.6rem' }} />
         </RelayContainer>
       </SCard>

@@ -24,7 +24,7 @@ export const EditAliasModal = ({ type, value }: OptionsMenuProps) => {
       <SBox>
         <TitleContainer>
           <StyledTitle>Edit {type} Alias</StyledTitle>
-          <CloseButton variant='text' onClick={close}>
+          <CloseButton variant='text' onClick={() => setModalOpen(ModalType.NONE)}>
             <SCloseIcon />
           </CloseButton>
         </TitleContainer>

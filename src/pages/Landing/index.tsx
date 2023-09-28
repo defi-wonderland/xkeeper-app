@@ -1,33 +1,20 @@
+import { useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/material/styles';
 
 import { SearchInput, VaultCard, BasicTabs, NavigationLink, ActiveButton } from '~/components';
+import { getVaults, getVaultsData } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
 
 export const Landing = () => {
-  const { userAddress } = useStateContext();
+  const { addresses, userAddress } = useStateContext();
 
-  const vaults: VaultData[] = [
-    {
-      name: 'Connext One',
-      address: '0x1234567890123456789012345678901234567890',
-      balance: '$1,000,000',
-      relays: ['GelatoRelay', 'OpenRelay'],
-      chain: 'ethereum',
-      owned: true,
-    },
-    {
-      name: 'Connext Two',
-      address: '0x1234567890123456789012345678901234567891',
-      balance: '$41,000,000',
-      relays: ['GelatoRelay', 'OpenRelay'],
-      chain: 'optimism',
-    },
-  ];
+  const [vaults, setVaults] = useState<VaultData[]>([]);
+  const ownedVaults = useMemo(() => vaults.filter((vault) => vault.owner === userAddress), [userAddress, vaults]);
 
-  const sections = [
+  const exploreVaultSection = [
     {
       title: 'Explore Vaults',
       items: vaults.map((vault, index) => (
@@ -36,24 +23,22 @@ export const Landing = () => {
         </NavigationLink>
       )),
     },
-    {
-      title: 'My Vaults',
-      items: (
-        <NavigationLink to={'/vault/' + '0x1234567890123456789012345678901234567890'}>
-          <VaultCard
-            vaultData={{
-              name: 'Connext One',
-              address: '0x1234567890123456789012345678901234567890',
-              balance: '$1,000,000',
-              relays: ['GelatoRelay', 'OpenRelay'],
-              chain: 'ethereum',
-              owned: true,
-            }}
-          />
-        </NavigationLink>
-      ),
-    },
   ];
+
+  const myVaultSection = {
+    title: 'My Vaults',
+    items: ownedVaults.map((vault, index) => (
+      <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
+        <VaultCard vaultData={vault} />
+      </NavigationLink>
+    )),
+  };
+
+  useEffect(() => {
+    getVaults(addresses.AutomationVaultFactory).then((vaults) => {
+      getVaultsData(vaults).then((vaultsData) => setVaults(vaultsData));
+    });
+  }, []);
 
   return (
     <HomeContainer>
@@ -76,7 +61,7 @@ export const Landing = () => {
       </FirstSection>
 
       {/* Explore Vault Tabs */}
-      <BasicTabs sections={sections} />
+      <BasicTabs sections={userAddress ? [...exploreVaultSection, myVaultSection] : exploreVaultSection} />
     </HomeContainer>
   );
 };

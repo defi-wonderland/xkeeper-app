@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Dropdown } from '@mui/base/Dropdown';
 import { Menu } from '@mui/base/Menu';
 import { MenuButton } from '@mui/base/MenuButton';
@@ -7,37 +6,40 @@ import { styled, css } from '@mui/system';
 
 import { useStateContext } from '~/hooks';
 import { ChainIcon, StyledText } from '~/components';
+import { Chains } from '~/types';
 
 interface ChainDropdownProps {
-  chains: string[];
+  chains: Chains;
+  value: string;
+  setValue: (val: string) => void;
 }
 
-export function ChainDropdown({ chains }: ChainDropdownProps) {
-  const [selectedChain, setSelectedChain] = useState(chains[0]);
-
+export function ChainDropdown({ chains, value, setValue }: ChainDropdownProps) {
   const createHandleMenuClick = (menuItem: string) => {
     return () => {
-      setSelectedChain(menuItem);
+      setValue(menuItem);
       console.log(`Clicked on ${menuItem}`);
     };
   };
+
+  const availableChains = Object.keys(chains);
 
   return (
     <Dropdown>
       {/* Dropdown button */}
       <TriggerButton>
-        <ChainIcon chainName={selectedChain} />
-        <StyledText>{selectedChain}</StyledText>
+        <ChainIcon chainName={chains[value].iconName} />
+        <StyledText>{chains[value].iconName}</StyledText>
       </TriggerButton>
 
       {/* Dropdown Options */}
       <Menu slots={{ listbox: StyledListbox }}>
-        {chains
-          .filter((chain) => chain !== selectedChain)
-          .map((chainName) => (
-            <StyledMenuItem key={chainName} onClick={createHandleMenuClick(chainName)}>
-              <ChainIcon chainName={chainName.toLowerCase()} />
-              {chainName}
+        {availableChains
+          .filter((chainId: string) => chainId !== value)
+          .map((chainId: string) => (
+            <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)}>
+              <ChainIcon chainName={chains[chainId].iconName} />
+              {chains[chainId].name}
             </StyledMenuItem>
           ))}
       </Menu>
