@@ -17,7 +17,7 @@ export interface OptionsMenuProps {
 }
 
 export function OptionsMenu({ type, value }: OptionsMenuProps) {
-  const { modalOpen, setModalOpen, userAddress } = useStateContext();
+  const { modalOpen, setModalOpen, userAddress, selectedVault } = useStateContext();
 
   const handleOpenEditModal = () => setModalOpen(ModalType.EDIT_ALIAS);
   const handleOpenRevokeModal = () => setModalOpen(ModalType.REVOQUE);
@@ -40,8 +40,7 @@ export function OptionsMenu({ type, value }: OptionsMenuProps) {
           </EditContainer>
         </StyledMenuItem>
 
-        {/* TODO: add isOwner condition */}
-        {userAddress && (
+        {userAddress && selectedVault?.owner === userAddress && (
           <StyledMenuItem onClick={handleOpenRevokeModal}>
             <RevokeContainer>
               <HighlightOffIcon />

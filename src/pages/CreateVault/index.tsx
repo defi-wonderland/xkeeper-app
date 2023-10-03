@@ -24,6 +24,7 @@ export const CreateVault = () => {
   const { isLoading, write } = useContractWrite(config);
 
   const handleCreateVault = () => {
+    // temporary log
     console.log('creating vault...');
     if (write) {
       write();

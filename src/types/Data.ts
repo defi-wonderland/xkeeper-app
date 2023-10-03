@@ -6,6 +6,10 @@ export interface VaultData {
   balance: string;
   owner: Address | undefined;
   name: string | undefined;
-  relays: readonly Address[];
+  relays: RelayData;
   jobs: readonly Address[];
+}
+
+export interface RelayData {
+  [relayAddress: Address]: Address[];
 }

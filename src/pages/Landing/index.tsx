@@ -9,7 +9,7 @@ import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
 
 export const Landing = () => {
-  const { addresses, userAddress } = useStateContext();
+  const { addresses, userAddress, setSelectedVault } = useStateContext();
 
   const [vaults, setVaults] = useState<VaultData[]>([]);
   const ownedVaults = useMemo(() => vaults.filter((vault) => vault.owner === userAddress), [userAddress, vaults]);
@@ -19,7 +19,7 @@ export const Landing = () => {
       title: 'Explore Vaults',
       items: vaults.map((vault, index) => (
         <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
-          <VaultCard vaultData={vault} />
+          <VaultCard vaultData={vault} onClick={() => setSelectedVault(vault)} />
         </NavigationLink>
       )),
     },
@@ -47,14 +47,8 @@ export const Landing = () => {
         <SearchInput placeholder='Vault name or address' />
 
         {/* Create Vault Button */}
-        <NavigationLink to='/create' disabled={!userAddress}>
-          <CreateVaultBtn
-            variant='contained'
-            size='large'
-            startIcon={<AddIcon />}
-            data-testid='create-vault-btn'
-            disabled={!userAddress}
-          >
+        <NavigationLink to='/create'>
+          <CreateVaultBtn variant='contained' size='large' startIcon={<AddIcon />} data-testid='create-vault-btn'>
             Create Vault
           </CreateVaultBtn>
         </NavigationLink>

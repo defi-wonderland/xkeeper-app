@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
 
@@ -22,13 +22,7 @@ function CustomTabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box>
-          <Typography component={'span'} fontSize={'1.4rem'}>
-            {children}
-          </Typography>
-        </Box>
-      )}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
@@ -45,6 +39,7 @@ interface BasicTabsProps {
     title: string;
     items?: React.ReactNode;
   }[];
+  isLoading?: boolean;
 }
 
 export const BasicTabs = ({ sections }: BasicTabsProps) => {

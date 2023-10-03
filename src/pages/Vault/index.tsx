@@ -1,9 +1,12 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
+import { Address } from 'viem';
 
 import { AddressChip, BasicTabs, BreadCrumbs, CloseButton as EditAliasButton, InfoChip, STooltip } from '~/components';
-import { truncateAddress } from '~/utils';
+import { getVaultsData, truncateAddress } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
@@ -12,7 +15,9 @@ import { Activity } from './Activity';
 import { ModalType } from '~/types';
 
 export const Vault = () => {
-  const { currentTheme, setModalOpen } = useStateContext();
+  const { currentTheme, setModalOpen, selectedVault, setSelectedVault } = useStateContext();
+  const { address } = useParams();
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   // temporary
   const title = 'Connext One';
@@ -41,6 +46,27 @@ export const Vault = () => {
       ),
     },
   ];
+
+  const loadSelectedVault = async () => {
+    setLoading(true);
+    try {
+      // temporary log
+      console.log('getting vault:', address);
+      const vaultData = await getVaultsData([address as Address]);
+
+      setLoading(false);
+      setSelectedVault(vaultData[0]);
+    } catch (error) {
+      setLoading(false);
+      console.error(`Error loading vault ${address}:`, error);
+    }
+  };
+
+  useEffect(() => {
+    if (!selectedVault?.address) {
+      loadSelectedVault();
+    }
+  }, []);
 
   return (
     <PageContainer>
@@ -89,7 +115,7 @@ export const Vault = () => {
           </DataSection>
         </Header>
 
-        <BasicTabs sections={sections} />
+        <BasicTabs sections={sections} isLoading={isLoading} />
       </VaultContainer>
     </PageContainer>
   );

@@ -20,6 +20,12 @@ export const Header = () => {
       setTheme('light');
     }
   };
+  const logoStyles = {
+    fontSize: '2rem',
+    fontWeight: '500',
+  };
+
+  const navigationLinkStyles = { fontSize: '1.6rem', fontWeight: '500', color: currentTheme.textDisabled };
 
   return (
     <HeaderContainer
@@ -29,8 +35,8 @@ export const Header = () => {
       }}
     >
       <Navbar>
-        <NavigationLink to='/' text='Keep3r Framework' variant='h5' sx={{ fontWeight: '500', fontSize: '2rem' }} />
-        <NavigationLink to='/' text='Docs' variant='h5' sx={{ fontWeight: '500', color: currentTheme.textDisabled }} />
+        <NavigationLink to='/' text='Keep3r Framework' sx={logoStyles} />
+        <NavigationLink to='/' text='Docs' sx={navigationLinkStyles} />
       </Navbar>
 
       <RightSection>

@@ -10,8 +10,8 @@
     "turtlemoji (https://github.com/turtlemoji)"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "yarn generate && vite",
+    "build": "yarn generate && tsc && vite build",
     "generate": "wagmi generate",
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
@@ -21,8 +21,8 @@
     "format": "yarn run prettier:fix && yarn run lint:fix",
     "format:check": "yarn run prettier && yarn run lint",
     "prepare": "husky install && wonderland-crypto-husky-checks install",
-    "test": "vitest run --dir src/tests/",
-    "test:watch": "vitest --dir src/tests/"
+    "test": "yarn generate && vitest run --dir src/tests/",
+    "test:watch": "yarn generate && vitest --dir src/tests/"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": "eslint --cache --fix",

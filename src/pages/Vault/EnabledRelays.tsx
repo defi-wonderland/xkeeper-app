@@ -16,16 +16,18 @@ const rows = [
 ];
 
 export const EnabledRelays = () => {
-  const { userAddress, setModalOpen } = useStateContext();
+  const { userAddress, setModalOpen, selectedVault } = useStateContext();
 
   return (
     <SCard variant='outlined'>
       <SectionHeader>
         <Title>Enabled Relays</Title>
 
-        <ActiveButton variant='contained' disabled={!userAddress} onClick={() => setModalOpen(ModalType.ADD_RELAY)}>
-          Add New Relay
-        </ActiveButton>
+        {selectedVault?.owner === userAddress && (
+          <ActiveButton variant='contained' onClick={() => setModalOpen(ModalType.ADD_RELAY)}>
+            Add New Relay
+          </ActiveButton>
+        )}
       </SectionHeader>
 
       <TableContainer>

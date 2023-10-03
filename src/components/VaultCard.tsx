@@ -9,14 +9,15 @@ import { VaultData } from '~/types';
 
 interface VaultCardProps {
   vaultData: VaultData;
+  onClick?: () => void;
 }
 
-export const VaultCard = ({ vaultData }: VaultCardProps) => {
+export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
   const { currentTheme, userAddress } = useStateContext();
   const { name, balance, relays, chain, owner, address } = vaultData;
 
   return (
-    <SContainer>
+    <SContainer onClick={onClick}>
       <SCard variant='outlined' sx={{ borderRadius: currentTheme.borderRadius }}>
         <Box>
           <TitleContainer>
@@ -40,11 +41,11 @@ export const VaultCard = ({ vaultData }: VaultCardProps) => {
         {/* Active Relays */}
         <RelayContainer>
           <ChipsContainer>
-            {relays?.map((relayName) => <RelayChip text={getRelayName(relayName)} key={relayName} />)}
+            {Object.keys(relays)?.map((relayName) => <RelayChip text={getRelayName(relayName)} key={relayName} />)}
           </ChipsContainer>
 
           {/* See more icon */}
-          {/* TODO: get tHe correct icon */}
+          {/* TODO: get the correct icon */}
           <EastIcon fontSize='large' sx={{ color: currentTheme.textDisabled, opacity: '0.5', fontSize: '2.6rem' }} />
         </RelayContainer>
       </SCard>

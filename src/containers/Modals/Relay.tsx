@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { isAddress } from 'viem';
 
 import {
   ActiveButton,
@@ -14,21 +16,65 @@ import {
 } from '~/components';
 import { ButtonsContainer, BigModal, TitleContainer, SCloseIcon } from '~/containers';
 import { useStateContext } from '~/hooks';
+import { vaultABI } from '~/generated';
 import { ModalType } from '~/types';
+import { anyCaller } from '~/utils';
 
 export const RelayModal = () => {
-  const { modalOpen, setModalOpen } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [relayAddress, setRelayAddress] = useState('');
-  const [callers, setCallers] = useState('');
+  const [callerAddress, setCallerAddress] = useState<string>('');
+  const [callers, setCallers] = useState<string[]>([]);
   const [relayAlias, setRelayAlias] = useState('');
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
 
+  const callerList = useMemo(() => {
+    if (allowAnyCaller) {
+      return [anyCaller];
+    } else {
+      return [callerAddress, ...callers];
+    }
+  }, [allowAnyCaller, callerAddress, callers]);
+
+  const { config } = usePrepareContractWrite({
+    address: selectedVault?.address,
+    abi: vaultABI,
+    functionName: 'approveRelayCallers',
+    args: [relayAddress as Address, callerList as Address[]],
+  });
+
+  const { isLoading, write } = useContractWrite(config);
+
   const handleToggle = () => {
     setAllowAnyCaller(!allowAnyCaller);
-    console.log(allowAnyCaller);
   };
+
+  const handleApproveRelay = () => {
+    // temporary log
+    console.log('approving relay...');
+    if (write) {
+      write();
+    }
+  };
+
+  const handleAddNewCaller = () => {
+    if (isAddress(callerAddress)) {
+      setCallers([...callers, callerAddress]);
+      setCallerAddress('');
+    }
+  };
+
+  useEffect(() => {
+    if (allowAnyCaller) {
+      setCallers([anyCaller]);
+      setCallerAddress(anyCaller);
+    } else {
+      setCallers([]);
+      setCallerAddress('');
+    }
+  }, [allowAnyCaller]);
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
@@ -50,10 +96,24 @@ export const RelayModal = () => {
             placeholder='Choose Relay'
           />
 
-          <StyledInput label='Callers' value={callers} setValue={setCallers} placeholder='Enter caller address' />
+          <StyledInput
+            label='Callers'
+            value={callerAddress}
+            setValue={setCallerAddress}
+            placeholder='Enter caller address'
+            disabled={allowAnyCaller}
+          />
+
+          {callers.map((caller) => (
+            <>
+              {!allowAnyCaller && (
+                <StyledInput sx={{ mt: '-1rem' }} key={caller} value={caller} setValue={() => {}} disabled />
+              )}
+            </>
+          ))}
 
           <CallersContainer>
-            <SButton variant='text'>
+            <SButton variant='text' disabled={allowAnyCaller || !isAddress(callerAddress)} onClick={handleAddNewCaller}>
               <Container>
                 <AddIcon />
                 <ButtonText>Add additional caller address</ButtonText>
@@ -80,7 +140,9 @@ export const RelayModal = () => {
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained'>Confirm</ActiveButton>
+          <ActiveButton variant='contained' disabled={!write || isLoading} onClick={handleApproveRelay}>
+            Confirm
+          </ActiveButton>
         </ButtonsContainer>
       </BigModal>
     </BaseModal>
@@ -113,10 +175,24 @@ const Container = styled('div')({
   width: 'fit-content',
 });
 
-const SButton = styled(Button)({
-  width: '23rem',
-  padding: 0,
-  justifyContent: 'flex-start',
+const SButton = styled(Button)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    color: currentTheme.actionButton,
+    width: '23rem',
+    padding: 0,
+    justifyContent: 'flex-start',
+    '&:hover': {
+      background: 'inherit',
+    },
+    '&:disabled': {
+      color: 'inherit',
+      opacity: '0.7',
+    },
+    svg: {
+      color: currentTheme.actionButton,
+    },
+  };
 });
 
 const ToggleText = styled(StyledText)(() => {

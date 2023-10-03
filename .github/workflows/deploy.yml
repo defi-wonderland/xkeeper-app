@@ -32,6 +32,7 @@ jobs:
         id: build
         env:
           VITE_RPC_URL: ${{ secrets.VITE_RPC_URL }}
+          VITE_ALCHEMY_KEY: ${{ secrets.VITE_ALCHEMY_KEY }}
 
       - uses: amondnet/vercel-action@v25
         id: vercel-deployment

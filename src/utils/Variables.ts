@@ -4,6 +4,7 @@
 
 export const THEME_KEY = 'keep3r-framework-app-theme';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const anyCaller = '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
 
 /*=============================================
 =               Style Variables               =

@@ -1,0 +1,66 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "_organizationName",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_automationVault",
+          "type": "address"
+        }
+      ],
+      "name": "DeployAutomationVault",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "automationVaults",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "__automationVaults",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "_organizationName",
+          "type": "string"
+        }
+      ],
+      "name": "deployAutomationVault",
+      "outputs": [
+        {
+          "internalType": "contract IAutomationVault",
+          "name": "_automationVault",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}

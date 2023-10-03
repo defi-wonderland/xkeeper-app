@@ -25,4 +25,4 @@ dist-ssr
 
 .eslintcache
 .env
-abis/
+src/generated.ts

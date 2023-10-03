@@ -1,4 +1,6 @@
 import { defineConfig } from '@wagmi/cli';
+
+// Update those imports with the npm package later
 import { abi as VaultFactoryAbi } from './abis/IAutomationVaultFactory.sol/IAutomationVaultFactory.json';
 import { abi as VaultAbi } from './abis/IAutomationVault.sol/IAutomationVault.json';
 

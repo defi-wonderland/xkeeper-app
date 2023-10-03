@@ -27,7 +27,7 @@ const rows = [
 ];
 
 export const Tokens = () => {
-  const { userAddress, setModalOpen } = useStateContext();
+  const { userAddress, setModalOpen, selectedVault } = useStateContext();
   const totalValueInUsd = '$12,000';
 
   return (
@@ -42,9 +42,11 @@ export const Tokens = () => {
         </Box>
 
         <ButtonsContainer>
-          <CancelButton variant='outlined' disabled={!userAddress} onClick={() => setModalOpen(ModalType.WITHDRAW)}>
-            Withdraw funds
-          </CancelButton>
+          {selectedVault?.owner === userAddress && (
+            <CancelButton variant='outlined' onClick={() => setModalOpen(ModalType.WITHDRAW)}>
+              Withdraw funds
+            </CancelButton>
+          )}
 
           <ActiveButton variant='contained' disabled={!userAddress} onClick={() => setModalOpen(ModalType.DEPOSIT)}>
             Deposit funds

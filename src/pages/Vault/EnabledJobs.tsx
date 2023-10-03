@@ -16,16 +16,18 @@ const rows = [
 ];
 
 export const EnabledJobs = () => {
-  const { userAddress, setModalOpen } = useStateContext();
+  const { userAddress, setModalOpen, selectedVault } = useStateContext();
 
   return (
     <SCard variant='outlined'>
       <SectionHeader>
         <Title>Enabled Jobs</Title>
 
-        <ActiveButton variant='contained' disabled={!userAddress} onClick={() => setModalOpen(ModalType.ADD_JOB)}>
-          Add New Job
-        </ActiveButton>
+        {selectedVault?.owner === userAddress && (
+          <ActiveButton variant='contained' disabled={!userAddress} onClick={() => setModalOpen(ModalType.ADD_JOB)}>
+            Add New Job
+          </ActiveButton>
+        )}
       </SectionHeader>
 
       <TableContainer>

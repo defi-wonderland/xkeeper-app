@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, styled } from '@mui/material';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CloseIcon from '@mui/icons-material/Close';
+
 import {
   BaseModal,
   StyledText,
@@ -17,10 +18,10 @@ import { ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
 
 export const DepositModal = () => {
-  const { modalOpen, setModalOpen } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
-  const [depositAddress, setDepositAddress] = useState('');
+  const [depositAddress, setDepositAddress] = useState((selectedVault?.address as string) || '');
 
   return (
     <BaseModal open={modalOpen === ModalType.DEPOSIT}>
@@ -48,7 +49,9 @@ export const DepositModal = () => {
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained'>Done</ActiveButton>
+          <ActiveButton variant='contained' onClick={handleClose}>
+            Done
+          </ActiveButton>
         </SButtonsContainer>
       </BigModal>
     </BaseModal>

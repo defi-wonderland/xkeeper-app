@@ -1,21 +1,23 @@
-import { Box, FormControl, OutlinedInput, Typography, styled } from '@mui/material';
+import { Box, FormControl, OutlinedInput, Typography, styled, SxProps, Theme } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
 
 interface InputProps {
   value: string;
   setValue: (value: string) => void;
-  label: string;
+  label?: string;
   description?: string;
   placeholder?: string;
+  disabled?: boolean;
+  sx?: SxProps<Theme>;
 }
 
-export const StyledInput = ({ value, setValue, label, description, placeholder }: InputProps) => {
+export const StyledInput = ({ value, setValue, label, description, placeholder, disabled, sx }: InputProps) => {
   return (
-    <InputContainer>
-      <InputLabel>{label}</InputLabel>
+    <InputContainer sx={sx}>
+      {!!label && <InputLabel>{label}</InputLabel>}
 
-      <FormControl fullWidth>
+      <FormControl fullWidth disabled={disabled}>
         <SOutlinedInput fullWidth value={value} onChange={(e) => setValue(e.target.value)} placeholder={placeholder} />
       </FormControl>
 

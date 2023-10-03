@@ -18,7 +18,6 @@ export function ChainDropdown({ chains, value, setValue }: ChainDropdownProps) {
   const createHandleMenuClick = (menuItem: string) => {
     return () => {
       setValue(menuItem);
-      console.log(`Clicked on ${menuItem}`);
     };
   };
 

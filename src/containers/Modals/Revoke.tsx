@@ -8,6 +8,7 @@ export const RevokeModal = ({ type, value }: OptionsMenuProps) => {
   const { setNotificationOpen, setModalOpen } = useStateContext();
 
   const handleConfirm = () => {
+    // temporary log
     console.log('Revoke', type, value);
     setModalOpen(ModalType.NONE);
     setNotificationOpen(true);

@@ -1,8 +1,8 @@
 import { Address } from 'viem';
 
 import { vaultABI, vaultFactoryABI } from '~/generated';
+import { RelayData, VaultData } from '~/types';
 import { publicClient } from '~/config';
-import { VaultData } from '~/types';
 
 export const getVaults = async (vaultFactoryAddress: Address): Promise<Address[]> => {
   try {
@@ -14,7 +14,7 @@ export const getVaults = async (vaultFactoryAddress: Address): Promise<Address[]
 
     return data as Address[];
   } catch (error) {
-    console.log('Error getting vaults', error);
+    console.error('Error getting vaults', error);
     return [];
   }
 };
@@ -27,20 +27,19 @@ export const getVaultsData = async (vaults: Address[]): Promise<VaultData[]> => 
       const { owner, name, relays, jobs } = await getData(vault);
 
       vaultsData.push({
-        // temporary fixed values
         address: vault,
         balance: '$1,000,000',
         chain: 'ethereum',
         name: name,
         owner: owner,
         jobs: jobs,
-        relays: [...relays, '0x74e1b9f9b1df2fde9e05ba03e62c0074f383cabb'],
+        relays: relays,
       });
     }
 
     return vaultsData;
   } catch (error) {
-    console.log('Error getting vaults data', error);
+    console.error('Error getting vaults data', error);
     return vaultsData;
   }
 };
@@ -50,13 +49,14 @@ const getData = async (
 ): Promise<{
   owner: Address | undefined;
   name: string | undefined;
-  relays: readonly Address[];
+  relays: RelayData;
   jobs: readonly Address[];
 }> => {
   const vaultContract = {
     address: vaultAddress,
     abi: vaultABI,
   } as const;
+  let relaysData: RelayData = {};
 
   const [owner, name, relays, jobs] = await publicClient.multicall({
     contracts: [
@@ -79,10 +79,28 @@ const getData = async (
     ],
   });
 
+  if (relays?.result) {
+    const contractsCall = relays.result.map((relayAddress: Address) => ({
+      ...vaultContract,
+      functionName: 'relayEnabledCallers',
+      args: [relayAddress],
+    }));
+
+    const callers = await publicClient.multicall({
+      contracts: contractsCall,
+    });
+
+    if (callers?.length > 0) {
+      relaysData = Object.fromEntries(
+        relays.result.map((relayAddress, index) => [relayAddress, callers[index].result as Address[]]),
+      );
+    }
+  }
+
   return {
     owner: owner.result,
     name: name.result,
-    relays: relays.result || [],
+    relays: relaysData,
     jobs: jobs.result || [],
   };
 };
