@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Box, styled, Radio } from '@mui/material';
+import { Box, styled, Radio, Typography } from '@mui/material';
+import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 
 import {
   ActiveButton,
@@ -10,14 +11,17 @@ import {
   STextarea,
   StyledInput,
   StyledTitle,
+  FunctionDropdown,
 } from '~/components';
 import { ButtonsContainer, SCloseIcon, TitleContainer } from '~/containers';
 import { ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
+import { vaultABI } from '~/generated';
 
 export const JobModal = () => {
-  const { modalOpen, setModalOpen } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, setNotificationOpen, loading, setLoading } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
+  const publicClient = usePublicClient();
 
   const [jobAddress, setJobAddress] = useState('');
   const [jobAbi, setJobAbi] = useState('');
@@ -30,6 +34,32 @@ export const JobModal = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedValue(event.target.value);
+  };
+
+  const { config } = usePrepareContractWrite({
+    address: selectedVault?.address,
+    abi: vaultABI,
+    functionName: 'approveJobFunctions',
+    args: [jobAddress as Address, [functionSignature as `0x${string}`]],
+  });
+
+  const { writeAsync } = useContractWrite(config);
+
+  const handleApproveJob = async () => {
+    setLoading(true);
+    try {
+      // temporary log
+      console.log('approving job...');
+      if (writeAsync) {
+        const writeResult = await writeAsync();
+        await publicClient.waitForTransactionReceipt(writeResult);
+        setModalOpen(ModalType.NONE);
+        setNotificationOpen(true);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
   };
 
   return (
@@ -71,7 +101,15 @@ export const JobModal = () => {
         </RadioContainer>
 
         {selectedValue === 'a' && (
-          <StyledInput label='Contract function' value={contractFunction} setValue={setContractFunction} />
+          <DropdownContainer>
+            <DropdownLabel>Contract function</DropdownLabel>
+            <FunctionDropdown
+              value={contractFunction}
+              setValue={setContractFunction}
+              setSignature={setFunctionSignature}
+              abi={jobAbi}
+            />
+          </DropdownContainer>
         )}
 
         {selectedValue === 'b' && (
@@ -86,11 +124,14 @@ export const JobModal = () => {
         />
 
         <ButtonsContainer>
-          <CancelButton variant='outlined' onClick={handleClose}>
+          <CancelButton variant='outlined' disabled={loading} onClick={handleClose}>
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained'>Confirm</ActiveButton>
+          <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleApproveJob}>
+            {!loading && 'Confirm'}
+            {loading && 'Loading...'}
+          </ActiveButton>
         </ButtonsContainer>
       </BigModal>
     </BaseModal>
@@ -120,4 +161,21 @@ const RadioContainer = styled('div')({
     flexDirection: 'row',
     alignItems: 'center',
   },
+});
+
+const DropdownContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.6rem',
+  marginBottom: '2.4rem',
+});
+
+const DropdownLabel = styled(Typography)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    color: currentTheme.textSecondary,
+    fontSize: '1.4rem',
+    lineHeight: '2rem',
+    fontWeight: 500,
+  };
 });

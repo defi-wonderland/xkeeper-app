@@ -1,5 +1,5 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { Address, useAccount } from 'wagmi';
 
 import { Theme, ThemeName, ModalType, Addresses, Chains, VaultData } from '~/types';
 import { getConstants } from '~/config/constants';
@@ -28,6 +28,9 @@ type ContextType = {
   userAddress?: string;
   addresses: Addresses;
   availableChains: Chains;
+
+  selectedItem: { type: string; address: string; params: Address[] | string[] };
+  setSelectedItem: (val: { type: string; address: string; params: Address[] | string[] }) => void;
 };
 
 interface StateProps {
@@ -37,11 +40,18 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
+  const { address } = useAccount();
+
   const [theme, setTheme] = useState<ThemeName>('dark');
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
+
   const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
   const [selectedVault, setSelectedVault] = useState<VaultData>();
-  const { address } = useAccount();
+  const [selectedItem, setSelectedItem] = useState<{ type: string; address: string; params: string[] }>({
+    type: '',
+    address: '',
+    params: [],
+  });
 
   const [modalOpen, setModalOpen] = useState<ModalType>(ModalType.NONE);
   const [loading, setLoading] = useState<boolean>(false);
@@ -78,6 +88,8 @@ export const StateProvider = ({ children }: StateProps) => {
         availableChains,
         selectedVault,
         setSelectedVault,
+        selectedItem,
+        setSelectedItem,
       }}
     >
       {children}

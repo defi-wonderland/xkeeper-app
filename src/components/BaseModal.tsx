@@ -15,11 +15,9 @@ interface BaseModalProps {
 export const BaseModal = ({ children, open }: BaseModalProps) => {
   const { setModalOpen } = useStateContext();
   return (
-    <div>
-      <StyledModal open={open} onClose={() => setModalOpen(ModalType.NONE)} slots={{ backdrop: StyledBackdrop }}>
-        <SModal>{children}</SModal>
-      </StyledModal>
-    </div>
+    <StyledModal open={open} onClose={() => setModalOpen(ModalType.NONE)} slots={{ backdrop: StyledBackdrop }}>
+      <SModal>{children}</SModal>
+    </StyledModal>
   );
 };
 

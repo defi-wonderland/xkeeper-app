@@ -1,27 +1,29 @@
 import { Dropdown, Menu, MenuButton, MenuItem } from '@mui/base';
 import { styled } from '@mui/system';
+import { Address } from 'viem';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CreateIcon from '@mui/icons-material/Create';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 import { useStateContext } from '~/hooks';
-import { Backdrop, StyledModal } from './BaseModal';
-import { EditAliasModal, RevokeModal } from '~/containers';
 import { ModalType } from '~/types';
-import { zIndex } from '~/utils';
 
 export interface OptionsMenuProps {
-  value: string;
+  address: string;
+  params: Address[] | string[];
   type: 'vault' | 'job' | 'relay';
 }
 
-export function OptionsMenu({ type, value }: OptionsMenuProps) {
-  const { modalOpen, setModalOpen, userAddress, selectedVault } = useStateContext();
+export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
+  const { setModalOpen, userAddress, selectedVault, setSelectedItem } = useStateContext();
 
   const handleOpenEditModal = () => setModalOpen(ModalType.EDIT_ALIAS);
-  const handleOpenRevokeModal = () => setModalOpen(ModalType.REVOQUE);
-  const handleClose = () => setModalOpen(ModalType.NONE);
+
+  const handleOpenRevokeModal = () => {
+    setSelectedItem({ type, address, params });
+    setModalOpen(ModalType.REVOQUE);
+  };
 
   return (
     <Dropdown>
@@ -49,14 +51,6 @@ export function OptionsMenu({ type, value }: OptionsMenuProps) {
           </StyledMenuItem>
         )}
       </Menu>
-
-      <StyledModal open={modalOpen === ModalType.EDIT_ALIAS} onClose={handleClose} slots={{ backdrop: StyledBackdrop }}>
-        <EditAliasModal type={type} value={value} />
-      </StyledModal>
-
-      <StyledModal open={modalOpen === ModalType.REVOQUE} onClose={handleClose} slots={{ backdrop: StyledBackdrop }}>
-        <RevokeModal type={type} value={value} />
-      </StyledModal>
     </Dropdown>
   );
 }
@@ -134,11 +128,3 @@ const RevokeContainer = styled(OptionContainer)(() => {
     color: currentTheme.red,
   };
 });
-
-const StyledBackdrop = styled(Backdrop)`
-  z-index: ${zIndex.BACKDROP};
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.1);
-  -webkit-tap-highlight-color: transparent;
-`;

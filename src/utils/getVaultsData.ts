@@ -1,7 +1,8 @@
 import { Address } from 'viem';
 
 import { vaultABI, vaultFactoryABI } from '~/generated';
-import { RelayData, VaultData } from '~/types';
+import { JobData, RelayData, VaultData } from '~/types';
+import { truncateFunctionSignature } from '~/utils';
 import { publicClient } from '~/config';
 
 export const getVaults = async (vaultFactoryAddress: Address): Promise<Address[]> => {
@@ -43,64 +44,56 @@ export const getVaultsData = async (vaults: Address[]): Promise<VaultData[]> => 
     return vaultsData;
   }
 };
-
 const getData = async (
   vaultAddress: Address,
 ): Promise<{
   owner: Address | undefined;
   name: string | undefined;
   relays: RelayData;
-  jobs: readonly Address[];
+  jobs: JobData;
 }> => {
-  const vaultContract = {
-    address: vaultAddress,
-    abi: vaultABI,
-  } as const;
+  const vaultContract = { address: vaultAddress, abi: vaultABI } as const;
   let relaysData: RelayData = {};
+  let jobData: JobData = {};
 
   const [owner, name, relays, jobs] = await publicClient.multicall({
     contracts: [
-      {
-        ...vaultContract,
-        functionName: 'owner',
-      },
-      {
-        ...vaultContract,
-        functionName: 'organizationName',
-      },
-      {
-        ...vaultContract,
-        functionName: 'relays',
-      },
-      {
-        ...vaultContract,
-        functionName: 'jobs',
-      },
+      { ...vaultContract, functionName: 'owner' },
+      { ...vaultContract, functionName: 'organizationName' },
+      { ...vaultContract, functionName: 'relays' },
+      { ...vaultContract, functionName: 'jobs' },
     ],
   });
 
-  if (relays?.result) {
-    const contractsCall = relays.result.map((relayAddress: Address) => ({
+  if (relays?.result && jobs?.result) {
+    const relayEnabledCallers = relays.result.map((relayAddress: Address) => ({
       ...vaultContract,
       functionName: 'relayEnabledCallers',
       args: [relayAddress],
     }));
 
-    const callers = await publicClient.multicall({
-      contracts: contractsCall,
-    });
+    const jobEnabledFunctions = jobs.result.map((jobAddress: Address) => ({
+      ...vaultContract,
+      functionName: 'jobEnabledFunctions',
+      args: [jobAddress],
+    }));
 
-    if (callers?.length > 0) {
-      relaysData = Object.fromEntries(
-        relays.result.map((relayAddress, index) => [relayAddress, callers[index].result as Address[]]),
-      );
-    }
+    const [callers, jobFunctions] = await Promise.all([
+      publicClient.multicall({ contracts: relayEnabledCallers }),
+      publicClient.multicall({ contracts: jobEnabledFunctions }),
+    ]);
+
+    relaysData = Object.fromEntries(callers.map((caller, index) => [relays.result[index], caller.result as Address[]]));
+
+    jobData = Object.fromEntries(
+      jobFunctions.map((func, index) => [jobs.result[index], (func.result as string[]).map(truncateFunctionSignature)]),
+    );
   }
 
   return {
-    owner: owner.result,
-    name: name.result,
+    owner: owner?.result,
+    name: name?.result,
     relays: relaysData,
-    jobs: jobs.result || [],
+    jobs: jobData,
   };
 };

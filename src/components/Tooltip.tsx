@@ -7,6 +7,7 @@ interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: any;
   text: string;
+  address?: boolean;
   placement?:
     | 'bottom-end'
     | 'bottom-start'
@@ -26,7 +27,7 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
 ))();
 
-export const STooltip = ({ children, text, placement }: Props) => {
+export const STooltip = ({ children, text, placement, address }: Props) => {
   const {
     currentTheme: { tooltipBackground, tooltipColor },
   } = useStateContext();
@@ -44,6 +45,7 @@ export const STooltip = ({ children, text, placement }: Props) => {
       backgroundColor: tooltipBackground,
       borderRadius: '0.8rem',
       padding: '0.8rem 1.2rem',
+      maxWidth: address ? 'max-content' : 'auto',
     },
   };
 

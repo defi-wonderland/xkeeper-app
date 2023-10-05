@@ -24,7 +24,7 @@ export const fontSize = {
 
 export const zIndex = {
   HEADER: 100,
-  MODAL: 200,
+  MODAL: 10,
   BACKDROP: -1,
   TOAST: 500,
 };

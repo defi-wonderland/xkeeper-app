@@ -57,6 +57,11 @@ export const RevokeButton = styled(ActiveButton)(() => {
       backgroundColor: currentTheme.red,
       boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     },
+    '&:disabled': {
+      opacity: 0.6,
+      backgroundColor: currentTheme.red,
+      boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
+    },
   };
 });
 

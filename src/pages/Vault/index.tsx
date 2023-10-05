@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
+import { useNetwork } from 'wagmi';
 import { Address } from 'viem';
 
 import { AddressChip, BasicTabs, BreadCrumbs, CloseButton as EditAliasButton, InfoChip, STooltip } from '~/components';
@@ -13,18 +14,17 @@ import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
 import { ModalType } from '~/types';
+import { getConstants } from '~/config/constants';
 
 export const Vault = () => {
-  const { currentTheme, setModalOpen, selectedVault, setSelectedVault } = useStateContext();
+  const { currentTheme, setModalOpen, selectedVault, setSelectedVault, availableChains } = useStateContext();
   const { address } = useParams();
+  const { chain } = useNetwork();
   const [isLoading, setLoading] = useState<boolean>(false);
+  const { DEFAULT_CHAIN } = getConstants();
 
-  // temporary
-  const title = 'Connext One';
-  const chain = 'Ethereum Mainnet';
+  const chainName = availableChains[chain?.id || DEFAULT_CHAIN].name;
   const version = 'V1.0.0';
-  const contractAddress = '0x1234567890123456789012345678901234567890';
-  const ownerAddress = '0x1234567890123456789012345678901234567890';
 
   const sections = [
     {
@@ -78,7 +78,7 @@ export const Vault = () => {
           {/* Vault Address | Vault Alias */}
           <TitleContainer>
             <TitleBox>
-              <Title>{title}</Title>
+              <Title>{selectedVault?.name}</Title>
 
               <STooltip text='Edit vault alias'>
                 <EditAliasButton variant='text' onClick={() => setModalOpen(ModalType.EDIT_ALIAS)}>
@@ -103,14 +103,14 @@ export const Vault = () => {
           <DataSection>
             {/* Contract and Owner addresses */}
             <DataContainer>
-              <AddressChip label='Contract' text={truncateAddress(contractAddress)} />
-              <AddressChip label='Owner' text={truncateAddress(ownerAddress)} />
+              <AddressChip label='Contract' text={truncateAddress(selectedVault?.address || '')} />
+              <AddressChip label='Owner' text={truncateAddress(selectedVault?.owner || '')} />
             </DataContainer>
 
             {/* Vault version and Chain */}
             <DataContainer>
               <Version sx={{ color: currentTheme.textDisabled }}>{version}</Version>
-              <InfoChip>{chain}</InfoChip>
+              <InfoChip>{chainName}</InfoChip>
             </DataContainer>
           </DataSection>
         </Header>

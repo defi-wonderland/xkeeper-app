@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Box, styled } from '@mui/material';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CloseIcon from '@mui/icons-material/Close';
@@ -21,8 +20,6 @@ export const DepositModal = () => {
   const { modalOpen, setModalOpen, selectedVault } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
-  const [depositAddress, setDepositAddress] = useState((selectedVault?.address as string) || '');
-
   return (
     <BaseModal open={modalOpen === ModalType.DEPOSIT}>
       <BigModal>
@@ -38,7 +35,12 @@ export const DepositModal = () => {
           <StyledText>You can send ETH or any ERC-20 token on the Ethereum network to this adddress.</StyledText>
         </SBox>
 
-        <StyledInput label='Deposit address' value={depositAddress} setValue={setDepositAddress} />
+        <StyledInput
+          label='Deposit address'
+          value={(selectedVault?.address as string) || ''}
+          setValue={() => {}}
+          disabled
+        />
 
         <WarningChip>
           <WarningAmberIcon /> The owner of this vault can withdraw all funds at any time.

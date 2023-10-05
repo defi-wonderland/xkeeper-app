@@ -5,8 +5,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { ScrollToTop, useStateContext } from '~/hooks';
 import { CreateVault, Landing, Vault } from '~/pages';
-import { AppLayout, DepositModal, JobModal, RelayModal, WithdrawtModal } from '~/containers';
+import {
+  AppLayout,
+  DepositModal,
+  EditAliasModal,
+  JobModal,
+  RelayModal,
+  RevokeModal,
+  WithdrawtModal,
+} from '~/containers';
 import { UseSnackbar } from '~/components';
+import { zIndex } from './utils';
 
 const AppRouter = () => {
   return (
@@ -27,6 +36,8 @@ const Modals = () => {
       <JobModal />
       <RelayModal />
       <WithdrawtModal />
+      <EditAliasModal />
+      <RevokeModal />
     </>
   );
 };
@@ -46,6 +57,9 @@ export const App = () => {
               html: {
                 fontSize: '62.5%',
                 backgroundColor: currentTheme.backgroundSecondary,
+              },
+              ['.Mui-expanded']: {
+                zIndex: zIndex.MODAL,
               },
             },
           },

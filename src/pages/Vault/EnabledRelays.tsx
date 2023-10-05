@@ -1,22 +1,22 @@
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
+import { Address } from 'viem';
 
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { STooltip, OptionsMenu, ActiveButton } from '~/components';
 import { useStateContext } from '~/hooks';
+import { truncateAddress } from '~/utils';
 import { ModalType } from '~/types';
+import { Text } from './EnabledJobs';
 
-function createRelaysData(alias: string, contractAddress: string, enabledCallers: string) {
+function createRelaysData(alias: string, contractAddress: string, enabledCallers: Address[]) {
   return { alias, contractAddress, enabledCallers };
 }
 
-const rows = [
-  createRelaysData('Gelato Relat', '0xA99...9526', '0xA99...9526'),
-  createRelaysData('Tom Relay (Open Relay)', '0xA99...9525', '0xA99...9526'),
-  createRelaysData('-', '0xA99...9524', '0xA99...9526'),
-];
-
 export const EnabledRelays = () => {
   const { userAddress, setModalOpen, selectedVault } = useStateContext();
+  const selectedRelays = selectedVault?.relays || {};
+
+  const relays = Object.keys(selectedRelays).map((key) => createRelaysData('Test', key, selectedRelays[key]));
 
   return (
     <SCard variant='outlined'>
@@ -42,20 +42,28 @@ export const EnabledRelays = () => {
           </TableHead>
 
           <TableBody>
-            {rows.map((row) => (
+            {relays.map((row) => (
               <STableRow key={row.contractAddress}>
                 <RowText component='th' scope='row'>
                   <STooltip text='Edit alias'>{row.alias}</STooltip>
                 </RowText>
 
                 <RowText align='left'>
-                  <STooltip text={row.contractAddress}>{row.contractAddress}</STooltip>
+                  <STooltip text={row.contractAddress} address>
+                    {truncateAddress(row.contractAddress)}
+                  </STooltip>
                 </RowText>
 
-                <RowText align='left'>{row.enabledCallers}</RowText>
+                <RowText align='left'>
+                  {row.enabledCallers?.map((caller) => (
+                    <STooltip text={caller} address key={caller}>
+                      <Text>{truncateAddress(caller)}</Text>
+                    </STooltip>
+                  ))}
+                </RowText>
 
                 <RowText align='right'>
-                  <OptionsMenu type='relay' value={row.contractAddress} />
+                  <OptionsMenu type='relay' address={row.contractAddress} params={row.enabledCallers} />
                 </RowText>
               </STableRow>
             ))}

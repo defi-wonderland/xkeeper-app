@@ -3,7 +3,7 @@ export * from './TextArea';
 export * from './BaseModal';
 export * from './BreadCrumbs';
 export * from './Button';
-export * from './ChainDropdown';
+export * from './Dropdowns';
 export * from './ChainIcon';
 export * from './Input';
 export * from './NavigationLink';

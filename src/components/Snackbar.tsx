@@ -16,7 +16,7 @@ export function UseSnackbar() {
   const { getRootProps, onClickAway } = useSnackbar({
     onClose: handleClose,
     open: notificationOpen,
-    autoHideDuration: 5000,
+    autoHideDuration: 10000,
   });
 
   return (

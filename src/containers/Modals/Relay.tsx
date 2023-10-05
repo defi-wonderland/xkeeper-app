@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 import { isAddress } from 'viem';
 
 import {
@@ -21,8 +21,9 @@ import { ModalType } from '~/types';
 import { anyCaller } from '~/utils';
 
 export const RelayModal = () => {
-  const { modalOpen, setModalOpen, selectedVault } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, setNotificationOpen, loading, setLoading } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
+  const publicClient = usePublicClient();
 
   const [relayAddress, setRelayAddress] = useState('');
   const [callerAddress, setCallerAddress] = useState<string>('');
@@ -45,18 +46,27 @@ export const RelayModal = () => {
     args: [relayAddress as Address, callerList as Address[]],
   });
 
-  const { isLoading, write } = useContractWrite(config);
+  const { writeAsync } = useContractWrite(config);
 
   const handleToggle = () => {
     setAllowAnyCaller(!allowAnyCaller);
   };
 
-  const handleApproveRelay = () => {
-    // temporary log
-    console.log('approving relay...');
-    if (write) {
-      write();
+  const handleApproveRelay = async () => {
+    setLoading(true);
+    try {
+      // temporary log
+      console.log('approving relay...');
+      if (writeAsync) {
+        const writeResult = await writeAsync();
+        await publicClient.waitForTransactionReceipt(writeResult);
+        setModalOpen(ModalType.NONE);
+        setNotificationOpen(true);
+      }
+    } catch (error) {
+      console.error(error);
     }
+    setLoading(false);
   };
 
   const handleAddNewCaller = () => {
@@ -136,12 +146,13 @@ export const RelayModal = () => {
         </InputsContainer>
 
         <ButtonsContainer>
-          <CancelButton variant='outlined' onClick={handleClose}>
+          <CancelButton variant='outlined' disabled={loading} onClick={handleClose}>
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained' disabled={!write || isLoading} onClick={handleApproveRelay}>
-            Confirm
+          <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleApproveRelay}>
+            {!loading && 'Confirm'}
+            {loading && 'Loading...'}
           </ActiveButton>
         </ButtonsContainer>
       </BigModal>

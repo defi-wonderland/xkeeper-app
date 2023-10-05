@@ -7,6 +7,7 @@ export interface Env {
 }
 
 export interface Constants {
+  DEFAULT_CHAIN: number;
   addresses: Addresses;
   availableChains: Chains;
 }
