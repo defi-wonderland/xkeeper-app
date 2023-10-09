@@ -99,17 +99,16 @@ export const Tokens = () => {
 };
 
 export const SCard = styled(Card)(() => {
-  const {
-    currentTheme: { borderRadius },
-  } = useStateContext();
+  const { currentTheme } = useStateContext();
   return {
+    backgroundColor: currentTheme.backgroundPrimary,
+    borderRadius: currentTheme.borderRadius,
     padding: '2rem 3.2rem 0',
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
     boxShadow: '0px 2px 10px 0px rgba(16, 24, 40, 0.02)',
     marginTop: '2.4rem',
-    borderRadius: borderRadius,
   };
 });
 
@@ -172,11 +171,12 @@ export const RowText = styled(TableCell)(() => {
     currentTheme: { textSecondary },
   } = useStateContext();
   return {
+    color: textSecondary,
     fontSize: '1.4rem',
     height: '3.2rem',
     fontWeight: 500,
     padding: '1.6rem 2.4rem',
-    color: textSecondary,
+    cursor: 'pointer',
   };
 });
 

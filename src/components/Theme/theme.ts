@@ -7,23 +7,25 @@ export const darkTheme: Theme = {
   textTertiary: '#667085',
   textDisabled: '#667085',
   textSecondaryDisabled: '#475467', // gray-600
-  red: '#D92D20',
-  white: '#ffffff',
+  error: '#D92D20',
 
-  backgroundPrimary: '#000000',
-  backgroundSecondary: '#1A191F',
+  backgroundPrimary: '#101828',
+  backgroundSecondary: '#0A101C',
+  backgroundHover: '#F9FAFB', // gray-50
+
   borderRadius: '8px',
   secondaryBorderRadius: '4px',
-  border: '1px solid rgba(153, 164, 184, 0.1)',
+  border: '1px solid #1D2939',
 
   actionButton: '#444CE7',
   actionButtonHover: '#3538CD',
   actionButtonDisabled: '#A4BCFD',
+  actionButtonColor: '#ffffff',
 
-  tabColor: '#444CE7',
+  tabColor: '#D0D5DD',
 
-  relayChipColor: '#05603A',
-  relayChipBackground: '#ECFDF3',
+  relayChipColor: '#9FFAD4',
+  relayChipBackground: '#042C1C',
 
   warningChipColor: '#93370D',
   warningChipBackground: '#FFFAEB',
@@ -48,11 +50,12 @@ export const lightTheme: Theme = {
   textTertiary: '#667085', // gray-500
   textDisabled: '#98A2B3', // gray-400
   textSecondaryDisabled: '#D0D5DD', // gray-300
-  red: '#D92D20',
-  white: '#ffffff',
+  error: '#D92D20',
 
   backgroundPrimary: '#ffffff', // gray-100
   backgroundSecondary: '#FCFCFD', // gray-25
+  backgroundHover: '#F9FAFB', // gray-50
+
   borderRadius: '8px',
   secondaryBorderRadius: '4px',
   border: '1px solid #F2F4F7',
@@ -60,6 +63,7 @@ export const lightTheme: Theme = {
   actionButton: '#444CE7',
   actionButtonHover: '#3538CD',
   actionButtonDisabled: '#A4BCFD',
+  actionButtonColor: '#ffffff',
 
   tabColor: '#344054',
 

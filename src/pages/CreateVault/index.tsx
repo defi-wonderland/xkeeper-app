@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Box, Typography, styled } from '@mui/material';
-import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
+import { isAddress } from 'viem';
 
 import { DataSection as DescriptionContainer, Title, Header } from '~/pages';
 import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton } from '~/components';
@@ -8,7 +9,9 @@ import { useStateContext } from '~/hooks';
 import { vaultFactoryABI } from '~/generated';
 
 export const CreateVault = () => {
-  const { addresses, availableChains } = useStateContext();
+  const { addresses, availableChains, loading, setLoading, setNotificationOpen } = useStateContext();
+  const publicClient = usePublicClient();
+
   const [vaultName, setVaultName] = useState('');
   const [vaultOwner, setVaultOwner] = useState('');
   const [selectedChain, setSelectedChain] = useState(Object.keys(availableChains)[0]);
@@ -21,14 +24,22 @@ export const CreateVault = () => {
     chainId: Number(selectedChain),
   });
 
-  const { isLoading, write } = useContractWrite(config);
+  const { writeAsync } = useContractWrite(config);
 
-  const handleCreateVault = () => {
-    // temporary log
-    console.log('creating vault...');
-    if (write) {
-      write();
+  const handleCreateVault = async () => {
+    setLoading(true);
+    try {
+      // temporary log
+      console.log('creating vault...');
+      if (writeAsync) {
+        const writeResult = await writeAsync();
+        await publicClient.waitForTransactionReceipt(writeResult);
+        setNotificationOpen(true);
+      }
+    } catch (error) {
+      console.error(error);
     }
+    setLoading(false);
   };
 
   return (
@@ -55,6 +66,7 @@ export const CreateVault = () => {
           description='Your vault name will only be visible to you.'
           value={vaultName}
           setValue={setVaultName}
+          disabled={loading}
         />
 
         <StyledInput
@@ -62,17 +74,26 @@ export const CreateVault = () => {
           description='The vault owner will be able to withdraw funds and make changes to the vault.'
           value={vaultOwner}
           setValue={setVaultOwner}
+          error={!!vaultOwner && !isAddress(vaultOwner)}
+          errorText='Invalid address'
+          disabled={loading}
         />
 
         <InputContainer>
           <InputLabel>Chain</InputLabel>
-          <ChainDropdown chains={availableChains} value={selectedChain} setValue={setSelectedChain} />
+          <ChainDropdown
+            chains={availableChains}
+            value={selectedChain}
+            setValue={setSelectedChain}
+            disabled={loading}
+          />
         </InputContainer>
 
         {/* Create Button */}
         <ButtonContainer>
-          <CreateButton variant='contained' disabled={!write || isLoading || !vaultName} onClick={handleCreateVault}>
-            Create Vault
+          <CreateButton variant='contained' disabled={!writeAsync || loading || !vaultName} onClick={handleCreateVault}>
+            {!loading && 'Create Vault'}
+            {loading && 'Loading...'}
           </CreateButton>
         </ButtonContainer>
       </CreateContainer>

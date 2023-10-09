@@ -28,12 +28,7 @@ export const Header = () => {
   const navigationLinkStyles = { fontSize: '1.6rem', fontWeight: '500', color: currentTheme.textDisabled };
 
   return (
-    <HeaderContainer
-      sx={{
-        borderBottom: currentTheme.border,
-        backgroundColor: currentTheme.backgroundPrimary,
-      }}
-    >
+    <HeaderContainer>
       <Navbar>
         <NavigationLink to='/' text='Keep3r Framework' sx={logoStyles} />
         <NavigationLink to='/' text='Docs' sx={navigationLinkStyles} />
@@ -50,19 +45,24 @@ export const Header = () => {
   );
 };
 
-const HeaderContainer = styled(Box)({
-  position: 'fixed',
-  top: 0,
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  width: '100%',
-  height: '8rem',
-  padding: '0 4.8rem',
-  maxWidth: '100vw',
-  fontSize: '1.2rem',
-  zIndex: zIndex.HEADER,
+const HeaderContainer = styled(Box)(() => {
+  const { theme, currentTheme } = useStateContext();
+  return {
+    borderBottom: currentTheme.border,
+    backgroundColor: theme === 'light' ? currentTheme.backgroundPrimary : currentTheme.backgroundSecondary,
+    zIndex: zIndex.HEADER,
+    position: 'fixed',
+    top: 0,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: '8rem',
+    padding: '0 4.8rem',
+    maxWidth: '100vw',
+    fontSize: '1.2rem',
+  };
 });
 
 const Navbar = styled(Box)({

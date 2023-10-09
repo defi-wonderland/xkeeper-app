@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Box, styled, Radio, Typography } from '@mui/material';
 import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
+import { isAddress } from 'viem';
 
 import {
   ActiveButton,
@@ -33,6 +34,7 @@ export const JobModal = () => {
   const [selectedValue, setSelectedValue] = useState('a');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFunctionSignature('');
     setSelectedValue(event.target.value);
   };
 
@@ -73,9 +75,16 @@ export const JobModal = () => {
           </CloseButton>
         </TitleContainer>
 
-        <StyledInput label='Job address' value={jobAddress} setValue={setJobAddress} />
+        <StyledInput
+          label='Job address'
+          value={jobAddress}
+          setValue={setJobAddress}
+          disabled={loading}
+          error={!!jobAddress && !isAddress(jobAddress)}
+          errorText='Invalid address'
+        />
 
-        <AbiTextarea value={jobAbi} spellCheck={false} onChange={(e) => setJobAbi(e.target.value)} />
+        <AbiTextarea value={jobAbi} spellCheck={false} disabled={loading} onChange={(e) => setJobAbi(e.target.value)} />
 
         <RadioContainer>
           <div>
@@ -85,6 +94,7 @@ export const JobModal = () => {
               value='a'
               name='radio-buttons'
               inputProps={{ 'aria-label': 'A' }}
+              disabled={loading}
             />
             <InputLabel>Choose function</InputLabel>
           </div>
@@ -95,6 +105,7 @@ export const JobModal = () => {
               value='b'
               name='radio-buttons'
               inputProps={{ 'aria-label': 'B' }}
+              disabled={loading}
             />
             <InputLabel>Enter raw function signature</InputLabel>
           </div>
@@ -108,12 +119,18 @@ export const JobModal = () => {
               setValue={setContractFunction}
               setSignature={setFunctionSignature}
               abi={jobAbi}
+              disabled={!contractFunction || loading}
             />
           </DropdownContainer>
         )}
 
         {selectedValue === 'b' && (
-          <StyledInput label='Function signature' value={functionSignature} setValue={setFunctionSignature} />
+          <StyledInput
+            label='Function signature'
+            value={functionSignature}
+            setValue={setFunctionSignature}
+            disabled={loading}
+          />
         )}
 
         <StyledInput
@@ -121,6 +138,7 @@ export const JobModal = () => {
           value={jobAlias}
           setValue={setJobAlias}
           description='This will only be visible to you.'
+          disabled={loading}
         />
 
         <ButtonsContainer>

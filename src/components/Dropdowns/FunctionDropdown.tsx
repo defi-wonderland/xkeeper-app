@@ -9,14 +9,16 @@ import { AbiFunction } from 'abitype';
 
 import { useStateContext } from '~/hooks';
 import { StyledText } from '~/components';
+
 interface FunctionDropdownProps {
   value: string;
   setValue: (val: string) => void;
   setSignature: (val: string) => void;
+  disabled?: boolean;
   abi: string;
 }
 
-export function FunctionDropdown({ value, setValue, abi, setSignature }: FunctionDropdownProps) {
+export function FunctionDropdown({ value, setValue, abi, setSignature, disabled }: FunctionDropdownProps) {
   const createHandleMenuClick = (value: AbiFunction) => {
     return () => {
       const signature = getFunctionSelector(value);
@@ -41,7 +43,7 @@ export function FunctionDropdown({ value, setValue, abi, setSignature }: Functio
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <TriggerButton>
+      <TriggerButton disabled={disabled}>
         <StyledText>{value || availableValues[0]?.name}</StyledText>
       </TriggerButton>
 

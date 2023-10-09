@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
+import { isAddress } from 'viem';
 
 import {
   ActiveButton,
@@ -52,7 +53,13 @@ export const WithdrawtModal = () => {
           </InfoContainer>
         </TitleContainer>
 
-        <StyledInput label='Withdrawal address' value={widthdrawalAddress} setValue={setWithdrawalAddress} />
+        <StyledInput
+          label='Withdrawal address'
+          value={widthdrawalAddress}
+          setValue={setWithdrawalAddress}
+          error={!!widthdrawalAddress && !isAddress(widthdrawalAddress)}
+          errorText='Invalid address'
+        />
 
         <StyledInput label='Token' value={token} setValue={setToken} />
 

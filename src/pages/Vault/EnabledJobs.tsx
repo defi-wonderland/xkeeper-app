@@ -1,6 +1,7 @@
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
+import { RowButton } from './EnabledRelays';
 import { ActiveButton, OptionsMenu, STooltip } from '~/components';
 import { useStateContext } from '~/hooks';
 import { truncateAddress } from '~/utils';
@@ -28,46 +29,48 @@ export const EnabledJobs = () => {
         )}
       </SectionHeader>
 
-      <TableContainer>
-        <STable aria-label='simple table'>
-          <TableHead>
-            <TableRow>
-              <SColumnTitle>Alias</SColumnTitle>
-              <ColumnTitle align='left'>ContractAddress</ColumnTitle>
-              <ColumnTitle align='left'>Function Signature</ColumnTitle>
-              <ColumnTitle align='right'></ColumnTitle>
-            </TableRow>
-          </TableHead>
+      {!!jobs.length && (
+        <TableContainer>
+          <STable aria-label='simple table'>
+            <TableHead>
+              <TableRow>
+                <SColumnTitle>Alias</SColumnTitle>
+                <ColumnTitle align='left'>ContractAddress</ColumnTitle>
+                <ColumnTitle align='left'>Function Signature</ColumnTitle>
+                <ColumnTitle align='right'></ColumnTitle>
+              </TableRow>
+            </TableHead>
 
-          <TableBody>
-            {jobs.map((row) => (
-              <STableRow key={row.contractAddress}>
-                <RowText component='th' scope='row'>
-                  <STooltip text='Edit alias'>{row.alias}</STooltip>
-                </RowText>
+            <TableBody>
+              {jobs.map((row) => (
+                <STableRow key={row.contractAddress}>
+                  <RowText component='th' scope='row'>
+                    <STooltip text='Edit alias'>{row.alias}</STooltip>
+                  </RowText>
 
-                <RowText align='left'>
-                  <STooltip text={row.contractAddress} address>
-                    {truncateAddress(row.contractAddress)}
-                  </STooltip>
-                </RowText>
-
-                <RowText align='left'>
-                  {row.functionSignature?.map((signature) => (
-                    <STooltip text={signature} address key={signature}>
-                      <Text>{signature}</Text>
+                  <RowText align='left'>
+                    <STooltip text={row.contractAddress} address>
+                      {truncateAddress(row.contractAddress)}
                     </STooltip>
-                  ))}
-                </RowText>
+                  </RowText>
 
-                <RowText align='right'>
-                  <OptionsMenu type='job' address={row.contractAddress} params={row.functionSignature} />
-                </RowText>
-              </STableRow>
-            ))}
-          </TableBody>
-        </STable>
-      </TableContainer>
+                  <RowText align='left'>
+                    {row.functionSignature?.map((signature) => (
+                      <STooltip text={signature} address key={signature}>
+                        <Text>{signature}</Text>
+                      </STooltip>
+                    ))}
+                  </RowText>
+
+                  <RowButton align='right'>
+                    <OptionsMenu type='job' address={row.contractAddress} params={row.functionSignature} />
+                  </RowButton>
+                </STableRow>
+              ))}
+            </TableBody>
+          </STable>
+        </TableContainer>
+      )}
     </SCard>
   );
 };

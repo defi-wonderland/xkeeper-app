@@ -27,7 +27,7 @@ export const CancelButton = styled(Button)(() => {
 export const ActiveButton = styled(Button)(() => {
   const { currentTheme } = useStateContext();
   return {
-    color: currentTheme.white,
+    color: currentTheme.actionButtonColor,
     borderRadius: currentTheme.borderRadius,
     backgroundColor: currentTheme.actionButton,
     textTransform: 'capitalize',
@@ -41,7 +41,7 @@ export const ActiveButton = styled(Button)(() => {
     },
     '&:disabled': {
       backgroundColor: currentTheme.actionButtonDisabled,
-      color: currentTheme.white,
+      color: currentTheme.actionButtonColor,
       cursor: 'default',
     },
   };
@@ -50,16 +50,16 @@ export const ActiveButton = styled(Button)(() => {
 export const RevokeButton = styled(ActiveButton)(() => {
   const { currentTheme } = useStateContext();
   return {
-    backgroundColor: currentTheme.red,
+    backgroundColor: currentTheme.error,
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     '&:hover': {
       opacity: 0.9,
-      backgroundColor: currentTheme.red,
+      backgroundColor: currentTheme.error,
       boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     },
     '&:disabled': {
       opacity: 0.6,
-      backgroundColor: currentTheme.red,
+      backgroundColor: currentTheme.error,
       boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     },
   };

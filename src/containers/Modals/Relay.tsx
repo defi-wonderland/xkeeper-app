@@ -103,7 +103,10 @@ export const RelayModal = () => {
             description='Choose from trusted relays or enter a custom address.'
             value={relayAddress}
             setValue={setRelayAddress}
+            disabled={loading}
             placeholder='Choose Relay'
+            error={!!relayAddress && !isAddress(relayAddress)}
+            errorText='Invalid address'
           />
 
           <StyledInput
@@ -111,7 +114,9 @@ export const RelayModal = () => {
             value={callerAddress}
             setValue={setCallerAddress}
             placeholder='Enter caller address'
-            disabled={allowAnyCaller}
+            disabled={allowAnyCaller || loading}
+            error={!!callerAddress && !isAddress(callerAddress)}
+            errorText='Invalid address'
           />
 
           {callers.map((caller) => (
@@ -123,7 +128,11 @@ export const RelayModal = () => {
           ))}
 
           <CallersContainer>
-            <SButton variant='text' disabled={allowAnyCaller || !isAddress(callerAddress)} onClick={handleAddNewCaller}>
+            <SButton
+              variant='text'
+              disabled={allowAnyCaller || !isAddress(callerAddress) || loading}
+              onClick={handleAddNewCaller}
+            >
               <Container>
                 <AddIcon />
                 <ButtonText>Add additional caller address</ButtonText>
@@ -131,7 +140,7 @@ export const RelayModal = () => {
             </SButton>
 
             <Container>
-              <SSwitch onClick={handleToggle} />
+              <SSwitch disabled={loading} onClick={handleToggle} />
               <ToggleText>Allow any caller</ToggleText>
             </Container>
           </CallersContainer>
@@ -142,6 +151,7 @@ export const RelayModal = () => {
             value={relayAlias}
             setValue={setRelayAlias}
             placeholder='My Custom Relay'
+            disabled={loading}
           />
         </InputsContainer>
 

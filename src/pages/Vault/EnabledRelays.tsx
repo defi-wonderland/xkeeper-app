@@ -30,50 +30,72 @@ export const EnabledRelays = () => {
         )}
       </SectionHeader>
 
-      <TableContainer>
-        <STable aria-label='simple table'>
-          <TableHead>
-            <TableRow>
-              <SColumnTitle>Alias</SColumnTitle>
-              <ColumnTitle align='left'>Contract Address</ColumnTitle>
-              <ColumnTitle align='left'>Enabled Callers</ColumnTitle>
-              <ColumnTitle align='left'></ColumnTitle>
-            </TableRow>
-          </TableHead>
+      {!!relays.length && (
+        <TableContainer>
+          <STable aria-label='simple table'>
+            <TableHead>
+              <TableRow>
+                <SColumnTitle>Alias</SColumnTitle>
+                <ColumnTitle align='left'>Contract Address</ColumnTitle>
+                <ColumnTitle align='left'>Enabled Callers</ColumnTitle>
+                <ColumnTitle align='left'></ColumnTitle>
+              </TableRow>
+            </TableHead>
 
-          <TableBody>
-            {relays.map((row) => (
-              <STableRow key={row.contractAddress}>
-                <RowText component='th' scope='row'>
-                  <STooltip text='Edit alias'>{row.alias}</STooltip>
-                </RowText>
+            <TableBody>
+              {relays.map((row) => (
+                <STableRow key={row.contractAddress}>
+                  <RowText component='th' scope='row'>
+                    <STooltip text='Edit alias'>{row.alias}</STooltip>
+                  </RowText>
 
-                <RowText align='left'>
-                  <STooltip text={row.contractAddress} address>
-                    {truncateAddress(row.contractAddress)}
-                  </STooltip>
-                </RowText>
-
-                <RowText align='left'>
-                  {row.enabledCallers?.map((caller) => (
-                    <STooltip text={caller} address key={caller}>
-                      <Text>{truncateAddress(caller)}</Text>
+                  <RowText align='left'>
+                    <STooltip text={row.contractAddress} address>
+                      {truncateAddress(row.contractAddress)}
                     </STooltip>
-                  ))}
-                </RowText>
+                  </RowText>
 
-                <RowText align='right'>
-                  <OptionsMenu type='relay' address={row.contractAddress} params={row.enabledCallers} />
-                </RowText>
-              </STableRow>
-            ))}
-          </TableBody>
-        </STable>
-      </TableContainer>
+                  <RowText align='left'>
+                    {row.enabledCallers?.map((caller) => (
+                      <STooltip text={caller} address key={caller}>
+                        <Text>{truncateAddress(caller)}</Text>
+                      </STooltip>
+                    ))}
+                  </RowText>
+
+                  <RowButton align='right'>
+                    <OptionsMenu type='relay' address={row.contractAddress} params={row.enabledCallers} />
+                  </RowButton>
+                </STableRow>
+              ))}
+            </TableBody>
+          </STable>
+        </TableContainer>
+      )}
     </SCard>
   );
 };
 
 const SColumnTitle = styled(ColumnTitle)({
   width: '28rem',
+});
+
+export const RowButton = styled(RowText)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    padding: '0rem',
+    minWidth: '8rem',
+    '&:hover': {
+      transition: 'all 0.2s ease-in-out',
+      backgroundColor: currentTheme.backgroundHover,
+    },
+    button: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  };
 });

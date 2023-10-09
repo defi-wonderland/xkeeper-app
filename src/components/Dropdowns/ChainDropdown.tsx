@@ -12,9 +12,10 @@ interface ChainDropdownProps {
   chains: Chains;
   value: string;
   setValue: (val: string) => void;
+  disabled?: boolean;
 }
 
-export function ChainDropdown({ chains, value, setValue }: ChainDropdownProps) {
+export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdownProps) {
   const createHandleMenuClick = (menuItem: string) => {
     return () => {
       setValue(menuItem);
@@ -26,7 +27,7 @@ export function ChainDropdown({ chains, value, setValue }: ChainDropdownProps) {
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <TriggerButton>
+      <TriggerButton disabled={disabled}>
         <ChainIcon chainName={chains[value].iconName} />
         <StyledText>{chains[value].iconName}</StyledText>
       </TriggerButton>

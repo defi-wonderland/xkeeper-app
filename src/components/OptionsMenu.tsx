@@ -69,6 +69,7 @@ const StyledListbox = styled('ul')(() => {
     borderRadius: '12px',
     overflow: 'auto',
     outline: '0px',
+    boxShadow: ' 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08)',
   };
 });
 
@@ -125,6 +126,6 @@ const EditContainer = styled(OptionContainer)(() => {
 const RevokeContainer = styled(OptionContainer)(() => {
   const { currentTheme } = useStateContext();
   return {
-    color: currentTheme.red,
+    color: currentTheme.error,
   };
 });

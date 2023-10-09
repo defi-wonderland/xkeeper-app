@@ -8,6 +8,7 @@ interface Props {
   children: any;
   text: string;
   address?: boolean;
+  open?: boolean;
   placement?:
     | 'bottom-end'
     | 'bottom-start'
@@ -27,7 +28,7 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
 ))();
 
-export const STooltip = ({ children, text, placement, address }: Props) => {
+export const STooltip = ({ children, text, placement, address, open }: Props) => {
   const {
     currentTheme: { tooltipBackground, tooltipColor },
   } = useStateContext();
@@ -51,6 +52,7 @@ export const STooltip = ({ children, text, placement, address }: Props) => {
 
   return (
     <CustomTooltip
+      open={open}
       title={
         <Typography component='span' sx={textStyles}>
           {text}

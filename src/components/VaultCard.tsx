@@ -62,13 +62,17 @@ const SContainer = styled(Box)({
   margin: '2.4rem auto',
 });
 
-const SCard = styled(Card)({
-  padding: '2rem',
-  gap: '2.6rem',
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  boxShadow: '0px 2px 10px 0px rgba(16, 24, 40, 0.02)',
+const SCard = styled(Card)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    backgroundColor: currentTheme.backgroundPrimary,
+    padding: '2rem',
+    gap: '2.6rem',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    boxShadow: '0px 2px 10px 0px rgba(16, 24, 40, 0.02)',
+  };
 });
 
 const TitleContainer = styled(Box)({
