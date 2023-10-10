@@ -14,22 +14,27 @@ const constants: Constants = {
     '5': {
       name: 'Goerli',
       iconName: 'goerli',
+      scanner: 'https://goerli.etherscan.io',
     },
     '1': {
       name: 'Ethereum Mainnet',
       iconName: 'ethereum',
+      scanner: 'https://etherscan.io',
     },
     '42161': {
       name: 'Arbitrum One',
       iconName: 'arbitrum',
+      scanner: 'https://arbiscan.io',
     },
     '137': {
       name: 'Polygon',
       iconName: 'polygon',
+      scanner: 'https://polygonscan.com',
     },
     '10': {
       name: 'OP Mainnet',
       iconName: 'optimism',
+      scanner: 'https://optimistic.etherscan.io',
     },
   },
 };

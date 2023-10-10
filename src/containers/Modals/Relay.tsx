@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 import { isAddress } from 'viem';
 
@@ -13,15 +12,17 @@ import {
   StyledTitle,
   StyledText,
   CloseButton,
+  Icon,
 } from '~/components';
-import { ButtonsContainer, BigModal, TitleContainer, SCloseIcon } from '~/containers';
+import { ButtonsContainer, BigModal, TitleContainer } from '~/containers';
 import { useStateContext } from '~/hooks';
 import { vaultABI } from '~/generated';
 import { ModalType } from '~/types';
 import { anyCaller } from '~/utils';
 
 export const RelayModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, setNotificationOpen, loading, setLoading } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, setNotification, loading, setLoading, currentTheme } =
+    useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
   const publicClient = usePublicClient();
 
@@ -61,7 +62,16 @@ export const RelayModal = () => {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);
         setModalOpen(ModalType.NONE);
-        setNotificationOpen(true);
+        setNotification({
+          open: true,
+          title: `Relay successfuly approved`,
+          message: (
+            <>
+              <span>{relayAddress}</span> relay is now enabled.
+            </>
+          ),
+          type: '',
+        });
       }
     } catch (error) {
       console.error(error);
@@ -93,7 +103,7 @@ export const RelayModal = () => {
           <StyledTitle>Add New Relay</StyledTitle>
 
           <CloseButton variant='text' onClick={handleClose}>
-            <SCloseIcon />
+            <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
           </CloseButton>
         </TitleContainer>
 
@@ -134,7 +144,7 @@ export const RelayModal = () => {
               onClick={handleAddNewCaller}
             >
               <Container>
-                <AddIcon />
+                <Icon name='plus' size='2rem' color={currentTheme.actionButton} />
                 <ButtonText>Add additional caller address</ButtonText>
               </Container>
             </SButton>
@@ -191,7 +201,7 @@ const CallersContainer = styled('div')({
 const Container = styled('div')({
   display: 'flex',
   flexDirection: 'row',
-  gap: '0.8rem',
+  gap: '0.6rem',
   alignItems: 'center',
   width: 'fit-content',
 });

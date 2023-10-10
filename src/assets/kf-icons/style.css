@@ -1,0 +1,109 @@
+@font-face {
+  font-family: 'keep3r-framework';
+  src: url('fonts/keep3r-framework.eot?oir0pz');
+  src:
+    url('fonts/keep3r-framework.eot?oir0pz#iefix') format('embedded-opentype'),
+    url('fonts/keep3r-framework.ttf?oir0pz') format('truetype'),
+    url('fonts/keep3r-framework.woff?oir0pz') format('woff'),
+    url('fonts/keep3r-framework.svg?oir0pz#keep3r-framework') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'keep3r-framework' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-pencil-square:before {
+  content: '\e90e';
+  color: #98a2b3;
+}
+.icon-alert-circle:before {
+  content: '\e900';
+  color: #f04438;
+}
+.icon-arrow-left:before {
+  content: '\e901';
+  color: #98a2b3;
+}
+.icon-arrow-right:before {
+  content: '\e902';
+  color: #d0d5dd;
+}
+.icon-check:before {
+  content: '\e903';
+  color: #5777eb;
+}
+.icon-check-circle:before {
+  content: '\e904';
+  color: #039855;
+}
+.icon-chevron-down:before {
+  content: '\e905';
+  color: #98a2b3;
+}
+.icon-chevron-right:before {
+  content: '\e906';
+  color: #d0d5dd;
+}
+.icon-close:before {
+  content: '\e907';
+  color: #667085;
+}
+.icon-copy:before {
+  content: '\e908';
+  color: #98a2b3;
+}
+.icon-exclamation-triangle:before {
+  content: '\e909';
+  color: #93370d;
+}
+.icon-external-link:before {
+  content: '\e90a';
+  color: #98a2b3;
+}
+.icon-menu:before {
+  content: '\e90b';
+  color: #98a2b3;
+}
+.icon-moon:before {
+  content: '\e90c';
+  color: #667085;
+}
+.icon-owned:before {
+  content: '\e90d';
+  color: #444ce7;
+}
+.icon-plus:before {
+  content: '\e90f';
+  color: #fff;
+}
+.icon-safe:before {
+  content: '\e910';
+  color: #98a2b3;
+}
+.icon-search:before {
+  content: '\e911';
+  color: #98a2b3;
+}
+.icon-sun:before {
+  content: '\e912';
+  color: #98a2b3;
+}
+.icon-x-circle:before {
+  content: '\e913';
+  color: #d92d20;
+}

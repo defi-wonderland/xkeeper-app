@@ -23,7 +23,20 @@ export interface Chains {
   [chainId: string]: {
     name: string;
     iconName: string;
+    scanner: string;
   };
+}
+
+export interface Items {
+  value: string;
+  itemCopied: boolean;
+}
+
+export interface Notification {
+  open: boolean;
+  title?: string;
+  message?: string | JSX.Element;
+  type?: string;
 }
 
 export interface Config extends Env, Constants {}

@@ -47,6 +47,11 @@ export interface Theme {
   // Tooltips
   tooltipColor: string;
   tooltipBackground: string;
+
+  // Snackbar
+  checkColor: string;
+  checkBackground: string;
+  checkBorderColor: string;
 }
 
 export interface PropTheme {

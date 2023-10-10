@@ -13,7 +13,7 @@ export const getVaults = async (vaultFactoryAddress: Address): Promise<Address[]
       functionName: 'automationVaults',
     });
 
-    return data as Address[];
+    return [...data].reverse();
   } catch (error) {
     console.error('Error getting vaults', error);
     return [];

@@ -1,8 +1,6 @@
-import { Box, Card } from '@mui/material';
-import EastIcon from '@mui/icons-material/East';
-import { styled } from '@mui/material/styles';
+import { Box, Card, styled } from '@mui/material';
 
-import { ChainIcon, InfoChip, RelayChip, STooltip, StyledText, StyledTitle } from '~/components';
+import { ChainIcon, Icon, InfoChip, RelayChip, STooltip, StyledText, StyledTitle } from '~/components';
 import { useStateContext } from '~/hooks';
 import { getRelayName } from '~/utils';
 import { VaultData } from '~/types';
@@ -27,8 +25,12 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
             </STooltip>
 
             <SBox>
-              {/* TODO: add Owned Icon */}
-              {owner === userAddress && <InfoChip>Vault Owned</InfoChip>}
+              {owner === userAddress && (
+                <InfoChip>
+                  Vault Owned
+                  <Icon name='owned' size='1.6rem' />
+                </InfoChip>
+              )}
 
               <ChainIcon chainName={chain} />
             </SBox>
@@ -45,8 +47,7 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
           </ChipsContainer>
 
           {/* See more icon */}
-          {/* TODO: get the correct icon */}
-          <EastIcon fontSize='large' sx={{ color: currentTheme.textDisabled, opacity: '0.5', fontSize: '2.6rem' }} />
+          <Icon name='arrow-right' size='2.4rem' color={currentTheme.textSecondaryDisabled} />
         </RelayContainer>
       </SCard>
     </SContainer>

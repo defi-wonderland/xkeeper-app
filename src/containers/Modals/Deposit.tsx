@@ -1,6 +1,4 @@
 import { Box, styled } from '@mui/material';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import CloseIcon from '@mui/icons-material/Close';
 
 import {
   BaseModal,
@@ -11,13 +9,14 @@ import {
   ActiveButton,
   WarningChip,
   CloseButton,
+  Icon,
 } from '~/components';
 import { BigModal } from '~/containers';
 import { ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
 
 export const DepositModal = () => {
-  const { modalOpen, setModalOpen, selectedVault } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, currentTheme } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   return (
@@ -28,7 +27,7 @@ export const DepositModal = () => {
             <StyledTitle>Deposit Funds</StyledTitle>
 
             <CloseButton variant='text' onClick={handleClose}>
-              <SCloseIcon />
+              <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
             </CloseButton>
           </TitleContainer>
 
@@ -43,7 +42,8 @@ export const DepositModal = () => {
         />
 
         <WarningChip>
-          <WarningAmberIcon /> The owner of this vault can withdraw all funds at any time.
+          <Icon name='exclamation-triangle' size='2rem' color={currentTheme.warningChipColor} />
+          The owner of this vault can withdraw all funds at any time.
         </WarningChip>
 
         <SButtonsContainer>
@@ -83,9 +83,4 @@ export const TitleContainer = styled(Box)({
   justifyContent: 'space-between',
   alignItems: 'flex-start',
   width: '100%',
-});
-
-export const SCloseIcon = styled(CloseIcon)({
-  fontSize: '2.4rem',
-  opacity: 0.6,
 });

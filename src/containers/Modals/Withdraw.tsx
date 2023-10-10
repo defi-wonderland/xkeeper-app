@@ -11,13 +11,14 @@ import {
   StyledInput,
   StyledText,
   StyledTitle,
+  Icon,
 } from '~/components';
-import { BigModal, SCloseIcon, TitleContainer as Header } from '~/containers';
+import { BigModal, TitleContainer as Header } from '~/containers';
 import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
 
 export const WithdrawtModal = () => {
-  const { modalOpen, setModalOpen } = useStateContext();
+  const { modalOpen, setModalOpen, setNotification, setLoading, currentTheme } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [widthdrawalAddress, setWithdrawalAddress] = useState('');
@@ -28,6 +29,27 @@ export const WithdrawtModal = () => {
   const vaultName = 'Connext One';
   const network = 'Ethereum';
 
+  const handleConfirm = async () => {
+    setLoading(true);
+    try {
+      // temporary log
+      console.log('approving relay...');
+      // if (writeAsync) {
+      // const writeResult = await writeAsync();
+      // await publicClient.waitForTransactionReceipt(writeResult);
+      setModalOpen(ModalType.NONE);
+      setNotification({
+        open: true,
+        title: 'Funds successfully withdrawn',
+        message: 'View transaction',
+      });
+      // }
+    } catch (error) {
+      console.error(error);
+    }
+    setLoading(false);
+  };
+
   return (
     <BaseModal open={modalOpen === ModalType.WITHDRAW}>
       <BigModal>
@@ -36,7 +58,7 @@ export const WithdrawtModal = () => {
             <StyledTitle>Withdraw Funds</StyledTitle>
 
             <CloseButton variant='text' onClick={handleClose}>
-              <SCloseIcon />
+              <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
             </CloseButton>
           </Header>
 
@@ -76,7 +98,9 @@ export const WithdrawtModal = () => {
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained'>Confirm</ActiveButton>
+          <ActiveButton variant='contained' onClick={handleConfirm}>
+            Confirm
+          </ActiveButton>
         </SButtonsContainer>
       </BigModal>
     </BaseModal>

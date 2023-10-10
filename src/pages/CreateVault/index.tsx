@@ -9,11 +9,11 @@ import { useStateContext } from '~/hooks';
 import { vaultFactoryABI } from '~/generated';
 
 export const CreateVault = () => {
-  const { addresses, availableChains, loading, setLoading, setNotificationOpen } = useStateContext();
+  const { addresses, availableChains, loading, setLoading, setNotification, userAddress } = useStateContext();
   const publicClient = usePublicClient();
 
   const [vaultName, setVaultName] = useState('');
-  const [vaultOwner, setVaultOwner] = useState('');
+  const [vaultOwner, setVaultOwner] = useState(userAddress || '');
   const [selectedChain, setSelectedChain] = useState(Object.keys(availableChains)[0]);
 
   const { config } = usePrepareContractWrite({
@@ -34,7 +34,11 @@ export const CreateVault = () => {
       if (writeAsync) {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);
-        setNotificationOpen(true);
+        setNotification({
+          open: true,
+          title: 'Vault successfully created',
+          message: 'View transaction',
+        });
       }
     } catch (error) {
       console.error(error);

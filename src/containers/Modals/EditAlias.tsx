@@ -1,8 +1,17 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
 
-import { TitleContainer, SCloseIcon, ButtonsContainer } from '~/containers';
-import { ActiveButton, CancelButton, StyledText, StyledTitle, StyledInput, CloseButton, BaseModal } from '~/components';
+import { TitleContainer, ButtonsContainer } from '~/containers';
+import {
+  ActiveButton,
+  CancelButton,
+  StyledText,
+  StyledTitle,
+  StyledInput,
+  CloseButton,
+  BaseModal,
+  Icon,
+} from '~/components';
 import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
 
@@ -10,7 +19,7 @@ export const EditAliasModal = () => {
   // temporary
   const type = 'relay';
   const value = '0x1234567890123456789012345678901234567890';
-  const { setModalOpen, modalOpen } = useStateContext();
+  const { setModalOpen, modalOpen, currentTheme } = useStateContext();
   const [alias, setAlias] = useState<string>(`My Custom ${type}`);
 
   return (
@@ -19,8 +28,9 @@ export const EditAliasModal = () => {
         <SBox>
           <TitleContainer>
             <StyledTitle>Edit {type} Alias</StyledTitle>
+
             <CloseButton variant='text' onClick={() => setModalOpen(ModalType.NONE)}>
-              <SCloseIcon />
+              <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
             </CloseButton>
           </TitleContainer>
 

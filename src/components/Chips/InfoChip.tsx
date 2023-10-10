@@ -20,7 +20,7 @@ export const InfoChip = ({ children }: InfoChipProps) => {
         fontWeight: '500',
         height: 'auto',
         borderRadius: '1.6rem',
-        padding: '0.2rem 1rem',
+        padding: '0.3rem 1rem 0.2rem 1rem',
         lineHeight: '2rem',
         width: 'fit-content',
       }}

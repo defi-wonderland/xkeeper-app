@@ -1,5 +1,7 @@
+export * from './Icon';
 export * from './Text';
 export * from './TextArea';
+export * from './CustomScrollbar';
 export * from './BaseModal';
 export * from './BreadCrumbs';
 export * from './Button';

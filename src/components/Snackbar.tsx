@@ -3,36 +3,39 @@ import { css, keyframes, styled } from '@mui/system';
 import { Button } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
-import { StyledText, StyledTitle } from './Text';
+import { StyledText, StyledTitle, Icon } from '~/components';
 import { zIndex } from '~/utils';
 
 export function UseSnackbar() {
-  const { notificationOpen, setNotificationOpen } = useStateContext();
+  const { notification, setNotification, currentTheme } = useStateContext();
 
   const handleClose = () => {
-    setNotificationOpen(false);
+    setNotification({ ...notification, open: false });
   };
 
   const { getRootProps, onClickAway } = useSnackbar({
     onClose: handleClose,
-    open: notificationOpen,
-    autoHideDuration: 10000,
+    open: notification.open,
+    autoHideDuration: 5000,
   });
 
   return (
     <>
-      {notificationOpen && (
+      {notification.open && (
         <ClickAwayListener onClickAway={onClickAway}>
           <CustomSnackbar {...getRootProps()}>
-            {/* TODO: add icons and dynamic text */}
-            <div>✅</div>
+            <div>
+              <SCheckIcon name='check-circle' size='2rem' />
+            </div>
+
             <TextContainer>
-              <Title>Title</Title>
-              <Text>Example text</Text>
+              <Title>{notification?.title}</Title>
+              <Text>{notification?.message}</Text>
             </TextContainer>
-            <Button variant='text' onClick={handleClose}>
-              ✖
-            </Button>
+
+            <SButton variant='text' onClick={handleClose}>
+              <Icon name='close' size='2rem' color={currentTheme.textTertiary} />
+            </SButton>
           </CustomSnackbar>
         </ClickAwayListener>
       )}
@@ -54,22 +57,21 @@ const CustomSnackbar = styled('div')(() => {
   const { currentTheme } = useStateContext();
   return css`
     background-color: ${currentTheme.backgroundPrimary};
-    position: fixed;
+    border: ${currentTheme.border};
+    border-radius: ${currentTheme.borderRadius};
     z-index: ${zIndex.TOAST};
+    position: fixed;
     display: flex;
-    gap: 2rem;
+    gap: 1.4rem;
     right: 1.6rem;
     bottom: 1.6rem;
     left: auto;
     justify-content: start;
-    width: 40rem;
-    border-radius: 8px;
-    border: none;
+    width: 36.8rem;
     box-shadow:
       0px 4px 6px -2px rgba(16, 24, 40, 0.03),
       0px 12px 16px -4px rgba(16, 24, 40, 0.08);
-    padding: 0.75rem;
-    font-family: 'IBM Plex Sans', sans-serif;
+    padding: 1.6rem;
     font-weight: 500;
     animation: ${snackbarInRight} 200ms;
     transition: transform 0.2s ease-out;
@@ -82,6 +84,9 @@ const TextContainer = styled('div')(() => {
     flexDirection: 'column',
     gap: '0.4rem',
     width: '100%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-word',
   };
 });
 
@@ -92,6 +97,9 @@ const Title = styled(StyledTitle)(() => {
     lineHeight: '2rem',
     fontWeight: 600,
     color: currentTheme.textPrimary,
+    '&::first-letter': {
+      textTransform: 'capitalize',
+    },
   };
 });
 
@@ -102,5 +110,34 @@ const Text = styled(StyledText)(() => {
     lineHeight: '2rem',
     fontWeight: 500,
     color: currentTheme.textTertiary,
+    span: {
+      fontWeight: 600,
+    },
+  };
+});
+
+const SButton = styled(Button)(() => {
+  return {
+    padding: 0,
+    minWidth: 'auto',
+    width: '2rem',
+    minHeight: 'auto',
+    alignItems: 'start',
+    '&:hover': {
+      background: 'inherit',
+    },
+  };
+});
+
+const SCheckIcon = styled(Icon)(() => {
+  const { currentTheme } = useStateContext();
+
+  return {
+    color: currentTheme.checkColor,
+    background: currentTheme.checkBackground,
+    padding: '0.8rem',
+    border: '0.8rem solid',
+    borderColor: currentTheme.checkBorderColor,
+    borderRadius: '100%',
   };
 });

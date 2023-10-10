@@ -3,12 +3,13 @@ import { Dropdown } from '@mui/base/Dropdown';
 import { Menu } from '@mui/base/Menu';
 import { MenuButton } from '@mui/base/MenuButton';
 import { MenuItem, menuItemClasses } from '@mui/base/MenuItem';
+import { blue, grey } from '@mui/material/colors';
 import { styled, css } from '@mui/system';
 import { getFunctionSelector } from 'viem';
 import { AbiFunction } from 'abitype';
 
 import { useStateContext } from '~/hooks';
-import { StyledText } from '~/components';
+import { StyledText, CustomScrollbar } from '~/components';
 
 interface FunctionDropdownProps {
   value: string;
@@ -49,39 +50,18 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
 
       {/* Dropdown Options */}
       <Menu slots={{ listbox: StyledListbox }}>
-        {!!availableValues &&
-          availableValues.map((value: AbiFunction) => (
-            <StyledMenuItem key={value.name} onClick={createHandleMenuClick(value)}>
-              {value.name}
-            </StyledMenuItem>
-          ))}
+        <SCustomScrollbar>
+          {!!availableValues &&
+            availableValues.map((value: AbiFunction) => (
+              <StyledMenuItem key={value.name} onClick={createHandleMenuClick(value)}>
+                {value.name}
+              </StyledMenuItem>
+            ))}
+        </SCustomScrollbar>
       </Menu>
     </Dropdown>
   );
 }
-
-// temporary styles
-const blue = {
-  100: '#DAECFF',
-  200: '#99CCF3',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  900: '#003A75',
-};
-
-const grey = {
-  50: '#f6f8fa',
-  100: '#eaeef2',
-  200: '#d0d7de',
-  300: '#afb8c1',
-  400: '#8c959f',
-  500: '#6e7781',
-  600: '#57606a',
-  700: '#424a53',
-  800: '#32383f',
-  900: '#24292f',
-};
 
 const StyledListbox = styled('ul')(() => {
   const { currentTheme } = useStateContext();
@@ -98,8 +78,6 @@ const StyledListbox = styled('ul')(() => {
     border: `1px solid ${currentTheme.textSecondaryDisabled}`,
     backgroundColor: currentTheme.backgroundSecondary,
     color: currentTheme.textSecondary,
-    maxHeight: '19rem',
-    overflowY: 'auto',
   };
 });
 
@@ -165,4 +143,9 @@ const TriggerButton = styled(MenuButton)(() => {
       fontSize: '1.6rem',
     },
   };
+});
+
+const SCustomScrollbar = styled(CustomScrollbar)({
+  padding: '0.2rem',
+  maxHeight: '17rem',
 });

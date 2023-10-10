@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/material/styles';
 
-import { SearchInput, VaultCard, BasicTabs, NavigationLink, ActiveButton } from '~/components';
+import { SearchInput, VaultCard, BasicTabs, NavigationLink, ActiveButton, Icon } from '~/components';
 import { getVaults, getVaultsData } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
 
 export const Landing = () => {
-  const { addresses, userAddress, setSelectedVault } = useStateContext();
+  const { addresses, userAddress, setSelectedVault, currentTheme } = useStateContext();
 
   const [vaults, setVaults] = useState<VaultData[]>([]);
   const ownedVaults = useMemo(() => vaults.filter((vault) => vault.owner === userAddress), [userAddress, vaults]);
@@ -48,7 +47,8 @@ export const Landing = () => {
 
         {/* Create Vault Button */}
         <NavigationLink to='/create'>
-          <CreateVaultBtn variant='contained' size='large' startIcon={<AddIcon />} data-testid='create-vault-btn'>
+          <CreateVaultBtn variant='contained' size='large' data-testid='create-vault-btn'>
+            <SIcon name='plus' size='1.8rem' color={currentTheme.backgroundPrimary} />
             Create Vault
           </CreateVaultBtn>
         </NavigationLink>
@@ -59,6 +59,9 @@ export const Landing = () => {
     </HomeContainer>
   );
 };
+const SIcon = styled(Icon)({
+  marginRight: '0.8rem',
+});
 
 const HomeContainer = styled(Box)({
   maxWidth: '60rem',

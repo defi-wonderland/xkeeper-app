@@ -1,3 +1,5 @@
+import '~/assets/kf-icons/style.css';
+
 import { useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -60,6 +62,24 @@ export const App = () => {
               },
               ['.Mui-expanded']: {
                 zIndex: zIndex.MODAL,
+              },
+              ['&::-webkit-scrollbar']: {
+                width: '0.6rem',
+                height: ' 0.6rem',
+                background: currentTheme.backgroundPrimary,
+              },
+
+              ['&::-webkit-scrollbar-thumb']: {
+                background: currentTheme.textSecondaryDisabled,
+                borderRadius: '0.4rem',
+              },
+
+              [' &::-webkit-scrollbar-thumb:hover']: {
+                background: currentTheme.textDisabled,
+              },
+
+              [' &::-webkit-scrollbar-thumb:active']: {
+                background: currentTheme.textDisabled,
               },
             },
           },

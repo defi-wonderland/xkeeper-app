@@ -13,14 +13,16 @@ import {
   StyledInput,
   StyledTitle,
   FunctionDropdown,
+  Icon,
 } from '~/components';
-import { ButtonsContainer, SCloseIcon, TitleContainer } from '~/containers';
+import { ButtonsContainer, TitleContainer } from '~/containers';
 import { ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
 import { vaultABI } from '~/generated';
 
 export const JobModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, setNotificationOpen, loading, setLoading } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, setNotification, loading, setLoading, currentTheme } =
+    useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
   const publicClient = usePublicClient();
 
@@ -56,7 +58,15 @@ export const JobModal = () => {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);
         setModalOpen(ModalType.NONE);
-        setNotificationOpen(true);
+        setNotification({
+          open: true,
+          title: 'Job successfully approved',
+          message: (
+            <>
+              <span>{jobAddress}</span> job is now enabled
+            </>
+          ),
+        });
       }
     } catch (error) {
       console.error(error);
@@ -71,10 +81,11 @@ export const JobModal = () => {
           <STitle>Add New Job</STitle>
 
           <CloseButton variant='text' onClick={handleClose}>
-            <SCloseIcon />
+            <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
           </CloseButton>
         </TitleContainer>
 
+        {/* Job Address */}
         <StyledInput
           label='Job address'
           value={jobAddress}
@@ -84,8 +95,15 @@ export const JobModal = () => {
           errorText='Invalid address'
         />
 
-        <AbiTextarea value={jobAbi} spellCheck={false} disabled={loading} onChange={(e) => setJobAbi(e.target.value)} />
+        {/* ABI input */}
+        <AbiTextarea
+          value={jobAbi}
+          spellCheck={false}
+          disabled={loading || selectedValue === 'b'}
+          onChange={(e) => setJobAbi(e.target.value)}
+        />
 
+        {/* Radio Buttons section */}
         <RadioContainer>
           <div>
             <Radio
@@ -111,6 +129,7 @@ export const JobModal = () => {
           </div>
         </RadioContainer>
 
+        {/* Function dropdown */}
         {selectedValue === 'a' && (
           <DropdownContainer>
             <DropdownLabel>Contract function</DropdownLabel>
@@ -119,11 +138,12 @@ export const JobModal = () => {
               setValue={setContractFunction}
               setSignature={setFunctionSignature}
               abi={jobAbi}
-              disabled={!contractFunction || loading}
+              disabled={!jobAbi || loading}
             />
           </DropdownContainer>
         )}
 
+        {/* Function signature */}
         {selectedValue === 'b' && (
           <StyledInput
             label='Function signature'
@@ -133,6 +153,7 @@ export const JobModal = () => {
           />
         )}
 
+        {/* Alias input */}
         <StyledInput
           label='Job alias'
           value={jobAlias}

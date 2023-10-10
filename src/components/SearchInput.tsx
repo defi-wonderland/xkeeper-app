@@ -1,5 +1,6 @@
 import { InputAdornment, FormControl, OutlinedInput } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+
+import { Icon } from './Icon';
 
 interface SearchInputProps {
   placeholder?: string;
@@ -14,7 +15,7 @@ export const SearchInput = ({ placeholder }: SearchInputProps) => {
         placeholder={placeholder}
         startAdornment={
           <InputAdornment position='start'>
-            <SearchIcon fontSize='large' />
+            <Icon name='search' size='2rem' />
           </InputAdornment>
         }
         sx={{

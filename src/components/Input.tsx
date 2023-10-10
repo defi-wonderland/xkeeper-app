@@ -1,8 +1,7 @@
 import { Box, FormControl, OutlinedInput, Typography, styled, SxProps, Theme, InputAdornment } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { useStateContext } from '~/hooks';
-import { STooltip } from '~/components';
+import { Icon, STooltip } from '~/components';
 
 interface InputProps {
   value: string;
@@ -43,10 +42,11 @@ export const StyledInput = ({
               {error && (
                 <SInputAdornment position='end'>
                   <STooltip text={errorText || ''}>
-                    <SInfoOutlinedIcon />
+                    <SInfoOutlinedIcon name='alert-circle' size='1.7rem' />
                   </STooltip>
                 </SInputAdornment>
               )}
+              {!error && null}
             </>
           }
         />
@@ -112,7 +112,7 @@ const SOutlinedInput = styled(OutlinedInput)(() => {
   };
 });
 
-const SInfoOutlinedIcon = styled(InfoOutlinedIcon)(() => {
+const SInfoOutlinedIcon = styled(Icon)(() => {
   const { currentTheme } = useStateContext();
   return {
     color: currentTheme.error,

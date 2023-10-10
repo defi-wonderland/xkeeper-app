@@ -1,13 +1,11 @@
 import { Dropdown, Menu, MenuButton, MenuItem } from '@mui/base';
+import { grey } from '@mui/material/colors';
 import { styled } from '@mui/system';
 import { Address } from 'viem';
 
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import CreateIcon from '@mui/icons-material/Create';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-
 import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
+import { Icon } from './Icon';
 
 export interface OptionsMenuProps {
   address: string;
@@ -16,7 +14,7 @@ export interface OptionsMenuProps {
 }
 
 export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
-  const { setModalOpen, userAddress, selectedVault, setSelectedItem } = useStateContext();
+  const { setModalOpen, userAddress, selectedVault, setSelectedItem, currentTheme } = useStateContext();
 
   const handleOpenEditModal = () => setModalOpen(ModalType.EDIT_ALIAS);
 
@@ -29,15 +27,14 @@ export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
     <Dropdown>
       {/* Dropdown button */}
       <TriggerButton>
-        {/* TODO: use correct icons */}
-        <MoreVertIcon />
+        <Icon name='menu' color={currentTheme.textDisabled} size='2rem' />
       </TriggerButton>
 
       {/* Dropdown Options */}
       <Menu slots={{ listbox: StyledListbox }}>
         <StyledMenuItem onClick={handleOpenEditModal}>
           <EditContainer>
-            <CreateIcon />
+            <Icon name='pencil-square' size='2rem' />
             <p>Edit {type}</p>
           </EditContainer>
         </StyledMenuItem>
@@ -45,7 +42,7 @@ export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
         {userAddress && selectedVault?.owner === userAddress && (
           <StyledMenuItem onClick={handleOpenRevokeModal}>
             <RevokeContainer>
-              <HighlightOffIcon />
+              <Icon name='x-circle' size='2rem' />
               <p>Revoke {type}</p>
             </RevokeContainer>
           </StyledMenuItem>
@@ -61,7 +58,7 @@ const StyledListbox = styled('ul')(() => {
     border: `1px solid ${currentTheme.textSecondaryDisabled}`,
     color: currentTheme.textSecondary,
     background: currentTheme.backgroundPrimary,
-    padding: '0.4rem 0',
+    padding: '0.4rem',
     width: '16.4rem',
     fontSize: '1.4rem',
     boxSizing: 'border-box',
@@ -73,9 +70,11 @@ const StyledListbox = styled('ul')(() => {
   };
 });
 
-const StyledMenuItem = styled(MenuItem)({
-  padding: '0',
-  margin: '0',
+const StyledMenuItem = styled(MenuItem)(() => {
+  return {
+    padding: '0',
+    margin: '0',
+  };
 });
 
 const TriggerButton = styled(MenuButton)(() => {
@@ -117,13 +116,18 @@ const OptionContainer = styled('div')(() => {
 });
 
 const EditContainer = styled(OptionContainer)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme, theme } = useStateContext();
   return {
     color: currentTheme.textPrimary,
+    borderRadius: currentTheme.borderRadius,
+    '&:hover': {
+      transition: 'all 0.2s ease-in-out',
+      backgroundColor: theme === 'dark' ? grey[800] : grey[100],
+    },
   };
 });
 
-const RevokeContainer = styled(OptionContainer)(() => {
+const RevokeContainer = styled(EditContainer)(() => {
   const { currentTheme } = useStateContext();
   return {
     color: currentTheme.error,

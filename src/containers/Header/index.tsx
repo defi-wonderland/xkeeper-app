@@ -1,11 +1,8 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Box, IconButton } from '@mui/material';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { styled } from '@mui/material/styles';
+import { Box, IconButton, styled } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
-import { NavigationLink } from '~/components';
+import { Icon, NavigationLink } from '~/components';
 import { THEME_KEY, zIndex } from '~/utils';
 
 export const Header = () => {
@@ -27,6 +24,8 @@ export const Header = () => {
 
   const navigationLinkStyles = { fontSize: '1.6rem', fontWeight: '500', color: currentTheme.textDisabled };
 
+  const iconType = theme === 'dark' ? 'sun' : 'moon';
+
   return (
     <HeaderContainer>
       <Navbar>
@@ -36,7 +35,7 @@ export const Header = () => {
 
       <RightSection>
         <IconButton onClick={handleThemeChange} color='inherit'>
-          {theme === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          <Icon name={iconType} size='2.4rem' color={currentTheme.textTertiary} />
         </IconButton>
 
         <ConnectButton />
@@ -76,5 +75,5 @@ const RightSection = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  gap: '4.2rem',
+  gap: '3.2rem',
 });

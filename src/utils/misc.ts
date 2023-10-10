@@ -5,3 +5,7 @@ export const truncateAddress = (address: string, chars = 4) => {
 export const truncateFunctionSignature = (bytes: string) => {
   return bytes.slice(0, 10);
 };
+
+export const copyData = (data: string) => {
+  navigator.clipboard.writeText(data);
+};

@@ -1,21 +1,44 @@
+import { useEffect, useMemo, useState } from 'react';
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
-import { RowButton } from './EnabledRelays';
-import { ActiveButton, OptionsMenu, STooltip } from '~/components';
+import { AddressContainer, RowButton } from './EnabledRelays';
+import { ActiveButton, OptionsMenu, IconContainer, STooltip, Icon } from '~/components';
+import { copyData, truncateAddress } from '~/utils';
+import { Items, ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
-import { truncateAddress } from '~/utils';
-import { ModalType } from '~/types';
 
 function createJobsData(alias: string, contractAddress: string, functionSignature: string[]) {
   return { alias, contractAddress, functionSignature };
 }
 
 export const EnabledJobs = () => {
-  const { userAddress, setModalOpen, selectedVault } = useStateContext();
-  const selectedJobs = selectedVault?.jobs || {};
+  const { userAddress, setModalOpen, selectedVault, currentTheme } = useStateContext();
+  const [items, setItems] = useState<Items[]>([{ value: '', itemCopied: false }]);
 
-  const jobs = Object.keys(selectedJobs).map((key) => createJobsData('Test', key, selectedJobs[key]));
+  const selectedJobs = useMemo(() => selectedVault?.jobs || {}, [selectedVault?.jobs]);
+
+  const jobs = useMemo(
+    () => Object.keys(selectedJobs).map((key) => createJobsData('Test', key, selectedJobs[key])),
+    [selectedJobs],
+  );
+
+  useEffect(() => {
+    if (jobs.length > 0) setItems(jobs?.map((jobs) => ({ value: jobs.contractAddress, itemCopied: false })));
+  }, [jobs]);
+
+  const handleCopy = async (content: string, index: number) => {
+    copyData(content);
+    const newItems = [...items];
+    newItems[index].itemCopied = true;
+    setItems(newItems);
+
+    setTimeout(() => {
+      const newItems = [...items];
+      newItems[index].itemCopied = false;
+      setItems(newItems);
+    }, 800);
+  };
 
   return (
     <SCard variant='outlined'>
@@ -42,18 +65,30 @@ export const EnabledJobs = () => {
             </TableHead>
 
             <TableBody>
-              {jobs.map((row) => (
+              {jobs.map((row, index) => (
                 <STableRow key={row.contractAddress}>
+                  {/* Alias */}
                   <RowText component='th' scope='row'>
-                    <STooltip text='Edit alias'>{row.alias}</STooltip>
-                  </RowText>
-
-                  <RowText align='left'>
-                    <STooltip text={row.contractAddress} address>
-                      {truncateAddress(row.contractAddress)}
+                    <STooltip text='Edit alias'>
+                      <Text>{row.alias}</Text>
                     </STooltip>
                   </RowText>
 
+                  {/* Contract Address */}
+                  <RowText align='left'>
+                    <AddressContainer>
+                      <STooltip text={row.contractAddress} address>
+                        <Text>{truncateAddress(row.contractAddress)}</Text>
+                      </STooltip>
+                      <STooltip text={'Copied!'} open={!!items[index]?.itemCopied}>
+                        <IconContainer onClick={() => handleCopy(row.contractAddress, index)}>
+                          <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />
+                        </IconContainer>
+                      </STooltip>
+                    </AddressContainer>
+                  </RowText>
+
+                  {/* Function Signature */}
                   <RowText align='left'>
                     {row.functionSignature?.map((signature) => (
                       <STooltip text={signature} address key={signature}>
@@ -62,6 +97,7 @@ export const EnabledJobs = () => {
                     ))}
                   </RowText>
 
+                  {/* Options Menu */}
                   <RowButton align='right'>
                     <OptionsMenu type='job' address={row.contractAddress} params={row.functionSignature} />
                   </RowButton>
@@ -80,6 +116,7 @@ const SColumnTitle = styled(ColumnTitle)({
 });
 
 export const Text = styled('p')({
-  display: 'inline-block',
-  margin: '0 100% 0 0',
+  display: 'block',
+  margin: '0.2rem 0',
+  width: 'fit-content',
 });

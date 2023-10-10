@@ -1,10 +1,7 @@
-import { Box, Breadcrumbs, Typography, IconButton } from '@mui/material';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { styled } from '@mui/material/styles';
+import { Box, Breadcrumbs, Typography, IconButton, styled } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
-import { NavigationLink } from '.';
+import { Icon, NavigationLink } from '~/components';
 
 interface BreadCrumbsProps {
   currentPage: string;
@@ -30,12 +27,16 @@ export const BreadCrumbs = ({ currentPage, previousPage }: BreadCrumbsProps) => 
         <BackBtn
           sx={{ background: currentTheme.backgroundPrimary, border: `1px solid ${currentTheme.backButtonBorderColor}` }}
         >
-          <ArrowBackIcon sx={{ fontSize: '2.4rem', color: currentTheme.textDisabled }} />
+          <Icon name='arrow-left' color={currentTheme.textDisabled} size='2rem' />
         </BackBtn>
       </NavigationLink>
 
       {/* Breadcrumbs */}
-      <Breadcrumbs sx={{ my: '2rem' }} separator={<NavigateNextIcon fontSize='medium' />} aria-label='breadcrumb'>
+      <Breadcrumbs
+        sx={{ my: '2rem' }}
+        separator={<Icon name='chevron-right' color={currentTheme.textSecondaryDisabled} size='1.8rem' />}
+        aria-label='breadcrumb'
+      >
         {breadcrumbs}
       </Breadcrumbs>
     </BreadCrumbsContainer>
@@ -60,9 +61,17 @@ const PreviousPage = styled(Typography)({
   opacity: 0.8,
 });
 
-const BackBtn = styled(IconButton)({
-  borderRadius: '0.8rem',
-  border: '1px solid #EAECF0',
-  padding: '0.4rem',
-  opacity: 0.6,
+const BackBtn = styled(IconButton)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    borderRadius: '0.8rem',
+    border: '1px solid ',
+    borderColor: currentTheme.backButtonBorderColor,
+    padding: '0.8rem',
+    '&:hover': {
+      boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
+      backgroundColor: currentTheme.backgroundSecondary,
+      borderColor: currentTheme.textDisabled,
+    },
+  };
 });

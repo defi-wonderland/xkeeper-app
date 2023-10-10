@@ -2,12 +2,19 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import EditIcon from '@mui/icons-material/Edit';
 import { useNetwork } from 'wagmi';
 import { Address } from 'viem';
 
-import { AddressChip, BasicTabs, BreadCrumbs, CloseButton as EditAliasButton, InfoChip, STooltip } from '~/components';
-import { getVaultsData, truncateAddress } from '~/utils';
+import {
+  AddressChip,
+  BasicTabs,
+  BreadCrumbs,
+  CloseButton as EditAliasButton,
+  Icon,
+  InfoChip,
+  STooltip,
+} from '~/components';
+import { getVaultsData } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
@@ -82,20 +89,15 @@ export const Vault = () => {
 
               <STooltip text='Edit vault alias'>
                 <EditAliasButton variant='text' onClick={() => setModalOpen(ModalType.EDIT_ALIAS)}>
-                  <EditIcon />
+                  <Icon name='pencil-square' color={currentTheme.textDisabled} size='2rem' />
                 </EditAliasButton>
               </STooltip>
             </TitleBox>
 
             {/* Owner Icon */}
             <STooltip text='You own this vault'>
-              <SInfoChip
-                sx={{
-                  color: currentTheme.infoChipColor,
-                  backgroundColor: currentTheme.infoChipBackground,
-                }}
-              >
-                <EditIcon sx={{ fontSize: '1.8rem' }} />
+              <SInfoChip>
+                <Icon name='owned' />
               </SInfoChip>
             </STooltip>
           </TitleContainer>
@@ -103,8 +105,8 @@ export const Vault = () => {
           <DataSection>
             {/* Contract and Owner addresses */}
             <DataContainer>
-              <AddressChip label='Contract' text={truncateAddress(selectedVault?.address || '')} />
-              <AddressChip label='Owner' text={truncateAddress(selectedVault?.owner || '')} />
+              <AddressChip label='Contract' text={selectedVault?.address || ''} />
+              <AddressChip label='Owner' text={selectedVault?.owner || ''} />
             </DataContainer>
 
             {/* Vault version and Chain */}
@@ -188,14 +190,20 @@ const Version = styled(Typography)({
   padding: '0.2rem 1rem',
 });
 
-const SInfoChip = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '0.6rem',
-  fontWeight: '500',
-  height: 'auto',
-  borderRadius: '100%',
-  padding: '0.6rem',
-  lineHeight: '2rem',
-  width: 'fit-content',
+const SInfoChip = styled(Box)(() => {
+  const { currentTheme } = useStateContext();
+
+  return {
+    color: currentTheme.infoChipColor,
+    backgroundColor: currentTheme.infoChipBackground,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.6rem',
+    fontWeight: '500',
+    height: 'auto',
+    borderRadius: '100%',
+    padding: '0.6rem 0.6rem 0.5rem 0.6rem',
+    lineHeight: '2rem',
+    width: 'fit-content',
+  };
 });

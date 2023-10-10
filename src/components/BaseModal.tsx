@@ -6,6 +6,7 @@ import { Modal } from '@mui/base/Modal';
 import { useStateContext } from '~/hooks';
 import { zIndex } from '~/utils';
 import { ModalType } from '~/types';
+import { CustomScrollbar } from '~/components';
 
 interface BaseModalProps {
   children: React.ReactNode;
@@ -16,7 +17,9 @@ export const BaseModal = ({ children, open }: BaseModalProps) => {
   const { setModalOpen } = useStateContext();
   return (
     <StyledModal open={open} onClose={() => setModalOpen(ModalType.NONE)} slots={{ backdrop: StyledBackdrop }}>
-      <SModal>{children}</SModal>
+      <SModal>
+        <SCustomScrollbar>{children}</SCustomScrollbar>
+      </SModal>
     </StyledModal>
   );
 };
@@ -47,15 +50,21 @@ export const StyledBackdrop = styled(Backdrop)`
 `;
 
 export const SModal = styled(Box)(() => {
-  const {
-    currentTheme: { backgroundPrimary },
-  } = useStateContext();
+  const { currentTheme } = useStateContext();
 
   return {
+    backgroundColor: currentTheme.backgroundPrimary,
     minWidth: '40rem',
     borderRadius: '1.2rem',
-    padding: '2.4rem',
-    backgroundColor: backgroundPrimary,
+    padding: '0.6rem',
     boxShadow: 'none',
+  };
+});
+
+const SCustomScrollbar = styled(CustomScrollbar)(() => {
+  return {
+    overflowX: 'hidden',
+    maxHeight: '75vh',
+    padding: '1.8rem',
   };
 });

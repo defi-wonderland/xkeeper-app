@@ -3,9 +3,10 @@ import { Menu } from '@mui/base/Menu';
 import { MenuButton } from '@mui/base/MenuButton';
 import { MenuItem, menuItemClasses } from '@mui/base/MenuItem';
 import { styled, css } from '@mui/system';
+import { blue, grey } from '@mui/material/colors';
 
 import { useStateContext } from '~/hooks';
-import { ChainIcon, StyledText } from '~/components';
+import { ChainIcon, Icon, StyledText } from '~/components';
 import { Chains } from '~/types';
 
 interface ChainDropdownProps {
@@ -16,6 +17,7 @@ interface ChainDropdownProps {
 }
 
 export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdownProps) {
+  const { currentTheme } = useStateContext();
   const createHandleMenuClick = (menuItem: string) => {
     return () => {
       setValue(menuItem);
@@ -30,6 +32,7 @@ export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdo
       <TriggerButton disabled={disabled}>
         <ChainIcon chainName={chains[value].iconName} />
         <StyledText>{chains[value].iconName}</StyledText>
+        <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
       </TriggerButton>
 
       {/* Dropdown Options */}
@@ -46,29 +49,6 @@ export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdo
     </Dropdown>
   );
 }
-
-// temporary styles
-const blue = {
-  100: '#DAECFF',
-  200: '#99CCF3',
-  400: '#3399FF',
-  500: '#007FFF',
-  600: '#0072E5',
-  900: '#003A75',
-};
-
-const grey = {
-  50: '#f6f8fa',
-  100: '#eaeef2',
-  200: '#d0d7de',
-  300: '#afb8c1',
-  400: '#8c959f',
-  500: '#6e7781',
-  600: '#57606a',
-  700: '#424a53',
-  800: '#32383f',
-  900: '#24292f',
-};
 
 const StyledListbox = styled('ul')(() => {
   const { currentTheme } = useStateContext();
@@ -88,8 +68,8 @@ const StyledListbox = styled('ul')(() => {
   };
 });
 
-// temporary styles
-const StyledMenuItem = styled(MenuItem)(({ theme }) => {
+const StyledMenuItem = styled(MenuItem)(() => {
+  const { theme } = useStateContext();
   return css`
     display: flex;
     flex-direction: row;
@@ -108,18 +88,18 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => {
     }
 
     &.${menuItemClasses.focusVisible} {
-      outline: 3px solid ${theme.palette.mode === 'dark' ? blue[600] : blue[200]};
-      background-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[100]};
-      color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+      outline: 3px solid ${theme === 'dark' ? blue[600] : blue[200]};
+      background-color: ${theme === 'dark' ? grey[800] : grey[100]};
+      color: ${theme === 'dark' ? grey[300] : grey[900]};
     }
 
     &.${menuItemClasses.disabled} {
-      color: ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
+      color: ${theme === 'dark' ? grey[700] : grey[400]};
     }
 
     &:hover:not(.${menuItemClasses.disabled}) {
-      background-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[100]};
-      color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
+      background-color: ${theme === 'dark' ? grey[800] : grey[100]};
+      color: ${theme === 'dark' ? grey[300] : grey[900]};
     }
   `;
 });
@@ -149,5 +129,11 @@ const TriggerButton = styled(MenuButton)(() => {
     p: {
       fontSize: '1.6rem',
     },
+  };
+});
+
+const SIcon = styled(Icon)(() => {
+  return {
+    marginLeft: 'auto',
   };
 });

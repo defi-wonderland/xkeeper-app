@@ -1,5 +1,5 @@
 import { styled, Box } from '@mui/material';
-import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
+import { useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 
 import { StyledTitle, StyledText, CancelButton, RevokeButton, BaseModal } from '~/components';
 import { useStateContext } from '~/hooks';
@@ -8,19 +8,23 @@ import { vaultABI } from '~/generated';
 import { ModalType } from '~/types';
 
 export const RevokeModal = () => {
-  const { setNotificationOpen, setModalOpen, modalOpen, selectedItem, selectedVault, loading, setLoading } =
+  const { setNotification, setModalOpen, modalOpen, selectedItem, selectedVault, loading, setLoading } =
     useStateContext();
   const publicClient = usePublicClient();
 
   const type = selectedItem.type;
   const value = selectedItem.address;
+
   const functionName = selectedItem?.type === 'relay' ? 'revokeRelayCallers' : 'revokeJobFunctions';
+
+  const args = [selectedItem.address, selectedItem.params];
 
   const { config } = usePrepareContractWrite({
     address: selectedVault?.address,
     abi: vaultABI,
     functionName: functionName,
-    args: [selectedItem.address, selectedItem.params] as [Address, Address[]],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    args: args as any,
   });
 
   const { writeAsync } = useContractWrite(config);
@@ -34,7 +38,16 @@ export const RevokeModal = () => {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);
         setModalOpen(ModalType.NONE);
-        setNotificationOpen(true);
+        setNotification({
+          open: true,
+          title: `${type} successfully revoked`,
+          message: (
+            <>
+              <span>{value}</span> has been revoked and is no longer active.
+            </>
+          ),
+          type: type,
+        });
       }
     } catch (error) {
       console.error(error);

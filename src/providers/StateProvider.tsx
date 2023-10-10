@@ -1,7 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
 import { Address, useAccount } from 'wagmi';
 
-import { Theme, ThemeName, ModalType, Addresses, Chains, VaultData } from '~/types';
+import { Theme, ThemeName, ModalType, Addresses, Chains, VaultData, Notification } from '~/types';
 import { getConstants } from '~/config/constants';
 import { THEME_KEY, getTheme } from '~/utils';
 
@@ -16,8 +16,8 @@ type ContextType = {
   isError: boolean;
   setIsError: (val: boolean) => void;
 
-  notificationOpen: boolean;
-  setNotificationOpen: (val: boolean) => void;
+  notification: Notification;
+  setNotification: (val: Notification) => void;
 
   modalOpen: ModalType;
   setModalOpen: (val: ModalType) => void;
@@ -45,7 +45,7 @@ export const StateProvider = ({ children }: StateProps) => {
   const [theme, setTheme] = useState<ThemeName>('dark');
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
 
-  const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
+  const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
   const [selectedItem, setSelectedItem] = useState<{ type: string; address: string; params: string[] }>({
     type: '',
@@ -79,8 +79,8 @@ export const StateProvider = ({ children }: StateProps) => {
         isError,
         setIsError,
         currentTheme,
-        notificationOpen,
-        setNotificationOpen,
+        notification,
+        setNotification,
         modalOpen,
         setModalOpen,
         userAddress: address,
