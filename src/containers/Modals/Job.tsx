@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, styled, Radio, Typography } from '@mui/material';
-import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
-import { Hex, isAddress } from 'viem';
+import { isAddress } from 'viem';
 
 import {
   ActiveButton,
@@ -17,19 +16,15 @@ import {
 } from '~/components';
 import { ButtonsContainer, TitleContainer } from '~/containers';
 import { ModalType } from '~/types';
-import { useStateContext } from '~/hooks';
-import { vaultABI } from '~/generated';
+import { useStateContext, useVault } from '~/hooks';
 import { getContractAbi } from '~/utils';
 
 export const JobModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, setNotification, loading, setLoading, currentTheme, currentNetwork } =
-    useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, loading, currentTheme, currentNetwork } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
-  const publicClient = usePublicClient();
 
   const [jobAddress, setJobAddress] = useState('');
   const [jobAbi, setJobAbi] = useState('');
-
   const [contractFunction, setContractFunction] = useState('');
   const [functionSignature, setFunctionSignature] = useState('');
   const [jobAlias, setJobAlias] = useState('');
@@ -41,37 +36,17 @@ export const JobModal = () => {
     setSelectedValue(event.target.value);
   };
 
-  const { config } = usePrepareContractWrite({
-    address: selectedVault?.address,
-    abi: vaultABI,
-    functionName: 'approveJobFunctions',
-    args: [jobAddress as Address, [functionSignature as Hex]],
+  const { handleSendTransaction, writeAsync } = useVault({
+    contractAddress: selectedVault?.address,
+    functionName: 'approveRelayCallers',
+    args: [jobAddress, [functionSignature]],
+    notificationTitle: 'Job successfully approved',
+    notificationMessage: (
+      <>
+        <span>{jobAddress}</span> job is now enabled
+      </>
+    ),
   });
-
-  const { writeAsync } = useContractWrite(config);
-
-  const handleApproveJob = async () => {
-    setLoading(true);
-    try {
-      if (writeAsync) {
-        const writeResult = await writeAsync();
-        await publicClient.waitForTransactionReceipt(writeResult);
-        setModalOpen(ModalType.NONE);
-        setNotification({
-          open: true,
-          title: 'Job successfully approved',
-          message: (
-            <>
-              <span>{jobAddress}</span> job is now enabled
-            </>
-          ),
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    setLoading(false);
-  };
 
   useEffect(() => {
     if (isAddress(jobAddress)) {
@@ -174,7 +149,7 @@ export const JobModal = () => {
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleApproveJob}>
+          <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
             {!loading && 'Confirm'}
             {loading && 'Loading...'}
           </ActiveButton>

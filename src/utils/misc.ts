@@ -44,7 +44,7 @@ export function formatDataNumber(
   compact?: boolean,
 ) {
   let res: number = Number.parseFloat(input);
-  if (res === 0) return '0';
+  if (res === 0) return `${currency ? '$0' : '0'}`;
 
   if (decimals !== 0) res = Number.parseFloat(formatUnits(BigInt(input), decimals));
 

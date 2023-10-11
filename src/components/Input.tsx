@@ -2,19 +2,23 @@ import React, { useState } from 'react';
 import { Box, FormControl, OutlinedInput, Typography, styled, SxProps, Theme, InputAdornment } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
-import { Icon, STooltip } from '~/components';
+import { Icon, STooltip, StyledText } from '~/components';
+import { TextButton } from '~/containers';
 
 interface InputProps {
   value: string;
   setValue: (value: string) => void;
   label?: string;
-  description?: string;
+  description?: string | React.ReactNode;
   placeholder?: string;
   disabled?: boolean;
   error?: boolean;
   sx?: SxProps<Theme>;
   errorText?: string;
   copyable?: boolean;
+  number?: boolean;
+  onClick?: () => void;
+  tokenSymbol?: string;
 }
 
 export const StyledInput = ({
@@ -28,11 +32,15 @@ export const StyledInput = ({
   errorText,
   sx,
   copyable,
+  number,
+  tokenSymbol,
+  onClick,
 }: InputProps) => {
   const { currentTheme } = useStateContext();
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = () => {
+    if (!copyable) return;
     navigator.clipboard.writeText(value);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
@@ -59,6 +67,7 @@ export const StyledInput = ({
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
           error={error}
+          type={number ? 'number' : 'text'}
           readOnly={copyable}
           endAdornment={
             <React.Fragment>
@@ -69,10 +78,20 @@ export const StyledInput = ({
                   </STooltip>
                 </SInputAdornment>
               )}
+
               {copyable && !error && (
                 <SInputAdornment position='end'>
                   <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' />
                 </SInputAdornment>
+              )}
+
+              {number && !error && (
+                <AmountInputAdornment position='end'>
+                  <StyledText>{tokenSymbol}</StyledText>
+                  <STextButton variant='text' onClick={onClick} disabled={disabled}>
+                    Max
+                  </STextButton>
+                </AmountInputAdornment>
               )}
             </React.Fragment>
           }
@@ -108,14 +127,18 @@ export const InputLabel = styled(Typography)(() => {
   };
 });
 
-const InputDescription = styled('p')(() => {
+export const InputDescription = styled('p')(() => {
   const { currentTheme } = useStateContext();
   return {
-    color: currentTheme.textDisabled,
+    color: currentTheme.textTertiary,
     margin: 0,
     fontSize: '1.2rem',
     lineHeight: '1.6rem',
     fontWeight: 400,
+    span: {
+      fontWeight: 500,
+      color: currentTheme.textSecondary,
+    },
   };
 });
 
@@ -140,13 +163,15 @@ const SOutlinedInput = styled(OutlinedInput)(() => {
       backgroundColor: currentTheme.backgroundHover,
       color: currentTheme.textSecondary,
     },
+    ['input::-webkit-outer-spin-button,input::-webkit-inner-spin-button']: {
+      '-webkit-appearance': 'none',
+      margin: 0,
+    },
   };
 });
 
 const SIcon = styled(Icon)(() => {
-  const { currentTheme } = useStateContext();
   return {
-    color: currentTheme.error,
     marginRight: '1rem',
     fontSize: '1.6rem',
   };
@@ -155,5 +180,31 @@ const SIcon = styled(Icon)(() => {
 const SInputAdornment = styled(InputAdornment)(() => {
   return {
     cursor: 'pointer',
+  };
+});
+
+const AmountInputAdornment = styled(SInputAdornment)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    cursor: 'auto',
+    gap: '1.2rem',
+    p: {
+      color: currentTheme.textDisabled,
+    },
+  };
+});
+
+const STextButton = styled(TextButton)(() => {
+  return {
+    fontSize: '1.6rem',
+    lineHeight: '2.4rem',
+    fontWeight: 500,
+    textTransform: 'none',
+    minWidth: 'auto',
+    width: 'auto',
+    marginRight: '1.2rem',
+    '&:hover': {
+      fontWeight: 600,
+    },
   };
 });

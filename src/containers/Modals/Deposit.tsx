@@ -16,7 +16,7 @@ import { ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
 
 export const DepositModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, currentTheme } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, currentTheme, currentNetwork } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   return (
@@ -31,7 +31,9 @@ export const DepositModal = () => {
             </CloseButton>
           </TitleContainer>
 
-          <StyledText>You can send ETH or any ERC-20 token on the Ethereum network to this adddress.</StyledText>
+          <StyledText>
+            You can send ETH or any ERC-20 token on the {currentNetwork.displayName} network to this adddress.
+          </StyledText>
         </SBox>
 
         <StyledInput

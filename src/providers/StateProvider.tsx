@@ -35,6 +35,8 @@ type ContextType = {
 
   vaults: VaultData[];
   setVaults: (val: VaultData[]) => void;
+
+  update: () => void;
 };
 
 interface StateProps {
@@ -44,9 +46,9 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
+  const { addresses, availableChains, DEFAULT_CHAIN } = getConstants();
   const { address } = useAccount();
   const { chain } = useNetwork();
-  const publicClient = usePublicClient();
 
   const [theme, setTheme] = useState<ThemeName>('dark');
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
@@ -63,12 +65,12 @@ export const StateProvider = ({ children }: StateProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const { addresses, availableChains, DEFAULT_CHAIN } = getConstants();
-
   const currentNetwork = useMemo(
     () => availableChains[chain?.id || DEFAULT_CHAIN],
     [DEFAULT_CHAIN, availableChains, chain?.id],
   );
+
+  const publicClient = usePublicClient({ chainId: currentNetwork.id });
 
   const update = useCallback(async () => {
     setLoading(true);
@@ -84,6 +86,12 @@ export const StateProvider = ({ children }: StateProps) => {
   useEffect(() => {
     update();
   }, [update]);
+
+  useEffect(() => {
+    if (notification.open) {
+      update();
+    }
+  }, [notification.open, update]);
 
   // Load theme from local storage
   useEffect(() => {
@@ -119,6 +127,7 @@ export const StateProvider = ({ children }: StateProps) => {
         setSelectedItem,
         vaults,
         setVaults,
+        update,
       }}
     >
       {children}

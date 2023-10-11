@@ -1,48 +1,19 @@
 import { useState } from 'react';
 import { Box, Typography, styled } from '@mui/material';
-import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
+import { Address } from 'wagmi';
 import { isAddress } from 'viem';
 
 import { DataSection as DescriptionContainer, Title, Header } from '~/pages';
 import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton } from '~/components';
-import { useStateContext } from '~/hooks';
-import { vaultFactoryABI } from '~/generated';
+import { useStateContext, useVaultFactory } from '~/hooks';
 
 export const CreateVault = () => {
-  const { addresses, availableChains, loading, setLoading, setNotification, userAddress } = useStateContext();
-  const publicClient = usePublicClient();
+  const { availableChains, loading, userAddress, currentNetwork } = useStateContext();
 
   const [vaultName, setVaultName] = useState('');
   const [vaultOwner, setVaultOwner] = useState(userAddress || '');
-  const [selectedChain, setSelectedChain] = useState(Object.keys(availableChains)[0]);
-
-  const { config } = usePrepareContractWrite({
-    address: addresses.AutomationVaultFactory,
-    abi: vaultFactoryABI,
-    functionName: 'deployAutomationVault',
-    args: [vaultOwner as Address, vaultName],
-    chainId: Number(selectedChain),
-  });
-
-  const { writeAsync } = useContractWrite(config);
-
-  const handleCreateVault = async () => {
-    setLoading(true);
-    try {
-      if (writeAsync) {
-        const writeResult = await writeAsync();
-        await publicClient.waitForTransactionReceipt(writeResult);
-        setNotification({
-          open: true,
-          title: 'Vault successfully created',
-          message: 'View transaction',
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    setLoading(false);
-  };
+  const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
+  const { handleSendTransaction, writeAsync } = useVaultFactory({ args: [vaultOwner as Address, vaultName] });
 
   return (
     <PageContainer>
@@ -93,7 +64,11 @@ export const CreateVault = () => {
 
         {/* Create Button */}
         <ButtonContainer>
-          <CreateButton variant='contained' disabled={!writeAsync || loading || !vaultName} onClick={handleCreateVault}>
+          <CreateButton
+            variant='contained'
+            disabled={!writeAsync || loading || !vaultName}
+            onClick={handleSendTransaction}
+          >
             {!loading && 'Create Vault'}
             {loading && 'Loading...'}
           </CreateButton>

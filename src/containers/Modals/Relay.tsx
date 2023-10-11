@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
-import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 import { isAddress } from 'viem';
 
 import {
@@ -15,16 +14,13 @@ import {
   Icon,
 } from '~/components';
 import { ButtonsContainer, BigModal, TitleContainer } from '~/containers';
-import { useStateContext } from '~/hooks';
-import { vaultABI } from '~/generated';
+import { useStateContext, useVault } from '~/hooks';
 import { ModalType } from '~/types';
 import { anyCaller } from '~/utils';
 
 export const RelayModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, setNotification, loading, setLoading, currentTheme } =
-    useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, loading, currentTheme } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
-  const publicClient = usePublicClient();
 
   const [relayAddress, setRelayAddress] = useState('');
   const [callerAddress, setCallerAddress] = useState<string>('');
@@ -40,41 +36,20 @@ export const RelayModal = () => {
     }
   }, [allowAnyCaller, callerAddress, callers]);
 
-  const { config } = usePrepareContractWrite({
-    address: selectedVault?.address,
-    abi: vaultABI,
+  const { handleSendTransaction, writeAsync } = useVault({
+    contractAddress: selectedVault?.address,
     functionName: 'approveRelayCallers',
-    args: [relayAddress as Address, callerList as Address[]],
+    args: [relayAddress, callerList],
+    notificationTitle: 'Relay successfuly approved',
+    notificationMessage: (
+      <>
+        <span>{relayAddress}</span> relay is now enabled.
+      </>
+    ),
   });
-
-  const { writeAsync } = useContractWrite(config);
 
   const handleToggle = () => {
     setAllowAnyCaller(!allowAnyCaller);
-  };
-
-  const handleApproveRelay = async () => {
-    setLoading(true);
-    try {
-      if (writeAsync) {
-        const writeResult = await writeAsync();
-        await publicClient.waitForTransactionReceipt(writeResult);
-        setModalOpen(ModalType.NONE);
-        setNotification({
-          open: true,
-          title: `Relay successfuly approved`,
-          message: (
-            <>
-              <span>{relayAddress}</span> relay is now enabled.
-            </>
-          ),
-          type: '',
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    setLoading(false);
   };
 
   const handleAddNewCaller = () => {
@@ -136,7 +111,7 @@ export const RelayModal = () => {
           ))}
 
           <CallersContainer>
-            <SButton
+            <TextButton
               variant='text'
               disabled={allowAnyCaller || !isAddress(callerAddress) || loading}
               onClick={handleAddNewCaller}
@@ -145,7 +120,7 @@ export const RelayModal = () => {
                 <Icon name='plus' size='2rem' color={currentTheme.actionButton} />
                 <ButtonText>Add additional caller address</ButtonText>
               </Container>
-            </SButton>
+            </TextButton>
 
             <Container>
               <SSwitch disabled={loading} onClick={handleToggle} />
@@ -168,7 +143,7 @@ export const RelayModal = () => {
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleApproveRelay}>
+          <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
             {!loading && 'Confirm'}
             {loading && 'Loading...'}
           </ActiveButton>
@@ -204,7 +179,7 @@ const Container = styled('div')({
   width: 'fit-content',
 });
 
-const SButton = styled(Button)(() => {
+export const TextButton = styled(Button)(() => {
   const { currentTheme } = useStateContext();
   return {
     color: currentTheme.actionButton,

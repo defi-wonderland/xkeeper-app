@@ -1,54 +1,29 @@
 import { styled, Box } from '@mui/material';
-import { useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 
 import { StyledTitle, StyledText, CancelButton, RevokeButton, BaseModal } from '~/components';
-import { useStateContext } from '~/hooks';
+import { useStateContext, useVault } from '~/hooks';
 import { truncateAddress } from '~/utils';
-import { vaultABI } from '~/generated';
 import { ModalType } from '~/types';
 
 export const RevokeModal = () => {
-  const { setNotification, setModalOpen, modalOpen, selectedItem, selectedVault, loading, setLoading } =
-    useStateContext();
-  const publicClient = usePublicClient();
+  const { setModalOpen, modalOpen, selectedItem, selectedVault, loading } = useStateContext();
 
   const type = selectedItem.type;
   const value = selectedItem.address;
 
   const functionName = selectedItem?.type === 'relay' ? 'revokeRelayCallers' : 'revokeJobFunctions';
 
-  const { config } = usePrepareContractWrite({
-    address: selectedVault?.address,
-    abi: vaultABI,
+  const { handleSendTransaction, writeAsync } = useVault({
+    contractAddress: selectedVault?.address,
     functionName: functionName,
     args: [selectedItem.address, selectedItem.params],
+    notificationTitle: `${type} successfully revoked`,
+    notificationMessage: (
+      <>
+        <span>{value}</span> has been revoked and is no longer active.
+      </>
+    ),
   });
-
-  const { writeAsync } = useContractWrite(config);
-
-  const handleConfirm = async () => {
-    setLoading(true);
-    try {
-      if (writeAsync) {
-        const writeResult = await writeAsync();
-        await publicClient.waitForTransactionReceipt(writeResult);
-        setModalOpen(ModalType.NONE);
-        setNotification({
-          open: true,
-          title: `${type} successfully revoked`,
-          message: (
-            <>
-              <span>{value}</span> has been revoked and is no longer active.
-            </>
-          ),
-          type: type,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    setLoading(false);
-  };
 
   return (
     <BaseModal open={modalOpen === ModalType.REVOQUE}>
@@ -65,7 +40,7 @@ export const RevokeModal = () => {
           Cancel
         </CancelButton>
 
-        <RevokeButton variant='contained' disabled={!writeAsync || loading} onClick={handleConfirm}>
+        <RevokeButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
           {!loading && `Revoke ${type}`}
           {loading && `Loading...`}
         </RevokeButton>

@@ -50,7 +50,7 @@ export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdo
   );
 }
 
-const StyledListbox = styled('ul')(() => {
+export const StyledListbox = styled('ul')(() => {
   const { currentTheme } = useStateContext();
   return {
     fontSize: '1.4rem',
@@ -68,7 +68,7 @@ const StyledListbox = styled('ul')(() => {
   };
 });
 
-const StyledMenuItem = styled(MenuItem)(() => {
+export const StyledMenuItem = styled(MenuItem)(() => {
   const { theme } = useStateContext();
   return css`
     display: flex;
@@ -104,7 +104,7 @@ const StyledMenuItem = styled(MenuItem)(() => {
   `;
 });
 
-const TriggerButton = styled(MenuButton)(() => {
+export const TriggerButton = styled(MenuButton)(() => {
   const { currentTheme } = useStateContext();
   return {
     cursor: 'pointer',
@@ -132,7 +132,7 @@ const TriggerButton = styled(MenuButton)(() => {
   };
 });
 
-const SIcon = styled(Icon)(() => {
+export const SIcon = styled(Icon)(() => {
   return {
     marginLeft: 'auto',
   };

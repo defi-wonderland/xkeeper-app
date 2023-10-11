@@ -24,6 +24,7 @@ export interface Chain {
   displayName: string;
   name: string;
   scanner: string;
+  id: number;
 }
 
 export interface Chains {

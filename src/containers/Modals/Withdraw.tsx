@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Box, styled } from '@mui/material';
-import { isAddress } from 'viem';
+import { Address, isAddress, parseUnits } from 'viem';
 
 import {
   ActiveButton,
@@ -12,41 +12,64 @@ import {
   StyledText,
   StyledTitle,
   Icon,
+  TokenDropdown,
 } from '~/components';
 import { BigModal, TitleContainer as Header } from '~/containers';
-import { useStateContext } from '~/hooks';
-import { ModalType } from '~/types';
+import { useStateContext, useVault } from '~/hooks';
+import { ModalType, TokenData } from '~/types';
 
 export const WithdrawtModal = () => {
-  const { modalOpen, setModalOpen, setNotification, setLoading, currentTheme, selectedVault, currentNetwork } =
+  const { modalOpen, setModalOpen, currentTheme, selectedVault, currentNetwork, loading, userAddress } =
     useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
-  const [widthdrawalAddress, setWithdrawalAddress] = useState('');
-  const [token, setToken] = useState('');
+  const [widthdrawalAddress, setWithdrawalAddress] = useState(userAddress || '');
+  const [token, setToken] = useState<TokenData>({} as TokenData);
   const [amount, setAmount] = useState('');
 
   const vaultName = selectedVault?.name;
   const network = currentNetwork.displayName;
 
-  const handleConfirm = async () => {
-    setLoading(true);
+  const amountE18 = useMemo(() => {
     try {
-      // if (writeAsync) {
-      // const writeResult = await writeAsync();
-      // await publicClient.waitForTransactionReceipt(writeResult);
-      setModalOpen(ModalType.NONE);
-      setNotification({
-        open: true,
-        title: 'Funds successfully withdrawn',
-        message: 'View transaction',
-      });
-      // }
+      return parseUnits(amount, token.decimals);
     } catch (error) {
-      console.error(error);
+      return BigInt('0');
     }
-    setLoading(false);
+  }, [amount, token.decimals]);
+
+  const handleMax = () => {
+    setAmount(token.balance);
   };
+
+  const { handleSendTransaction, writeAsync } = useVault({
+    contractAddress: selectedVault?.address,
+    functionName: 'withdrawFunds',
+    args: [token.address as Address, amountE18, widthdrawalAddress as Address],
+    notificationTitle: 'Funds successfully withdrawn',
+    notificationMessage: 'View transaction',
+  });
+
+  useEffect(() => {
+    if (userAddress) {
+      setWithdrawalAddress(userAddress);
+    }
+  }, [userAddress]);
+
+  useEffect(() => {
+    if (selectedVault) {
+      setToken(selectedVault.tokens[0]);
+    }
+  }, [selectedVault]);
+
+  const AmountFieldDescription = (
+    <>
+      Available:{' '}
+      <span>
+        {token.balance} {token.symbol}
+      </span>
+    </>
+  );
 
   return (
     <BaseModal open={modalOpen === ModalType.WITHDRAW}>
@@ -73,37 +96,70 @@ export const WithdrawtModal = () => {
           </InfoContainer>
         </TitleContainer>
 
+        {/* Withdrawal address */}
         <StyledInput
           label='Withdrawal address'
           value={widthdrawalAddress}
           setValue={setWithdrawalAddress}
           error={!!widthdrawalAddress && !isAddress(widthdrawalAddress)}
           errorText='Invalid address'
+          disabled={loading}
         />
 
-        <StyledInput label='Token' value={token} setValue={setToken} />
+        {/* Token selector  */}
+        <InputContainer>
+          <InputLabel>Token</InputLabel>
+          <TokenDropdown tokens={selectedVault?.tokens} value={token} setValue={setToken} disabled={loading} />
+        </InputContainer>
 
+        {/* Amount field */}
         <StyledInput
           label='Amount'
           value={amount}
           setValue={setAmount}
-          description='Available: 12 ETH'
           placeholder='0'
+          number
+          description={AmountFieldDescription}
+          onClick={handleMax}
+          tokenSymbol={token.symbol}
+          disabled={loading}
         />
 
         <SButtonsContainer>
-          <CancelButton variant='outlined' onClick={handleClose}>
+          <CancelButton variant='outlined' disabled={loading} onClick={handleClose}>
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained' onClick={handleConfirm}>
-            Confirm
+          <ActiveButton
+            variant='contained'
+            disabled={!writeAsync || loading || !Number(amount)}
+            onClick={handleSendTransaction}
+          >
+            {!loading && 'Confirm'}
+            {loading && 'Loading...'}
           </ActiveButton>
         </SButtonsContainer>
       </BigModal>
     </BaseModal>
   );
 };
+
+const InputLabel = styled(StyledText)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    color: currentTheme.textSecondary,
+    fontSize: '1.4rem',
+    lineHeight: '2rem',
+    fontWeight: 500,
+  };
+});
+
+const InputContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.6rem',
+  marginBottom: '2.4rem',
+});
 
 const TitleContainer = styled(Box)({
   display: 'flex',
@@ -121,6 +177,10 @@ const InfoContainer = styled(Box)({
 
 const VaultText = styled(StyledText)(() => {
   return {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '0.4rem',
     span: {
       fontWeight: 500,
     },
@@ -131,6 +191,7 @@ const NetworkText = styled(StyledText)(() => {
   return {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     gap: '0.4rem',
   };
 });

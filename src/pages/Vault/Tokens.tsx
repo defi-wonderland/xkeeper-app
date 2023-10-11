@@ -33,12 +33,16 @@ export const Tokens = () => {
 
         <ButtonsContainer>
           {selectedVault?.owner === userAddress && (
-            <CancelButton variant='outlined' onClick={() => setModalOpen(ModalType.WITHDRAW)}>
+            <CancelButton
+              variant='outlined'
+              onClick={() => setModalOpen(ModalType.WITHDRAW)}
+              disabled={!Number(selectedVault?.totalValue)}
+            >
               Withdraw funds
             </CancelButton>
           )}
 
-          <ActiveButton variant='contained' disabled={!userAddress} onClick={() => setModalOpen(ModalType.DEPOSIT)}>
+          <ActiveButton variant='contained' onClick={() => setModalOpen(ModalType.DEPOSIT)}>
             Deposit funds
           </ActiveButton>
         </ButtonsContainer>

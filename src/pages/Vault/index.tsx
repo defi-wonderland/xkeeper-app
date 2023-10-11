@@ -23,7 +23,7 @@ import { Activity } from './Activity';
 import { ModalType } from '~/types';
 
 export const Vault = () => {
-  const { currentTheme, setModalOpen, selectedVault, setSelectedVault, currentNetwork, setSelectedItem } =
+  const { currentTheme, setModalOpen, selectedVault, setSelectedVault, currentNetwork, setSelectedItem, notification } =
     useStateContext();
   const { address } = useParams();
   const publicClient = usePublicClient();
@@ -79,6 +79,12 @@ export const Vault = () => {
       loadSelectedVault();
     }
   }, []);
+
+  useEffect(() => {
+    if (notification.open) {
+      loadSelectedVault();
+    }
+  }, [notification.open]);
 
   return (
     <PageContainer>
