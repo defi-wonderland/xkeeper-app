@@ -1,8 +1,8 @@
 import { Box, Card, styled } from '@mui/material';
 
 import { ChainIcon, Icon, InfoChip, RelayChip, STooltip, StyledText, StyledTitle } from '~/components';
+import { formatDataNumber, getRelayName } from '~/utils';
 import { useStateContext } from '~/hooks';
-import { getRelayName } from '~/utils';
 import { VaultData } from '~/types';
 
 interface VaultCardProps {
@@ -12,7 +12,7 @@ interface VaultCardProps {
 
 export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
   const { currentTheme, userAddress } = useStateContext();
-  const { name, balance, relays, chain, owner, address } = vaultData;
+  const { name, totalValue, relays, chain, owner, address } = vaultData;
 
   return (
     <SContainer onClick={onClick}>
@@ -37,7 +37,7 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
           </TitleContainer>
 
           {/* Vault total balance */}
-          <Balance sx={{ color: currentTheme.textDisabled }}>{balance}</Balance>
+          <Balance sx={{ color: currentTheme.textDisabled }}>{formatDataNumber(totalValue, 18, 2, true)}</Balance>
         </Box>
 
         {/* Active Relays */}

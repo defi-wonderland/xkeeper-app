@@ -1,16 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import { SearchInput, VaultCard, BasicTabs, NavigationLink, ActiveButton, Icon, NoUserVaults } from '~/components';
-import { getVaults, getVaultsData } from '~/utils';
 import { useStateContext } from '~/hooks';
-import { VaultData } from '~/types';
 
 export const Landing = () => {
-  const { addresses, userAddress, setSelectedVault, currentTheme, loading, setLoading } = useStateContext();
+  const { userAddress, setSelectedVault, currentTheme, loading, vaults } = useStateContext();
 
-  const [vaults, setVaults] = useState<VaultData[]>([]);
   const [searchValue, setSearchValue] = useState('');
 
   const ownedVaults = useMemo(() => vaults.filter((vault) => vault.owner === userAddress), [userAddress, vaults]);
@@ -57,19 +54,6 @@ export const Landing = () => {
       />
     ),
   };
-
-  const loadSafes = useCallback(async () => {
-    setLoading(true);
-    const vaults = await getVaults(addresses.AutomationVaultFactory);
-    const vaultsData = await getVaultsData(vaults);
-
-    setVaults(vaultsData);
-    setLoading(false);
-  }, [addresses.AutomationVaultFactory, setLoading]);
-
-  useEffect(() => {
-    loadSafes();
-  }, [loadSafes]);
 
   return (
     <HomeContainer>

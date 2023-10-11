@@ -2,6 +2,7 @@ import { Constants } from '~/types';
 
 const constants: Constants = {
   DEFAULT_CHAIN: 1,
+  DEFAULT_ETH_ADDRESS: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
 
   addresses: {
     AutomationVaultFactory: '0x49f06CfB7e9505b5a704Ca24E4674aa7B1A81D96',

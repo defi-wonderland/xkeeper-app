@@ -38,7 +38,7 @@ export const DepositModal = () => {
           label='Deposit address'
           value={(selectedVault?.address as string) || ''}
           setValue={() => {}}
-          disabled
+          copyable
         />
 
         <WarningChip>

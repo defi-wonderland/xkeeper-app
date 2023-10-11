@@ -1,5 +1,6 @@
 import { styled } from '@mui/system';
 import defaultImage from '~/assets/defaultToken.png';
+import { getConstants } from '~/config/constants';
 
 interface TokenIconProps {
   chainName: string;
@@ -17,10 +18,14 @@ const Image = styled('img')`
 `;
 
 export const TokenIcon = ({ chainName, tokenAddress }: TokenIconProps) => {
+  const { DEFAULT_ETH_ADDRESS } = getConstants();
+  const customSrc = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainName}/assets/${tokenAddress}/logo.png`;
+  const ethSrc = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png`;
+
   return (
     <Image
       alt={chainName}
-      src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainName}/assets/${tokenAddress}/logo.png`}
+      src={tokenAddress === DEFAULT_ETH_ADDRESS ? ethSrc : customSrc}
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError={(ev: any) => {
         ev.target.src = defaultImage;

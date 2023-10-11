@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Box, FormControl, OutlinedInput, Typography, styled, SxProps, Theme, InputAdornment } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
@@ -13,6 +14,7 @@ interface InputProps {
   error?: boolean;
   sx?: SxProps<Theme>;
   errorText?: string;
+  copyable?: boolean;
 }
 
 export const StyledInput = ({
@@ -25,9 +27,29 @@ export const StyledInput = ({
   error,
   errorText,
   sx,
+  copyable,
 }: InputProps) => {
+  const { currentTheme } = useStateContext();
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  let copyableSx: SxProps<Theme> | null = null;
+  if (copyable) {
+    copyableSx = {
+      input: {
+        cursor: 'pointer',
+        color: currentTheme.textSecondary,
+      },
+    };
+  }
+
   return (
-    <InputContainer sx={sx}>
+    <InputContainer onClick={handleCopy} sx={{ ...sx, ...copyableSx }}>
       {!!label && <InputLabel>{label}</InputLabel>}
 
       <FormControl fullWidth disabled={disabled}>
@@ -37,17 +59,22 @@ export const StyledInput = ({
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
           error={error}
+          readOnly={copyable}
           endAdornment={
-            <>
+            <React.Fragment>
               {error && (
                 <SInputAdornment position='end'>
                   <STooltip text={errorText || ''}>
-                    <SInfoOutlinedIcon name='alert-circle' size='1.7rem' />
+                    <SIcon name='alert-circle' size='1.7rem' color={currentTheme.error} />
                   </STooltip>
                 </SInputAdornment>
               )}
-              {!error && null}
-            </>
+              {copyable && !error && (
+                <SInputAdornment position='end'>
+                  <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' />
+                </SInputAdornment>
+              )}
+            </React.Fragment>
           }
         />
       </FormControl>
@@ -109,10 +136,14 @@ const SOutlinedInput = styled(OutlinedInput)(() => {
       padding: '1rem 1.4rem',
       color: currentTheme.textPrimary,
     },
+    '&:disabled': {
+      backgroundColor: currentTheme.backgroundHover,
+      color: currentTheme.textSecondary,
+    },
   };
 });
 
-const SInfoOutlinedIcon = styled(Icon)(() => {
+const SIcon = styled(Icon)(() => {
   const { currentTheme } = useStateContext();
   return {
     color: currentTheme.error,

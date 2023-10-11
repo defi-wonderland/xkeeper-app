@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNetwork, usePublicClient } from 'wagmi';
 import { Address } from 'viem';
 
 import {
@@ -13,7 +14,7 @@ import {
   InfoChip,
   STooltip,
 } from '~/components';
-import { getVaultsData } from '~/utils';
+import { getTokenList, getVaultsData } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
@@ -25,6 +26,9 @@ export const Vault = () => {
   const { currentTheme, setModalOpen, selectedVault, setSelectedVault, currentNetwork, setSelectedItem } =
     useStateContext();
   const { address } = useParams();
+  const publicClient = usePublicClient();
+  const { chain } = useNetwork();
+
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const chainName = currentNetwork.displayName;
@@ -54,7 +58,8 @@ export const Vault = () => {
   const loadSelectedVault = async () => {
     setLoading(true);
     try {
-      const vaultData = await getVaultsData([address as Address]);
+      const tokens = getTokenList(chain?.id);
+      const vaultData = await getVaultsData(publicClient, [address as Address], tokens);
 
       setLoading(false);
       setSelectedVault(vaultData[0]);

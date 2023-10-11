@@ -1,9 +1,9 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { useAccount, useNetwork, usePublicClient } from 'wagmi';
 
 import { Theme, ThemeName, ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
+import { THEME_KEY, getTheme, getTokenList, getVaults, getVaultsData } from '~/utils';
 import { getConstants } from '~/config/constants';
-import { THEME_KEY, getTheme } from '~/utils';
 
 type ContextType = {
   theme: ThemeName;
@@ -32,6 +32,9 @@ type ContextType = {
 
   selectedItem: SelectedItem;
   setSelectedItem: (val: SelectedItem) => void;
+
+  vaults: VaultData[];
+  setVaults: (val: VaultData[]) => void;
 };
 
 interface StateProps {
@@ -43,12 +46,13 @@ export const StateContext = createContext({} as ContextType);
 export const StateProvider = ({ children }: StateProps) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
+  const publicClient = usePublicClient();
 
   const [theme, setTheme] = useState<ThemeName>('dark');
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
-
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
+  const [vaults, setVaults] = useState<VaultData[]>([]);
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     type: '',
     address: '0x',
@@ -65,6 +69,21 @@ export const StateProvider = ({ children }: StateProps) => {
     () => availableChains[chain?.id || DEFAULT_CHAIN],
     [DEFAULT_CHAIN, availableChains, chain?.id],
   );
+
+  const update = useCallback(async () => {
+    setLoading(true);
+    const tokens = getTokenList(chain?.id);
+
+    const vaults = await getVaults(publicClient, addresses.AutomationVaultFactory);
+    const vaultsData = await getVaultsData(publicClient, vaults, tokens);
+
+    setVaults(vaultsData);
+    setLoading(false);
+  }, [addresses.AutomationVaultFactory, chain?.id, publicClient]);
+
+  useEffect(() => {
+    update();
+  }, [update]);
 
   // Load theme from local storage
   useEffect(() => {
@@ -98,6 +117,8 @@ export const StateProvider = ({ children }: StateProps) => {
         setSelectedVault,
         selectedItem,
         setSelectedItem,
+        vaults,
+        setVaults,
       }}
     >
       {children}

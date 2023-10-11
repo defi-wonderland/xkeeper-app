@@ -60,6 +60,7 @@ export const STooltip = ({ children, text, placement, address, open }: Props) =>
       }
       placement={placement ? placement : 'top'}
       sx={tooltipStyles}
+      disableInteractive
       enterDelay={0}
       leaveDelay={0}
     >

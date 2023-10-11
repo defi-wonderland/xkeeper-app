@@ -1,11 +1,11 @@
 import { Address } from 'viem';
+import { PublicClient } from 'wagmi';
 
 import { vaultABI, vaultFactoryABI } from '~/generated';
-import { JobData, RelayData, VaultData } from '~/types';
-import { truncateFunctionSignature } from '~/utils';
-import { publicClient } from '~/config';
+import { JobData, RelayData, Token, TokenData, VaultData } from '~/types';
+import { getTokensData, getTotalUsdBalance, truncateFunctionSignature } from '~/utils';
 
-export const getVaults = async (vaultFactoryAddress: Address): Promise<Address[]> => {
+export const getVaults = async (publicClient: PublicClient, vaultFactoryAddress: Address): Promise<Address[]> => {
   try {
     const data = await publicClient.readContract({
       address: vaultFactoryAddress,
@@ -20,21 +20,26 @@ export const getVaults = async (vaultFactoryAddress: Address): Promise<Address[]
   }
 };
 
-export const getVaultsData = async (vaults: Address[]): Promise<VaultData[]> => {
+export const getVaultsData = async (
+  publicClient: PublicClient,
+  vaults: Address[],
+  tokenList: Token[],
+): Promise<VaultData[]> => {
   const vaultsData: VaultData[] = [];
 
   try {
     for (const vault of vaults) {
-      const { owner, name, relays, jobs } = await getData(vault);
+      const { owner, name, relays, jobs, tokens } = await fetchAndFormatData(publicClient, vault, tokenList);
 
       vaultsData.push({
         address: vault,
-        balance: '$1,000,000',
         chain: 'ethereum',
         name: name,
         owner: owner,
         jobs: jobs,
         relays: relays,
+        tokens: tokens,
+        totalValue: getTotalUsdBalance(tokens),
       });
     }
 
@@ -44,17 +49,22 @@ export const getVaultsData = async (vaults: Address[]): Promise<VaultData[]> => 
     return vaultsData;
   }
 };
-const getData = async (
+
+const fetchAndFormatData = async (
+  publicClient: PublicClient,
   vaultAddress: Address,
+  tokens: Token[],
 ): Promise<{
   owner: Address | undefined;
   name: string | undefined;
   relays: RelayData;
   jobs: JobData;
+  tokens: TokenData[];
 }> => {
   const vaultContract = { address: vaultAddress, abi: vaultABI };
   let relaysData: RelayData = {};
   let jobData: JobData = {};
+  let tokensData: TokenData[] = [];
 
   const [owner, name, relays, jobs] = await publicClient.multicall({
     contracts: [
@@ -78,9 +88,10 @@ const getData = async (
       args: [jobAddress],
     }));
 
-    const [callers, jobFunctions] = await Promise.all([
+    const [callers, jobFunctions, tokensResult] = await Promise.all([
       publicClient.multicall({ contracts: relayEnabledCallers }),
       publicClient.multicall({ contracts: jobEnabledFunctions }),
+      getTokensData(tokens, vaultAddress),
     ]);
 
     relaysData = Object.fromEntries(callers.map((caller, index) => [relays.result[index], caller.result as Address[]]));
@@ -88,6 +99,8 @@ const getData = async (
     jobData = Object.fromEntries(
       jobFunctions.map((func, index) => [jobs.result[index], (func.result as string[]).map(truncateFunctionSignature)]),
     );
+
+    tokensData = tokensResult;
   }
 
   return {
@@ -95,5 +108,6 @@ const getData = async (
     name: name?.result,
     relays: relaysData,
     jobs: jobData,
+    tokens: tokensData,
   };
 };

@@ -160,5 +160,6 @@ export const AddressContainer = styled('div')(() => {
     alignItems: 'center',
     gap: '0.8rem',
     width: '100%',
+    cursor: 'pointer',
   };
 });
