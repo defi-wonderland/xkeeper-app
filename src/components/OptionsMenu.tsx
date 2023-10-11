@@ -1,25 +1,28 @@
 import { Dropdown, Menu, MenuButton, MenuItem } from '@mui/base';
 import { grey } from '@mui/material/colors';
 import { styled } from '@mui/system';
-import { Address } from 'viem';
 
 import { useStateContext } from '~/hooks';
-import { ModalType } from '~/types';
+import { ModalType, OptionsType, SelectedItem } from '~/types';
 import { Icon } from './Icon';
 
 export interface OptionsMenuProps {
   address: string;
-  params: Address[] | string[];
-  type: 'vault' | 'job' | 'relay';
+  params: string[];
+  type: OptionsType;
 }
 
 export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
   const { setModalOpen, userAddress, selectedVault, setSelectedItem, currentTheme } = useStateContext();
+  const selectedItem = { type, address, params } as SelectedItem;
 
-  const handleOpenEditModal = () => setModalOpen(ModalType.EDIT_ALIAS);
+  const handleOpenEditModal = () => {
+    setSelectedItem(selectedItem);
+    setModalOpen(ModalType.EDIT_ALIAS);
+  };
 
   const handleOpenRevokeModal = () => {
-    setSelectedItem({ type, address, params });
+    setSelectedItem(selectedItem);
     setModalOpen(ModalType.REVOQUE);
   };
 

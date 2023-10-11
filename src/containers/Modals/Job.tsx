@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, styled, Radio, Typography } from '@mui/material';
 import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
-import { isAddress } from 'viem';
+import { Hex, isAddress } from 'viem';
 
 import {
   ActiveButton,
@@ -19,9 +19,10 @@ import { ButtonsContainer, TitleContainer } from '~/containers';
 import { ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
 import { vaultABI } from '~/generated';
+import { getContractAbi } from '~/utils';
 
 export const JobModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, setNotification, loading, setLoading, currentTheme } =
+  const { modalOpen, setModalOpen, selectedVault, setNotification, loading, setLoading, currentTheme, currentNetwork } =
     useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
   const publicClient = usePublicClient();
@@ -44,7 +45,7 @@ export const JobModal = () => {
     address: selectedVault?.address,
     abi: vaultABI,
     functionName: 'approveJobFunctions',
-    args: [jobAddress as Address, [functionSignature as `0x${string}`]],
+    args: [jobAddress as Address, [functionSignature as Hex]],
   });
 
   const { writeAsync } = useContractWrite(config);
@@ -52,8 +53,6 @@ export const JobModal = () => {
   const handleApproveJob = async () => {
     setLoading(true);
     try {
-      // temporary log
-      console.log('approving job...');
       if (writeAsync) {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);
@@ -73,6 +72,14 @@ export const JobModal = () => {
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (isAddress(jobAddress)) {
+      getContractAbi(currentNetwork.name, jobAddress).then((abi) => {
+        setJobAbi(abi);
+      });
+    }
+  }, [currentNetwork, jobAddress]);
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_JOB}>

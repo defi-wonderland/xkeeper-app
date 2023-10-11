@@ -19,12 +19,14 @@ export interface Addresses {
   Keep3rRelay: Address;
 }
 
+export interface Chain {
+  displayName: string;
+  name: string;
+  scanner: string;
+}
+
 export interface Chains {
-  [chainId: string]: {
-    name: string;
-    iconName: string;
-    scanner: string;
-  };
+  [chainId: string]: Chain;
 }
 
 export interface Items {

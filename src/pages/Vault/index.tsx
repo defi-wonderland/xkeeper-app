@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNetwork } from 'wagmi';
 import { Address } from 'viem';
 
 import {
@@ -21,16 +20,14 @@ import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
 import { ModalType } from '~/types';
-import { getConstants } from '~/config/constants';
 
 export const Vault = () => {
-  const { currentTheme, setModalOpen, selectedVault, setSelectedVault, availableChains } = useStateContext();
+  const { currentTheme, setModalOpen, selectedVault, setSelectedVault, currentNetwork, setSelectedItem } =
+    useStateContext();
   const { address } = useParams();
-  const { chain } = useNetwork();
   const [isLoading, setLoading] = useState<boolean>(false);
-  const { DEFAULT_CHAIN } = getConstants();
 
-  const chainName = availableChains[chain?.id || DEFAULT_CHAIN].name;
+  const chainName = currentNetwork.displayName;
   const version = 'V1.0.0';
 
   const sections = [
@@ -57,8 +54,6 @@ export const Vault = () => {
   const loadSelectedVault = async () => {
     setLoading(true);
     try {
-      // temporary log
-      console.log('getting vault:', address);
       const vaultData = await getVaultsData([address as Address]);
 
       setLoading(false);
@@ -67,6 +62,11 @@ export const Vault = () => {
       setLoading(false);
       console.error(`Error loading vault ${address}:`, error);
     }
+  };
+
+  const handleEditAlias = () => {
+    setSelectedItem({ type: 'vault', address: selectedVault?.address || '0x', params: [] });
+    setModalOpen(ModalType.EDIT_ALIAS);
   };
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export const Vault = () => {
               <Title>{selectedVault?.name}</Title>
 
               <STooltip text='Edit vault alias'>
-                <EditAliasButton variant='text' onClick={() => setModalOpen(ModalType.EDIT_ALIAS)}>
+                <EditAliasButton variant='text' onClick={handleEditAlias}>
                   <Icon name='pencil-square' color={currentTheme.textDisabled} size='2rem' />
                 </EditAliasButton>
               </STooltip>

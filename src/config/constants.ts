@@ -12,28 +12,28 @@ const constants: Constants = {
 
   availableChains: {
     '5': {
-      name: 'Goerli',
-      iconName: 'goerli',
+      displayName: 'Goerli',
+      name: 'goerli',
       scanner: 'https://goerli.etherscan.io',
     },
     '1': {
-      name: 'Ethereum Mainnet',
-      iconName: 'ethereum',
+      displayName: 'Ethereum Mainnet',
+      name: 'ethereum',
       scanner: 'https://etherscan.io',
     },
     '42161': {
-      name: 'Arbitrum One',
-      iconName: 'arbitrum',
+      displayName: 'Arbitrum One',
+      name: 'arbitrum',
       scanner: 'https://arbiscan.io',
     },
     '137': {
-      name: 'Polygon',
-      iconName: 'polygon',
+      displayName: 'Polygon',
+      name: 'polygon',
       scanner: 'https://polygonscan.com',
     },
     '10': {
-      name: 'OP Mainnet',
-      iconName: 'optimism',
+      displayName: 'OP Mainnet',
+      name: 'optimism',
       scanner: 'https://optimistic.etherscan.io',
     },
   },

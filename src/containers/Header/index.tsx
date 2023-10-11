@@ -22,7 +22,15 @@ export const Header = () => {
     fontWeight: '500',
   };
 
-  const navigationLinkStyles = { fontSize: '1.6rem', fontWeight: '500', color: currentTheme.textDisabled };
+  const navigationLinkStyles = {
+    fontSize: '1.6rem',
+    fontWeight: '500',
+    color: currentTheme.textDisabled,
+    '&:hover': {
+      color: currentTheme.textPrimary,
+      transition: 'color 0.2s ease-in-out',
+    },
+  };
 
   const iconType = theme === 'dark' ? 'sun' : 'moon';
 

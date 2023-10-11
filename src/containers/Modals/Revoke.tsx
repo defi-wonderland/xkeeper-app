@@ -17,14 +17,11 @@ export const RevokeModal = () => {
 
   const functionName = selectedItem?.type === 'relay' ? 'revokeRelayCallers' : 'revokeJobFunctions';
 
-  const args = [selectedItem.address, selectedItem.params];
-
   const { config } = usePrepareContractWrite({
     address: selectedVault?.address,
     abi: vaultABI,
     functionName: functionName,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    args: args as any,
+    args: [selectedItem.address, selectedItem.params],
   });
 
   const { writeAsync } = useContractWrite(config);
@@ -32,8 +29,6 @@ export const RevokeModal = () => {
   const handleConfirm = async () => {
     setLoading(true);
     try {
-      // temporary log
-      console.log(`revoking ${type} ${value}`);
       if (writeAsync) {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);

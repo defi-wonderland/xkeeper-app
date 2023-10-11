@@ -29,8 +29,6 @@ export const CreateVault = () => {
   const handleCreateVault = async () => {
     setLoading(true);
     try {
-      // temporary log
-      console.log('creating vault...');
       if (writeAsync) {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);

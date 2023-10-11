@@ -18,22 +18,20 @@ import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
 
 export const WithdrawtModal = () => {
-  const { modalOpen, setModalOpen, setNotification, setLoading, currentTheme } = useStateContext();
+  const { modalOpen, setModalOpen, setNotification, setLoading, currentTheme, selectedVault, currentNetwork } =
+    useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [widthdrawalAddress, setWithdrawalAddress] = useState('');
   const [token, setToken] = useState('');
   const [amount, setAmount] = useState('');
 
-  // temporary
-  const vaultName = 'Connext One';
-  const network = 'Ethereum';
+  const vaultName = selectedVault?.name;
+  const network = currentNetwork.displayName;
 
   const handleConfirm = async () => {
     setLoading(true);
     try {
-      // temporary log
-      console.log('approving relay...');
       // if (writeAsync) {
       // const writeResult = await writeAsync();
       // await publicClient.waitForTransactionReceipt(writeResult);

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
-import { useNetwork } from 'wagmi';
 
 import { useStateContext } from '~/hooks';
 import { Icon, STooltip, StyledText } from '~/components';
@@ -12,8 +11,7 @@ interface AddressChipProps {
 }
 
 export const AddressChip = ({ text, label }: AddressChipProps) => {
-  const { availableChains, currentTheme } = useStateContext();
-  const { chain } = useNetwork();
+  const { currentTheme, currentNetwork } = useStateContext();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -26,15 +24,21 @@ export const AddressChip = ({ text, label }: AddressChipProps) => {
   };
   return (
     <SBox onClick={handleCopy}>
-      <SText>{label ? `${label}: ${truncateAddress(text)}` : truncateAddress(text)}</SText>
+      <TextContainer>
+        <SText>{label}:</SText>
+        <STooltip text={text} address>
+          <SText>{truncateAddress(text)}</SText>
+        </STooltip>
+      </TextContainer>
 
-      <STooltip text={'Copied!'} open={copied}>
+      <STooltip text={copied ? 'Copied!' : 'Copy Address'}>
         <IconContainer>
-          <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />
+          {!copied && <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />}
+          {copied && <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />}
         </IconContainer>
       </STooltip>
 
-      <ExternalLink href={`${availableChains[chain?.id || 5].scanner}/address/${text}`} target='_blank'>
+      <ExternalLink href={`${currentNetwork.scanner}/address/${text}`} target='_blank'>
         <IconContainer>
           <Icon name='external-link' color={currentTheme.textDisabled} size='1.6rem' />
         </IconContainer>
@@ -67,6 +71,15 @@ const SBox = styled(Box)(() => {
     lineHeight: '2rem',
     width: 'fit-content',
     cursor: 'pointer',
+  };
+});
+
+const TextContainer = styled(Box)(() => {
+  return {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: '0.4rem',
   };
 });
 

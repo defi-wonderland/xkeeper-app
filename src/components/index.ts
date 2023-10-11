@@ -9,6 +9,7 @@ export * from './Dropdowns';
 export * from './ChainIcon';
 export * from './Input';
 export * from './NavigationLink';
+export * from './NoUserVaults';
 export * from './OptionsMenu';
 export * from './Theme';
 export * from './Chips';

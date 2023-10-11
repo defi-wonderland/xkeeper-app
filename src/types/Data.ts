@@ -1,4 +1,4 @@
-import { Address } from 'wagmi';
+import { Hex, Address } from 'viem';
 
 export interface VaultData {
   address: Address;
@@ -17,3 +17,11 @@ export interface RelayData {
 export interface JobData {
   [jobAddress: string]: string[];
 }
+
+export interface SelectedItem {
+  type: string;
+  address: Address;
+  params: Hex[];
+}
+
+export type OptionsType = 'vault' | 'job' | 'relay';

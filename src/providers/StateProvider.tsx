@@ -1,7 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
-import { Address, useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
-import { Theme, ThemeName, ModalType, Addresses, Chains, VaultData, Notification } from '~/types';
+import { Theme, ThemeName, ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
 import { getConstants } from '~/config/constants';
 import { THEME_KEY, getTheme } from '~/utils';
 
@@ -27,10 +27,11 @@ type ContextType = {
 
   userAddress?: string;
   addresses: Addresses;
+  currentNetwork: Chain;
   availableChains: Chains;
 
-  selectedItem: { type: string; address: string; params: Address[] | string[] };
-  setSelectedItem: (val: { type: string; address: string; params: Address[] | string[] }) => void;
+  selectedItem: SelectedItem;
+  setSelectedItem: (val: SelectedItem) => void;
 };
 
 interface StateProps {
@@ -41,15 +42,16 @@ export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
   const { address } = useAccount();
+  const { chain } = useNetwork();
 
   const [theme, setTheme] = useState<ThemeName>('dark');
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
 
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
-  const [selectedItem, setSelectedItem] = useState<{ type: string; address: string; params: string[] }>({
+  const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     type: '',
-    address: '',
+    address: '0x',
     params: [],
   });
 
@@ -57,7 +59,12 @@ export const StateProvider = ({ children }: StateProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const { addresses, availableChains } = getConstants();
+  const { addresses, availableChains, DEFAULT_CHAIN } = getConstants();
+
+  const currentNetwork = useMemo(
+    () => availableChains[chain?.id || DEFAULT_CHAIN],
+    [DEFAULT_CHAIN, availableChains, chain?.id],
+  );
 
   // Load theme from local storage
   useEffect(() => {
@@ -85,6 +92,7 @@ export const StateProvider = ({ children }: StateProps) => {
         setModalOpen,
         userAddress: address,
         addresses,
+        currentNetwork,
         availableChains,
         selectedVault,
         setSelectedVault,

@@ -76,13 +76,19 @@ export const EnabledJobs = () => {
 
                   {/* Contract Address */}
                   <RowText align='left'>
-                    <AddressContainer>
+                    <AddressContainer onClick={() => handleCopy(row.contractAddress, index)}>
                       <STooltip text={row.contractAddress} address>
                         <Text>{truncateAddress(row.contractAddress)}</Text>
                       </STooltip>
-                      <STooltip text={'Copied!'} open={!!items[index]?.itemCopied}>
-                        <IconContainer onClick={() => handleCopy(row.contractAddress, index)}>
-                          <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />
+
+                      <STooltip text={items[index]?.itemCopied ? 'Copied!' : 'Copy Address'}>
+                        <IconContainer>
+                          {!items[index]?.itemCopied && (
+                            <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />
+                          )}
+                          {!!items[index]?.itemCopied && (
+                            <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />
+                          )}
                         </IconContainer>
                       </STooltip>
                     </AddressContainer>

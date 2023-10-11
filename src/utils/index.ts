@@ -1,3 +1,4 @@
+export * from './getContractAbi';
 export * from './getRelayName';
 export * from './getTheme';
 export * from './getVaultsData';

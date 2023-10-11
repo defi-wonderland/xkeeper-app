@@ -67,12 +67,23 @@ const SCard = styled(Card)(() => {
   const { currentTheme } = useStateContext();
   return {
     backgroundColor: currentTheme.backgroundPrimary,
+    borderColor: currentTheme.backButtonBorderColor,
     padding: '2rem',
     gap: '2.6rem',
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
     boxShadow: '0px 2px 10px 0px rgba(16, 24, 40, 0.02)',
+    '&:hover': {
+      borderColor: currentTheme.textSecondaryDisabled,
+      boxShadow: '0px 2px 12px 0px rgba(16, 24, 40, 0.04)',
+      transition: 'all 0.2s ease-in-out',
+    },
+
+    '&:hover .icon-arrow-right:before': {
+      color: currentTheme.textDisabled,
+      transition: 'all 0.2s ease-in-out',
+    },
   };
 });
 

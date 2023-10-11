@@ -5,7 +5,7 @@ import { Address } from 'viem';
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon } from '~/components';
 import { copyData, truncateAddress } from '~/utils';
-import { Items, ModalType } from '~/types';
+import { ModalType } from '~/types';
 import { useStateContext } from '~/hooks';
 import { Text } from './EnabledJobs';
 
@@ -15,29 +15,30 @@ function createRelaysData(alias: string, contractAddress: string, enabledCallers
 
 export const EnabledRelays = () => {
   const { userAddress, setModalOpen, selectedVault, currentTheme } = useStateContext();
-
+  const [items, setItems] = useState<{ [key: string]: boolean }>({});
   const selectedRelays = useMemo(() => selectedVault?.relays || {}, [selectedVault]);
+
+  // Double flat() to get all contract addresses and callers in a single array
+  const flattenRelays = useMemo(() => Object.entries(selectedRelays).flat().flat(), [selectedRelays]);
 
   const relays = useMemo(
     () => Object.keys(selectedRelays).map((key) => createRelaysData('Test', key, selectedRelays[key])),
     [selectedRelays],
   );
 
-  const [items, setItems] = useState<Items[]>([{ value: '', itemCopied: false }]);
-
   useEffect(() => {
-    if (relays.length > 0) setItems(relays?.map((relays) => ({ value: relays.contractAddress, itemCopied: false })));
-  }, [relays]);
+    if (flattenRelays.length > 0) setItems(Object.fromEntries(flattenRelays.map((address) => [address, false])));
+  }, [flattenRelays]);
 
-  const handleCopy = async (content: string, index: number) => {
+  const handleCopy = async (content: string) => {
     copyData(content);
-    const newItems = [...items];
-    newItems[index].itemCopied = true;
+    const newItems = { ...items };
+    newItems[content] = true;
     setItems(newItems);
 
     setTimeout(() => {
-      const newItems = [...items];
-      newItems[index].itemCopied = false;
+      const newItems = { ...items };
+      newItems[content] = false;
       setItems(newItems);
     }, 800);
   };
@@ -67,7 +68,7 @@ export const EnabledRelays = () => {
             </TableHead>
 
             <TableBody>
-              {relays.map((row, index) => (
+              {relays.map((row) => (
                 <STableRow key={row.contractAddress}>
                   {/* Alias */}
                   <RowText component='th' scope='row'>
@@ -78,14 +79,19 @@ export const EnabledRelays = () => {
 
                   {/* Contract Address */}
                   <RowText align='left'>
-                    <AddressContainer>
+                    <AddressContainer onClick={() => handleCopy(row.contractAddress)}>
                       <STooltip text={row.contractAddress} address>
                         <Text>{truncateAddress(row.contractAddress)}</Text>
                       </STooltip>
 
-                      <STooltip text={'Copied!'} open={!!items[index]?.itemCopied}>
-                        <IconContainer onClick={() => handleCopy(row.contractAddress, index)}>
-                          <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />
+                      <STooltip text={items[row.contractAddress] ? 'Copied!' : 'Copy Address'}>
+                        <IconContainer>
+                          {!items[row.contractAddress] && (
+                            <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />
+                          )}
+                          {!!items[row.contractAddress] && (
+                            <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />
+                          )}
                         </IconContainer>
                       </STooltip>
                     </AddressContainer>
@@ -94,14 +100,15 @@ export const EnabledRelays = () => {
                   {/* Enabled Callers */}
                   <RowText align='left'>
                     {row.enabledCallers?.map((caller) => (
-                      <AddressContainer key={caller}>
+                      <AddressContainer key={caller} onClick={() => handleCopy(caller)}>
                         <STooltip text={caller} address>
                           <Text>{truncateAddress(caller)}</Text>
                         </STooltip>
 
-                        <STooltip text={'Copied!'} open={!!items[index]?.itemCopied}>
-                          <IconContainer onClick={() => handleCopy(row.contractAddress, index)}>
-                            <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />
+                        <STooltip text={items[caller] ? 'Copied!' : 'Copy Address'}>
+                          <IconContainer>
+                            {!items[caller] && <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />}
+                            {!!items[caller] && <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />}
                           </IconContainer>
                         </STooltip>
                       </AddressContainer>

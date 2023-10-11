@@ -56,8 +56,6 @@ export const RelayModal = () => {
   const handleApproveRelay = async () => {
     setLoading(true);
     try {
-      // temporary log
-      console.log('approving relay...');
       if (writeAsync) {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);

@@ -1,49 +1,81 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import { SearchInput, VaultCard, BasicTabs, NavigationLink, ActiveButton, Icon } from '~/components';
+import { SearchInput, VaultCard, BasicTabs, NavigationLink, ActiveButton, Icon, NoUserVaults } from '~/components';
 import { getVaults, getVaultsData } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
 
 export const Landing = () => {
-  const { addresses, userAddress, setSelectedVault, currentTheme } = useStateContext();
+  const { addresses, userAddress, setSelectedVault, currentTheme, loading, setLoading } = useStateContext();
 
   const [vaults, setVaults] = useState<VaultData[]>([]);
+  const [searchValue, setSearchValue] = useState('');
+
   const ownedVaults = useMemo(() => vaults.filter((vault) => vault.owner === userAddress), [userAddress, vaults]);
+
+  const searchedVaults = useMemo(
+    () =>
+      vaults.filter(
+        (vault) =>
+          vault.name?.toLowerCase().includes(searchValue.toLowerCase()) ||
+          vault.address.toLowerCase().includes(searchValue.toLowerCase()),
+      ),
+    [searchValue, vaults],
+  );
 
   const exploreVaultSection = [
     {
       title: 'Explore Vaults',
-      items: vaults.map((vault, index) => (
-        <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
-          <VaultCard vaultData={vault} onClick={() => setSelectedVault(vault)} />
-        </NavigationLink>
-      )),
+
+      items: searchedVaults.length ? (
+        searchedVaults.map((vault, index) => (
+          <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
+            <VaultCard vaultData={vault} onClick={() => setSelectedVault(vault)} />
+          </NavigationLink>
+        ))
+      ) : (
+        <NoUserVaults text={loading ? 'Loading Vaults...' : 'No matches found, please try again.'} icon='search' />
+      ),
     },
   ];
 
   const myVaultSection = {
     title: 'My Vaults',
-    items: ownedVaults.map((vault, index) => (
-      <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
-        <VaultCard vaultData={vault} />
-      </NavigationLink>
-    )),
+    items: ownedVaults.length ? (
+      ownedVaults.map((vault, index) => (
+        <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
+          <VaultCard vaultData={vault} />
+        </NavigationLink>
+      ))
+    ) : (
+      <NoUserVaults
+        text={loading ? 'Loading Vaults...' : 'You have no active Vaults'}
+        icon={loading ? 'search' : 'safe'}
+        button={!loading}
+      />
+    ),
   };
 
+  const loadSafes = useCallback(async () => {
+    setLoading(true);
+    const vaults = await getVaults(addresses.AutomationVaultFactory);
+    const vaultsData = await getVaultsData(vaults);
+
+    setVaults(vaultsData);
+    setLoading(false);
+  }, [addresses.AutomationVaultFactory, setLoading]);
+
   useEffect(() => {
-    getVaults(addresses.AutomationVaultFactory).then((vaults) => {
-      getVaultsData(vaults).then((vaultsData) => setVaults(vaultsData));
-    });
-  }, []);
+    loadSafes();
+  }, [loadSafes]);
 
   return (
     <HomeContainer>
       <FirstSection>
         {/* Search Input */}
-        <SearchInput placeholder='Vault name or address' />
+        <SearchInput placeholder='Vault name or address' value={searchValue} setValue={setSearchValue} />
 
         {/* Create Vault Button */}
         <NavigationLink to='/create'>

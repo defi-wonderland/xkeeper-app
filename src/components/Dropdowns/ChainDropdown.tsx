@@ -30,8 +30,8 @@ export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdo
     <Dropdown>
       {/* Dropdown button */}
       <TriggerButton disabled={disabled}>
-        <ChainIcon chainName={chains[value].iconName} />
-        <StyledText>{chains[value].iconName}</StyledText>
+        <ChainIcon chainName={chains[value].name} />
+        <StyledText>{chains[value].name}</StyledText>
         <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
       </TriggerButton>
 
@@ -41,8 +41,8 @@ export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdo
           .filter((chainId: string) => chainId !== value)
           .map((chainId: string) => (
             <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)}>
-              <ChainIcon chainName={chains[chainId].iconName} />
-              {chains[chainId].name}
+              <ChainIcon chainName={chains[chainId].name} />
+              {chains[chainId].displayName}
             </StyledMenuItem>
           ))}
       </Menu>

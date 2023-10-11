@@ -16,18 +16,15 @@ import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
 
 export const EditAliasModal = () => {
-  // temporary
-  const type = 'relay';
-  const value = '0x1234567890123456789012345678901234567890';
-  const { setModalOpen, modalOpen, currentTheme } = useStateContext();
-  const [alias, setAlias] = useState<string>(`My Custom ${type}`);
+  const { setModalOpen, modalOpen, currentTheme, selectedItem } = useStateContext();
+  const [alias, setAlias] = useState<string>('');
 
   return (
     <BaseModal open={modalOpen === ModalType.EDIT_ALIAS}>
       <BigModal>
         <SBox>
           <TitleContainer>
-            <StyledTitle>Edit {type} Alias</StyledTitle>
+            <StyledTitle>Edit {selectedItem.type} Alias</StyledTitle>
 
             <CloseButton variant='text' onClick={() => setModalOpen(ModalType.NONE)}>
               <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
@@ -35,7 +32,7 @@ export const EditAliasModal = () => {
           </TitleContainer>
 
           <Text>
-            {type} address: <span>{value}</span>
+            {selectedItem.type} address: <span>{selectedItem.address}</span>
           </Text>
         </SBox>
 
@@ -45,6 +42,7 @@ export const EditAliasModal = () => {
             value={alias}
             setValue={setAlias}
             description='This will only be visible to you.'
+            placeholder={`My custom ${selectedItem.type}`}
           />
         </InputContainer>
 

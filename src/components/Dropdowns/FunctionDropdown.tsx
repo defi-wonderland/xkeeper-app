@@ -81,7 +81,6 @@ const StyledListbox = styled('ul')(() => {
   };
 });
 
-// temporary styles
 const StyledMenuItem = styled(MenuItem)(({ theme }) => {
   return css`
     display: flex;

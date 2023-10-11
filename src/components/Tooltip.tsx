@@ -60,6 +60,8 @@ export const STooltip = ({ children, text, placement, address, open }: Props) =>
       }
       placement={placement ? placement : 'top'}
       sx={tooltipStyles}
+      enterDelay={0}
+      leaveDelay={0}
     >
       {children}
     </CustomTooltip>

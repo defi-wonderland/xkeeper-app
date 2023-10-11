@@ -13,6 +13,8 @@ const Image = styled('img')`
   background-color: inherit;
   color: inherit;
   border-radius: inherit;
+  user-select: none;
+  pointer-events: none;
 `;
 
 export const ChainIcon = ({ chainName }: ChainIconProps) => {

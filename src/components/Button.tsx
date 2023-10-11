@@ -35,6 +35,7 @@ export const ActiveButton = styled(Button)(() => {
     padding: '1rem 1.6rem',
     width: 'max-content',
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
+    gap: '0.8rem',
     '&:hover': {
       backgroundColor: currentTheme.actionButtonHover,
       boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',

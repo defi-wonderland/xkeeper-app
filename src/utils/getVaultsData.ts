@@ -52,7 +52,7 @@ const getData = async (
   relays: RelayData;
   jobs: JobData;
 }> => {
-  const vaultContract = { address: vaultAddress, abi: vaultABI } as const;
+  const vaultContract = { address: vaultAddress, abi: vaultABI };
   let relaysData: RelayData = {};
   let jobData: JobData = {};
 
