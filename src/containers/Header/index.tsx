@@ -42,9 +42,9 @@ export const Header = () => {
       </Navbar>
 
       <RightSection>
-        <IconButton onClick={handleThemeChange} color='inherit'>
+        <SIconButton onClick={handleThemeChange} color='inherit'>
           <Icon name={iconType} size='2.4rem' color={currentTheme.textTertiary} />
-        </IconButton>
+        </SIconButton>
 
         <ConnectButton />
       </RightSection>
@@ -84,4 +84,17 @@ const RightSection = styled(Box)({
   flexDirection: 'row',
   alignItems: 'center',
   gap: '3.2rem',
+});
+
+const SIconButton = styled(IconButton)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    '&:hover': {
+      backgroundColor: 'inherit',
+    },
+    '&:hover i:before': {
+      color: currentTheme.textPrimary,
+      transition: 'color 0.2s ease-in-out',
+    },
+  };
 });

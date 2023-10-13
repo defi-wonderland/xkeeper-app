@@ -49,14 +49,12 @@ export function TokenDropdown({ tokens, value, setValue, disabled }: TokenDropdo
       <Menu slots={{ listbox: StyledListbox }}>
         <SCustomScrollbar>
           {!!tokens?.length &&
-            tokens
-              .filter((token) => token.address !== value?.address)
-              .map((token) => (
-                <StyledMenuItem key={token.address} onClick={createHandleMenuClick(token)} sx={customIcon}>
-                  <TokenIcon chainName={currentNetwork.name} tokenAddress={token.address} />
-                  {token.symbol}
-                </StyledMenuItem>
-              ))}
+            tokens.map((token) => (
+              <StyledMenuItem key={token.address} onClick={createHandleMenuClick(token)} sx={customIcon}>
+                <TokenIcon chainName={currentNetwork.name} tokenAddress={token.address} />
+                {token.symbol}
+              </StyledMenuItem>
+            ))}
         </SCustomScrollbar>
       </Menu>
     </Dropdown>

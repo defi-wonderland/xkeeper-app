@@ -1,5 +1,4 @@
 import { Dropdown, Menu, MenuButton, MenuItem } from '@mui/base';
-import { grey } from '@mui/material/colors';
 import { styled } from '@mui/system';
 
 import { useStateContext } from '~/hooks';
@@ -119,13 +118,13 @@ const OptionContainer = styled('div')(() => {
 });
 
 const EditContainer = styled(OptionContainer)(() => {
-  const { currentTheme, theme } = useStateContext();
+  const { currentTheme } = useStateContext();
   return {
     color: currentTheme.textPrimary,
     borderRadius: currentTheme.borderRadius,
     '&:hover': {
       transition: 'all 0.2s ease-in-out',
-      backgroundColor: theme === 'dark' ? grey[800] : grey[100],
+      backgroundColor: currentTheme.backgroundHover,
     },
   };
 });

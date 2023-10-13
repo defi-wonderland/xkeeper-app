@@ -64,7 +64,7 @@ export const Landing = () => {
         {/* Create Vault Button */}
         <NavigationLink to='/create'>
           <CreateVaultBtn variant='contained' size='large' data-testid='create-vault-btn'>
-            <SIcon name='plus' size='1.8rem' color={currentTheme.backgroundPrimary} />
+            <SIcon name='plus' size='1.8rem' color={currentTheme.actionButtonColor} />
             Create Vault
           </CreateVaultBtn>
         </NavigationLink>

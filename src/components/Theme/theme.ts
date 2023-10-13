@@ -11,7 +11,7 @@ export const darkTheme: Theme = {
 
   backgroundPrimary: '#101828',
   backgroundSecondary: '#0A101C',
-  backgroundHover: '#F9FAFB', // gray-50
+  backgroundHover: '#1D2939', // gray-800
 
   borderRadius: '8px',
   secondaryBorderRadius: '4px',

@@ -37,14 +37,12 @@ export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdo
 
       {/* Dropdown Options */}
       <Menu slots={{ listbox: StyledListbox }}>
-        {availableChains
-          .filter((chainId: string) => chainId !== value)
-          .map((chainId: string) => (
-            <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)}>
-              <ChainIcon chainName={chains[chainId].name} />
-              {chains[chainId].displayName}
-            </StyledMenuItem>
-          ))}
+        {availableChains.map((chainId: string) => (
+          <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)}>
+            <ChainIcon chainName={chains[chainId].name} />
+            {chains[chainId].displayName}
+          </StyledMenuItem>
+        ))}
       </Menu>
     </Dropdown>
   );
@@ -69,7 +67,10 @@ export const StyledListbox = styled('ul')(() => {
 });
 
 export const StyledMenuItem = styled(MenuItem)(() => {
-  const { theme } = useStateContext();
+  const {
+    theme,
+    currentTheme: { backgroundHover },
+  } = useStateContext();
   return css`
     display: flex;
     flex-direction: row;
@@ -98,7 +99,7 @@ export const StyledMenuItem = styled(MenuItem)(() => {
     }
 
     &:hover:not(.${menuItemClasses.disabled}) {
-      background-color: ${theme === 'dark' ? grey[800] : grey[100]};
+      background-color: ${theme === 'dark' ? backgroundHover : grey[100]};
       color: ${theme === 'dark' ? grey[300] : grey[900]};
     }
   `;
