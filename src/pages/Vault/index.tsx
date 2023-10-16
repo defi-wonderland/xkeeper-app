@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNetwork, usePublicClient } from 'wagmi';
+import { useNetwork } from 'wagmi';
 import { Address } from 'viem';
 
 import {
@@ -21,14 +21,13 @@ import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
 import { ModalType } from '~/types';
-import { getConfig } from '~/config';
+import { getConfig, publicClient } from '~/config';
 
 export const Vault = () => {
   const { currentTheme, setModalOpen, selectedVault, setSelectedVault, currentNetwork, setSelectedItem, notification } =
     useStateContext();
   const { DEFAULT_ETH_ADDRESS } = getConfig();
   const { address } = useParams();
-  const publicClient = usePublicClient();
   const { chain } = useNetwork();
 
   const [isLoading, setLoading] = useState<boolean>(false);

@@ -1,9 +1,9 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { useAccount, useNetwork, usePublicClient } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 import { Theme, ThemeName, ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
 import { THEME_KEY, getPrices, getTheme, getTokenList, getVaults, getVaultsData } from '~/utils';
-import { getConfig } from '~/config';
+import { getConfig, publicClient } from '~/config';
 
 type ContextType = {
   theme: ThemeName;
@@ -70,8 +70,6 @@ export const StateProvider = ({ children }: StateProps) => {
     [DEFAULT_CHAIN, availableChains, chain?.id],
   );
 
-  const publicClient = usePublicClient({ chainId: currentNetwork.id });
-
   const update = useCallback(async () => {
     setLoading(true);
     const tokens = getTokenList(chain?.id);
@@ -88,7 +86,7 @@ export const StateProvider = ({ children }: StateProps) => {
 
     setVaults(vaultsData);
     setLoading(false);
-  }, [DEFAULT_ETH_ADDRESS, addresses.AutomationVaultFactory, chain?.id, publicClient]);
+  }, [DEFAULT_ETH_ADDRESS, addresses.AutomationVaultFactory, chain?.id]);
 
   useEffect(() => {
     update();
