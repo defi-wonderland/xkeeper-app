@@ -2,7 +2,7 @@ import { styled, Box } from '@mui/material';
 
 import { StyledTitle, StyledText, CancelButton, RevokeButton, BaseModal } from '~/components';
 import { useStateContext, useVault } from '~/hooks';
-import { truncateAddress } from '~/utils';
+import { getReceiptMessage, truncateAddress } from '~/utils';
 import { ModalType } from '~/types';
 
 export const RevokeModal = () => {
@@ -18,11 +18,7 @@ export const RevokeModal = () => {
     functionName: functionName,
     args: [selectedItem.address, selectedItem.params],
     notificationTitle: `${type} successfully revoked`,
-    notificationMessage: (
-      <>
-        <span>{value}</span> has been revoked and is no longer active.
-      </>
-    ),
+    notificationMessage: getReceiptMessage(value, 'has been revoked and is no longer active'),
   });
 
   return (

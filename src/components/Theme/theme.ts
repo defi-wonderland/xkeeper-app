@@ -42,9 +42,9 @@ export const darkTheme: Theme = {
   tooltipColor: '#ffffff',
   tooltipBackground: '#1D2939',
 
-  checkColor: '#039855',
-  checkBackground: '#d1fadf',
-  checkBorderColor: '#ecfdf3',
+  checkColor: '#04B163',
+  checkBackground: '#07461D',
+  checkBorderColor: '#073221',
 };
 
 export const lightTheme: Theme = {

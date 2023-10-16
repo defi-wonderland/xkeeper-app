@@ -2,6 +2,7 @@ import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } f
 import { WriteContractResult } from 'wagmi/actions';
 
 import { useStateContext } from './useStateContext';
+import { getViewTransaction } from '~/utils';
 import { vaultABI } from '~/generated';
 import { ModalType } from '~/types';
 
@@ -23,6 +24,7 @@ interface SendTransactionProps {
 
   notificationTitle?: string;
   notificationMessage?: string | JSX.Element;
+  showReceipt?: boolean;
 }
 
 export const useVault = ({
@@ -31,11 +33,12 @@ export const useVault = ({
   args,
   notificationTitle,
   notificationMessage,
+  showReceipt,
 }: SendTransactionProps): {
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { setLoading, setModalOpen, setNotification } = useStateContext();
+  const { currentNetwork, setLoading, setModalOpen, setNotification } = useStateContext();
   const publicClient = usePublicClient();
 
   const { config } = usePrepareContractWrite({
@@ -57,7 +60,7 @@ export const useVault = ({
         setNotification({
           open: true,
           title: notificationTitle,
-          message: notificationMessage,
+          message: showReceipt ? getViewTransaction(writeResult.hash, currentNetwork) : notificationMessage,
         });
       }
     } catch (error) {

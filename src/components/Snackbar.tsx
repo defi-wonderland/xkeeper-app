@@ -75,10 +75,16 @@ const CustomSnackbar = styled('div')(() => {
     font-weight: 500;
     animation: ${snackbarInRight} 200ms;
     transition: transform 0.2s ease-out;
+    &:hover {
+      border-color: ${currentTheme.textSecondaryDisabled};
+      box-shadow: '0px 2px 12px 0px rgba(16, 24, 40, 0.04)';
+      transition: 'all 0.2s ease-in-out';
+    }
   `;
 });
 
 const TextContainer = styled('div')(() => {
+  const { currentTheme } = useStateContext();
   return {
     display: 'flex',
     flexDirection: 'column',
@@ -87,6 +93,9 @@ const TextContainer = styled('div')(() => {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     wordBreak: 'break-word',
+    a: {
+      color: currentTheme.actionButton,
+    },
   };
 });
 
@@ -117,6 +126,7 @@ const Text = styled(StyledText)(() => {
 });
 
 const SButton = styled(Button)(() => {
+  const { currentTheme } = useStateContext();
   return {
     padding: 0,
     minWidth: 'auto',
@@ -125,6 +135,9 @@ const SButton = styled(Button)(() => {
     alignItems: 'start',
     '&:hover': {
       background: 'inherit',
+    },
+    '&:hover i:before': {
+      color: currentTheme.textPrimary,
     },
   };
 });

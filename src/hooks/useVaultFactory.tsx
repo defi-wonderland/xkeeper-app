@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useStateContext } from './useStateContext';
 import { vaultFactoryABI } from '~/generated';
+import { getViewTransaction } from '~/utils';
 
 interface SendTransactionProps {
   args: [Address, string];
@@ -15,7 +16,7 @@ export const useVaultFactory = ({
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { setLoading, setNotification, addresses } = useStateContext();
+  const { setLoading, setNotification, addresses, currentNetwork } = useStateContext();
   const publicClient = usePublicClient();
   const navigate = useNavigate();
   const { config } = usePrepareContractWrite({
@@ -37,7 +38,7 @@ export const useVaultFactory = ({
         setNotification({
           open: true,
           title: 'Vault successfully created',
-          message: 'View transaction',
+          message: getViewTransaction(writeResult.hash, currentNetwork),
         });
       }
     } catch (error) {

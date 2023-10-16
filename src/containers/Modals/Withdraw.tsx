@@ -47,7 +47,7 @@ export const WithdrawtModal = () => {
     functionName: 'withdrawFunds',
     args: [token.address as Address, amountE18, widthdrawalAddress as Address],
     notificationTitle: 'Funds successfully withdrawn',
-    notificationMessage: 'View transaction',
+    showReceipt: true,
   });
 
   useEffect(() => {

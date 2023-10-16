@@ -16,7 +16,7 @@ import {
 import { ButtonsContainer, BigModal, TitleContainer } from '~/containers';
 import { useStateContext, useVault } from '~/hooks';
 import { ModalType } from '~/types';
-import { anyCaller } from '~/utils';
+import { anyCaller, getReceiptMessage } from '~/utils';
 
 export const RelayModal = () => {
   const { modalOpen, setModalOpen, selectedVault, loading, currentTheme } = useStateContext();
@@ -41,11 +41,7 @@ export const RelayModal = () => {
     functionName: 'approveRelayCallers',
     args: [relayAddress, callerList],
     notificationTitle: 'Relay successfuly approved',
-    notificationMessage: (
-      <>
-        <span>{relayAddress}</span> relay is now enabled.
-      </>
-    ),
+    notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
   });
 
   const handleToggle = () => {

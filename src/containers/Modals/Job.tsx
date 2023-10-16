@@ -17,7 +17,7 @@ import {
 import { ButtonsContainer, TitleContainer } from '~/containers';
 import { ModalType } from '~/types';
 import { useStateContext, useVault } from '~/hooks';
-import { getContractAbi } from '~/utils';
+import { getContractAbi, getReceiptMessage } from '~/utils';
 
 export const JobModal = () => {
   const { modalOpen, setModalOpen, selectedVault, loading, currentTheme, currentNetwork } = useStateContext();
@@ -41,11 +41,7 @@ export const JobModal = () => {
     functionName: 'approveRelayCallers',
     args: [jobAddress, [functionSignature]],
     notificationTitle: 'Job successfully approved',
-    notificationMessage: (
-      <>
-        <span>{jobAddress}</span> job is now enabled
-      </>
-    ),
+    notificationMessage: getReceiptMessage(jobAddress, 'job is now enabled'),
   });
 
   useEffect(() => {

@@ -9,13 +9,18 @@ interface NavigationLinkProps {
   children?: React.ReactNode;
   sx?: SxProps<Theme>;
   disabled?: boolean;
+  external?: boolean;
 }
 
-export const NavigationLink = ({ to, text, children, sx, disabled }: NavigationLinkProps) => {
+export const NavigationLink = ({ to, text, children, sx, disabled, external }: NavigationLinkProps) => {
   return (
     <Box sx={{ ...sx, a: { textDecoration: 'none', color: 'inherit' } }}>
       {disabled && <>{children ? children : text}</>}
-      {!disabled && <Link to={to}>{children ? children : text}</Link>}
+      {!disabled && (
+        <Link to={to} target={external ? '_blank' : undefined}>
+          {children ? children : text}
+        </Link>
+      )}
     </Box>
   );
 };
