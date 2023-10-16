@@ -2,7 +2,7 @@ import { Address } from 'viem';
 import { PublicClient } from 'wagmi';
 
 import { vaultABI, vaultFactoryABI } from '~/generated';
-import { JobData, RelayData, Token, TokenData, VaultData } from '~/types';
+import { JobData, PriceData, RelayData, Token, TokenData, VaultData } from '~/types';
 import { getTokensData, getTotalUsdBalance, truncateFunctionSignature } from '~/utils';
 
 export const getVaults = async (publicClient: PublicClient, vaultFactoryAddress: Address): Promise<Address[]> => {
@@ -24,12 +24,13 @@ export const getVaultsData = async (
   publicClient: PublicClient,
   vaults: Address[],
   tokenList: Token[],
+  prices: PriceData,
 ): Promise<VaultData[]> => {
   const vaultsData: VaultData[] = [];
 
   try {
     for (const vault of vaults) {
-      const { owner, name, relays, jobs, tokens } = await fetchAndFormatData(publicClient, vault, tokenList);
+      const { owner, name, relays, jobs, tokens } = await fetchAndFormatData(publicClient, vault, tokenList, prices);
 
       vaultsData.push({
         address: vault,
@@ -54,6 +55,7 @@ const fetchAndFormatData = async (
   publicClient: PublicClient,
   vaultAddress: Address,
   tokens: Token[],
+  prices: PriceData,
 ): Promise<{
   owner: Address | undefined;
   name: string | undefined;
@@ -88,14 +90,19 @@ const fetchAndFormatData = async (
       args: [jobAddress],
     }));
 
+    const currentChain = publicClient.chain.name.toLocaleLowerCase();
+    const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain; // Load tokens from mainnet when on goerli
+
     const [callers, jobFunctions, tokensResult] = await Promise.all([
       publicClient.multicall({ contracts: relayEnabledCallers }),
       publicClient.multicall({ contracts: jobEnabledFunctions }),
-      getTokensData(tokens, vaultAddress),
+      getTokensData(tokens, vaultAddress, chainName, prices),
     ]);
 
+    // format RelayData
     relaysData = Object.fromEntries(callers.map((caller, index) => [relays.result[index], caller.result as Address[]]));
 
+    // format JobData
     jobData = Object.fromEntries(
       jobFunctions.map((func, index) => [jobs.result[index], (func.result as string[]).map(truncateFunctionSignature)]),
     );

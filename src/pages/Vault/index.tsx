@@ -14,17 +14,19 @@ import {
   InfoChip,
   STooltip,
 } from '~/components';
-import { getTokenList, getVaultsData } from '~/utils';
+import { getPrices, getTokenList, getVaultsData } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
 import { ModalType } from '~/types';
+import { getConfig } from '~/config';
 
 export const Vault = () => {
   const { currentTheme, setModalOpen, selectedVault, setSelectedVault, currentNetwork, setSelectedItem, notification } =
     useStateContext();
+  const { DEFAULT_ETH_ADDRESS } = getConfig();
   const { address } = useParams();
   const publicClient = usePublicClient();
   const { chain } = useNetwork();
@@ -59,7 +61,14 @@ export const Vault = () => {
     setLoading(true);
     try {
       const tokens = getTokenList(chain?.id);
-      const vaultData = await getVaultsData(publicClient, [address as Address], tokens);
+      const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
+
+      const currentChain = publicClient.chain.name.toLocaleLowerCase();
+      // Load tokens from mainnet when on goerli
+      const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain;
+
+      const prices = await getPrices(chainName, tokenAddressList);
+      const vaultData = await getVaultsData(publicClient, [address as Address], tokens, prices);
 
       setLoading(false);
       setSelectedVault(vaultData[0]);

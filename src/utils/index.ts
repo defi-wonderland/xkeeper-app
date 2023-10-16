@@ -1,5 +1,6 @@
 export * from './Variables';
 export * from './getMessageComponents';
+export * from './getPrices';
 export * from './getContractAbi';
 export * from './getRelayName';
 export * from './getTheme';
