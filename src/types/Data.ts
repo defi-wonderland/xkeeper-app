@@ -1,5 +1,11 @@
 import { Hex, Address } from 'viem';
 
+export interface CallResult {
+  result: bigint;
+  error?: Error;
+  status: 'success' | 'failure';
+}
+
 export interface VaultData {
   address: Address;
   chain: string;

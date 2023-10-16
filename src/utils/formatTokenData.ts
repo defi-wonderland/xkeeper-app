@@ -1,38 +1,17 @@
-import { erc20ABI } from 'wagmi';
-import { Address, formatUnits } from 'viem';
+import { formatUnits } from 'viem';
 
-import { Token, TokenData, PriceData } from '~/types';
-import { publicClient, getConfig } from '~/config';
+import { Token, TokenData, PriceData, CallResult } from '~/types';
+import { getConfig } from '~/config';
 import { getUsdBalance } from '~/utils';
 
-interface CallResult {
-  result: bigint;
-  error?: Error;
-  status: 'success' | 'failure';
-}
-
-export const getTokensData = async (
+export const formatTokensData = (
   tokenList: Token[],
-  vaultAddress: Address,
+  contractCallsResult: CallResult[],
+  ethBalanceResult: bigint,
   chainName: string,
   prices: PriceData,
-): Promise<TokenData[]> => {
+): TokenData[] => {
   try {
-    const contracts = tokenList.map((token) => ({
-      address: token.address as Address,
-      abi: erc20ABI,
-      functionName: 'balanceOf',
-      args: [vaultAddress],
-    }));
-
-    const ethBalance = publicClient.getBalance({ address: vaultAddress });
-
-    const contractCalls = publicClient.multicall({
-      contracts: contracts,
-    }) as Promise<CallResult[]>;
-
-    const [ethBalanceResult, contractCallsResult] = await Promise.all([ethBalance, contractCalls]);
-
     const result = contractCallsResult.map(({ result }, index) => {
       const price = prices.coins[`${chainName}:${tokenList[index].address}`].price || 0;
       return {

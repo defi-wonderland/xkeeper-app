@@ -1,9 +1,9 @@
 import { Address } from 'viem';
-import { PublicClient } from 'wagmi';
+import { PublicClient, erc20ABI } from 'wagmi';
 
 import { vaultABI, vaultFactoryABI } from '~/generated';
-import { JobData, PriceData, RelayData, Token, TokenData, VaultData } from '~/types';
-import { getTokensData, getTotalUsdBalance, truncateFunctionSignature } from '~/utils';
+import { CallResult, JobData, PriceData, RelayData, Token, TokenData, VaultData } from '~/types';
+import { formatTokensData, getTotalUsdBalance, truncateFunctionSignature } from '~/utils';
 
 export const getVaults = async (publicClient: PublicClient, vaultFactoryAddress: Address): Promise<Address[]> => {
   try {
@@ -68,14 +68,28 @@ const fetchAndFormatData = async (
   let jobData: JobData = {};
   let tokensData: TokenData[] = [];
 
-  const [owner, name, relays, jobs] = await publicClient.multicall({
+  const balanceCalls = tokens.map((token) => ({
+    address: token.address as Address,
+    abi: erc20ABI,
+    functionName: 'balanceOf',
+    args: [vaultAddress],
+  }));
+
+  const ethBalance = await publicClient.getBalance({ address: vaultAddress });
+
+  const multicallResult = await publicClient.multicall({
     contracts: [
       { ...vaultContract, functionName: 'owner' },
       { ...vaultContract, functionName: 'organizationName' },
       { ...vaultContract, functionName: 'relays' },
       { ...vaultContract, functionName: 'jobs' },
+      ...balanceCalls,
     ],
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [owner, name, relays, jobs] = multicallResult.slice(0, 4) as any;
+  const tokensResult = multicallResult.slice(4) as CallResult[];
 
   if (relays?.result && jobs?.result) {
     const relayEnabledCallers = relays.result.map((relayAddress: Address) => ({
@@ -93,10 +107,9 @@ const fetchAndFormatData = async (
     const currentChain = publicClient.chain.name.toLocaleLowerCase();
     const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain; // Load tokens from mainnet when on goerli
 
-    const [callers, jobFunctions, tokensResult] = await Promise.all([
+    const [callers, jobFunctions] = await Promise.all([
       publicClient.multicall({ contracts: relayEnabledCallers }),
       publicClient.multicall({ contracts: jobEnabledFunctions }),
-      getTokensData(tokens, vaultAddress, chainName, prices),
     ]);
 
     // format RelayData
@@ -107,7 +120,7 @@ const fetchAndFormatData = async (
       jobFunctions.map((func, index) => [jobs.result[index], (func.result as string[]).map(truncateFunctionSignature)]),
     );
 
-    tokensData = tokensResult;
+    tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, prices);
   }
 
   return {
