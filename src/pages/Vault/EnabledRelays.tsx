@@ -5,7 +5,7 @@ import { Address } from 'viem';
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon } from '~/components';
 import { copyData, truncateAddress } from '~/utils';
-import { ModalType } from '~/types';
+import { ModalType, OptionsType, SelectedItem } from '~/types';
 import { useStateContext } from '~/hooks';
 import { Text } from './EnabledJobs';
 
@@ -14,7 +14,7 @@ function createRelaysData(alias: string, contractAddress: string, enabledCallers
 }
 
 export const EnabledRelays = () => {
-  const { setModalOpen, userAddress, selectedVault, currentTheme, aliasData } = useStateContext();
+  const { setModalOpen, setSelectedItem, userAddress, selectedVault, currentTheme, aliasData } = useStateContext();
   const [items, setItems] = useState<{ [key: string]: boolean }>({});
   const selectedRelays = useMemo(() => selectedVault?.relays || {}, [selectedVault]);
 
@@ -42,6 +42,12 @@ export const EnabledRelays = () => {
       newItems[content] = false;
       setItems(newItems);
     }, 800);
+  };
+
+  const handleOpenAliasModal = (type: OptionsType, address: string, params: string[]) => {
+    const selectedItem = { type, address, params } as SelectedItem;
+    setSelectedItem(selectedItem);
+    setModalOpen(ModalType.EDIT_ALIAS);
   };
 
   return (
@@ -74,7 +80,9 @@ export const EnabledRelays = () => {
                   {/* Alias */}
                   <RowText component='th' scope='row'>
                     <STooltip text='Edit alias'>
-                      <Text>{aliasData[row.contractAddress] || row.alias}</Text>
+                      <SText onClick={() => handleOpenAliasModal('relay', row.contractAddress, row.enabledCallers)}>
+                        {aliasData[row.contractAddress] || row.alias}
+                      </SText>
                     </STooltip>
                   </RowText>
 
@@ -163,4 +171,8 @@ export const AddressContainer = styled('div')(() => {
     width: '100%',
     cursor: 'pointer',
   };
+});
+
+export const SText = styled(Text)(() => {
+  return { cursor: 'pointer' };
 });
