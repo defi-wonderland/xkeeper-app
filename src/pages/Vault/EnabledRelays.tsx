@@ -3,7 +3,7 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 import { Address } from 'viem';
 
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
-import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon } from '~/components';
+import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon, StyledText } from '~/components';
 import { copyData, truncateAddress } from '~/utils';
 import { ModalType, OptionsType, SelectedItem } from '~/types';
 import { useStateContext } from '~/hooks';
@@ -134,6 +134,12 @@ export const EnabledRelays = () => {
           </STable>
         </TableContainer>
       )}
+
+      {!relays.length && (
+        <NoDataContainer>
+          <StyledText>No relays enabled.</StyledText>
+        </NoDataContainer>
+      )}
     </SCard>
   );
 };
@@ -175,4 +181,19 @@ export const AddressContainer = styled('div')(() => {
 
 export const SText = styled(Text)(() => {
   return { cursor: 'pointer' };
+});
+
+export const NoDataContainer = styled('div')(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    paddingBottom: '2.4rem',
+    p: {
+      color: currentTheme.textDisabled,
+    },
+  };
 });

@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
-import { AddressContainer, RowButton, SText } from './EnabledRelays';
-import { ActiveButton, OptionsMenu, IconContainer, STooltip, Icon } from '~/components';
+import { AddressContainer, NoDataContainer, RowButton, SText } from './EnabledRelays';
+import { ActiveButton, OptionsMenu, IconContainer, STooltip, Icon, StyledText } from '~/components';
 import { copyData, truncateAddress } from '~/utils';
 import { Items, ModalType, OptionsType, SelectedItem } from '~/types';
 import { useStateContext } from '~/hooks';
@@ -120,6 +120,12 @@ export const EnabledJobs = () => {
             </TableBody>
           </STable>
         </TableContainer>
+      )}
+
+      {!jobs.length && (
+        <NoDataContainer>
+          <StyledText>No jobs enabled.</StyledText>
+        </NoDataContainer>
       )}
     </SCard>
   );
