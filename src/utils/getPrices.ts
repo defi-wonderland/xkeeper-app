@@ -9,7 +9,6 @@ export const getPricesUrl = (chainName: string, address: string[]) => {
 export const getPrices = async (chain: string, contractAddress: string[]): Promise<PriceData> => {
   try {
     const url = getPricesUrl(chain, contractAddress);
-    console.log(url);
     const jsonData = await fetchData(url);
     return jsonData;
   } catch (error) {
