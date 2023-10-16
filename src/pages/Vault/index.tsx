@@ -23,8 +23,16 @@ import { Activity } from './Activity';
 import { ModalType } from '~/types';
 
 export const Vault = () => {
-  const { currentTheme, setModalOpen, selectedVault, setSelectedVault, currentNetwork, setSelectedItem, notification } =
-    useStateContext();
+  const {
+    currentTheme,
+    selectedVault,
+    currentNetwork,
+    notification,
+    aliasData,
+    setModalOpen,
+    setSelectedVault,
+    setSelectedItem,
+  } = useStateContext();
   const { address } = useParams();
   const publicClient = usePublicClient();
   const { chain } = useNetwork();
@@ -32,6 +40,7 @@ export const Vault = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const chainName = currentNetwork.displayName;
+  const vaultAddress = selectedVault?.address || '';
   const version = 'V1.0.0';
 
   const sections = [
@@ -96,7 +105,7 @@ export const Vault = () => {
           {/* Vault Address | Vault Alias */}
           <TitleContainer>
             <TitleBox>
-              <Title>{selectedVault?.name}</Title>
+              <Title>{aliasData[vaultAddress] || selectedVault?.name}</Title>
 
               <STooltip text='Edit vault alias'>
                 <EditAliasButton variant='text' onClick={handleEditAlias}>

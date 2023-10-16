@@ -13,13 +13,13 @@ function createJobsData(alias: string, contractAddress: string, functionSignatur
 }
 
 export const EnabledJobs = () => {
-  const { userAddress, setModalOpen, selectedVault, currentTheme } = useStateContext();
+  const { userAddress, setModalOpen, selectedVault, currentTheme, aliasData } = useStateContext();
   const [items, setItems] = useState<Items[]>([{ value: '', itemCopied: false }]);
 
   const selectedJobs = useMemo(() => selectedVault?.jobs || {}, [selectedVault?.jobs]);
 
   const jobs = useMemo(
-    () => Object.keys(selectedJobs).map((key) => createJobsData('Test', key, selectedJobs[key])),
+    () => Object.keys(selectedJobs).map((key, index) => createJobsData(`Job ${index + 1}`, key, selectedJobs[key])),
     [selectedJobs],
   );
 
@@ -70,7 +70,7 @@ export const EnabledJobs = () => {
                   {/* Alias */}
                   <RowText component='th' scope='row'>
                     <STooltip text='Edit alias'>
-                      <Text>{row.alias}</Text>
+                      <Text>{aliasData[row.contractAddress] || row.alias}</Text>
                     </STooltip>
                   </RowText>
 

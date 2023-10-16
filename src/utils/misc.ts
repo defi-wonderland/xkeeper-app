@@ -1,5 +1,5 @@
 import { formatUnits } from 'viem';
-import { TokenData } from '~/types';
+import { AliasData, TokenData } from '~/types';
 
 export const truncateAddress = (address: string, chars = 4) => {
   return `${address.slice(0, 2 + chars)}...${address.slice(-chars)}`;
@@ -57,3 +57,18 @@ export function formatDataNumber(
     currency: 'USD',
   }).format(res);
 }
+
+// Load data from localStorage
+export const loadLocalStorage = (key: string) => {
+  const data = localStorage.getItem(key);
+  if (data) {
+    return JSON.parse(data);
+  }
+  return {};
+};
+
+// Save data to localStorage
+export const saveLocalStorage = (key: string, data: AliasData) => {
+  const stringifiedData = JSON.stringify(data);
+  localStorage.setItem(key, stringifiedData);
+};

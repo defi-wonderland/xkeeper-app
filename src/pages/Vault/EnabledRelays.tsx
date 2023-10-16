@@ -14,7 +14,7 @@ function createRelaysData(alias: string, contractAddress: string, enabledCallers
 }
 
 export const EnabledRelays = () => {
-  const { userAddress, setModalOpen, selectedVault, currentTheme } = useStateContext();
+  const { setModalOpen, userAddress, selectedVault, currentTheme, aliasData } = useStateContext();
   const [items, setItems] = useState<{ [key: string]: boolean }>({});
   const selectedRelays = useMemo(() => selectedVault?.relays || {}, [selectedVault]);
 
@@ -22,7 +22,8 @@ export const EnabledRelays = () => {
   const flattenRelays = useMemo(() => Object.entries(selectedRelays).flat().flat(), [selectedRelays]);
 
   const relays = useMemo(
-    () => Object.keys(selectedRelays).map((key) => createRelaysData('Test', key, selectedRelays[key])),
+    () =>
+      Object.keys(selectedRelays).map((key, index) => createRelaysData(`Relay ${index + 1}`, key, selectedRelays[key])),
     [selectedRelays],
   );
 
@@ -73,7 +74,7 @@ export const EnabledRelays = () => {
                   {/* Alias */}
                   <RowText component='th' scope='row'>
                     <STooltip text='Edit alias'>
-                      <Text>{row.alias}</Text>
+                      <Text>{aliasData[row.contractAddress] || row.alias}</Text>
                     </STooltip>
                   </RowText>
 

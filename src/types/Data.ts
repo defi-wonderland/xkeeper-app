@@ -36,4 +36,8 @@ export interface TokenData {
   balanceUSD: string;
 }
 
+export interface AliasData {
+  [address: string]: string;
+}
+
 export type OptionsType = 'vault' | 'job' | 'relay';

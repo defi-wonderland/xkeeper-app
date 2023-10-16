@@ -11,8 +11,11 @@ interface VaultCardProps {
 }
 
 export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
-  const { currentTheme, userAddress } = useStateContext();
+  const { currentTheme, userAddress, aliasData } = useStateContext();
   const { name, totalValue, relays, chain, owner, address } = vaultData;
+
+  const vaultAlias = aliasData[address];
+  const vaultName = name ? name : address;
 
   return (
     <SContainer onClick={onClick}>
@@ -21,7 +24,7 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
           <TitleContainer>
             {/* Vault Alias | Vault Address */}
             <STooltip text='Custom Alias (only you can see this)'>
-              <CardTitle sx={{ color: currentTheme.textPrimary }}>{name ? name : address}</CardTitle>
+              <CardTitle sx={{ color: currentTheme.textPrimary }}>{vaultAlias ? vaultAlias : vaultName}</CardTitle>
             </STooltip>
 
             <SBox>

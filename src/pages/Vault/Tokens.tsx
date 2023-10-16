@@ -176,6 +176,12 @@ export const RowText = styled(TableCell)(() => {
     height: '3.2rem',
     fontWeight: 500,
     padding: '1.6rem 2.4rem',
+    maxWidth: '28rem',
+    p: {
+      textOverflow: 'ellipsis',
+      overflowWrap: 'break-word',
+      wordBreak: 'break-all',
+    },
   };
 });
 
