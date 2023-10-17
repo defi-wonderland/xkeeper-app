@@ -184,6 +184,10 @@ const SOutlinedInput = styled(InputBase)(() => {
       '-webkit-appearance': 'none',
       margin: 0,
     },
+    '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth.MuiInputBase-adornedEnd:hover': {
+      borderColor: currentTheme.textDisabled,
+      transition: 'all 0.2s ease-in-out',
+    },
   };
 });
 
