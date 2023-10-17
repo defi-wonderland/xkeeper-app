@@ -63,7 +63,6 @@ export const useVault = ({
         // Update alias
         if (newAliasData) {
           const temp = { ...aliasData, ...newAliasData };
-          console.log(aliasData, temp);
           saveLocalStorage(ALIAS_KEY, temp);
           updateAliasData();
         }
