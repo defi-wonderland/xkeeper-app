@@ -49,10 +49,9 @@ export const StyledInput = ({
   };
 
   let copyableSx: SxProps<Theme> | null = null;
-  if (copyable || removable) {
+  if (copyable) {
     copyableSx = {
       div: {
-        borderRadius: currentTheme.borderRadius,
         background: currentTheme.backgroundHover,
       },
       input: {
@@ -76,7 +75,7 @@ export const StyledInput = ({
         placeholder={placeholder}
         error={error}
         type={number ? 'number' : 'text'}
-        readOnly={copyable || removable || disabled}
+        readOnly={copyable || disabled}
         endAdornment={
           <React.Fragment>
             {error && (
@@ -95,7 +94,7 @@ export const StyledInput = ({
 
             {removable && !error && (
               <SInputAdornment onClick={onClick} position='end'>
-                <SIcon name={'close'} size='1.7rem' color='inherit' />
+                <SIcon name={'close'} size='1.8rem' color='inherit' />
               </SInputAdornment>
             )}
 
@@ -173,6 +172,9 @@ const SOutlinedInput = styled(InputBase)(() => {
     input: {
       padding: '1rem 1.4rem',
       color: currentTheme.textPrimary,
+    },
+    'i:before': {
+      color: currentTheme.textSecondary,
     },
     '&:disabled': {
       backgroundColor: currentTheme.backgroundHover,

@@ -50,13 +50,22 @@ export const RelayModal = () => {
 
   const handleAddNewCaller = () => {
     if (isAddress(callerAddress)) {
-      setCallers([...callers, callerAddress]);
+      setCallers([callerAddress, ...callers]);
       setCallerAddress('');
     }
   };
 
   const handleRemoveCaller = (caller: string) => () => {
     setCallers(callers.filter((c) => c !== caller));
+  };
+
+  const handleRemoveCallerInput = () => {
+    if (callers.length > 0) {
+      setCallerAddress(callers[0]);
+      handleRemoveCaller(callers[0])();
+    } else {
+      setCallerAddress('');
+    }
   };
 
   useEffect(() => {
@@ -102,6 +111,8 @@ export const RelayModal = () => {
             disabled={allowAnyCaller || loading}
             error={!!callerAddress && !isAddress(callerAddress)}
             errorText='Invalid address'
+            onClick={handleRemoveCallerInput}
+            removable
           />
 
           {callers.map((caller) => (
@@ -114,6 +125,7 @@ export const RelayModal = () => {
                   setValue={() => {}}
                   onClick={handleRemoveCaller(caller)}
                   removable
+                  disabled
                 />
               )}
             </>
