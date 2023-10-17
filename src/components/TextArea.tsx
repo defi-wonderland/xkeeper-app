@@ -12,7 +12,7 @@ export const STextarea = styled('textarea')(() => {
     font-family: inherit;
     border-radius: ${currentTheme.borderRadius};
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    border: 1px solid ${currentTheme.textSecondaryDisabled};
+    border: ${currentTheme.inputBorder};
     background-color: inherit;
     padding: 1rem 1.4rem;
     width: 100%;

@@ -60,6 +60,20 @@ export const App = () => {
                 fontSize: '62.5%',
                 backgroundColor: currentTheme.backgroundSecondary,
               },
+              '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'transparent',
+              },
+              '& .MuiOutlinedInput-root, & .MuiInputBase-input': {
+                '& fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'transparent',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'transparent',
+                },
+              },
               ['.Mui-expanded']: {
                 zIndex: zIndex.MODAL,
               },

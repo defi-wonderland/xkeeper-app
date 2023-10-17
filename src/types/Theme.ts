@@ -18,6 +18,7 @@ export interface Theme {
   borderRadius: string;
   secondaryBorderRadius: string;
   border: string;
+  inputBorder: string;
 
   actionButton: string;
   actionButtonHover: string;

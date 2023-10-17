@@ -128,7 +128,7 @@ const TriggerButton = styled(MenuButton)(() => {
     gap: '0.8rem',
     textTransform: 'capitalize',
     padding: '1rem 1.4rem',
-    border: `1px solid ${currentTheme.textSecondaryDisabled}`,
+    border: currentTheme.inputBorder,
     borderRadius: currentTheme.borderRadius,
     fontsize: '1.6rem',
     textAlign: 'start',

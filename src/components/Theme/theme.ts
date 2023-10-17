@@ -16,6 +16,7 @@ export const darkTheme: Theme = {
   borderRadius: '8px',
   secondaryBorderRadius: '4px',
   border: '1px solid #1D2939',
+  inputBorder: '1px solid #344054',
 
   actionButton: '#444CE7',
   actionButtonHover: '#3538CD',
@@ -63,6 +64,7 @@ export const lightTheme: Theme = {
   borderRadius: '8px',
   secondaryBorderRadius: '4px',
   border: '1px solid #F2F4F7',
+  inputBorder: '1px solid #D0D5DD',
 
   actionButton: '#444CE7',
   actionButtonHover: '#3538CD',

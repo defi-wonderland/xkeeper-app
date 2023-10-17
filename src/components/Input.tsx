@@ -49,9 +49,16 @@ export const StyledInput = ({
   let copyableSx: SxProps<Theme> | null = null;
   if (copyable) {
     copyableSx = {
+      div: {
+        borderRadius: currentTheme.borderRadius,
+      },
+      color: `${currentTheme.textSecondary}`,
       input: {
         cursor: 'pointer',
-        color: currentTheme.textSecondary,
+        color: `${currentTheme.textSecondary} !important`,
+      },
+      'i:before': {
+        color: currentTheme.textTertiary,
       },
     };
   }
@@ -155,6 +162,8 @@ const SOutlinedInput = styled(OutlinedInput)(() => {
     fontSize: '1.6rem',
     borderRadius: currentTheme.borderRadius,
     padding: 0,
+    border: currentTheme.inputBorder,
+    boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     input: {
       padding: '1rem 1.4rem',
       color: currentTheme.textPrimary,
