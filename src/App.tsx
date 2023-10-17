@@ -60,19 +60,9 @@ export const App = () => {
                 fontSize: '62.5%',
                 backgroundColor: currentTheme.backgroundSecondary,
               },
-              '&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: 'transparent',
-              },
-              '& .MuiOutlinedInput-root, & .MuiInputBase-input': {
-                '& fieldset': {
-                  borderColor: 'transparent',
-                },
-                '&:hover fieldset': {
-                  borderColor: 'transparent',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: 'transparent',
-                },
+              '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth.MuiInputBase-adornedEnd:hover': {
+                borderColor: currentTheme.textDisabled,
+                transition: 'all 0.2s ease-in-out',
               },
               ['.Mui-expanded']: {
                 zIndex: zIndex.MODAL,

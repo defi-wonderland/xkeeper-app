@@ -29,6 +29,10 @@ export const STextarea = styled('textarea')(() => {
       outline: none;
     }
 
+    &:hover {
+      border-color: ${currentTheme.textDisabled} !important;
+    }
+
     overflow-y: overlay;
     overflow-x: hidden; /* Hide scrollbars */
 

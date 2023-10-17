@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, FormControl, OutlinedInput, Typography, styled, SxProps, Theme, InputAdornment } from '@mui/material';
+import { Box, Typography, styled, SxProps, Theme, InputAdornment, InputBase } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
 import { Icon, STooltip, StyledText } from '~/components';
@@ -19,6 +19,7 @@ interface InputProps {
   number?: boolean;
   onClick?: () => void;
   tokenSymbol?: string;
+  removable?: boolean;
 }
 
 export const StyledInput = ({
@@ -34,6 +35,7 @@ export const StyledInput = ({
   copyable,
   number,
   tokenSymbol,
+  removable,
   onClick,
 }: InputProps) => {
   const { currentTheme } = useStateContext();
@@ -47,18 +49,18 @@ export const StyledInput = ({
   };
 
   let copyableSx: SxProps<Theme> | null = null;
-  if (copyable) {
+  if (copyable || removable) {
     copyableSx = {
       div: {
         borderRadius: currentTheme.borderRadius,
+        background: currentTheme.backgroundHover,
       },
-      color: `${currentTheme.textSecondary}`,
       input: {
-        cursor: 'pointer',
-        color: `${currentTheme.textSecondary} !important`,
+        cursor: copyable ? 'pointer' : 'text',
+        color: `${currentTheme.textDisabled} !important`,
       },
       'i:before': {
-        color: currentTheme.textTertiary,
+        color: currentTheme.textDisabled,
       },
     };
   }
@@ -67,43 +69,47 @@ export const StyledInput = ({
     <InputContainer onClick={handleCopy} sx={{ ...sx, ...copyableSx }}>
       {!!label && <InputLabel>{label}</InputLabel>}
 
-      <FormControl fullWidth disabled={disabled}>
-        <SOutlinedInput
-          fullWidth
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder={placeholder}
-          error={error}
-          type={number ? 'number' : 'text'}
-          readOnly={copyable}
-          endAdornment={
-            <React.Fragment>
-              {error && (
-                <SInputAdornment position='end'>
-                  <STooltip text={errorText || ''}>
-                    <SIcon name='alert-circle' size='1.7rem' color={currentTheme.error} />
-                  </STooltip>
-                </SInputAdornment>
-              )}
+      <SOutlinedInput
+        fullWidth
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={placeholder}
+        error={error}
+        type={number ? 'number' : 'text'}
+        readOnly={copyable || removable || disabled}
+        endAdornment={
+          <React.Fragment>
+            {error && (
+              <SInputAdornment position='end'>
+                <STooltip text={errorText || ''}>
+                  <SIcon name='alert-circle' size='1.7rem' color={currentTheme.error} />
+                </STooltip>
+              </SInputAdornment>
+            )}
 
-              {copyable && !error && (
-                <SInputAdornment position='end'>
-                  <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' />
-                </SInputAdornment>
-              )}
+            {copyable && !error && (
+              <SInputAdornment position='end'>
+                <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' />
+              </SInputAdornment>
+            )}
 
-              {number && !error && (
-                <AmountInputAdornment position='end'>
-                  <StyledText>{tokenSymbol}</StyledText>
-                  <STextButton variant='text' onClick={onClick} disabled={disabled}>
-                    Max
-                  </STextButton>
-                </AmountInputAdornment>
-              )}
-            </React.Fragment>
-          }
-        />
-      </FormControl>
+            {removable && !error && (
+              <SInputAdornment onClick={onClick} position='end'>
+                <SIcon name={'close'} size='1.7rem' color='inherit' />
+              </SInputAdornment>
+            )}
+
+            {number && !error && (
+              <AmountInputAdornment position='end'>
+                <StyledText>{tokenSymbol}</StyledText>
+                <STextButton variant='text' onClick={onClick} disabled={disabled}>
+                  Max
+                </STextButton>
+              </AmountInputAdornment>
+            )}
+          </React.Fragment>
+        }
+      />
 
       {!!description && (
         <>
@@ -156,7 +162,7 @@ const ErrorDescription = styled(InputDescription)(() => {
   };
 });
 
-const SOutlinedInput = styled(OutlinedInput)(() => {
+const SOutlinedInput = styled(InputBase)(() => {
   const { currentTheme } = useStateContext();
   return {
     fontSize: '1.6rem',

@@ -55,6 +55,10 @@ export const RelayModal = () => {
     }
   };
 
+  const handleRemoveCaller = (caller: string) => () => {
+    setCallers(callers.filter((c) => c !== caller));
+  };
+
   useEffect(() => {
     if (allowAnyCaller) {
       setCallers([anyCaller]);
@@ -77,6 +81,7 @@ export const RelayModal = () => {
         </TitleContainer>
 
         <InputsContainer>
+          {/* Relay Input */}
           <StyledInput
             label='Relay'
             description='Choose from trusted relays or enter a custom address.'
@@ -88,6 +93,7 @@ export const RelayModal = () => {
             errorText='Invalid address'
           />
 
+          {/* Callers Input */}
           <StyledInput
             label='Callers'
             value={callerAddress}
@@ -101,7 +107,14 @@ export const RelayModal = () => {
           {callers.map((caller) => (
             <>
               {!allowAnyCaller && (
-                <StyledInput sx={{ mt: '-1rem' }} key={caller} value={caller} setValue={() => {}} disabled />
+                <StyledInput
+                  sx={{ mt: '-1rem' }}
+                  key={caller}
+                  value={caller}
+                  setValue={() => {}}
+                  onClick={handleRemoveCaller(caller)}
+                  removable
+                />
               )}
             </>
           ))}
