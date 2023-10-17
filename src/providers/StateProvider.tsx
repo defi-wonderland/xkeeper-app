@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { useAccount, useNetwork, usePublicClient } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 import {
   Theme,
@@ -13,8 +13,17 @@ import {
   SelectedItem,
   AliasData,
 } from '~/types';
-import { ALIAS_KEY, THEME_KEY, getTheme, getTokenList, getVaults, getVaultsData, loadLocalStorage } from '~/utils';
-import { getConfig } from '~/config';
+import {
+  ALIAS_KEY,
+  THEME_KEY,
+  getPrices,
+  getTheme,
+  getTokenList,
+  getVaults,
+  getVaultsData,
+  loadLocalStorage,
+} from '~/utils';
+import { getConfig, publicClient } from '~/config';
 
 type ContextType = {
   theme: ThemeName;
@@ -60,7 +69,7 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const { addresses, availableChains, DEFAULT_CHAIN } = getConfig();
+  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_ETH_ADDRESS } = getConfig();
   const { address } = useAccount();
   const { chain } = useNetwork();
 
@@ -85,19 +94,23 @@ export const StateProvider = ({ children }: StateProps) => {
     [DEFAULT_CHAIN, availableChains, chain?.id],
   );
 
-  const publicClient = usePublicClient({ chainId: currentNetwork.id });
-
-  // Load vaults from blockchain
   const update = useCallback(async () => {
     setLoading(true);
     const tokens = getTokenList(chain?.id);
+    const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
 
-    const vaults = await getVaults(publicClient, addresses.AutomationVaultFactory);
-    const vaultsData = await getVaultsData(publicClient, vaults, tokens);
+    const currentChain = publicClient.chain.name.toLocaleLowerCase();
+    const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain; // Load tokens from mainnet when on goerli
+
+    const pricesCall = getPrices(chainName, tokenAddresses);
+    const vaultsCall = getVaults(publicClient, addresses.AutomationVaultFactory);
+
+    const [vaults, prices] = await Promise.all([vaultsCall, pricesCall]);
+    const vaultsData = await getVaultsData(publicClient, vaults, tokens, prices);
 
     setVaults(vaultsData);
     setLoading(false);
-  }, [addresses.AutomationVaultFactory, chain?.id, publicClient]);
+  }, [DEFAULT_ETH_ADDRESS, addresses.AutomationVaultFactory, chain?.id]);
 
   // Load alias data from local storage
   const updateAliasData = useCallback(async () => {

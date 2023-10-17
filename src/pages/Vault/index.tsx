@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNetwork, usePublicClient } from 'wagmi';
+import { useNetwork } from 'wagmi';
 import { Address } from 'viem';
 
 import {
@@ -14,13 +14,14 @@ import {
   InfoChip,
   STooltip,
 } from '~/components';
-import { getTokenList, getVaultsData } from '~/utils';
+import { getPrices, getTokenList, getVaultsData } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
 import { ModalType } from '~/types';
+import { getConfig, publicClient } from '~/config';
 
 export const Vault = () => {
   const {
@@ -33,8 +34,8 @@ export const Vault = () => {
     setSelectedVault,
     setSelectedItem,
   } = useStateContext();
+  const { DEFAULT_ETH_ADDRESS } = getConfig();
   const { address } = useParams();
-  const publicClient = usePublicClient();
   const { chain } = useNetwork();
 
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -68,7 +69,14 @@ export const Vault = () => {
     setLoading(true);
     try {
       const tokens = getTokenList(chain?.id);
-      const vaultData = await getVaultsData(publicClient, [address as Address], tokens);
+      const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
+
+      const currentChain = publicClient.chain.name.toLocaleLowerCase();
+      // Load tokens from mainnet when on goerli
+      const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain;
+
+      const prices = await getPrices(chainName, tokenAddressList);
+      const vaultData = await getVaultsData(publicClient, [address as Address], tokens, prices);
 
       setLoading(false);
       setSelectedVault(vaultData[0]);
