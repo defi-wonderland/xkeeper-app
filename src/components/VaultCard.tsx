@@ -1,6 +1,6 @@
 import { Box, Card, styled } from '@mui/material';
 
-import { ChainIcon, Icon, InfoChip, RelayChip, STooltip, StyledText, StyledTitle } from '~/components';
+import { ChainIcon, Icon, InfoChip, NoRelayChip, RelayChip, STooltip, StyledText, StyledTitle } from '~/components';
 import { formatDataNumber, getRelayName } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
@@ -11,8 +11,12 @@ interface VaultCardProps {
 }
 
 export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
-  const { currentTheme, userAddress } = useStateContext();
+  const { currentTheme, userAddress, aliasData } = useStateContext();
   const { name, totalValue, relays, chain, owner, address } = vaultData;
+
+  const activeRelays = Object.keys(relays);
+  const vaultAlias = aliasData[address];
+  const vaultName = name ? name : address;
 
   return (
     <SContainer onClick={onClick}>
@@ -21,7 +25,7 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
           <TitleContainer>
             {/* Vault Alias | Vault Address */}
             <STooltip text='Custom Alias (only you can see this)'>
-              <CardTitle sx={{ color: currentTheme.textPrimary }}>{name ? name : address}</CardTitle>
+              <CardTitle sx={{ color: currentTheme.textPrimary }}>{vaultAlias ? vaultAlias : vaultName}</CardTitle>
             </STooltip>
 
             <SBox>
@@ -43,7 +47,10 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
         {/* Active Relays */}
         <RelayContainer>
           <ChipsContainer>
-            {Object.keys(relays)?.map((relayName) => <RelayChip text={getRelayName(relayName)} key={relayName} />)}
+            {!!activeRelays.length &&
+              activeRelays.map((relayAddress) => <RelayChip text={getRelayName(relayAddress)} key={relayAddress} />)}
+
+            {!activeRelays.length && <NoRelayChip text='No active relays' />}
           </ChipsContainer>
 
           {/* See more icon */}

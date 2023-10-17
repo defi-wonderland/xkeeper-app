@@ -15,9 +15,11 @@ export interface Constants {
 
 export interface Addresses {
   AutomationVaultFactory: Address;
-  GelatoRelay: Address;
-  OpenRelay: Address;
-  Keep3rRelay: Address;
+  relays: {
+    GelatoRelay: Address;
+    OpenRelay: Address;
+    Keep3rRelay: Address;
+  };
 }
 
 export interface Chain {

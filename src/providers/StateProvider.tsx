@@ -1,8 +1,28 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
-import { Theme, ThemeName, ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
-import { THEME_KEY, getPrices, getTheme, getTokenList, getVaults, getVaultsData } from '~/utils';
+import {
+  Theme,
+  ThemeName,
+  ModalType,
+  Addresses,
+  Chains,
+  VaultData,
+  Notification,
+  Chain,
+  SelectedItem,
+  AliasData,
+} from '~/types';
+import {
+  ALIAS_KEY,
+  THEME_KEY,
+  getPrices,
+  getTheme,
+  getTokenList,
+  getVaults,
+  getVaultsData,
+  loadLocalStorage,
+} from '~/utils';
 import { getConfig, publicClient } from '~/config';
 
 type ContextType = {
@@ -36,6 +56,9 @@ type ContextType = {
   vaults: VaultData[];
   setVaults: (val: VaultData[]) => void;
 
+  aliasData: AliasData;
+  updateAliasData: () => void;
+
   update: () => void;
 };
 
@@ -55,6 +78,7 @@ export const StateProvider = ({ children }: StateProps) => {
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
   const [vaults, setVaults] = useState<VaultData[]>([]);
+  const [aliasData, setAliasData] = useState<AliasData>({});
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     type: '',
     address: '0x',
@@ -88,17 +112,33 @@ export const StateProvider = ({ children }: StateProps) => {
     setLoading(false);
   }, [DEFAULT_ETH_ADDRESS, addresses.AutomationVaultFactory, chain?.id]);
 
+  // Load alias data from local storage
+  const updateAliasData = useCallback(async () => {
+    setLoading(true);
+    const data = loadLocalStorage(ALIAS_KEY);
+    setAliasData(data);
+
+    setLoading(false);
+  }, []);
+
+  // Load vaults on load
   useEffect(() => {
     update();
   }, [update]);
 
+  // Load alias data on load
+  useEffect(() => {
+    updateAliasData();
+  }, [updateAliasData]);
+
+  // Update vaults on notification open
   useEffect(() => {
     if (notification.open) {
       update();
     }
   }, [notification.open, update]);
 
-  // Load theme from local storage
+  // Load theme from local storage on load
   useEffect(() => {
     const storedTheme = localStorage.getItem(THEME_KEY) as ThemeName;
     if (!storedTheme) {
@@ -133,6 +173,8 @@ export const StateProvider = ({ children }: StateProps) => {
         vaults,
         setVaults,
         update,
+        aliasData,
+        updateAliasData,
       }}
     >
       {children}

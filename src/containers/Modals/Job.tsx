@@ -38,10 +38,11 @@ export const JobModal = () => {
 
   const { handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
-    functionName: 'approveRelayCallers',
+    functionName: 'approveJobFunctions',
     args: [jobAddress, [functionSignature]],
     notificationTitle: 'Job successfully approved',
     notificationMessage: getReceiptMessage(jobAddress, 'job is now enabled'),
+    newAliasData: { [jobAddress]: jobAlias },
   });
 
   useEffect(() => {
@@ -180,14 +181,15 @@ const RadioContainer = styled('div')({
   },
 });
 
-const DropdownContainer = styled(Box)({
+export const DropdownContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'column',
   gap: '0.6rem',
   marginBottom: '2.4rem',
+  width: '100%',
 });
 
-const DropdownLabel = styled(Typography)(() => {
+export const DropdownLabel = styled(Typography)(() => {
   const { currentTheme } = useStateContext();
   return {
     color: currentTheme.textSecondary,

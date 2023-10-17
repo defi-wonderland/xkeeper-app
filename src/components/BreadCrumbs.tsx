@@ -13,7 +13,7 @@ export const BreadCrumbs = ({ currentPage, previousPage }: BreadCrumbsProps) => 
 
   const breadcrumbs = [
     <PreviousPage key='1' sx={{ color: currentTheme.textDisabled }}>
-      {previousPage}
+      <NavigationLink to='/'>{previousPage}</NavigationLink>
     </PreviousPage>,
     <CurrentPage key='2' sx={{ color: currentTheme.infoChipColor }}>
       {currentPage}

@@ -5,12 +5,12 @@ import { Menu } from '@mui/base/Menu';
 import { useStateContext } from '~/hooks';
 import {
   CustomScrollbar,
+  DropdownTriggerButton,
   SIcon,
   StyledListbox,
   StyledMenuItem,
   StyledText,
   TokenIcon,
-  TriggerButton,
 } from '~/components';
 import { TokenData } from '~/types';
 
@@ -39,11 +39,11 @@ export function TokenDropdown({ tokens, value, setValue, disabled }: TokenDropdo
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <TriggerButton sx={customIcon} disabled={disabled}>
+      <DropdownTriggerButton sx={customIcon} disabled={disabled}>
         <TokenIcon chainName={currentNetwork.name} tokenAddress={value?.address} />
         <StyledText>{value?.symbol}</StyledText>
         <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
-      </TriggerButton>
+      </DropdownTriggerButton>
 
       {/* Dropdown Options */}
       <Menu slots={{ listbox: StyledListbox }}>

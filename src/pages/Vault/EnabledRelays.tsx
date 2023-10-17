@@ -3,9 +3,9 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 import { Address } from 'viem';
 
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
-import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon } from '~/components';
+import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon, StyledText } from '~/components';
 import { copyData, truncateAddress } from '~/utils';
-import { ModalType } from '~/types';
+import { ModalType, OptionsType, SelectedItem } from '~/types';
 import { useStateContext } from '~/hooks';
 import { Text } from './EnabledJobs';
 
@@ -14,7 +14,7 @@ function createRelaysData(alias: string, contractAddress: string, enabledCallers
 }
 
 export const EnabledRelays = () => {
-  const { userAddress, setModalOpen, selectedVault, currentTheme } = useStateContext();
+  const { setModalOpen, setSelectedItem, userAddress, selectedVault, currentTheme, aliasData } = useStateContext();
   const [items, setItems] = useState<{ [key: string]: boolean }>({});
   const selectedRelays = useMemo(() => selectedVault?.relays || {}, [selectedVault]);
 
@@ -22,7 +22,8 @@ export const EnabledRelays = () => {
   const flattenRelays = useMemo(() => Object.entries(selectedRelays).flat().flat(), [selectedRelays]);
 
   const relays = useMemo(
-    () => Object.keys(selectedRelays).map((key) => createRelaysData('Test', key, selectedRelays[key])),
+    () =>
+      Object.keys(selectedRelays).map((key, index) => createRelaysData(`Relay ${index + 1}`, key, selectedRelays[key])),
     [selectedRelays],
   );
 
@@ -41,6 +42,12 @@ export const EnabledRelays = () => {
       newItems[content] = false;
       setItems(newItems);
     }, 800);
+  };
+
+  const handleOpenAliasModal = (type: OptionsType, address: string, params: string[]) => {
+    const selectedItem = { type, address, params } as SelectedItem;
+    setSelectedItem(selectedItem);
+    setModalOpen(ModalType.EDIT_ALIAS);
   };
 
   return (
@@ -73,7 +80,9 @@ export const EnabledRelays = () => {
                   {/* Alias */}
                   <RowText component='th' scope='row'>
                     <STooltip text='Edit alias'>
-                      <Text>{row.alias}</Text>
+                      <SText onClick={() => handleOpenAliasModal('relay', row.contractAddress, row.enabledCallers)}>
+                        {aliasData[row.contractAddress] || row.alias}
+                      </SText>
                     </STooltip>
                   </RowText>
 
@@ -125,6 +134,12 @@ export const EnabledRelays = () => {
           </STable>
         </TableContainer>
       )}
+
+      {!relays.length && (
+        <NoDataContainer>
+          <StyledText>No relays enabled.</StyledText>
+        </NoDataContainer>
+      )}
     </SCard>
   );
 };
@@ -161,5 +176,24 @@ export const AddressContainer = styled('div')(() => {
     gap: '0.8rem',
     width: '100%',
     cursor: 'pointer',
+  };
+});
+
+export const SText = styled(Text)(() => {
+  return { cursor: 'pointer' };
+});
+
+export const NoDataContainer = styled('div')(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    paddingBottom: '2.4rem',
+    p: {
+      color: currentTheme.textDisabled,
+    },
   };
 });

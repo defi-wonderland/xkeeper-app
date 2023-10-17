@@ -42,6 +42,10 @@ export interface TokenData {
   balanceUSD: string;
 }
 
+export interface AliasData {
+  [address: string]: string;
+}
+
 export interface PriceData {
   coins: {
     [chainAndAddress: string]: {

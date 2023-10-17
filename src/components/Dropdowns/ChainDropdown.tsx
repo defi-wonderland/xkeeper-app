@@ -29,11 +29,11 @@ export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdo
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <TriggerButton disabled={disabled}>
+      <DropdownTriggerButton disabled={disabled}>
         <ChainIcon chainName={chains[value].name} />
         <StyledText>{chains[value].name}</StyledText>
         <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
-      </TriggerButton>
+      </DropdownTriggerButton>
 
       {/* Dropdown Options */}
       <Menu slots={{ listbox: StyledListbox }}>
@@ -105,7 +105,7 @@ export const StyledMenuItem = styled(MenuItem)(() => {
   `;
 });
 
-export const TriggerButton = styled(MenuButton)(() => {
+export const DropdownTriggerButton = styled(MenuButton)(() => {
   const { currentTheme } = useStateContext();
   return {
     cursor: 'pointer',
@@ -117,15 +117,19 @@ export const TriggerButton = styled(MenuButton)(() => {
     gap: '0.8rem',
     textTransform: 'capitalize',
     padding: '1rem 1.4rem',
-    border: `1px solid ${currentTheme.textSecondaryDisabled}`,
+    border: currentTheme.inputBorder,
     borderRadius: currentTheme.borderRadius,
     fontsize: '1.6rem',
     textAlign: 'start',
     backgroundColor: 'inherit',
     height: '4.3rem',
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
-    '&:hover': {
-      border: `1px solid ${currentTheme.textPrimary}`,
+    '&:hover:not(:disabled)': {
+      borderColor: currentTheme.textDisabled,
+      transition: 'all 0.2s ease-in-out',
+    },
+    '&:disabled': {
+      cursor: 'auto',
     },
     p: {
       fontSize: '1.6rem',

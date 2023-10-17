@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, styled } from '@mui/material';
 
 import { TitleContainer, ButtonsContainer } from '~/containers';
@@ -14,10 +14,23 @@ import {
 } from '~/components';
 import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
+import { ALIAS_KEY, saveLocalStorage } from '~/utils';
 
 export const EditAliasModal = () => {
-  const { setModalOpen, modalOpen, currentTheme, selectedItem } = useStateContext();
+  const { setModalOpen, modalOpen, currentTheme, selectedItem, aliasData, updateAliasData } = useStateContext();
   const [alias, setAlias] = useState<string>('');
+
+  const handleConfirm = () => {
+    aliasData[selectedItem.address] = alias;
+    saveLocalStorage(ALIAS_KEY, aliasData);
+    updateAliasData();
+    setAlias('');
+    setModalOpen(ModalType.NONE);
+  };
+
+  useEffect(() => {
+    setAlias(aliasData[selectedItem.address] || '');
+  }, [aliasData, selectedItem.address]);
 
   return (
     <BaseModal open={modalOpen === ModalType.EDIT_ALIAS}>
@@ -51,7 +64,13 @@ export const EditAliasModal = () => {
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained'>Confirm</ActiveButton>
+          {/* 
+              If the user clicks confirm with the input field empty, 
+              the alias will be removed and the default name will be displayed.
+          */}
+          <ActiveButton variant='contained' onClick={handleConfirm}>
+            Confirm
+          </ActiveButton>
         </ButtonsContainer>
       </BigModal>
     </BaseModal>

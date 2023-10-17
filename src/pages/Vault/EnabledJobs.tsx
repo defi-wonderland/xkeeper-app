@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
-import { AddressContainer, RowButton } from './EnabledRelays';
-import { ActiveButton, OptionsMenu, IconContainer, STooltip, Icon } from '~/components';
+import { AddressContainer, NoDataContainer, RowButton, SText } from './EnabledRelays';
+import { ActiveButton, OptionsMenu, IconContainer, STooltip, Icon, StyledText } from '~/components';
 import { copyData, truncateAddress } from '~/utils';
-import { Items, ModalType } from '~/types';
+import { Items, ModalType, OptionsType, SelectedItem } from '~/types';
 import { useStateContext } from '~/hooks';
 
 function createJobsData(alias: string, contractAddress: string, functionSignature: string[]) {
@@ -13,13 +13,13 @@ function createJobsData(alias: string, contractAddress: string, functionSignatur
 }
 
 export const EnabledJobs = () => {
-  const { userAddress, setModalOpen, selectedVault, currentTheme } = useStateContext();
+  const { userAddress, setSelectedItem, setModalOpen, selectedVault, currentTheme, aliasData } = useStateContext();
   const [items, setItems] = useState<Items[]>([{ value: '', itemCopied: false }]);
 
   const selectedJobs = useMemo(() => selectedVault?.jobs || {}, [selectedVault?.jobs]);
 
   const jobs = useMemo(
-    () => Object.keys(selectedJobs).map((key) => createJobsData('Test', key, selectedJobs[key])),
+    () => Object.keys(selectedJobs).map((key, index) => createJobsData(`Job ${index + 1}`, key, selectedJobs[key])),
     [selectedJobs],
   );
 
@@ -38,6 +38,12 @@ export const EnabledJobs = () => {
       newItems[index].itemCopied = false;
       setItems(newItems);
     }, 800);
+  };
+
+  const handleOpenAliasModal = (type: OptionsType, address: string, params: string[]) => {
+    const selectedItem = { type, address, params } as SelectedItem;
+    setSelectedItem(selectedItem);
+    setModalOpen(ModalType.EDIT_ALIAS);
   };
 
   return (
@@ -70,7 +76,9 @@ export const EnabledJobs = () => {
                   {/* Alias */}
                   <RowText component='th' scope='row'>
                     <STooltip text='Edit alias'>
-                      <Text>{row.alias}</Text>
+                      <SText onClick={() => handleOpenAliasModal('job', row.contractAddress, row.functionSignature)}>
+                        {aliasData[row.contractAddress] || row.alias}
+                      </SText>
                     </STooltip>
                   </RowText>
 
@@ -112,6 +120,12 @@ export const EnabledJobs = () => {
             </TableBody>
           </STable>
         </TableContainer>
+      )}
+
+      {!jobs.length && (
+        <NoDataContainer>
+          <StyledText>No jobs enabled.</StyledText>
+        </NoDataContainer>
       )}
     </SCard>
   );
