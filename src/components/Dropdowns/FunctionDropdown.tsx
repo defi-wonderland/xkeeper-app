@@ -5,7 +5,8 @@ import { styled } from '@mui/system';
 import { getFunctionSelector } from 'viem';
 import { AbiFunction } from 'abitype';
 
-import { StyledText, CustomScrollbar, DropdownTriggerButton, StyledListbox, StyledMenuItem } from '~/components';
+import { StyledText, CustomScrollbar, DropdownTriggerButton, StyledListbox, StyledMenuItem, SIcon } from '~/components';
+import { useStateContext } from '~/hooks';
 
 interface FunctionDropdownProps {
   value: string;
@@ -16,6 +17,8 @@ interface FunctionDropdownProps {
 }
 
 export function FunctionDropdown({ value, setValue, abi, setSignature, disabled }: FunctionDropdownProps) {
+  const { currentTheme } = useStateContext();
+
   const createHandleMenuClick = (value: AbiFunction) => {
     return () => {
       const signature = getFunctionSelector(value);
@@ -42,6 +45,7 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
       {/* Dropdown button */}
       <DropdownTriggerButton disabled={disabled}>
         <StyledText>{value || availableValues[0]?.name}</StyledText>
+        <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}

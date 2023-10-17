@@ -6,9 +6,11 @@ const constants: Constants = {
 
   addresses: {
     AutomationVaultFactory: '0x49f06CfB7e9505b5a704Ca24E4674aa7B1A81D96',
-    GelatoRelay: '0x74e1b9f9b1df2fde9e05ba03e62c0074f383cabb',
-    OpenRelay: '0x217742801febb8220fdea5d35dd976988a052bea',
-    Keep3rRelay: '0xcb3ebc14b351f7e9924420b4affbcff1f3f25fc0',
+    relays: {
+      GelatoRelay: '0x74E1b9F9b1Df2fdE9E05bA03e62C0074f383cabB',
+      OpenRelay: '0x217742801feBB8220FdEA5D35dD976988a052BEa',
+      Keep3rRelay: '0xcb3eBC14B351F7e9924420b4AFFBCFf1F3F25Fc0',
+    },
   },
 
   availableChains: {

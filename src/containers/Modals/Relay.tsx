@@ -12,15 +12,20 @@ import {
   StyledText,
   CloseButton,
   Icon,
+  RelayDropdown,
 } from '~/components';
-import { ButtonsContainer, BigModal, TitleContainer } from '~/containers';
+import { ButtonsContainer, BigModal, TitleContainer, DropdownContainer, DropdownLabel } from '~/containers';
+import { anyCaller, getReceiptMessage, getRelayName } from '~/utils';
 import { useStateContext, useVault } from '~/hooks';
 import { ModalType } from '~/types';
-import { anyCaller, getReceiptMessage } from '~/utils';
+import { getConfig } from '~/config';
 
 export const RelayModal = () => {
   const { modalOpen, setModalOpen, selectedVault, loading, currentTheme } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
+  const {
+    addresses: { relays },
+  } = getConfig();
 
   const [relayAddress, setRelayAddress] = useState('');
   const [callerAddress, setCallerAddress] = useState<string>('');
@@ -42,6 +47,7 @@ export const RelayModal = () => {
     args: [relayAddress, callerList],
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
+    newAliasData: { [relayAddress]: relayAlias },
   });
 
   const handleToggle = () => {
@@ -91,16 +97,20 @@ export const RelayModal = () => {
 
         <InputsContainer>
           {/* Relay Input */}
-          <StyledInput
-            label='Relay'
-            description='Choose from trusted relays or enter a custom address.'
-            value={relayAddress}
-            setValue={setRelayAddress}
-            disabled={loading}
-            placeholder='Choose Relay'
-            error={!!relayAddress && !isAddress(relayAddress)}
-            errorText='Invalid address'
-          />
+
+          <DropdownContainer>
+            <DropdownLabel>Relay</DropdownLabel>
+            <RelayDropdown
+              value={getRelayName(relayAddress, 'Choose Relay')}
+              setValue={setRelayAddress}
+              availableValues={Object.values(relays)}
+              disabled={loading}
+            />
+          </DropdownContainer>
+
+          {isAddress(relayAddress) && (
+            <StyledInput sx={{ mt: '-1rem' }} value={relayAddress} setValue={() => {}} onClick={() => {}} copyable />
+          )}
 
           {/* Callers Input */}
           <StyledInput
