@@ -1,4 +1,4 @@
-import { formatUnits } from 'viem';
+import { formatUnits, parseUnits } from 'viem';
 import { TokenData } from '~/types';
 
 export const truncateAddress = (address: string, chars = 4) => {
@@ -13,8 +13,8 @@ export const copyData = (data: string) => {
   navigator.clipboard.writeText(data);
 };
 
-export const getUsdBalance = (price: string, balance: string, decimals: number): string => {
-  const priceBN = BigInt(price);
+export const getUsdBalance = (price: number, balance: string, decimals: number): string => {
+  const priceBN = parseUnits(price.toString(), decimals);
   const balanceBN = BigInt(balance);
   const result = (priceBN * balanceBN) / BigInt(10 ** decimals);
   return result.toString();

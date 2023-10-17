@@ -1,5 +1,11 @@
 import { Hex, Address } from 'viem';
 
+export interface CallResult {
+  result: bigint;
+  error?: Error;
+  status: 'success' | 'failure';
+}
+
 export interface VaultData {
   address: Address;
   chain: string;
@@ -32,8 +38,19 @@ export interface TokenData {
   balanceE18: string;
   balance: string;
   address: string;
-  price: string;
+  price: number;
   balanceUSD: string;
 }
 
+export interface PriceData {
+  coins: {
+    [chainAndAddress: string]: {
+      decimals: number;
+      symbol: string;
+      price: number;
+      timestamp: number;
+      confidence: number;
+    };
+  };
+}
 export type OptionsType = 'vault' | 'job' | 'relay';
