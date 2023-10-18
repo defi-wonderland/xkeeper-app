@@ -62,6 +62,7 @@ export const RelayModal = () => {
   };
 
   const handleRemoveCaller = (caller: string) => () => {
+    if (loading) return;
     setCallers(callers.filter((c) => c !== caller));
   };
 

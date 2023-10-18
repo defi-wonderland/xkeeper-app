@@ -93,7 +93,7 @@ export const StyledInput = ({
             )}
 
             {removable && !error && (
-              <SInputAdornment onClick={!disabled ? onClick : undefined} position='end'>
+              <SInputAdornment onClick={onClick} position='end'>
                 <SIcon name={'close'} size='1.8rem' color='inherit' />
               </SInputAdornment>
             )}
