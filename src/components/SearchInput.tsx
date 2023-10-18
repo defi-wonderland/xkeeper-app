@@ -1,6 +1,8 @@
-import { InputAdornment, FormControl, OutlinedInput } from '@mui/material';
+import { InputAdornment, FormControl, styled } from '@mui/material';
 
 import { Icon } from './Icon';
+import { SOutlinedInput } from './Input';
+import { useStateContext } from '~/hooks';
 
 interface SearchInputProps {
   value: string;
@@ -11,7 +13,7 @@ interface SearchInputProps {
 export const SearchInput = ({ value, setValue, placeholder }: SearchInputProps) => {
   return (
     <FormControl sx={{ my: '2rem' }} fullWidth>
-      <OutlinedInput
+      <SInput
         fullWidth
         type='search'
         value={value}
@@ -33,3 +35,14 @@ export const SearchInput = ({ value, setValue, placeholder }: SearchInputProps) 
     </FormControl>
   );
 };
+
+const SInput = styled(SOutlinedInput)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    paddingLeft: '1.4rem',
+    '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
+      borderColor: currentTheme.textDisabled,
+      transition: 'all 0.2s ease-in-out',
+    },
+  };
+});

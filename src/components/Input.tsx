@@ -93,7 +93,7 @@ export const StyledInput = ({
             )}
 
             {removable && !error && (
-              <SInputAdornment onClick={onClick} position='end'>
+              <SInputAdornment onClick={!disabled ? onClick : undefined} position='end'>
                 <SIcon name={'close'} size='1.8rem' color='inherit' />
               </SInputAdornment>
             )}
@@ -161,7 +161,7 @@ const ErrorDescription = styled(InputDescription)(() => {
   };
 });
 
-const SOutlinedInput = styled(InputBase)(() => {
+export const SOutlinedInput = styled(InputBase)(() => {
   const { currentTheme } = useStateContext();
   return {
     fontSize: '1.6rem',
@@ -184,7 +184,7 @@ const SOutlinedInput = styled(InputBase)(() => {
       '-webkit-appearance': 'none',
       margin: 0,
     },
-    '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth.MuiInputBase-adornedEnd:hover': {
+    '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
       borderColor: currentTheme.textDisabled,
       transition: 'all 0.2s ease-in-out',
     },
