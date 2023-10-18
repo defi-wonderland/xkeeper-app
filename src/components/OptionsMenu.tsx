@@ -123,7 +123,7 @@ const EditContainer = styled(OptionContainer)(() => {
     color: currentTheme.textPrimary,
     borderRadius: currentTheme.borderRadius,
     '&:hover': {
-      transition: 'all 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
       backgroundColor: currentTheme.backgroundHover,
     },
   };

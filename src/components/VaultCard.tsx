@@ -84,12 +84,12 @@ const SCard = styled(Card)(() => {
     '&:hover': {
       borderColor: currentTheme.textSecondaryDisabled,
       boxShadow: '0px 2px 12px 0px rgba(16, 24, 40, 0.04)',
-      transition: 'all 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
     },
 
     '&:hover .icon-arrow-right:before': {
       color: currentTheme.textDisabled,
-      transition: 'all 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
     },
   };
 });

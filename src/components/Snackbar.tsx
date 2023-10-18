@@ -73,12 +73,12 @@ const CustomSnackbar = styled('div')(() => {
       0px 12px 16px -4px rgba(16, 24, 40, 0.08);
     padding: 1.6rem;
     font-weight: 500;
-    animation: ${snackbarInRight} 200ms;
-    transition: transform 0.2s ease-out;
+    animation: ${snackbarInRight} 0.1s;
+    transition: transform 0.1s ease-out;
     &:hover {
       border-color: ${currentTheme.textSecondaryDisabled};
       box-shadow: '0px 2px 12px 0px rgba(16, 24, 40, 0.04)';
-      transition: 'all 0.2s ease-in-out';
+      transition: ${currentTheme.basicTransition};
     }
   `;
 });

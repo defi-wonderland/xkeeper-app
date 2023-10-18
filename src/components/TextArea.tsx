@@ -31,7 +31,7 @@ export const STextarea = styled('textarea')(() => {
 
     &:hover {
       border-color: ${currentTheme.textDisabled} !important;
-      transition: all 0.2s ease-in-out;
+      transition: ${currentTheme.basicTransition};
     }
 
     overflow-y: overlay;

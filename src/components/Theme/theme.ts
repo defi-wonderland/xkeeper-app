@@ -2,6 +2,8 @@ import { Theme } from '~/types';
 
 export const darkTheme: Theme = {
   type: 'dark',
+  basicTransition: 'all 80ms ease-in-out',
+
   textPrimary: '#ffffff',
   textSecondary: '#99A4B8',
   textTertiary: '#667085',
@@ -50,6 +52,8 @@ export const darkTheme: Theme = {
 
 export const lightTheme: Theme = {
   type: 'light',
+  basicTransition: 'all 80ms ease-in-out',
+
   textPrimary: '#101828', // gray-900
   textSecondary: '#344054', // gray-700
   textTertiary: '#667085', // gray-500

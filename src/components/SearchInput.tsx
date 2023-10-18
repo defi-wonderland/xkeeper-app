@@ -42,7 +42,7 @@ const SInput = styled(SOutlinedInput)(() => {
     paddingLeft: '1.4rem',
     '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
       borderColor: currentTheme.textDisabled,
-      transition: 'all 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
     },
   };
 });
