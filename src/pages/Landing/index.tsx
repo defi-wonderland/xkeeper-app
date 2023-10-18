@@ -2,7 +2,17 @@ import { useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-import { SearchInput, VaultCard, BasicTabs, NavigationLink, ActiveButton, Icon, NoUserVaults } from '~/components';
+import {
+  SearchInput,
+  VaultCard,
+  BasicTabs,
+  NavigationLink,
+  ActiveButton,
+  Icon,
+  NoUserVaults,
+  BackToTop,
+  MadeByWonderland,
+} from '~/components';
 import { useStateContext } from '~/hooks';
 
 export const Landing = () => {
@@ -72,6 +82,12 @@ export const Landing = () => {
 
       {/* Explore Vault Tabs */}
       <BasicTabs sections={userAddress ? [...exploreVaultSection, myVaultSection] : exploreVaultSection} />
+
+      {/* Back To Top Button */}
+      <BackToTop />
+
+      {/* Made By Wonderland Button */}
+      <MadeByWonderland />
     </HomeContainer>
   );
 };
