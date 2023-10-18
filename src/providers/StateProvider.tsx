@@ -69,7 +69,7 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_ETH_ADDRESS } = getConfig();
+  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS } = getConfig();
   const { address } = useAccount();
   const { chain } = useNetwork();
 
@@ -97,7 +97,7 @@ export const StateProvider = ({ children }: StateProps) => {
   const update = useCallback(async () => {
     setLoading(true);
     const tokens = getTokenList(chain?.id);
-    const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
+    const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
 
     const currentChain = publicClient.chain.name.toLocaleLowerCase();
     const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain; // Load tokens from mainnet when on goerli
@@ -110,7 +110,7 @@ export const StateProvider = ({ children }: StateProps) => {
 
     setVaults(vaultsData);
     setLoading(false);
-  }, [DEFAULT_ETH_ADDRESS, addresses.AutomationVaultFactory, chain?.id]);
+  }, [DEFAULT_WETH_ADDRESS, addresses.AutomationVaultFactory, chain?.id]);
 
   // Load alias data from local storage
   const updateAliasData = useCallback(async () => {

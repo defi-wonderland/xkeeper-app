@@ -34,7 +34,7 @@ export const Vault = () => {
     setSelectedVault,
     setSelectedItem,
   } = useStateContext();
-  const { DEFAULT_ETH_ADDRESS } = getConfig();
+  const { DEFAULT_WETH_ADDRESS } = getConfig();
   const { address } = useParams();
   const { chain } = useNetwork();
 
@@ -69,7 +69,7 @@ export const Vault = () => {
     setLoading(true);
     try {
       const tokens = getTokenList(chain?.id);
-      const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
+      const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
 
       const currentChain = publicClient.chain.name.toLocaleLowerCase();
       // Load tokens from mainnet when on goerli
