@@ -1,4 +1,7 @@
-import { Hex, formatUnits, parseUnits } from 'viem';
+import { Address, Hex, formatUnits, parseUnits } from 'viem';
+import { PublicClient } from 'wagmi';
+
+import { vaultABI } from '~/generated';
 import { AliasData, TokenData } from '~/types';
 
 export const truncateAddress = (address: string, chars = 4) => {
@@ -89,4 +92,17 @@ export const formatTimestamp = (timestamp: string): string => {
   const minutes = String(date.getMinutes()).padStart(2, '0');
 
   return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
+
+export const getTimestamp = async (publicClient: PublicClient, blockNumber: bigint) => {
+  const blockData = await publicClient.getBlock({ blockNumber });
+  return blockData.timestamp.toString();
+};
+
+export const getVaultEvents = async (publicClient: PublicClient, fromBlock: bigint = 0n, vaultAddress?: Address) => {
+  return await publicClient.getContractEvents({
+    address: vaultAddress,
+    abi: vaultABI,
+    fromBlock: fromBlock,
+  });
 };

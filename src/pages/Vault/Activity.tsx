@@ -3,14 +3,21 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 import { Hex } from 'viem';
 
 import { SectionHeader, Title, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
-import { copyData, formatDataNumber, formatTimestamp, handleOpenTx, truncateAddress } from '~/utils';
 import { STooltip, StyledText } from '~/components';
 import { NoDataContainer } from './EnabledRelays';
 import { Text } from './EnabledJobs';
 import { useStateContext } from '~/hooks';
 import { publicClient } from '~/config';
-import { vaultABI } from '~/generated';
 import { EventData } from '~/types';
+import {
+  copyData,
+  formatDataNumber,
+  formatTimestamp,
+  getTimestamp,
+  getVaultEvents,
+  handleOpenTx,
+  truncateAddress,
+} from '~/utils';
 
 function createEventData(activity: string, hash: Hex, date: string, tokenAddress?: string, amount?: string): EventData {
   return { activity, hash, tokenAddress, amount, date };
@@ -40,19 +47,10 @@ export const Activity = () => {
     if (selectedVault?.events?.length) return;
     try {
       setIsLoaded(false);
-      const events = await publicClient.getContractEvents({
-        address: selectedVault?.address,
-        abi: vaultABI,
-        fromBlock: 0n,
-      });
-
-      const getTimestamp = async (blockNumber: bigint) => {
-        const blockData = await publicClient.getBlock({ blockNumber });
-        return blockData.timestamp.toString();
-      };
+      const events = await getVaultEvents(publicClient, 0n, selectedVault?.address);
 
       const timestampPromises = events.map(async (event) => {
-        const timestamp = await getTimestamp(event.blockNumber);
+        const timestamp = await getTimestamp(publicClient, event.blockNumber);
 
         return createEventData(
           event.eventName,
@@ -63,9 +61,9 @@ export const Activity = () => {
         );
       });
 
-      const eventWithTimestamps = await Promise.all(timestampPromises);
+      const eventsWithTimestamps = await Promise.all(timestampPromises);
 
-      setEvents(eventWithTimestamps.reverse()); // Reverse to show latest events first
+      setEvents(eventsWithTimestamps.reverse()); // Reverse to show latest events first
       setIsLoaded(true);
       setIsError(false);
     } catch (error) {
