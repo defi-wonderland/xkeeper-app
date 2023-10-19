@@ -15,6 +15,7 @@ export interface VaultData {
   jobs: JobData;
   tokens: TokenData[];
   totalValue: string;
+  events?: EventData[];
 }
 
 export interface RelayData {
@@ -40,6 +41,14 @@ export interface TokenData {
   address: string;
   price: number;
   balanceUSD: string;
+}
+
+export interface EventData {
+  activity: string;
+  hash: Hex;
+  date: string;
+  tokenAddress?: string;
+  amount?: string;
 }
 
 export interface AliasData {

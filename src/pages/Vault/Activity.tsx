@@ -1,76 +1,89 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
+import { Hex } from 'viem';
 
 import { SectionHeader, Title, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
-import { useStateContext } from '~/hooks';
+import { copyData, formatDataNumber, formatTimestamp, handleOpenTx, truncateAddress } from '~/utils';
 import { STooltip, StyledText } from '~/components';
+import { NoDataContainer } from './EnabledRelays';
 import { Text } from './EnabledJobs';
+import { useStateContext } from '~/hooks';
 import { publicClient } from '~/config';
 import { vaultABI } from '~/generated';
-import { Hex } from 'viem';
-import { copyData, formatDataNumber, formatTimestamp, handleOpenTx, truncateAddress } from '~/utils';
-import { NoDataContainer } from './EnabledRelays';
-
-export interface EventData {
-  activity: string;
-  hash: Hex;
-  date: string;
-  tokenAddress?: string;
-  amount?: string;
-}
+import { EventData } from '~/types';
 
 function createEventData(activity: string, hash: Hex, date: string, tokenAddress?: string, amount?: string): EventData {
   return { activity, hash, tokenAddress, amount, date };
 }
 
 export const Activity = () => {
-  const { currentNetwork, selectedVault } = useStateContext();
-  const [events, setEvents] = useState<EventData[]>([]);
+  const { currentNetwork, selectedVault, vaults, setVaults, setSelectedVault } = useStateContext();
+  const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const vaultAddress = selectedVault?.address || '0x';
+  // Update vault events data in vaults array
+  const updateVaultEvents = useCallback(() => {
+    const updatedVaults = vaults?.map((vault) => {
+      if (vault.address === selectedVault?.address) {
+        const newSelectedVaultData = { ...selectedVault, events };
+        setSelectedVault(newSelectedVaultData);
+        return newSelectedVaultData;
+      }
+      return vault;
+    });
+    setVaults(updatedVaults);
+  }, [events, vaults, selectedVault, setSelectedVault, setVaults]);
+
+  // Load events when there are no events loaded in the selected vault
+  const getEvents = useCallback(async () => {
+    if (selectedVault?.events?.length) return;
+    try {
+      setIsLoaded(false);
+      const events = await publicClient.getContractEvents({
+        address: selectedVault?.address,
+        abi: vaultABI,
+        fromBlock: 0n,
+      });
+
+      const getTimestamp = async (blockNumber: bigint) => {
+        const blockData = await publicClient.getBlock({ blockNumber });
+        return blockData.timestamp.toString();
+      };
+
+      const timestampPromises = events.map(async (event) => {
+        const timestamp = await getTimestamp(event.blockNumber);
+
+        return createEventData(
+          event.eventName,
+          event.transactionHash,
+          timestamp,
+          (event.args as { _token?: string })?._token,
+          (event.args as { _amount?: string })?._amount?.toString(),
+        );
+      });
+
+      const eventWithTimestamps = await Promise.all(timestampPromises);
+
+      setEvents(eventWithTimestamps.reverse()); // Reverse to show latest events first
+      setIsLoaded(true);
+      setIsError(false);
+    } catch (error) {
+      console.error('Error loading activity:', error);
+      setIsError(true);
+    }
+  }, [selectedVault?.address, selectedVault?.events?.length]);
 
   useEffect(() => {
-    const getEvents = async () => {
-      try {
-        setIsLoaded(false);
-        const events = await publicClient.getContractEvents({
-          address: vaultAddress,
-          abi: vaultABI,
-          fromBlock: 0n,
-        });
-
-        const getTimestamp = async (blockNumber: bigint) => {
-          const blockData = await publicClient.getBlock({ blockNumber });
-          return blockData.timestamp.toString();
-        };
-
-        const timestampPromises = events.map(async (event) => {
-          const timestamp = await getTimestamp(event.blockNumber);
-
-          return createEventData(
-            event.eventName,
-            event.transactionHash,
-            timestamp,
-            (event.args as { _token?: string })?._token,
-            (event.args as { _amount?: string })?._amount?.toString(),
-          );
-        });
-
-        const eventWithTimestamps = await Promise.all(timestampPromises);
-
-        setEvents(eventWithTimestamps.reverse()); // Reverse to show latest events first
-        setIsLoaded(true);
-        setIsError(false);
-      } catch (error) {
-        console.error('Error loading activity:', error);
-        setIsError(true);
-      }
-    };
-
     getEvents();
-  }, [vaultAddress]);
+  }, [getEvents]);
+
+  // Update vaults data when events are loaded
+  useEffect(() => {
+    if (events.length && !selectedVault?.events?.length) {
+      updateVaultEvents();
+    }
+  }, [events, selectedVault?.events?.length, updateVaultEvents]);
 
   return (
     <SCard variant='outlined'>
@@ -94,8 +107,8 @@ export const Activity = () => {
             </TableHead>
 
             <TableBody>
-              {events.map((row) => (
-                <STableRow key={row.hash}>
+              {events.map((row, index) => (
+                <STableRow key={row.hash + index}>
                   {/* Activity*/}
                   <ActivityRowText component='th' scope='row'>
                     <Text>{row.activity}</Text>
