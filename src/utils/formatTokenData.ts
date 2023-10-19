@@ -12,8 +12,8 @@ export const formatTokensData = (
   prices: PriceData,
 ): TokenData[] => {
   try {
-    const ethAddress = getConfig().DEFAULT_ETH_ADDRESS;
-    const ethPrice = prices.coins[`${chainName}:${ethAddress}`].price || 0;
+    const { DEFAULT_WETH_ADDRESS, DEFAULT_ETH_ADDRESS } = getConfig();
+    const ethPrice = prices.coins[`${chainName}:${DEFAULT_WETH_ADDRESS}`].price || 0;
 
     const result = contractCallsResult.map(({ result }, index) => {
       const price = prices.coins[`${chainName}:${tokenList[index].address}`].price || 0;
@@ -33,7 +33,7 @@ export const formatTokensData = (
       name: 'Ethereum',
       symbol: 'ETH',
       decimals: 18,
-      address: ethAddress,
+      address: DEFAULT_ETH_ADDRESS,
       balanceE18: ethBalanceResult.toString(),
       balance: formatUnits(ethBalanceResult, 18),
       balanceUSD: getUsdBalance(ethPrice, ethBalanceResult.toString(), 18),

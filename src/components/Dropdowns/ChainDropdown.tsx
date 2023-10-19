@@ -126,7 +126,7 @@ export const DropdownTriggerButton = styled(MenuButton)(() => {
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     '&:hover:not(:disabled)': {
       borderColor: currentTheme.textDisabled,
-      transition: 'all 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
     },
     '&:disabled': {
       cursor: 'auto',

@@ -154,7 +154,7 @@ export const RowButton = styled(RowText)(() => {
     padding: '0rem',
     minWidth: '8rem',
     '&:hover': {
-      transition: 'all 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
       backgroundColor: currentTheme.backgroundHover,
     },
     button: {

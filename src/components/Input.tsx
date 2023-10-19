@@ -41,6 +41,11 @@ export const StyledInput = ({
   const { currentTheme } = useStateContext();
   const [isCopied, setIsCopied] = useState(false);
 
+  const onInputClick = () => {
+    if (disabled || !onClick) return;
+    onClick();
+  };
+
   const handleCopy = () => {
     if (!copyable) return;
     navigator.clipboard.writeText(value);
@@ -93,7 +98,7 @@ export const StyledInput = ({
             )}
 
             {removable && !error && (
-              <SInputAdornment onClick={onClick} position='end'>
+              <SInputAdornment onClick={onInputClick} position='end'>
                 <SIcon name={'close'} size='1.8rem' color='inherit' />
               </SInputAdornment>
             )}
@@ -101,7 +106,7 @@ export const StyledInput = ({
             {number && !error && (
               <AmountInputAdornment position='end'>
                 <StyledText>{tokenSymbol}</StyledText>
-                <STextButton variant='text' onClick={onClick} disabled={disabled}>
+                <STextButton variant='text' onClick={onInputClick} disabled={disabled}>
                   Max
                 </STextButton>
               </AmountInputAdornment>
@@ -161,7 +166,7 @@ const ErrorDescription = styled(InputDescription)(() => {
   };
 });
 
-const SOutlinedInput = styled(InputBase)(() => {
+export const SOutlinedInput = styled(InputBase)(() => {
   const { currentTheme } = useStateContext();
   return {
     fontSize: '1.6rem',
@@ -184,9 +189,9 @@ const SOutlinedInput = styled(InputBase)(() => {
       '-webkit-appearance': 'none',
       margin: 0,
     },
-    '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth.MuiInputBase-adornedEnd:hover': {
+    '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
       borderColor: currentTheme.textDisabled,
-      transition: 'all 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
     },
   };
 });

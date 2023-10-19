@@ -98,7 +98,7 @@ export const IconContainer = styled('div')(() => {
     color: currentTheme.addressChipIconColor,
     'i:hover:before': {
       color: currentTheme.textSecondary,
-      transition: 'all 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
     },
   };
 });

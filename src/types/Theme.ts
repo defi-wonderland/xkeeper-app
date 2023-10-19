@@ -3,6 +3,7 @@ export type ThemeName = 'light' | 'dark';
 export interface Theme {
   type: ThemeName;
   error: string;
+  basicTransition: string;
 
   textPrimary: string;
   textSecondary: string;

@@ -28,7 +28,7 @@ export const Header = () => {
     color: currentTheme.textDisabled,
     '&:hover': {
       color: currentTheme.textPrimary,
-      transition: 'color 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
     },
   };
 
@@ -94,7 +94,7 @@ const SIconButton = styled(IconButton)(() => {
     },
     '&:hover i:before': {
       color: currentTheme.textPrimary,
-      transition: 'color 0.2s ease-in-out',
+      transition: currentTheme.basicTransition,
     },
   };
 });

@@ -16,6 +16,7 @@ export const CancelButton = styled(Button)(() => {
       boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
       backgroundColor: currentTheme.backgroundSecondary,
       borderColor: currentTheme.textDisabled,
+      transition: currentTheme.basicTransition,
     },
     '&:disabled': {
       backgroundColor: currentTheme.backgroundSecondary,
@@ -38,6 +39,7 @@ export const ActiveButton = styled(Button)(() => {
     gap: '0.8rem',
     '&:hover': {
       backgroundColor: currentTheme.actionButtonHover,
+      transition: currentTheme.basicTransition,
       boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     },
     '&:disabled': {
@@ -67,6 +69,7 @@ export const RevokeButton = styled(ActiveButton)(() => {
 });
 
 export const CloseButton = styled(Button)(() => {
+  const { currentTheme } = useStateContext();
   return {
     color: 'inherit',
     minWidth: 'auto',
@@ -74,6 +77,7 @@ export const CloseButton = styled(Button)(() => {
     padding: '0',
     '&:hover': {
       backgroundColor: 'transparent',
+      transition: currentTheme.basicTransition,
     },
   };
 });
