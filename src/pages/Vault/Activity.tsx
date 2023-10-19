@@ -155,17 +155,12 @@ export const Activity = () => {
         </TableContainer>
       )}
 
-      {!events.length && !isLoaded && (
-        <NoDataContainer>
-          <StyledText>Loading activity...</StyledText>
-        </NoDataContainer>
-      )}
-
-      {!events.length && isLoaded && (
+      {!events.length && (
         <NoDataContainer>
           <StyledText>
-            {isError && 'Error loading activity.'}
-            {!isError && 'No activity found.'}
+            {isLoaded && isError && 'Error loading activity.'}
+            {isLoaded && !isError && 'No activity found.'}
+            {!isLoaded && 'Loading activity...'}
           </StyledText>
         </NoDataContainer>
       )}
