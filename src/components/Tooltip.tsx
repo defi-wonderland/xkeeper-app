@@ -6,7 +6,7 @@ import { useStateContext } from '~/hooks';
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: any;
-  text: string;
+  text?: string;
   address?: boolean;
   open?: boolean;
   placement?:
@@ -53,6 +53,7 @@ export const STooltip = ({ children, text, placement, address, open }: Props) =>
   return (
     <CustomTooltip
       open={open}
+      disableHoverListener={!text}
       title={
         <Typography component='span' sx={textStyles}>
           {text}

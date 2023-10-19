@@ -1,4 +1,4 @@
-import { formatUnits, parseUnits } from 'viem';
+import { Hex, formatUnits, parseUnits } from 'viem';
 import { AliasData, TokenData } from '~/types';
 
 export const truncateAddress = (address: string, chars = 4) => {
@@ -9,7 +9,8 @@ export const truncateFunctionSignature = (bytes: string) => {
   return bytes.slice(0, 10);
 };
 
-export const copyData = (data: string) => {
+export const copyData = (data?: string) => {
+  if (!data) return;
   navigator.clipboard.writeText(data);
 };
 
@@ -71,4 +72,21 @@ export const loadLocalStorage = (key: string) => {
 export const saveLocalStorage = (key: string, data: AliasData) => {
   const stringifiedData = JSON.stringify(data);
   localStorage.setItem(key, stringifiedData);
+};
+
+export const handleOpenTx = (scanner: string, hash: Hex) => {
+  window.open(`${scanner}/tx/${hash}`, '_blank');
+};
+
+export const formatTimestamp = (timestamp: string): string => {
+  if (!timestamp) return '-';
+  const date = new Date(Number(timestamp) * 1000);
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
