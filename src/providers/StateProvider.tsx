@@ -69,11 +69,11 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS } = getConfig();
+  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS, DEFAULT_THEME } = getConfig();
   const { address } = useAccount();
   const { chain } = useNetwork();
 
-  const [theme, setTheme] = useState<ThemeName>('dark');
+  const [theme, setTheme] = useState<ThemeName>(DEFAULT_THEME);
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
@@ -114,11 +114,8 @@ export const StateProvider = ({ children }: StateProps) => {
 
   // Load alias data from local storage
   const updateAliasData = useCallback(async () => {
-    setLoading(true);
     const data = loadLocalStorage(ALIAS_KEY);
     setAliasData(data);
-
-    setLoading(false);
   }, []);
 
   // Load vaults on load
@@ -142,11 +139,11 @@ export const StateProvider = ({ children }: StateProps) => {
   useEffect(() => {
     const storedTheme = localStorage.getItem(THEME_KEY) as ThemeName;
     if (!storedTheme) {
-      localStorage.setItem(THEME_KEY, theme);
+      localStorage.setItem(THEME_KEY, DEFAULT_THEME);
     } else {
       setTheme(storedTheme);
     }
-  }, []);
+  }, [DEFAULT_THEME]);
 
   return (
     <StateContext.Provider
