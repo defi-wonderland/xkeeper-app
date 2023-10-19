@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -65,7 +65,7 @@ export const Vault = () => {
     },
   ];
 
-  const loadSelectedVault = async () => {
+  const loadSelectedVault = useCallback(async () => {
     setLoading(true);
     try {
       const tokens = getTokenList(chain?.id);
@@ -84,7 +84,7 @@ export const Vault = () => {
       setLoading(false);
       console.error(`Error loading vault ${address}:`, error);
     }
-  };
+  }, [DEFAULT_WETH_ADDRESS, address, chain?.id, setSelectedVault]);
 
   const handleEditAlias = () => {
     setSelectedItem({ type: 'vault', address: selectedVault?.address || '0x', params: [] });
@@ -95,13 +95,13 @@ export const Vault = () => {
     if (!selectedVault?.address) {
       loadSelectedVault();
     }
-  }, []);
+  }, [loadSelectedVault, selectedVault?.address]);
 
   useEffect(() => {
     if (notification.open) {
       loadSelectedVault();
     }
-  }, [notification.open]);
+  }, [loadSelectedVault, notification.open]);
 
   return (
     <PageContainer>

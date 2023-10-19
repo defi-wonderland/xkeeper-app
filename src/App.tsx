@@ -100,7 +100,13 @@ export const App = () => {
           ].join(','),
         },
       }),
-    [currentTheme.backgroundSecondary, mode],
+    [
+      currentTheme.backgroundPrimary,
+      currentTheme.backgroundSecondary,
+      currentTheme.textDisabled,
+      currentTheme.textSecondaryDisabled,
+      mode,
+    ],
   );
 
   return (
