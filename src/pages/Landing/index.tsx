@@ -32,38 +32,44 @@ export const Landing = () => {
     [searchValue, vaults],
   );
 
-  const exploreVaultSection = [
-    {
-      title: 'Explore Vaults',
+  const exploreVaultSection = useMemo(
+    () => [
+      {
+        title: 'Explore Vaults',
 
-      items: searchedVaults.length ? (
-        searchedVaults.map((vault, index) => (
+        items: searchedVaults.length ? (
+          searchedVaults.map((vault, index) => (
+            <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
+              <VaultCard vaultData={vault} onClick={() => setSelectedVault(vault)} />
+            </NavigationLink>
+          ))
+        ) : (
+          <NoUserVaults text={loading ? 'Loading Vaults...' : 'No matches found, please try again.'} icon='search' />
+        ),
+      },
+    ],
+    [loading, searchedVaults, setSelectedVault],
+  );
+
+  const myVaultSection = useMemo(
+    () => ({
+      title: 'My Vaults',
+      items: ownedVaults.length ? (
+        ownedVaults.map((vault, index) => (
           <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
-            <VaultCard vaultData={vault} onClick={() => setSelectedVault(vault)} />
+            <VaultCard vaultData={vault} />
           </NavigationLink>
         ))
       ) : (
-        <NoUserVaults text={loading ? 'Loading Vaults...' : 'No matches found, please try again.'} icon='search' />
+        <NoUserVaults
+          text={loading ? 'Loading Vaults...' : 'You have no active Vaults'}
+          icon={loading ? 'search' : 'safe'}
+          button={!loading}
+        />
       ),
-    },
-  ];
-
-  const myVaultSection = {
-    title: 'My Vaults',
-    items: ownedVaults.length ? (
-      ownedVaults.map((vault, index) => (
-        <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
-          <VaultCard vaultData={vault} />
-        </NavigationLink>
-      ))
-    ) : (
-      <NoUserVaults
-        text={loading ? 'Loading Vaults...' : 'You have no active Vaults'}
-        icon={loading ? 'search' : 'safe'}
-        button={!loading}
-      />
-    ),
-  };
+    }),
+    [loading, ownedVaults],
+  );
 
   return (
     <HomeContainer>

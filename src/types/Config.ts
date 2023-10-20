@@ -1,4 +1,5 @@
 import { Address } from 'viem';
+import { ThemeName } from './Theme';
 
 export interface Env {
   RPC_URL: string;
@@ -8,6 +9,7 @@ export interface Env {
 
 export interface Constants {
   DEFAULT_CHAIN: number;
+  DEFAULT_THEME: ThemeName;
   DEFAULT_ETH_ADDRESS: string;
   DEFAULT_WETH_ADDRESS: string;
   addresses: Addresses;
