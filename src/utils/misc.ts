@@ -4,7 +4,8 @@ import { PublicClient } from 'wagmi';
 import { vaultABI } from '~/generated';
 import { AliasData, TokenData } from '~/types';
 
-export const truncateAddress = (address: string, chars = 4) => {
+export const truncateAddress = (address?: string, chars = 4) => {
+  if (!address) return '-';
   return `${address.slice(0, 2 + chars)}...${address.slice(-chars)}`;
 };
 
