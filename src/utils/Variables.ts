@@ -6,6 +6,7 @@ export const THEME_KEY = 'keep3r-framework-app-theme';
 export const ALIAS_KEY = 'keep3r-framework-aliases';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const anyCaller = '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
+export const itemsPerPage = 7;
 
 /*=============================================
 =               Style Variables               =

@@ -3,7 +3,7 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 import { Hex } from 'viem';
 
 import { SectionHeader, Title, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
-import { STooltip, StyledText } from '~/components';
+import { STooltip, StyledText, SPagination } from '~/components';
 import { NoDataContainer } from './EnabledRelays';
 import { Text } from './EnabledJobs';
 import { useStateContext } from '~/hooks';
@@ -16,6 +16,7 @@ import {
   getTimestamp,
   getVaultEvents,
   handleOpenTx,
+  itemsPerPage,
   truncateAddress,
 } from '~/utils';
 
@@ -28,6 +29,7 @@ export const Activity = () => {
   const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const [paging, setPaging] = useState({ from: 0, to: itemsPerPage });
 
   // Update vault events data in vaults array
   const updateVaultEvents = useCallback(() => {
@@ -105,7 +107,7 @@ export const Activity = () => {
             </TableHead>
 
             <TableBody>
-              {events.map((row, index) => (
+              {events.slice(paging.from, paging.to).map((row, index) => (
                 <STableRow key={row.hash + index}>
                   {/* Activity*/}
                   <ActivityRowText component='th' scope='row'>
@@ -152,6 +154,7 @@ export const Activity = () => {
               ))}
             </TableBody>
           </STable>
+          <SPagination numberOfItems={events.length} perPage={itemsPerPage} setPaging={setPaging} />
         </TableContainer>
       )}
 
@@ -204,6 +207,7 @@ const ActivityRowText = styled(SRowText)(() => {
 const DateRowText = styled(ActivityRowText)(() => {
   return {
     minWidth: '15rem',
+    padding: '2.8rem 1rem',
   };
 });
 
