@@ -2,6 +2,7 @@ export * from './Icon';
 export * from './TokenIcon';
 export * from './Text';
 export * from './TextArea';
+export * from './ConfirmText';
 export * from './CustomScrollbar';
 export * from './BackToTop';
 export * from './BaseModal';

@@ -1,6 +1,6 @@
 import { styled, Box } from '@mui/material';
 
-import { StyledTitle, StyledText, CancelButton, RevokeButton, BaseModal } from '~/components';
+import { StyledTitle, StyledText, CancelButton, RevokeButton, BaseModal, ConfirmText } from '~/components';
 import { useStateContext, useVault } from '~/hooks';
 import { getReceiptMessage, truncateAddress } from '~/utils';
 import { ModalType } from '~/types';
@@ -37,8 +37,7 @@ export const RevokeModal = () => {
         </CancelButton>
 
         <RevokeButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
-          {!loading && `Revoke ${type}`}
-          {loading && `Loading...`}
+          <ConfirmText isLoading={loading} />
         </RevokeButton>
       </ButtonsContainer>
     </BaseModal>

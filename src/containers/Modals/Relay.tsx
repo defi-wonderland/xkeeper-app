@@ -13,6 +13,7 @@ import {
   CloseButton,
   Icon,
   RelayDropdown,
+  ConfirmText,
 } from '~/components';
 import { ButtonsContainer, BigModal, TitleContainer, DropdownContainer, DropdownLabel } from '~/containers';
 import { anyCaller, getReceiptMessage, getRelayName } from '~/utils';
@@ -30,7 +31,6 @@ export const RelayModal = () => {
   const [relayAddress, setRelayAddress] = useState('');
   const [callerAddress, setCallerAddress] = useState<string>('');
   const [callers, setCallers] = useState<string[]>([]);
-  const [relayAlias, setRelayAlias] = useState('');
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
 
   const callerList = useMemo(() => {
@@ -47,7 +47,6 @@ export const RelayModal = () => {
     args: [relayAddress, callerList],
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
-    newAliasData: { [relayAddress]: relayAlias },
   });
 
   const handleToggle = () => {
@@ -125,21 +124,18 @@ export const RelayModal = () => {
             removable
           />
 
-          {callers.map((caller) => (
-            <>
-              {!allowAnyCaller && (
-                <StyledInput
-                  sx={{ mt: '-1rem' }}
-                  key={caller}
-                  value={caller}
-                  setValue={() => {}}
-                  onClick={handleRemoveCaller(caller)}
-                  removable
-                  disabled
-                />
-              )}
-            </>
-          ))}
+          {!allowAnyCaller &&
+            callers.map((caller) => (
+              <StyledInput
+                sx={{ mt: '-1rem' }}
+                key={caller}
+                value={caller}
+                setValue={() => {}}
+                onClick={handleRemoveCaller(caller)}
+                removable
+                disabled
+              />
+            ))}
 
           <CallersContainer>
             <TextButton
@@ -158,15 +154,6 @@ export const RelayModal = () => {
               <ToggleText>Allow any caller</ToggleText>
             </Container>
           </CallersContainer>
-
-          <StyledInput
-            label='Relay name/alias'
-            description='This will only be visible to you.'
-            value={relayAlias}
-            setValue={setRelayAlias}
-            placeholder='My Custom Relay'
-            disabled={loading}
-          />
         </InputsContainer>
 
         <ButtonsContainer>
@@ -175,8 +162,7 @@ export const RelayModal = () => {
           </CancelButton>
 
           <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
-            {!loading && 'Confirm'}
-            {loading && 'Loading...'}
+            <ConfirmText isLoading={loading} />
           </ActiveButton>
         </ButtonsContainer>
       </BigModal>

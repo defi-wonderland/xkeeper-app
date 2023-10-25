@@ -13,6 +13,7 @@ import {
   StyledTitle,
   Icon,
   TokenDropdown,
+  ConfirmText,
 } from '~/components';
 import { BigModal, TitleContainer as Header } from '~/containers';
 import { useStateContext, useVault } from '~/hooks';
@@ -135,8 +136,7 @@ export const WithdrawtModal = () => {
             disabled={!writeAsync || loading || !Number(amount)}
             onClick={handleSendTransaction}
           >
-            {!loading && 'Confirm'}
-            {loading && 'Loading...'}
+            <ConfirmText isLoading={loading} />
           </ActiveButton>
         </SButtonsContainer>
       </BigModal>

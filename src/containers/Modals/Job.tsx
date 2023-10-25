@@ -13,6 +13,7 @@ import {
   StyledTitle,
   FunctionDropdown,
   Icon,
+  ConfirmText,
 } from '~/components';
 import { ButtonsContainer, TitleContainer } from '~/containers';
 import { ModalType } from '~/types';
@@ -27,7 +28,6 @@ export const JobModal = () => {
   const [jobAbi, setJobAbi] = useState('');
   const [contractFunction, setContractFunction] = useState('');
   const [functionSignature, setFunctionSignature] = useState('');
-  const [jobAlias, setJobAlias] = useState('');
 
   const [selectedValue, setSelectedValue] = useState('a');
 
@@ -42,7 +42,6 @@ export const JobModal = () => {
     args: [jobAddress, [functionSignature]],
     notificationTitle: 'Job successfully approved',
     notificationMessage: getReceiptMessage(jobAddress, 'job is now enabled'),
-    newAliasData: { [jobAddress]: jobAlias },
   });
 
   useEffect(() => {
@@ -132,23 +131,13 @@ export const JobModal = () => {
           />
         )}
 
-        {/* Alias input */}
-        <StyledInput
-          label='Job alias'
-          value={jobAlias}
-          setValue={setJobAlias}
-          description='This will only be visible to you.'
-          disabled={loading}
-        />
-
         <ButtonsContainer>
           <CancelButton variant='outlined' disabled={loading} onClick={handleClose}>
             Cancel
           </CancelButton>
 
           <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
-            {!loading && 'Confirm'}
-            {loading && 'Loading...'}
+            <ConfirmText isLoading={loading} />
           </ActiveButton>
         </ButtonsContainer>
       </BigModal>

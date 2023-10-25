@@ -4,7 +4,7 @@ import { Address } from 'wagmi';
 import { isAddress } from 'viem';
 
 import { DataSection as DescriptionContainer, Title, Header } from '~/pages';
-import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton } from '~/components';
+import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton, ConfirmText } from '~/components';
 import { useStateContext, useVaultFactory } from '~/hooks';
 
 export const CreateVault = () => {
@@ -69,8 +69,7 @@ export const CreateVault = () => {
             disabled={!writeAsync || loading || !vaultName}
             onClick={handleSendTransaction}
           >
-            {!loading && 'Create Vault'}
-            {loading && 'Loading...'}
+            <ConfirmText isLoading={loading} />
           </CreateButton>
         </ButtonContainer>
       </CreateContainer>

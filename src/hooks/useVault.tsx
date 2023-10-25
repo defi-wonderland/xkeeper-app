@@ -2,9 +2,9 @@ import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } f
 import { WriteContractResult } from 'wagmi/actions';
 
 import { useStateContext } from './useStateContext';
-import { ALIAS_KEY, getViewTransaction, saveLocalStorage } from '~/utils';
+import { getViewTransaction } from '~/utils';
 import { vaultABI } from '~/generated';
-import { AliasData, ModalType } from '~/types';
+import { ModalType } from '~/types';
 
 interface SendTransactionProps {
   contractAddress?: string;
@@ -25,7 +25,6 @@ interface SendTransactionProps {
   notificationTitle?: string;
   notificationMessage?: string | JSX.Element;
   showReceipt?: boolean;
-  newAliasData?: AliasData;
 }
 
 export const useVault = ({
@@ -35,12 +34,11 @@ export const useVault = ({
   notificationTitle,
   notificationMessage,
   showReceipt,
-  newAliasData,
 }: SendTransactionProps): {
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { currentNetwork, aliasData, updateAliasData, setLoading, setModalOpen, setNotification } = useStateContext();
+  const { currentNetwork, setLoading, setModalOpen, setNotification } = useStateContext();
   const publicClient = usePublicClient();
 
   const { config } = usePrepareContractWrite({
@@ -59,13 +57,6 @@ export const useVault = ({
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);
         setModalOpen(ModalType.NONE);
-
-        // Update alias
-        if (newAliasData) {
-          const temp = { ...aliasData, ...newAliasData };
-          saveLocalStorage(ALIAS_KEY, temp);
-          updateAliasData();
-        }
 
         setNotification({
           open: true,
