@@ -64,7 +64,7 @@ export const EnabledJobs = () => {
             <TableHead>
               <TableRow>
                 <SColumnTitle>Alias</SColumnTitle>
-                <ColumnTitle align='left'>ContractAddress</ColumnTitle>
+                <ColumnTitle align='left'>Job Address</ColumnTitle>
                 <ColumnTitle align='left'>Function Signature</ColumnTitle>
                 <ColumnTitle align='right'></ColumnTitle>
               </TableRow>

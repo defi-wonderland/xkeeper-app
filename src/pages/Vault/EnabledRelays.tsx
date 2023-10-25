@@ -72,7 +72,7 @@ export const EnabledRelays = () => {
             <TableHead>
               <TableRow>
                 <SColumnTitle>Alias</SColumnTitle>
-                <ColumnTitle align='left'>Contract Address</ColumnTitle>
+                <ColumnTitle align='left'>Relay Address</ColumnTitle>
                 <ColumnTitle align='left'>Enabled Callers</ColumnTitle>
                 <ColumnTitle align='left'></ColumnTitle>
               </TableRow>
