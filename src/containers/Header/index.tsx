@@ -3,17 +3,17 @@ import { Box, IconButton, styled } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
 import { Icon, NavigationLink } from '~/components';
-import { THEME_KEY, zIndex } from '~/utils';
+import { themeKey, zIndex } from '~/utils';
 
 export const Header = () => {
   const { setTheme, theme, currentTheme } = useStateContext();
 
   const handleThemeChange = () => {
     if (theme === 'light') {
-      localStorage.setItem(THEME_KEY, 'dark');
+      localStorage.setItem(themeKey, 'dark');
       setTheme('dark');
     } else {
-      localStorage.setItem(THEME_KEY, 'light');
+      localStorage.setItem(themeKey, 'light');
       setTheme('light');
     }
   };

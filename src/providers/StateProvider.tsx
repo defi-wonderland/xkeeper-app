@@ -14,8 +14,8 @@ import {
   AliasData,
 } from '~/types';
 import {
-  ALIAS_KEY,
-  THEME_KEY,
+  aliasKey,
+  themeKey,
   getPrices,
   getTheme,
   getTokenList,
@@ -114,7 +114,7 @@ export const StateProvider = ({ children }: StateProps) => {
 
   // Load alias data from local storage
   const updateAliasData = useCallback(async () => {
-    const data = loadLocalStorage(ALIAS_KEY);
+    const data = loadLocalStorage(aliasKey);
     setAliasData(data);
   }, []);
 
@@ -137,9 +137,9 @@ export const StateProvider = ({ children }: StateProps) => {
 
   // Load theme from local storage on load
   useEffect(() => {
-    const storedTheme = localStorage.getItem(THEME_KEY) as ThemeName;
+    const storedTheme = localStorage.getItem(themeKey) as ThemeName;
     if (!storedTheme) {
-      localStorage.setItem(THEME_KEY, DEFAULT_THEME);
+      localStorage.setItem(themeKey, DEFAULT_THEME);
     } else {
       setTheme(storedTheme);
     }
