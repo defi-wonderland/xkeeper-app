@@ -18,28 +18,32 @@ export const EnabledRelays = () => {
   const [items, setItems] = useState<{ [key: string]: boolean }>({});
   const selectedRelays = useMemo(() => selectedVault?.relays || {}, [selectedVault]);
 
-  // Double flat() to get all contract addresses and callers in a single array
-  const flattenRelays = useMemo(() => Object.entries(selectedRelays).flat().flat(), [selectedRelays]);
-
   const relays = useMemo(
     () =>
       Object.keys(selectedRelays).map((key, index) => createRelaysData(`Relay ${index + 1}`, key, selectedRelays[key])),
     [selectedRelays],
   );
 
+  const flattenRelays = useMemo(() => {
+    const relaysAddress = relays.map((relay) => relay.contractAddress);
+    const callers = relays.map((relay) => relay.enabledCallers.map((caller) => `${relay.contractAddress}${caller}`));
+    return [...relaysAddress, ...callers.flat()];
+  }, [relays]);
+
   useEffect(() => {
     if (flattenRelays.length > 0) setItems(Object.fromEntries(flattenRelays.map((address) => [address, false])));
   }, [flattenRelays]);
 
-  const handleCopy = async (content: string) => {
-    copyData(content);
+  const handleCopy = async (relayAddress: string, callerAddress: string) => {
+    const key = relayAddress + callerAddress;
+    copyData(callerAddress || relayAddress);
     const newItems = { ...items };
-    newItems[content] = true;
+    newItems[key] = true;
     setItems(newItems);
 
     setTimeout(() => {
       const newItems = { ...items };
-      newItems[content] = false;
+      newItems[key] = false;
       setItems(newItems);
     }, 800);
   };
@@ -88,7 +92,7 @@ export const EnabledRelays = () => {
 
                   {/* Contract Address */}
                   <RowText align='left'>
-                    <AddressContainer onClick={() => handleCopy(row.contractAddress)}>
+                    <AddressContainer onClick={() => handleCopy(row.contractAddress, '')}>
                       <STooltip text={row.contractAddress} address>
                         <Text>{truncateAddress(row.contractAddress)}</Text>
                       </STooltip>
@@ -109,15 +113,19 @@ export const EnabledRelays = () => {
                   {/* Enabled Callers */}
                   <RowText align='left'>
                     {row.enabledCallers?.map((caller) => (
-                      <AddressContainer key={caller} onClick={() => handleCopy(caller)}>
+                      <AddressContainer key={caller} onClick={() => handleCopy(row.contractAddress, caller)}>
                         <STooltip text={caller} address>
                           <Text>{truncateAddress(caller)}</Text>
                         </STooltip>
 
-                        <STooltip text={items[caller] ? 'Copied!' : 'Copy Address'}>
+                        <STooltip text={items[row.contractAddress + caller] ? 'Copied!' : 'Copy Address'}>
                           <IconContainer>
-                            {!items[caller] && <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />}
-                            {!!items[caller] && <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />}
+                            {!items[row.contractAddress + caller] && (
+                              <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />
+                            )}
+                            {!!items[row.contractAddress + caller] && (
+                              <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />
+                            )}
                           </IconContainer>
                         </STooltip>
                       </AddressContainer>
