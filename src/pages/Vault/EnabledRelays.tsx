@@ -4,7 +4,7 @@ import { Address } from 'viem';
 
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon, StyledText } from '~/components';
-import { copyData, truncateAddress } from '~/utils';
+import { copyData, getRelayName, truncateAddress } from '~/utils';
 import { ModalType, OptionsType, SelectedItem } from '~/types';
 import { useStateContext } from '~/hooks';
 import { Text } from './EnabledJobs';
@@ -19,8 +19,7 @@ export const EnabledRelays = () => {
   const selectedRelays = useMemo(() => selectedVault?.relays || {}, [selectedVault]);
 
   const relays = useMemo(
-    () =>
-      Object.keys(selectedRelays).map((key, index) => createRelaysData(`Relay ${index + 1}`, key, selectedRelays[key])),
+    () => Object.keys(selectedRelays).map((key) => createRelaysData(getRelayName(key), key, selectedRelays[key])),
     [selectedRelays],
   );
 
