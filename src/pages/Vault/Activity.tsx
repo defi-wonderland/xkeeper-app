@@ -3,7 +3,7 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 import { Hex } from 'viem';
 
 import { SectionHeader, Title, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
-import { STooltip, StyledText } from '~/components';
+import { STooltip, StyledText, SPagination, IconContainer, Icon } from '~/components';
 import { NoDataContainer } from './EnabledRelays';
 import { Text } from './EnabledJobs';
 import { useStateContext } from '~/hooks';
@@ -14,8 +14,10 @@ import {
   formatDataNumber,
   formatTimestamp,
   getTimestamp,
+  getUsdBalance,
   getVaultEvents,
   handleOpenTx,
+  itemsPerPage,
   truncateAddress,
 } from '~/utils';
 
@@ -24,10 +26,11 @@ function createEventData(activity: string, hash: Hex, date: string, tokenAddress
 }
 
 export const Activity = () => {
-  const { currentNetwork, selectedVault, vaults, setVaults, setSelectedVault } = useStateContext();
+  const { currentTheme, currentNetwork, selectedVault, vaults, setVaults, setSelectedVault } = useStateContext();
   const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const [paging, setPaging] = useState({ from: 0, to: itemsPerPage });
 
   // Update vault events data in vaults array
   const updateVaultEvents = useCallback(() => {
@@ -40,7 +43,10 @@ export const Activity = () => {
       return vault;
     });
     setVaults(updatedVaults);
-  }, [events, vaults, selectedVault, setSelectedVault, setVaults]);
+
+    // This is needed to avoid infinite loop when events are updated
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [events, vaults, selectedVault, setVaults]);
 
   // Load events when there are no events loaded in the selected vault
   const getEvents = useCallback(async () => {
@@ -83,6 +89,18 @@ export const Activity = () => {
     }
   }, [events, selectedVault?.events?.length, updateVaultEvents]);
 
+  const getTokenValues = (tokenAddress?: string, amount?: string) => {
+    const token = selectedVault?.tokens.find((token) => token.address === tokenAddress);
+    const price = token?.price || 0;
+    const decimals = token?.decimals || 18;
+    const symbol = token?.symbol || undefined;
+    const usdValue = getUsdBalance(price, amount || '0', decimals);
+    const formattedUsdValue = amount ? formatDataNumber(usdValue, 18, 2, true, true) : undefined;
+    const formattedAmount = amount ? formatDataNumber(amount, 18, 2, false, true) : '-';
+
+    return { usdValue: formattedUsdValue, symbol, amount: formattedAmount, decimals };
+  };
+
   return (
     <SCard variant='outlined'>
       <SectionHeader>
@@ -99,13 +117,12 @@ export const Activity = () => {
                 <SColumnTitle align='left'>Token</SColumnTitle>
                 <SColumnTitle align='left'>Amount</SColumnTitle>
                 <SColumnTitle align='left'>Date & Time</SColumnTitle>
-                {/* Temporary disabled */}
-                {/* <SColumnTitle align='left'></SColumnTitle> */}
+                <SColumnTitle align='left'></SColumnTitle>
               </TableRow>
             </TableHead>
 
             <TableBody>
-              {events.map((row, index) => (
+              {events.slice(paging.from, paging.to).map((row, index) => (
                 <STableRow key={row.hash + index}>
                   {/* Activity*/}
                   <ActivityRowText component='th' scope='row'>
@@ -122,36 +139,37 @@ export const Activity = () => {
                   </HashRow>
 
                   {/* Token */}
-                  <AddressRow align='left' onClick={() => copyData(row?.tokenAddress)}>
+                  <SymbolRow align='left' onClick={() => copyData(row?.tokenAddress)}>
                     <STooltip text={row?.tokenAddress} address>
-                      {/* TODO: print token symbol instead of token address */}
-                      <Text>{row?.tokenAddress ? truncateAddress(row.tokenAddress) : '-'}</Text>
+                      <Text>
+                        {getTokenValues(row?.tokenAddress, row?.amount).symbol || truncateAddress(row?.tokenAddress, 2)}
+                      </Text>
                     </STooltip>
-                  </AddressRow>
+                  </SymbolRow>
 
                   {/* Amount */}
-                  <SRowText align='left' onClick={() => copyData(row?.amount)}>
-                    <STooltip text={row?.amount}>
-                      <Text>{row?.amount ? formatDataNumber(row.amount, 18, 2, false, true) : '-'}</Text>
+                  <AmountRow align='left' onClick={() => copyData(row?.amount)}>
+                    <STooltip text={getTokenValues(row?.tokenAddress, row?.amount).usdValue}>
+                      <Text>{getTokenValues(row?.tokenAddress, row?.amount).amount}</Text>
                     </STooltip>
-                  </SRowText>
+                  </AmountRow>
 
                   {/* Date & Time */}
                   <DateRowText align='left'>
                     <Text>{formatTimestamp(row.date)}</Text>
                   </DateRowText>
 
-                  {/* Temporary disabled */}
                   {/* External link button */}
-                  {/* <RowText align='left'>
+                  <RowText align='left'>
                     <SIconContainer onClick={() => handleOpenTx(currentNetwork.scanner, row.hash)}>
                       <Icon name='external-link' color={currentTheme.textDisabled} size='1.6rem' />
                     </SIconContainer>
-                  </RowText> */}
+                  </RowText>
                 </STableRow>
               ))}
             </TableBody>
           </STable>
+          <SPagination numberOfItems={events.length} perPage={itemsPerPage} setPaging={setPaging} />
         </TableContainer>
       )}
 
@@ -169,12 +187,12 @@ export const Activity = () => {
 };
 
 const SColumnTitle = styled(ColumnTitle)({
-  padding: '1.6rem 1rem',
+  padding: '1.6rem 1.8rem',
 });
 
 const SRowText = styled(RowText)(() => {
   return {
-    padding: '1.6rem 1rem',
+    padding: '1.6rem 1.8rem',
     minWidth: '10rem',
   };
 });
@@ -183,14 +201,18 @@ const HashRow = styled(SRowText)(() => {
   const { currentTheme } = useStateContext();
   return {
     color: currentTheme.infoChipColor,
-    minWidth: '12rem',
     cursor: 'pointer',
   };
 });
 
-const AddressRow = styled(SRowText)(() => {
+const SymbolRow = styled(SRowText)(() => {
   return {
-    minWidth: '12rem',
+    cursor: 'pointer',
+  };
+});
+
+const AmountRow = styled(SRowText)(() => {
+  return {
     cursor: 'pointer',
   };
 });
@@ -204,12 +226,12 @@ const ActivityRowText = styled(SRowText)(() => {
 const DateRowText = styled(ActivityRowText)(() => {
   return {
     minWidth: '15rem',
+    padding: '2.8rem 1rem',
   };
 });
 
-// temporary disabled
-// const SIconContainer = styled(IconContainer)(() => {
-//   return {
-//     cursor: 'pointer',
-//   };
-// });
+const SIconContainer = styled(IconContainer)(() => {
+  return {
+    cursor: 'pointer',
+  };
+});

@@ -14,6 +14,7 @@ export * from './MadeByWonderland';
 export * from './NavigationLink';
 export * from './NoUserVaults';
 export * from './OptionsMenu';
+export * from './Pagination';
 export * from './Theme';
 export * from './Chips';
 export * from './SearchInput';
