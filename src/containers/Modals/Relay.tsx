@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Button, styled } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
 import { isAddress } from 'viem';
 
 import {
@@ -15,7 +15,7 @@ import {
   RelayDropdown,
   ConfirmText,
 } from '~/components';
-import { ButtonsContainer, BigModal, TitleContainer, DropdownContainer, DropdownLabel } from '~/containers';
+import { BigModal, TitleContainer, DropdownContainer, DropdownLabel } from '~/containers';
 import { anyCaller, getReceiptMessage, getRelayName } from '~/utils';
 import { useStateContext, useVault } from '~/hooks';
 import { ModalType } from '~/types';
@@ -156,7 +156,7 @@ export const RelayModal = () => {
           </CallersContainer>
         </InputsContainer>
 
-        <ButtonsContainer>
+        <SButtonsContainer>
           <CancelButton variant='outlined' disabled={loading} onClick={handleClose}>
             Cancel
           </CancelButton>
@@ -164,7 +164,7 @@ export const RelayModal = () => {
           <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
             <ConfirmText isLoading={loading} />
           </ActiveButton>
-        </ButtonsContainer>
+        </SButtonsContainer>
       </BigModal>
     </BaseModal>
   );
@@ -231,4 +231,14 @@ const ButtonText = styled(StyledText)(() => {
     color: currentTheme.actionButton,
     textTransform: 'none',
   };
+});
+
+const SButtonsContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: '1.2rem',
+  paddingTop: '0.4rem',
+  button: {
+    width: '100%',
+  },
 });

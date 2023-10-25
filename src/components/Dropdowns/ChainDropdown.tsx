@@ -130,6 +130,8 @@ export const DropdownTriggerButton = styled(MenuButton)(() => {
     },
     '&:disabled': {
       cursor: 'auto',
+      color: currentTheme.textSecondary,
+      textTransform: 'none',
     },
     p: {
       fontSize: '1.6rem',
