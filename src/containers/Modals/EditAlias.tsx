@@ -14,7 +14,7 @@ import {
 } from '~/components';
 import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
-import { ALIAS_KEY, saveLocalStorage } from '~/utils';
+import { aliasKey, saveLocalStorage } from '~/utils';
 
 export const EditAliasModal = () => {
   const { setModalOpen, modalOpen, currentTheme, selectedItem, aliasData, updateAliasData } = useStateContext();
@@ -22,7 +22,7 @@ export const EditAliasModal = () => {
 
   const handleConfirm = () => {
     aliasData[selectedItem.address] = alias;
-    saveLocalStorage(ALIAS_KEY, aliasData);
+    saveLocalStorage(aliasKey, aliasData);
     updateAliasData();
     setAlias('');
     setModalOpen(ModalType.NONE);

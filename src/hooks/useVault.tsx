@@ -2,7 +2,7 @@ import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } f
 import { WriteContractResult } from 'wagmi/actions';
 
 import { useStateContext } from './useStateContext';
-import { ALIAS_KEY, getViewTransaction, saveLocalStorage } from '~/utils';
+import { aliasKey, getViewTransaction, saveLocalStorage } from '~/utils';
 import { vaultABI } from '~/generated';
 import { AliasData, ModalType } from '~/types';
 
@@ -63,7 +63,7 @@ export const useVault = ({
         // Update alias
         if (newAliasData) {
           const temp = { ...aliasData, ...newAliasData };
-          saveLocalStorage(ALIAS_KEY, temp);
+          saveLocalStorage(aliasKey, temp);
           updateAliasData();
         }
 
