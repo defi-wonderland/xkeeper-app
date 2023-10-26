@@ -47,6 +47,7 @@ export interface Notification {
   title?: string;
   message?: string | JSX.Element;
   type?: string;
+  error?: boolean;
 }
 
 export interface Config extends Env, Constants {}

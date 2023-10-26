@@ -1,5 +1,6 @@
 import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
+import { TransactionExecutionError } from 'viem';
 
 import { useStateContext } from './useStateContext';
 import { getViewTransaction } from '~/utils';
@@ -66,6 +67,13 @@ export const useVault = ({
       }
     } catch (error) {
       console.error(error);
+      const e = error as TransactionExecutionError;
+      setNotification({
+        open: true,
+        error: true,
+        title: e.name,
+        message: e.shortMessage,
+      });
     }
     setLoading(false);
   };

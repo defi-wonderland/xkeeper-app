@@ -25,7 +25,11 @@ export function UseSnackbar() {
         <ClickAwayListener onClickAway={onClickAway}>
           <CustomSnackbar {...getRootProps()}>
             <div>
-              <SCheckIcon name='check-circle' size='2rem' />
+              <SCheckIcon
+                isError={notification?.error}
+                name={notification?.error ? 'x-circle' : 'check-circle'}
+                size='2rem'
+              />
             </div>
 
             <TextContainer>
@@ -142,15 +146,22 @@ const SButton = styled(Button)(() => {
   };
 });
 
-const SCheckIcon = styled(Icon)(() => {
+interface IconProps {
+  isError?: boolean;
+}
+const SCheckIcon = styled(Icon)(({ isError }: IconProps) => {
   const { currentTheme } = useStateContext();
+  const color = isError ? currentTheme.error : currentTheme.checkColor;
+  const background = isError ? currentTheme.errorBackground : currentTheme.checkBackground;
+  const outlineColor = isError ? currentTheme.errorOutlineColor : currentTheme.checkOutlineColor;
 
   return {
-    color: currentTheme.checkColor,
-    background: currentTheme.checkBackground,
     padding: '0.8rem',
-    border: '0.8rem solid',
-    borderColor: currentTheme.checkBorderColor,
+    margin: '0.8rem',
+    outline: '0.8rem solid',
     borderRadius: '100%',
+    color: color,
+    background: background,
+    outlineColor: outlineColor,
   };
 });

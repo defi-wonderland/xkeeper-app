@@ -1,6 +1,7 @@
 import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { useNavigate } from 'react-router-dom';
+import { TransactionExecutionError } from 'viem';
 
 import { useStateContext } from './useStateContext';
 import { vaultFactoryABI } from '~/generated';
@@ -43,6 +44,13 @@ export const useVaultFactory = ({
       }
     } catch (error) {
       console.error(error);
+      const e = error as TransactionExecutionError;
+      setNotification({
+        open: true,
+        error: true,
+        title: e.name,
+        message: e.shortMessage,
+      });
     }
     setLoading(false);
   };
