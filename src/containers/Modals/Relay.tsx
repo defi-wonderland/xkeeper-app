@@ -92,9 +92,12 @@ export const RelayModal = () => {
         setCallerAddress(selectedItem.params[0]);
         setCallers(selectedItem.params.slice(1));
       }
-      editRelay ? setRelayAddress(selectedItem.address) : setRelayAddress('');
     }
   }, [selectedItem, allowAnyCaller, editRelay]);
+
+  useEffect(() => {
+    setRelayAddress(editRelay ? selectedItem.address : '');
+  }, [selectedItem, editRelay]);
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>

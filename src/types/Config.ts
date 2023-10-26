@@ -30,6 +30,7 @@ export interface Chain {
   name: string;
   scanner: string;
   id: number;
+  apiUrl: string;
 }
 
 export interface Chains {
