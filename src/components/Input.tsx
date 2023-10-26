@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, styled, SxProps, Theme, InputAdornment, InputBase } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
-import { Icon, STooltip, StyledText } from '~/components';
+import { Icon, IconName, STooltip, StyledText } from '~/components';
 import { TextButton } from '~/containers';
 
 interface InputProps {
@@ -19,6 +19,7 @@ interface InputProps {
   number?: boolean;
   tokenSymbol?: string;
   removable?: boolean;
+  customIconName?: IconName;
   isAutoFocus?: boolean;
   onClick?: () => void;
   onKeyUp?: () => void;
@@ -39,6 +40,7 @@ export const StyledInput = ({
   tokenSymbol,
   removable,
   isAutoFocus,
+  customIconName,
   onClick,
   onKeyUp,
 }: InputProps) => {
@@ -121,7 +123,7 @@ export const StyledInput = ({
 
             {removable && !error && (
               <SInputAdornment onClick={onInputClick} position='end'>
-                <SIcon name={'close'} size='1.8rem' color={currentTheme.textSecondary} />
+                <SIcon name={customIconName || 'close'} size='1.8rem' color={currentTheme.textSecondary} />
               </SInputAdornment>
             )}
 
@@ -223,9 +225,15 @@ export const SOutlinedInput = styled(InputBase)(() => {
 });
 
 const SIcon = styled(Icon)(() => {
+  const { currentTheme } = useStateContext();
+
   return {
-    marginRight: '1rem',
+    padding: '1rem',
     fontSize: '1.6rem',
+    '&:hover:before': {
+      color: currentTheme.textPrimary,
+      transition: currentTheme.basicTransition,
+    },
   };
 });
 

@@ -138,6 +138,7 @@ export const RelayModal = () => {
               disabled={loading}
               error={!!relayAddress && !isAddress(relayAddress)}
               errorText='Invalid address'
+              customIconName='back'
               isAutoFocus
               removable
               onClick={() => {

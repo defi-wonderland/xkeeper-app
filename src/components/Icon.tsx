@@ -4,6 +4,7 @@ export type IconName =
   | 'alert-circle'
   | 'arrow-left'
   | 'arrow-right'
+  | 'back'
   | 'check'
   | 'check-circle'
   | 'chevron-down'
