@@ -16,9 +16,16 @@ import { ActiveButton, CancelButton, StyledText, TokenIcon } from '~/components'
 import { formatDataNumber } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { ModalType } from '~/types';
+import { getConfig } from '~/config';
 
 export const Tokens = () => {
   const { userAddress, setModalOpen, selectedVault, currentNetwork } = useStateContext();
+  const { DEFAULT_ETH_ADDRESS } = getConfig();
+
+  const openTokenContract = (address: string) => {
+    if (address === DEFAULT_ETH_ADDRESS) return;
+    window.open(`${currentNetwork.scanner}/token/${address}`, '_blank');
+  };
 
   return (
     <SCard variant='outlined'>
@@ -74,7 +81,7 @@ export const Tokens = () => {
                     <STableRow>
                       <SRowText component='th' scope='row'>
                         {/* Token Info */}
-                        <TokenContainer>
+                        <TokenContainer onClick={() => openTokenContract(row.address)}>
                           <TokenIcon chainName={currentNetwork.name} tokenAddress={row.address} />
                           <TokenSymbol>{row.symbol}</TokenSymbol>
                           <TokenName>{row.name}</TokenName>
@@ -215,6 +222,7 @@ const TokenContainer = styled('div')({
   alignItems: 'center',
   justifyContent: 'start',
   gap: '1.2rem',
+  cursor: 'pointer',
 });
 
 const ColumnText = styled(StyledText)(() => {
