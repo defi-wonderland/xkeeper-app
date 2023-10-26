@@ -5,6 +5,7 @@
 export const themeKey = 'keep3r-framework-app-theme';
 export const aliasKey = 'keep3r-framework-aliases';
 export const anyCaller = '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
+export const itemsPerPage = 7;
 
 /*=============================================
 =               Style Variables               =

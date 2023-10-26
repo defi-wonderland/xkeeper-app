@@ -24,9 +24,9 @@ export const EnabledRelays = () => {
   );
 
   const flattenRelays = useMemo(() => {
-    const realysAddress = relays.map((relay) => relay.contractAddress);
+    const relaysAddress = relays.map((relay) => relay.contractAddress);
     const callers = relays.map((relay) => relay.enabledCallers.map((caller) => `${relay.contractAddress}${caller}`));
-    return [...realysAddress, ...callers.flat()];
+    return [...relaysAddress, ...callers.flat()];
   }, [relays]);
 
   useEffect(() => {
