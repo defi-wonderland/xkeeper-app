@@ -39,7 +39,7 @@ const SBox = styled(Box)(() => {
         transition: 'color 0.3s ease-in-out',
       },
     },
-    '@media (max-width: 950px)': {
+    '@media (max-width: 1180px)': {
       display: 'none',
     },
   };

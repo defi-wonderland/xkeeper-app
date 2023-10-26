@@ -7,11 +7,13 @@ import { Address } from 'viem';
 
 import {
   AddressChip,
+  BackToTop,
   BasicTabs,
   BreadCrumbs,
   CloseButton as EditAliasButton,
   Icon,
   InfoChip,
+  MadeByWonderland,
   STooltip,
 } from '~/components';
 import { getPrices, getTokenList, getVaultsData } from '~/utils';
@@ -147,6 +149,12 @@ export const Vault = () => {
 
         <BasicTabs sections={sections} isLoading={isLoading} />
       </VaultContainer>
+
+      {/* Back To Top Button */}
+      <BackToTop />
+
+      {/* Made By Wonderland Button */}
+      <MadeByWonderland />
     </PageContainer>
   );
 };
