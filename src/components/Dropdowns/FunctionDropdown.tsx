@@ -40,7 +40,7 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
     }
   }, [abi]);
 
-  const noWriteFunctionsFound = availableValues.length === 0 || !abi;
+  const noWriteFunctionsFound = !availableValues.length || !abi;
 
   return (
     <Dropdown>

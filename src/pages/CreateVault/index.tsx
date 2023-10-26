@@ -35,8 +35,8 @@ export const CreateVault = () => {
         </Header>
 
         <StyledInput
-          label='Vault name'
-          description='Your vault name will only be visible to you.'
+          label='Vault alias'
+          description='Your vault alias will only be visible to you.'
           value={vaultName}
           setValue={setVaultName}
           disabled={loading}
