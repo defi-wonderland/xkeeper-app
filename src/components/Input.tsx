@@ -62,6 +62,7 @@ export const StyledInput = ({
   };
 
   let copyableSx: SxProps<Theme> | null = null;
+  let errorSx: SxProps<Theme> | null = null;
   if (copyable) {
     copyableSx = {
       div: {
@@ -77,12 +78,22 @@ export const StyledInput = ({
     };
   }
 
+  if (error) {
+    errorSx = {
+      borderColor: currentTheme.error,
+      '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
+        borderColor: currentTheme.error,
+      },
+    };
+  }
+
   return (
     <InputContainer onClick={handleCopy} sx={{ ...sx, ...copyableSx }}>
       {!!label && <InputLabel>{label}</InputLabel>}
 
       <SOutlinedInput
         fullWidth
+        sx={errorSx}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyUp={onKeyPress}
@@ -102,13 +113,13 @@ export const StyledInput = ({
 
             {copyable && !error && (
               <SInputAdornment position='end'>
-                <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' />
+                <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' color={currentTheme.textSecondary} />
               </SInputAdornment>
             )}
 
             {removable && !error && (
               <SInputAdornment onClick={onInputClick} position='end'>
-                <SIcon name={'close'} size='1.8rem' color='inherit' />
+                <SIcon name={'close'} size='1.8rem' color={currentTheme.textSecondary} />
               </SInputAdornment>
             )}
 
@@ -191,9 +202,6 @@ export const SOutlinedInput = styled(InputBase)(() => {
       color: currentTheme.textDisabled,
       fontWeight: 500,
       opacity: 1,
-    },
-    'i:before': {
-      color: currentTheme.textSecondary,
     },
     '&:disabled': {
       backgroundColor: currentTheme.backgroundHover,
