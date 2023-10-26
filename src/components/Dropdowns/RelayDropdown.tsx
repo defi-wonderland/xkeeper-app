@@ -11,13 +11,19 @@ interface RelayDropdownProps {
   setValue: (val: string) => void;
   disabled?: boolean;
   availableValues: string[];
+  setCustomRelay: (value: boolean) => void;
 }
 
-export function RelayDropdown({ value, setValue, availableValues, disabled }: RelayDropdownProps) {
+export function RelayDropdown({ value, setValue, availableValues, disabled, setCustomRelay }: RelayDropdownProps) {
   const { currentTheme } = useStateContext();
 
   const createHandleMenuClick = (value: string) => {
     return () => {
+      if (value === 'Custom Relay') {
+        setValue('');
+        setCustomRelay(true);
+        return;
+      }
       setValue(value);
     };
   };

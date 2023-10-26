@@ -32,6 +32,7 @@ export const RelayModal = () => {
   const [callerAddress, setCallerAddress] = useState<string>('');
   const [callers, setCallers] = useState<string[]>([]);
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
+  const [customRelay, setCustomRelay] = useState(false);
 
   const callerList = useMemo(() => {
     if (allowAnyCaller) {
@@ -44,6 +45,8 @@ export const RelayModal = () => {
   const editRelay = useMemo(() => {
     return isAddress(selectedItem.address);
   }, [selectedItem]);
+
+  const availableValues = useMemo(() => [...Object.values(relays), 'Custom Relay'], [relays]);
 
   const { handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
@@ -113,17 +116,37 @@ export const RelayModal = () => {
         <InputsContainer>
           {/* Relay Input */}
 
-          <DropdownContainer>
-            <DropdownLabel>Relay</DropdownLabel>
-            <RelayDropdown
-              value={getRelayName(relayAddress, 'Choose Relay')}
-              setValue={setRelayAddress}
-              availableValues={Object.values(relays)}
-              disabled={loading || editRelay}
-            />
-          </DropdownContainer>
+          {!customRelay && (
+            <DropdownContainer>
+              <DropdownLabel>Relay</DropdownLabel>
+              <RelayDropdown
+                value={getRelayName(relayAddress, 'Choose Relay')}
+                setValue={setRelayAddress}
+                availableValues={availableValues}
+                disabled={loading || editRelay}
+                setCustomRelay={setCustomRelay}
+              />
+            </DropdownContainer>
+          )}
 
-          {isAddress(relayAddress) && (
+          {customRelay && (
+            <StyledInput
+              label='Relay'
+              value={relayAddress}
+              setValue={setRelayAddress}
+              placeholder='Enter relay address'
+              disabled={loading}
+              error={!!relayAddress && !isAddress(relayAddress)}
+              errorText='Invalid address'
+              isAutoFocus
+              removable
+              onClick={() => {
+                setCustomRelay(!customRelay);
+              }}
+            />
+          )}
+
+          {isAddress(relayAddress) && !customRelay && (
             <StyledInput sx={{ mt: '-1rem' }} value={relayAddress} setValue={() => {}} onClick={() => {}} copyable />
           )}
 
@@ -138,7 +161,7 @@ export const RelayModal = () => {
             errorText='Invalid address'
             onClick={handleRemoveCallerInput}
             onKeyUp={handleSendTransaction}
-            removable
+            removable={!!callerAddress}
           />
 
           {!allowAnyCaller &&

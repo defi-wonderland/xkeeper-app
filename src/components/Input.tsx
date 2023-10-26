@@ -19,6 +19,7 @@ interface InputProps {
   number?: boolean;
   tokenSymbol?: string;
   removable?: boolean;
+  isAutoFocus?: boolean;
   onClick?: () => void;
   onKeyUp?: () => void;
 }
@@ -37,6 +38,7 @@ export const StyledInput = ({
   number,
   tokenSymbol,
   removable,
+  isAutoFocus,
   onClick,
   onKeyUp,
 }: InputProps) => {
@@ -133,6 +135,8 @@ export const StyledInput = ({
             )}
           </React.Fragment>
         }
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus={isAutoFocus} // we need to enable autoFocus to have a better UX
       />
 
       {!!description && (
