@@ -134,6 +134,7 @@ export const RelayModal = () => {
             error={!!callerAddress && !isAddress(callerAddress)}
             errorText='Invalid address'
             onClick={handleRemoveCallerInput}
+            onKeyUp={handleSendTransaction}
             removable
           />
 

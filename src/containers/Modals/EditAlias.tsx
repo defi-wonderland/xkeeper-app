@@ -56,6 +56,7 @@ export const EditAliasModal = () => {
             setValue={setAlias}
             description='This will only be visible to you.'
             placeholder={`My custom ${selectedItem.type}`}
+            onKeyUp={handleConfirm}
           />
         </InputContainer>
 

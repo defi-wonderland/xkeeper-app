@@ -17,9 +17,10 @@ interface InputProps {
   errorText?: string;
   copyable?: boolean;
   number?: boolean;
-  onClick?: () => void;
   tokenSymbol?: string;
   removable?: boolean;
+  onClick?: () => void;
+  onKeyUp?: () => void;
 }
 
 export const StyledInput = ({
@@ -37,6 +38,7 @@ export const StyledInput = ({
   tokenSymbol,
   removable,
   onClick,
+  onKeyUp,
 }: InputProps) => {
   const { currentTheme } = useStateContext();
   const [isCopied, setIsCopied] = useState(false);
@@ -44,6 +46,12 @@ export const StyledInput = ({
   const onInputClick = () => {
     if (disabled || !onClick) return;
     onClick();
+  };
+
+  const onKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    if (e.code === 'Enter') {
+      onKeyUp && onKeyUp();
+    }
   };
 
   const handleCopy = () => {
@@ -77,6 +85,7 @@ export const StyledInput = ({
         fullWidth
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        onKeyUp={onKeyPress}
         placeholder={placeholder}
         error={error}
         type={number ? 'number' : 'text'}
