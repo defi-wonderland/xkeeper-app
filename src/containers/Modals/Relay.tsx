@@ -22,13 +22,13 @@ import { ModalType } from '~/types';
 import { getConfig } from '~/config';
 
 export const RelayModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, loading, currentTheme } = useStateContext();
+  const { modalOpen, selectedVault, loading, currentTheme, selectedItem, setModalOpen } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
   const {
     addresses: { relays },
   } = getConfig();
 
-  const [relayAddress, setRelayAddress] = useState('');
+  const [relayAddress, setRelayAddress] = useState<string>('');
   const [callerAddress, setCallerAddress] = useState<string>('');
   const [callers, setCallers] = useState<string[]>([]);
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
@@ -41,6 +41,10 @@ export const RelayModal = () => {
     }
   }, [allowAnyCaller, callerAddress, callers]);
 
+  const editRelay = useMemo(() => {
+    return isAddress(selectedItem.address);
+  }, [selectedItem]);
+
   const { handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'approveRelayCallers',
@@ -50,6 +54,8 @@ export const RelayModal = () => {
   });
 
   const handleToggle = () => {
+    setCallers([]);
+    setCallerAddress('');
     setAllowAnyCaller(!allowAnyCaller);
   };
 
@@ -77,11 +83,18 @@ export const RelayModal = () => {
     if (allowAnyCaller) {
       setCallers([anyCaller]);
       setCallerAddress(anyCaller);
-    } else {
-      setCallers([]);
-      setCallerAddress('');
     }
   }, [allowAnyCaller]);
+
+  useEffect(() => {
+    if (!allowAnyCaller) {
+      if (selectedItem.params) {
+        setCallerAddress(selectedItem.params[0]);
+        setCallers(selectedItem.params.slice(1));
+      }
+      editRelay ? setRelayAddress(selectedItem.address) : setRelayAddress('');
+    }
+  }, [selectedItem, allowAnyCaller, editRelay]);
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
@@ -103,7 +116,7 @@ export const RelayModal = () => {
               value={getRelayName(relayAddress, 'Choose Relay')}
               setValue={setRelayAddress}
               availableValues={Object.values(relays)}
-              disabled={loading}
+              disabled={loading || editRelay}
             />
           </DropdownContainer>
 
@@ -133,7 +146,6 @@ export const RelayModal = () => {
                 setValue={() => {}}
                 onClick={handleRemoveCaller(caller)}
                 removable
-                disabled
               />
             ))}
 

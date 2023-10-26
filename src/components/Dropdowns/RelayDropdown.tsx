@@ -27,7 +27,7 @@ export function RelayDropdown({ value, setValue, availableValues, disabled }: Re
       {/* Dropdown button */}
       <DropdownTriggerButton disabled={disabled}>
         <StyledText>{value}</StyledText>
-        <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
+        {!disabled && <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />}
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}

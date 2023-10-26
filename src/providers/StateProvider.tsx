@@ -135,6 +135,17 @@ export const StateProvider = ({ children }: StateProps) => {
     }
   }, [notification.open, update]);
 
+  // Reset selected item when modal is close
+  useEffect(() => {
+    if (modalOpen === ModalType.NONE) {
+      setSelectedItem({
+        type: '',
+        address: '0x',
+        params: [],
+      });
+    }
+  }, [modalOpen]);
+
   // Load theme from local storage on load
   useEffect(() => {
     const storedTheme = localStorage.getItem(themeKey) as ThemeName;
