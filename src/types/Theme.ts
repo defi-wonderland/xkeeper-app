@@ -24,6 +24,7 @@ export interface Theme {
   actionButton: string;
   actionButtonHover: string;
   actionButtonDisabled: string;
+  actionButtonColorDisabled: string;
   actionButtonColor: string;
   tabColor: string;
 

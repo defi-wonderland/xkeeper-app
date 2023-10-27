@@ -19,9 +19,10 @@ export const darkTheme: Theme = {
   border: '1px solid #1D2939',
   inputBorder: '1px solid #344054',
 
-  actionButton: '#444CE7',
+  actionButton: '#555AE5',
   actionButtonHover: '#3538CD',
-  actionButtonDisabled: '#A4BCFD',
+  actionButtonDisabled: '#1D2939',
+  actionButtonColorDisabled: '#475467',
   actionButtonColor: '#ffffff',
 
   tabColor: '#D0D5DD',
@@ -75,6 +76,7 @@ export const lightTheme: Theme = {
   actionButton: '#444CE7',
   actionButtonHover: '#3538CD',
   actionButtonDisabled: '#A4BCFD',
+  actionButtonColorDisabled: '#ffffff',
   actionButtonColor: '#ffffff',
 
   tabColor: '#344054',
