@@ -13,7 +13,10 @@ export const CreateVault = () => {
   const [vaultName, setVaultName] = useState('');
   const [vaultOwner, setVaultOwner] = useState(userAddress || '');
   const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
-  const { handleSendTransaction, writeAsync } = useVaultFactory({ args: [vaultOwner as Address, vaultName] });
+  const { handleSendTransaction, writeAsync } = useVaultFactory({
+    args: [vaultOwner as Address, vaultName],
+    selectedChain,
+  });
 
   useEffect(() => {
     setVaultOwner(userAddress || '');

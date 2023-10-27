@@ -25,6 +25,8 @@ export const darkTheme: Theme = {
   actionButtonColorDisabled: '#475467',
   actionButtonColor: '#ffffff',
 
+  inputDisabledBackground: '#1D2939',
+
   tabColor: '#D0D5DD',
 
   relayChipColor: '#9FFAD4',
@@ -78,6 +80,8 @@ export const lightTheme: Theme = {
   actionButtonDisabled: '#A4BCFD',
   actionButtonColorDisabled: '#ffffff',
   actionButtonColor: '#ffffff',
+
+  inputDisabledBackground: '#F9FAFB',
 
   tabColor: '#344054',
 

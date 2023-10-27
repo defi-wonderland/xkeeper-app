@@ -9,10 +9,12 @@ import { getViewTransaction } from '~/utils';
 
 interface SendTransactionProps {
   args: [Address, string];
+  selectedChain: string;
 }
 
 export const useVaultFactory = ({
   args,
+  selectedChain,
 }: SendTransactionProps): {
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
@@ -20,11 +22,13 @@ export const useVaultFactory = ({
   const { setLoading, setNotification, addresses, currentNetwork } = useStateContext();
   const publicClient = usePublicClient();
   const navigate = useNavigate();
+
   const { config } = usePrepareContractWrite({
     address: addresses.AutomationVaultFactory,
     abi: vaultFactoryABI,
     functionName: 'deployAutomationVault',
     args: args,
+    chainId: Number(selectedChain),
   });
 
   const { writeAsync } = useContractWrite(config);
