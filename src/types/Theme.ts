@@ -28,6 +28,8 @@ export interface Theme {
   actionButtonColor: string;
   tabColor: string;
 
+  inputDisabledBackground: string;
+
   // Relays Chip
   relayChipColor: string;
   relayChipBackground: string;
