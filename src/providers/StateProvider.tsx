@@ -22,8 +22,9 @@ import {
   getVaults,
   getVaultsData,
   loadLocalStorage,
+  getCustomClient,
 } from '~/utils';
-import { getConfig, publicClient } from '~/config';
+import { getConfig } from '~/config';
 
 type ContextType = {
   theme: ThemeName;
@@ -47,7 +48,10 @@ type ContextType = {
 
   userAddress?: string;
   addresses: Addresses;
+
   currentNetwork: Chain;
+  setCurrentNetwork: (val: Chain) => void;
+
   availableChains: Chains;
 
   selectedItem: SelectedItem;
@@ -86,17 +90,18 @@ export const StateProvider = ({ children }: StateProps) => {
   });
 
   const [modalOpen, setModalOpen] = useState<ModalType>(ModalType.NONE);
+  const [currentNetwork, setCurrentNetwork] = useState<Chain>(availableChains[chain?.id || DEFAULT_CHAIN]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const currentNetwork = useMemo(
-    () => availableChains[chain?.id || DEFAULT_CHAIN],
-    [DEFAULT_CHAIN, availableChains, chain?.id],
-  );
-
   const update = useCallback(async () => {
+    const publicClient = getCustomClient(currentNetwork.id, address);
+
+    if (!publicClient) {
+      return;
+    }
     setLoading(true);
-    const tokens = getTokenList(chain?.id);
+    const tokens = getTokenList(currentNetwork.id);
     const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
 
     const currentChain = publicClient.chain.name.toLocaleLowerCase();
@@ -110,7 +115,17 @@ export const StateProvider = ({ children }: StateProps) => {
 
     setVaults(vaultsData);
     setLoading(false);
-  }, [DEFAULT_WETH_ADDRESS, addresses.AutomationVaultFactory, chain?.id]);
+  }, [DEFAULT_WETH_ADDRESS, address, addresses.AutomationVaultFactory, currentNetwork?.id]);
+
+  // Update current network when chain changes
+  useEffect(() => {
+    if (chain?.id) setCurrentNetwork(availableChains[chain?.id] || availableChains[DEFAULT_CHAIN]);
+  }, [DEFAULT_CHAIN, availableChains, chain, chain?.id]);
+
+  // Reset vaults when network changes
+  useEffect(() => {
+    setVaults([]);
+  }, [currentNetwork]);
 
   // Load alias data from local storage
   const updateAliasData = useCallback(async () => {
@@ -173,6 +188,7 @@ export const StateProvider = ({ children }: StateProps) => {
         userAddress: address,
         addresses,
         currentNetwork,
+        setCurrentNetwork,
         availableChains,
         selectedVault,
         setSelectedVault,

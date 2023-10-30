@@ -34,7 +34,7 @@ export const getVaultsData = async (
 
       vaultsData.push({
         address: vault,
-        chain: 'ethereum',
+        chain: publicClient.chain.name.toLocaleLowerCase(),
         name: name,
         owner: owner,
         jobs: jobs,

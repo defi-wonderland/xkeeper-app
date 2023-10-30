@@ -20,17 +20,18 @@ interface ChainDropdownProps {
 }
 
 export function ChainDropdown({ chains, value, setValue, disabled, compact }: ChainDropdownProps) {
-  const { currentTheme } = useStateContext();
+  const { currentTheme, setCurrentNetwork, availableChains } = useStateContext();
   const { switchNetworkAsync } = useSwitchNetwork();
 
   const createHandleMenuClick = (chainId: string) => {
     return async () => {
       switchNetworkAsync && (await switchNetworkAsync(Number(chainId)));
+      setCurrentNetwork(availableChains[chainId]);
       setValue(chainId);
     };
   };
 
-  const availableChains = Object.keys(chains);
+  const availableChainIds = Object.keys(chains);
 
   return (
     <Dropdown>
@@ -43,7 +44,7 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
 
       {/* Dropdown Options */}
       <SMenu slots={{ listbox: StyledListbox }} compact={compact}>
-        {availableChains.map((chainId: string) => (
+        {availableChainIds.map((chainId: string) => (
           <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)}>
             <ChainIcon chainName={chains[chainId].name} />
             {chains[chainId].displayName}
@@ -138,6 +139,10 @@ export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => 
     '&:hover:not(:disabled)': {
       borderColor: currentTheme.textDisabled,
       transition: currentTheme.basicTransition,
+      'i:before': {
+        color: currentTheme.textSecondary,
+        transition: currentTheme.basicTransition,
+      },
     },
     '&:disabled': {
       cursor: 'auto',
