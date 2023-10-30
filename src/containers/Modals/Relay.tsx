@@ -46,7 +46,7 @@ export const RelayModal = () => {
     return isAddress(selectedItem.address);
   }, [selectedItem]);
 
-  const availableValues = useMemo(() => [...Object.values(relays), 'Custom Relay'], [relays]);
+  const availableValues = useMemo(() => [...Object.values(relays), 'Choose Relay'], [relays]);
 
   const { handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
@@ -80,6 +80,11 @@ export const RelayModal = () => {
     } else {
       setCallerAddress('');
     }
+  };
+
+  const handleCustomRelayAddress = () => {
+    setRelayAddress('');
+    setCustomRelay(!customRelay);
   };
 
   useEffect(() => {
@@ -125,34 +130,30 @@ export const RelayModal = () => {
         <InputsContainer>
           {/* Relay Input */}
 
-          {!customRelay && (
-            <DropdownContainer>
-              <DropdownLabel>Relay</DropdownLabel>
-              <RelayDropdown
-                value={getRelayName(relayAddress, 'Choose Relay')}
-                setValue={setRelayAddress}
-                availableValues={availableValues}
-                disabled={loading || editRelay}
-                setCustomRelay={setCustomRelay}
-              />
-            </DropdownContainer>
-          )}
+          <DropdownContainer>
+            <DropdownLabel>Relay</DropdownLabel>
+            <RelayDropdown
+              value={getRelayName(relayAddress, 'Choose Relay')}
+              setValue={setRelayAddress}
+              availableValues={availableValues}
+              disabled={loading || editRelay}
+              setCustomRelay={setCustomRelay}
+              customRelay={customRelay}
+            />
+          </DropdownContainer>
 
           {customRelay && (
             <StyledInput
-              label='Relay'
               value={relayAddress}
               setValue={setRelayAddress}
               placeholder='Enter relay address'
               disabled={loading}
               error={!!relayAddress && !isAddress(relayAddress)}
               errorText='Invalid address'
-              customIconName='back'
               isAutoFocus
               removable
-              onClick={() => {
-                setCustomRelay(!customRelay);
-              }}
+              onClick={handleCustomRelayAddress}
+              sx={{ mt: '-1rem' }}
             />
           )}
 

@@ -79,7 +79,7 @@ export const StyledInput = ({
           placeholder={placeholder}
           error={error}
           type={number ? 'number' : 'text'}
-          readOnly={copyable}
+          readOnly={copyable || disabled}
           endAdornment={
             <React.Fragment>
               {error && (
@@ -96,7 +96,7 @@ export const StyledInput = ({
                 </SInputAdornment>
               )}
 
-              {removable && !error && (
+              {removable && !disabled && !error && (
                 <SInputAdornment onClick={onInputClick} position='end'>
                   <SIcon name={customIconName || 'close'} size='1.8rem' color={currentTheme.textSecondary} />
                 </SInputAdornment>
