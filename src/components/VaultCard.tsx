@@ -48,7 +48,9 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
         <RelayContainer>
           <ChipsContainer>
             {!!activeRelays.length &&
-              activeRelays.map((relayAddress) => <RelayChip text={getRelayName(relayAddress)} key={relayAddress} />)}
+              activeRelays.map((relayAddress) => (
+                <RelayChip text={aliasData[relayAddress] || getRelayName(relayAddress)} key={relayAddress} />
+              ))}
 
             {!activeRelays.length && <NoRelayChip text='No active relays' />}
           </ChipsContainer>
@@ -138,4 +140,6 @@ const RelayContainer = styled(Box)({
 const ChipsContainer = styled(Box)({
   display: 'flex',
   gap: '0.8rem',
+  maxWidth: 'calc(100% - 6rem)',
+  overflow: 'hidden',
 });

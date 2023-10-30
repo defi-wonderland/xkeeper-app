@@ -37,7 +37,7 @@ export const WithdrawtModal = () => {
     } catch (error) {
       return BigInt('0');
     }
-  }, [amount, token.decimals]);
+  }, [amount, token?.decimals]);
 
   const handleMax = () => {
     setAmount(token.balance);
