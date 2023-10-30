@@ -102,6 +102,15 @@ export const RelayModal = () => {
     setRelayAddress(editRelay ? selectedItem.address : '');
   }, [selectedItem, editRelay]);
 
+  const callerIsRepeated = useMemo(() => {
+    return callers.includes(callerAddress);
+  }, [callers, callerAddress]);
+
+  const errorText = useMemo(
+    () => (callerIsRepeated ? 'Caller address already added' : 'Invalid address'),
+    [callerIsRepeated],
+  );
+
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
       <BigModal>
@@ -158,8 +167,8 @@ export const RelayModal = () => {
             setValue={setCallerAddress}
             placeholder='Enter caller address'
             disabled={allowAnyCaller || loading}
-            error={!!callerAddress && !isAddress(callerAddress)}
-            errorText='Invalid address'
+            error={(!!callerAddress && !isAddress(callerAddress)) || callerIsRepeated}
+            errorText={errorText}
             onClick={handleRemoveCallerInput}
             onKeyUp={handleSendTransaction}
             removable={!!callerAddress}
