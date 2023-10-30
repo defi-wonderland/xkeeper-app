@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, styled, SxProps, Theme, InputAdornment, InputBase } from '@mui/material';
+import { Box, styled, SxProps, Theme, InputAdornment, InputBase } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
 import { Icon, IconName, STooltip, StyledText } from '~/components';
@@ -153,7 +153,7 @@ const InputContainer = styled(Box)(({ copyable }: { copyable?: boolean }) => {
   };
 });
 
-export const InputLabel = styled(Typography)(() => {
+export const InputLabel = styled(StyledText)(() => {
   const { currentTheme } = useStateContext();
   return {
     color: currentTheme.textSecondary,
@@ -164,7 +164,7 @@ export const InputLabel = styled(Typography)(() => {
   };
 });
 
-export const InputDescription = styled('p')(() => {
+export const InputDescription = styled(StyledText)(() => {
   const { currentTheme } = useStateContext();
   return {
     color: currentTheme.textTertiary,

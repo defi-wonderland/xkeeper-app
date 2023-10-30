@@ -95,12 +95,9 @@ export const StateProvider = ({ children }: StateProps) => {
   const [isError, setIsError] = useState<boolean>(false);
 
   const update = useCallback(async () => {
+    setLoading(true);
     const publicClient = getCustomClient(currentNetwork.id, address);
 
-    if (!publicClient) {
-      return;
-    }
-    setLoading(true);
     const tokens = getTokenList(currentNetwork.id);
     const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
 

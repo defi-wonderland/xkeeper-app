@@ -36,14 +36,14 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <DropdownTriggerButton disabled={disabled} compact={compact}>
+      <DropdownTriggerButton disabled={disabled} compact={compact?.toString()}>
         <ChainIcon chainName={chains[value].name} />
         {!compact && <StyledText>{chains[value].name}</StyledText>}
         <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}
-      <SMenu slots={{ listbox: StyledListbox }} compact={compact}>
+      <SMenu slots={{ listbox: StyledListbox }} compact={compact?.toString()}>
         {availableChainIds.map((chainId: string) => (
           <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)}>
             <ChainIcon chainName={chains[chainId].name} />
@@ -112,7 +112,7 @@ export const StyledMenuItem = styled(MenuItem)(() => {
 });
 
 interface Props {
-  compact?: boolean;
+  compact?: string;
 }
 export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => {
   const { currentTheme } = useStateContext();
@@ -147,7 +147,6 @@ export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => 
     '&:disabled': {
       cursor: 'auto',
       color: currentTheme.textSecondary,
-      textTransform: 'none',
     },
     p: {
       fontSize: '1.6rem',
