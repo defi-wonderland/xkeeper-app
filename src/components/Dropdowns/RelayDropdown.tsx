@@ -2,7 +2,14 @@ import { Dropdown } from '@mui/base/Dropdown';
 import { Menu } from '@mui/base/Menu';
 import { styled } from '@mui/system';
 
-import { StyledText, CustomScrollbar, DropdownTriggerButton, StyledListbox, StyledMenuItem, SIcon } from '~/components';
+import {
+  StyledText,
+  CustomScrollbar,
+  DropdownTriggerButton,
+  StyledMenuItem,
+  SIcon,
+  BasicStyledListbox,
+} from '~/components';
 import { useStateContext } from '~/hooks';
 import { getRelayName } from '~/utils';
 
@@ -37,7 +44,7 @@ export function RelayDropdown({ value, setValue, availableValues, disabled, setC
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}
-      <Menu slots={{ listbox: StyledListbox }}>
+      <Menu slots={{ listbox: BasicStyledListbox }}>
         <SCustomScrollbar>
           {!!availableValues &&
             availableValues.map((value) => (

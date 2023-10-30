@@ -1,12 +1,14 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useEffect, useState } from 'react';
 import { Box, IconButton, styled } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
-import { Icon, NavigationLink } from '~/components';
+import { ChainDropdown, ConnectButton, Icon, NavigationLink } from '~/components';
 import { themeKey, zIndex } from '~/utils';
+import { ModalType } from '~/types';
 
 export const Header = () => {
-  const { setTheme, theme, currentTheme } = useStateContext();
+  const { setTheme, theme, currentTheme, availableChains, currentNetwork, modalOpen } = useStateContext();
+  const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
 
   const handleThemeChange = () => {
     if (theme === 'light') {
@@ -34,11 +36,15 @@ export const Header = () => {
 
   const iconType = theme === 'dark' ? 'sun' : 'moon';
 
+  useEffect(() => {
+    setSelectedChain(currentNetwork.id.toString());
+  }, [currentNetwork]);
+
   return (
     <HeaderContainer>
       <Navbar>
-        <NavigationLink to='/' text='Keep3r Framework' sx={logoStyles} />
-        <NavigationLink to='/' text='Docs' sx={navigationLinkStyles} />
+        <NavigationLink disabled={modalOpen !== ModalType.NONE} to='/' text='Keep3r Framework' sx={logoStyles} />
+        <NavigationLink to='/' text='Docs' sx={navigationLinkStyles} external />
       </Navbar>
 
       <RightSection>
@@ -46,6 +52,13 @@ export const Header = () => {
           <Icon name={iconType} size='2.4rem' color={currentTheme.textTertiary} />
         </SIconButton>
 
+        <ChainDropdown
+          chains={availableChains}
+          value={selectedChain}
+          setValue={setSelectedChain}
+          disabled={modalOpen !== ModalType.NONE}
+          compact
+        />
         <ConnectButton />
       </RightSection>
     </HeaderContainer>

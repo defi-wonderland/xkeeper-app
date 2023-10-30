@@ -5,7 +5,7 @@ import { styled } from '@mui/system';
 import { getFunctionSelector } from 'viem';
 import { AbiFunction } from 'abitype';
 
-import { StyledText, CustomScrollbar, DropdownTriggerButton, StyledListbox, StyledMenuItem, SIcon } from '~/components';
+import { StyledText, CustomScrollbar, DropdownTriggerButton, StyledMenuItem, SIcon } from '~/components';
 import { useStateContext } from '~/hooks';
 
 interface FunctionDropdownProps {
@@ -54,7 +54,7 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}
-      <Menu slots={{ listbox: StyledListbox }}>
+      <Menu slots={{ listbox: BasicStyledListbox }}>
         <SCustomScrollbar>
           {!!availableValues &&
             availableValues.map((value: AbiFunction) => (
@@ -71,4 +71,21 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
 const SCustomScrollbar = styled(CustomScrollbar)({
   padding: '0.2rem',
   maxHeight: '17rem',
+});
+
+export const BasicStyledListbox = styled('ul')(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    border: `1px solid ${currentTheme.textSecondaryDisabled}`,
+    color: currentTheme.textSecondary,
+    backgroundColor: currentTheme.backgroundSecondary,
+    width: '60rem',
+    fontSize: '1.4rem',
+    boxSizing: 'border-box',
+    padding: '6px',
+    margin: '12px 0',
+    borderRadius: '12px',
+    overflow: 'auto',
+    outline: '0px',
+  };
 });

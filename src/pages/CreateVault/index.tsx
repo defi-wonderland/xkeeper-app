@@ -22,6 +22,10 @@ export const CreateVault = () => {
     setVaultOwner(userAddress || '');
   }, [userAddress]);
 
+  useEffect(() => {
+    setSelectedChain(currentNetwork.id.toString());
+  }, [currentNetwork]);
+
   return (
     <PageContainer>
       <BreadCrumbs previousPage='Home' currentPage='Create Vault' />

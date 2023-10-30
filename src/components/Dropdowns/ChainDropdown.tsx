@@ -8,19 +8,25 @@ import { blue, grey } from '@mui/material/colors';
 import { useStateContext } from '~/hooks';
 import { ChainIcon, Icon, StyledText } from '~/components';
 import { Chains } from '~/types';
+import { zIndex } from '~/utils';
+import { useSwitchNetwork } from 'wagmi';
 
 interface ChainDropdownProps {
   chains: Chains;
   value: string;
   setValue: (val: string) => void;
   disabled?: boolean;
+  compact?: boolean;
 }
 
-export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdownProps) {
+export function ChainDropdown({ chains, value, setValue, disabled, compact }: ChainDropdownProps) {
   const { currentTheme } = useStateContext();
-  const createHandleMenuClick = (menuItem: string) => {
-    return () => {
-      setValue(menuItem);
+  const { switchNetworkAsync } = useSwitchNetwork();
+
+  const createHandleMenuClick = (chainId: string) => {
+    return async () => {
+      switchNetworkAsync && (await switchNetworkAsync(Number(chainId)));
+      setValue(chainId);
     };
   };
 
@@ -29,21 +35,21 @@ export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdo
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <DropdownTriggerButton disabled={disabled}>
+      <DropdownTriggerButton disabled={disabled} compact={compact}>
         <ChainIcon chainName={chains[value].name} />
-        <StyledText>{chains[value].name}</StyledText>
+        {!compact && <StyledText>{chains[value].name}</StyledText>}
         <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}
-      <Menu slots={{ listbox: StyledListbox }}>
+      <SMenu slots={{ listbox: StyledListbox }} compact={compact}>
         {availableChains.map((chainId: string) => (
           <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)}>
             <ChainIcon chainName={chains[chainId].name} />
             {chains[chainId].displayName}
           </StyledMenuItem>
         ))}
-      </Menu>
+      </SMenu>
     </Dropdown>
   );
 }
@@ -51,18 +57,17 @@ export function ChainDropdown({ chains, value, setValue, disabled }: ChainDropdo
 export const StyledListbox = styled('ul')(() => {
   const { currentTheme } = useStateContext();
   return {
+    border: `1px solid ${currentTheme.textSecondaryDisabled}`,
+    color: currentTheme.textSecondary,
     fontSize: '1.4rem',
     boxSizing: 'border-box',
     padding: '6px',
     margin: '12px 0',
-    width: '60rem',
     borderRadius: '12px',
     overflow: 'auto',
     outline: '0px',
     background: 'inherit',
-    border: `1px solid ${currentTheme.textSecondaryDisabled}`,
     backgroundColor: currentTheme.backgroundSecondary,
-    color: currentTheme.textSecondary,
   };
 });
 
@@ -105,9 +110,17 @@ export const StyledMenuItem = styled(MenuItem)(() => {
   `;
 });
 
-export const DropdownTriggerButton = styled(MenuButton)(() => {
+interface Props {
+  compact?: boolean;
+}
+export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => {
   const { currentTheme } = useStateContext();
+  const iconSize = compact ? '3.15rem' : '2rem';
+  const borderRadius = compact ? '10rem' : currentTheme.borderRadius;
+  const padding = compact ? '0.6rem 0.8rem 0.6rem 0.6rem' : '1rem 1.4rem';
   return {
+    borderRadius,
+    padding,
     cursor: 'pointer',
     fontFamily: 'inherit',
     display: 'flex',
@@ -116,9 +129,7 @@ export const DropdownTriggerButton = styled(MenuButton)(() => {
     justifyContent: 'start',
     gap: '0.8rem',
     textTransform: 'capitalize',
-    padding: '1rem 1.4rem',
     border: currentTheme.inputBorder,
-    borderRadius: currentTheme.borderRadius,
     fontsize: '1.6rem',
     textAlign: 'start',
     backgroundColor: 'inherit',
@@ -136,11 +147,25 @@ export const DropdownTriggerButton = styled(MenuButton)(() => {
     p: {
       fontSize: '1.6rem',
     },
+    img: {
+      width: iconSize,
+      height: iconSize,
+      marginTop: '-0.1rem',
+    },
   };
 });
 
 export const SIcon = styled(Icon)(() => {
   return {
     marginLeft: 'auto',
+  };
+});
+
+const SMenu = styled(Menu)(({ compact }: Props) => {
+  const width = compact ? '20rem' : '60rem';
+  return {
+    zIndex: zIndex.TOAST,
+    width,
+    maxWidth: width,
   };
 });
