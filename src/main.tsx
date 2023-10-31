@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { injectedWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 
@@ -12,7 +11,6 @@ import { publicProvider } from 'wagmi/providers/public';
 import { goerli, mainnet, optimism, arbitrum, polygon } from 'wagmi/chains';
 
 import { StateProvider } from './providers';
-import { customTheme } from '~/components';
 import { App } from '~/App';
 
 import '@rainbow-me/rainbowkit/styles.css';
@@ -20,7 +18,7 @@ import { getConfig } from './config';
 
 const { PROJECT_ID, ALCHEMY_KEY } = getConfig();
 
-const { chains, publicClient } = configureChains(
+export const { chains: availableChains, publicClient } = configureChains(
   [goerli, mainnet, optimism, arbitrum, polygon],
   [alchemyProvider({ apiKey: ALCHEMY_KEY }), publicProvider()],
   { batch: { multicall: true } },
@@ -29,12 +27,12 @@ const { chains, publicClient } = configureChains(
 const getWallets = () => {
   if (PROJECT_ID) {
     return [
-      injectedWallet({ chains }),
-      rainbowWallet({ projectId: PROJECT_ID, chains }),
-      walletConnectWallet({ projectId: PROJECT_ID, chains }),
+      injectedWallet({ chains: availableChains }),
+      rainbowWallet({ projectId: PROJECT_ID, chains: availableChains }),
+      walletConnectWallet({ projectId: PROJECT_ID, chains: availableChains }),
     ];
   } else {
-    return [injectedWallet({ chains })];
+    return [injectedWallet({ chains: availableChains })];
   }
 };
 
@@ -54,13 +52,11 @@ const wagmiConfig = createConfig({
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider theme={customTheme} chains={chains}>
-        <HashRouter>
-          <StateProvider>
-            <App />
-          </StateProvider>
-        </HashRouter>
-      </RainbowKitProvider>
+      <HashRouter>
+        <StateProvider>
+          <App />
+        </StateProvider>
+      </HashRouter>
     </WagmiConfig>
   </React.StrictMode>,
 );
