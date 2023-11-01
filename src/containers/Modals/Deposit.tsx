@@ -73,7 +73,7 @@ const SButtonsContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   gap: '1.2rem',
-  marginTop: '5.6rem',
+  marginTop: '4rem',
   button: {
     width: '100%',
   },

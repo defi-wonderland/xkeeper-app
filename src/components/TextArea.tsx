@@ -19,7 +19,7 @@ export const STextarea = styled('textarea')(() => {
     height: 18rem;
     font-weight: 400;
     color: ${currentTheme.textPrimary};
-    opacity: 0.75;
+    opacity: 1;
 
     &:disabled {
       color: ${currentTheme.textDisabled};
@@ -53,6 +53,11 @@ export const STextarea = styled('textarea')(() => {
 
     &:hover {
       border-color: ${currentTheme.textPrimary};
+    }
+
+    &::placeholder {
+      color: ${currentTheme.textDisabled};
+      font-weight: 500;
     }
   `;
 });

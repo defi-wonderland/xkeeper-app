@@ -40,12 +40,17 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
     }
   }, [abi]);
 
+  const noWriteFunctionsFound = !availableValues.length || !abi;
+
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <DropdownTriggerButton disabled={disabled}>
-        <StyledText>{value || availableValues[0]?.name}</StyledText>
-        <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
+      <DropdownTriggerButton disabled={disabled || noWriteFunctionsFound}>
+        <StyledText>
+          {noWriteFunctionsFound && 'No write functions found'}
+          {!noWriteFunctionsFound && (value || availableValues[0]?.name)}
+        </StyledText>
+        {!noWriteFunctionsFound && <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />}
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}

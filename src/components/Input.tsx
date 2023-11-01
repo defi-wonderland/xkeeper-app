@@ -178,6 +178,11 @@ export const SOutlinedInput = styled(InputBase)(() => {
       padding: '1rem 1.4rem',
       color: currentTheme.textPrimary,
     },
+    '& input::placeholder': {
+      color: currentTheme.textDisabled,
+      fontWeight: 500,
+      opacity: 1,
+    },
     'i:before': {
       color: currentTheme.textSecondary,
     },
