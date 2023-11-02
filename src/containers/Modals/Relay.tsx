@@ -104,6 +104,7 @@ export const RelayModal = () => {
   }, [selectedItem, allowAnyCaller, editRelay]);
 
   useEffect(() => {
+    setCustomRelay(false);
     setRelayAddress(editRelay ? selectedItem.address : '');
   }, [selectedItem, editRelay]);
 
@@ -114,6 +115,11 @@ export const RelayModal = () => {
   const errorText = useMemo(
     () => (callerIsRepeated ? 'Caller address already added' : 'Invalid address'),
     [callerIsRepeated],
+  );
+
+  const dropdownValue = useMemo(
+    () => getRelayName(relayAddress, editRelay ? 'Custom Relay' : 'Choose Relay'),
+    [editRelay, relayAddress],
   );
 
   return (
@@ -133,7 +139,7 @@ export const RelayModal = () => {
           <DropdownContainer>
             <DropdownLabel>Relay</DropdownLabel>
             <RelayDropdown
-              value={getRelayName(relayAddress, 'Choose Relay')}
+              value={dropdownValue}
               setValue={setRelayAddress}
               availableValues={availableValues}
               disabled={loading || editRelay}
