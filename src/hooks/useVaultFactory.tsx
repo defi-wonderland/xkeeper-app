@@ -50,7 +50,7 @@ export const useVaultFactory = ({
         });
 
         // Redirects to the newly created vault
-        if (result && result?.[0]) navigate('/vault/' + result[result.length - 1]);
+        if (result && result.length) navigate('/vault/' + result[result.length - 1]);
 
         setNotification({
           open: true,
