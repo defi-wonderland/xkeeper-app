@@ -17,7 +17,7 @@ export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
 
   const handleOpenEditModal = () => {
     setSelectedItem(selectedItem);
-    setModalOpen(ModalType.EDIT_ALIAS);
+    setModalOpen(type === 'job' ? ModalType.ADD_JOB : ModalType.ADD_RELAY);
   };
 
   const handleOpenRevokeModal = () => {

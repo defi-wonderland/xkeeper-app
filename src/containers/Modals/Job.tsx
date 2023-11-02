@@ -46,8 +46,8 @@ export const JobModal = () => {
 
   useEffect(() => {
     if (isAddress(jobAddress)) {
-      getContractAbi(currentNetwork.name, jobAddress).then((abi) => {
-        setJobAbi(abi);
+      getContractAbi(currentNetwork.name, currentNetwork.apiUrl, jobAddress).then((abi) => {
+        setJobAbi(abi || '');
       });
     }
   }, [currentNetwork, jobAddress]);

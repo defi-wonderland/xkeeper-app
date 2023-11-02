@@ -11,13 +11,19 @@ interface RelayDropdownProps {
   setValue: (val: string) => void;
   disabled?: boolean;
   availableValues: string[];
+  setCustomRelay: (value: boolean) => void;
 }
 
-export function RelayDropdown({ value, setValue, availableValues, disabled }: RelayDropdownProps) {
+export function RelayDropdown({ value, setValue, availableValues, disabled, setCustomRelay }: RelayDropdownProps) {
   const { currentTheme } = useStateContext();
 
   const createHandleMenuClick = (value: string) => {
     return () => {
+      if (value === 'Custom Relay') {
+        setValue('');
+        setCustomRelay(true);
+        return;
+      }
       setValue(value);
     };
   };
@@ -27,7 +33,7 @@ export function RelayDropdown({ value, setValue, availableValues, disabled }: Re
       {/* Dropdown button */}
       <DropdownTriggerButton disabled={disabled}>
         <StyledText>{value}</StyledText>
-        <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
+        {!disabled && <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />}
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}

@@ -22,16 +22,17 @@ import { ModalType } from '~/types';
 import { getConfig } from '~/config';
 
 export const RelayModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, loading, currentTheme } = useStateContext();
+  const { modalOpen, selectedVault, loading, currentTheme, selectedItem, setModalOpen } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
   const {
     addresses: { relays },
   } = getConfig();
 
-  const [relayAddress, setRelayAddress] = useState('');
+  const [relayAddress, setRelayAddress] = useState<string>('');
   const [callerAddress, setCallerAddress] = useState<string>('');
   const [callers, setCallers] = useState<string[]>([]);
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
+  const [customRelay, setCustomRelay] = useState(false);
 
   const callerList = useMemo(() => {
     if (allowAnyCaller) {
@@ -40,6 +41,12 @@ export const RelayModal = () => {
       return [callerAddress, ...callers];
     }
   }, [allowAnyCaller, callerAddress, callers]);
+
+  const editRelay = useMemo(() => {
+    return isAddress(selectedItem.address);
+  }, [selectedItem]);
+
+  const availableValues = useMemo(() => [...Object.values(relays), 'Custom Relay'], [relays]);
 
   const { handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
@@ -50,6 +57,8 @@ export const RelayModal = () => {
   });
 
   const handleToggle = () => {
+    setCallers([]);
+    setCallerAddress('');
     setAllowAnyCaller(!allowAnyCaller);
   };
 
@@ -77,11 +86,21 @@ export const RelayModal = () => {
     if (allowAnyCaller) {
       setCallers([anyCaller]);
       setCallerAddress(anyCaller);
-    } else {
-      setCallers([]);
-      setCallerAddress('');
     }
   }, [allowAnyCaller]);
+
+  useEffect(() => {
+    if (!allowAnyCaller) {
+      if (selectedItem.params) {
+        setCallerAddress(selectedItem.params[0]);
+        setCallers(selectedItem.params.slice(1));
+      }
+    }
+  }, [selectedItem, allowAnyCaller, editRelay]);
+
+  useEffect(() => {
+    setRelayAddress(editRelay ? selectedItem.address : '');
+  }, [selectedItem, editRelay]);
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
@@ -97,17 +116,38 @@ export const RelayModal = () => {
         <InputsContainer>
           {/* Relay Input */}
 
-          <DropdownContainer>
-            <DropdownLabel>Relay</DropdownLabel>
-            <RelayDropdown
-              value={getRelayName(relayAddress, 'Choose Relay')}
-              setValue={setRelayAddress}
-              availableValues={Object.values(relays)}
-              disabled={loading}
-            />
-          </DropdownContainer>
+          {!customRelay && (
+            <DropdownContainer>
+              <DropdownLabel>Relay</DropdownLabel>
+              <RelayDropdown
+                value={getRelayName(relayAddress, 'Choose Relay')}
+                setValue={setRelayAddress}
+                availableValues={availableValues}
+                disabled={loading || editRelay}
+                setCustomRelay={setCustomRelay}
+              />
+            </DropdownContainer>
+          )}
 
-          {isAddress(relayAddress) && (
+          {customRelay && (
+            <StyledInput
+              label='Relay'
+              value={relayAddress}
+              setValue={setRelayAddress}
+              placeholder='Enter relay address'
+              disabled={loading}
+              error={!!relayAddress && !isAddress(relayAddress)}
+              errorText='Invalid address'
+              customIconName='back'
+              isAutoFocus
+              removable
+              onClick={() => {
+                setCustomRelay(!customRelay);
+              }}
+            />
+          )}
+
+          {isAddress(relayAddress) && !customRelay && (
             <StyledInput sx={{ mt: '-1rem' }} value={relayAddress} setValue={() => {}} onClick={() => {}} copyable />
           )}
 
@@ -121,7 +161,8 @@ export const RelayModal = () => {
             error={!!callerAddress && !isAddress(callerAddress)}
             errorText='Invalid address'
             onClick={handleRemoveCallerInput}
-            removable
+            onKeyUp={handleSendTransaction}
+            removable={!!callerAddress}
           />
 
           {!allowAnyCaller &&
@@ -133,7 +174,6 @@ export const RelayModal = () => {
                 setValue={() => {}}
                 onClick={handleRemoveCaller(caller)}
                 removable
-                disabled
               />
             ))}
 

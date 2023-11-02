@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, styled, SxProps, Theme, InputAdornment, InputBase } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
-import { Icon, STooltip, StyledText } from '~/components';
+import { Icon, IconName, STooltip, StyledText } from '~/components';
 import { TextButton } from '~/containers';
 
 interface InputProps {
@@ -17,9 +17,12 @@ interface InputProps {
   errorText?: string;
   copyable?: boolean;
   number?: boolean;
-  onClick?: () => void;
   tokenSymbol?: string;
   removable?: boolean;
+  customIconName?: IconName;
+  isAutoFocus?: boolean;
+  onClick?: () => void;
+  onKeyUp?: () => void;
 }
 
 export const StyledInput = ({
@@ -36,7 +39,10 @@ export const StyledInput = ({
   number,
   tokenSymbol,
   removable,
+  isAutoFocus,
+  customIconName,
   onClick,
+  onKeyUp,
 }: InputProps) => {
   const { currentTheme } = useStateContext();
   const [isCopied, setIsCopied] = useState(false);
@@ -44,6 +50,12 @@ export const StyledInput = ({
   const onInputClick = () => {
     if (disabled || !onClick) return;
     onClick();
+  };
+
+  const onKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    if (e.code === 'Enter') {
+      onKeyUp && onKeyUp();
+    }
   };
 
   const handleCopy = () => {
@@ -54,6 +66,7 @@ export const StyledInput = ({
   };
 
   let copyableSx: SxProps<Theme> | null = null;
+  let errorSx: SxProps<Theme> | null = null;
   if (copyable) {
     copyableSx = {
       div: {
@@ -69,14 +82,25 @@ export const StyledInput = ({
     };
   }
 
+  if (error) {
+    errorSx = {
+      borderColor: currentTheme.error,
+      '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
+        borderColor: currentTheme.error,
+      },
+    };
+  }
+
   return (
     <InputContainer onClick={handleCopy} sx={{ ...sx, ...copyableSx }}>
       {!!label && <InputLabel>{label}</InputLabel>}
 
       <SOutlinedInput
         fullWidth
+        sx={errorSx}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        onKeyUp={onKeyPress}
         placeholder={placeholder}
         error={error}
         type={number ? 'number' : 'text'}
@@ -93,13 +117,13 @@ export const StyledInput = ({
 
             {copyable && !error && (
               <SInputAdornment position='end'>
-                <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' />
+                <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' color={currentTheme.textSecondary} />
               </SInputAdornment>
             )}
 
             {removable && !error && (
               <SInputAdornment onClick={onInputClick} position='end'>
-                <SIcon name={'close'} size='1.8rem' color='inherit' />
+                <SIcon name={customIconName || 'close'} size='1.8rem' color={currentTheme.textSecondary} />
               </SInputAdornment>
             )}
 
@@ -113,6 +137,8 @@ export const StyledInput = ({
             )}
           </React.Fragment>
         }
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus={isAutoFocus} // we need to enable autoFocus to have a better UX
       />
 
       {!!description && (
@@ -183,9 +209,6 @@ export const SOutlinedInput = styled(InputBase)(() => {
       fontWeight: 500,
       opacity: 1,
     },
-    'i:before': {
-      color: currentTheme.textSecondary,
-    },
     '&:disabled': {
       backgroundColor: currentTheme.backgroundHover,
       color: currentTheme.textSecondary,
@@ -202,9 +225,15 @@ export const SOutlinedInput = styled(InputBase)(() => {
 });
 
 const SIcon = styled(Icon)(() => {
+  const { currentTheme } = useStateContext();
+
   return {
-    marginRight: '1rem',
+    padding: '1rem',
     fontSize: '1.6rem',
+    '&:hover:before': {
+      color: currentTheme.textPrimary,
+      transition: currentTheme.basicTransition,
+    },
   };
 });
 
