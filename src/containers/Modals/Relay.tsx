@@ -173,6 +173,7 @@ export const RelayModal = () => {
                 value={caller}
                 setValue={() => {}}
                 onClick={handleRemoveCaller(caller)}
+                disabled={allowAnyCaller || loading}
                 removable
               />
             ))}

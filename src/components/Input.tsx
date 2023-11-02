@@ -65,81 +65,57 @@ export const StyledInput = ({
     setTimeout(() => setIsCopied(false), 2000);
   };
 
-  let copyableSx: SxProps<Theme> | null = null;
-  let errorSx: SxProps<Theme> | null = null;
-  if (copyable) {
-    copyableSx = {
-      div: {
-        background: currentTheme.backgroundHover,
-      },
-      input: {
-        cursor: copyable ? 'pointer' : 'text',
-        color: `${currentTheme.textDisabled} !important`,
-      },
-      'i:before': {
-        color: currentTheme.textDisabled,
-      },
-    };
-  }
-
-  if (error) {
-    errorSx = {
-      borderColor: currentTheme.error,
-      '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
-        borderColor: currentTheme.error,
-      },
-    };
-  }
-
   return (
-    <InputContainer onClick={handleCopy} sx={{ ...sx, ...copyableSx }}>
+    <InputContainer onClick={handleCopy} copyable={copyable} sx={{ ...sx }}>
       {!!label && <InputLabel>{label}</InputLabel>}
 
-      <SOutlinedInput
-        fullWidth
-        sx={errorSx}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyUp={onKeyPress}
-        placeholder={placeholder}
-        error={error}
-        type={number ? 'number' : 'text'}
-        readOnly={copyable || disabled}
-        endAdornment={
-          <React.Fragment>
-            {error && (
-              <SInputAdornment position='end'>
-                <STooltip text={errorText || ''}>
-                  <SIcon name='alert-circle' size='1.7rem' color={currentTheme.error} />
-                </STooltip>
-              </SInputAdornment>
-            )}
+      <SBox disabled={disabled}>
+        <SOutlinedInput
+          isError={error}
+          fullWidth
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyUp={onKeyPress}
+          placeholder={placeholder}
+          error={error}
+          type={number ? 'number' : 'text'}
+          readOnly={copyable}
+          endAdornment={
+            <React.Fragment>
+              {error && (
+                <SInputAdornment position='end'>
+                  <STooltip text={errorText || ''}>
+                    <SIcon name='alert-circle' size='1.7rem' color={currentTheme.error} />
+                  </STooltip>
+                </SInputAdornment>
+              )}
 
-            {copyable && !error && (
-              <SInputAdornment position='end'>
-                <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' color={currentTheme.textSecondary} />
-              </SInputAdornment>
-            )}
+              {copyable && !error && (
+                <SInputAdornment position='end'>
+                  <SIcon name={isCopied ? 'check' : 'copy'} size='1.7rem' color={currentTheme.textSecondary} />
+                </SInputAdornment>
+              )}
 
-            {removable && !error && (
-              <SInputAdornment onClick={onInputClick} position='end'>
-                <SIcon name={customIconName || 'close'} size='1.8rem' color={currentTheme.textSecondary} />
-              </SInputAdornment>
-            )}
+              {removable && !error && (
+                <SInputAdornment onClick={onInputClick} position='end'>
+                  <SIcon name={customIconName || 'close'} size='1.8rem' color={currentTheme.textSecondary} />
+                </SInputAdornment>
+              )}
 
-            {number && !error && (
-              <AmountInputAdornment position='end'>
-                <StyledText>{tokenSymbol}</StyledText>
-                <STextButton variant='text' onClick={onInputClick} disabled={disabled}>
-                  Max
-                </STextButton>
-              </AmountInputAdornment>
-            )}
-          </React.Fragment>
-        }
-        // eslint-disable-next-line jsx-a11y/no-autofocus
-        autoFocus={isAutoFocus} // we need to enable autoFocus to have a better UX
-      />
+              {number && !error && (
+                <AmountInputAdornment position='end'>
+                  <StyledText>{tokenSymbol}</StyledText>
+                  <STextButton variant='text' onClick={onInputClick} disabled={disabled}>
+                    Max
+                  </STextButton>
+                </AmountInputAdornment>
+              )}
+            </React.Fragment>
+          }
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus={isAutoFocus} // we need to enable autoFocus to have a better UX
+        />
+      </SBox>
 
       {!!description && (
         <>
@@ -151,12 +127,30 @@ export const StyledInput = ({
   );
 };
 
-const InputContainer = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '0.6rem',
-  marginBottom: '2.4rem',
-  width: '100%',
+const InputContainer = styled(Box)(({ copyable }: { copyable?: boolean }) => {
+  const { currentTheme } = useStateContext();
+
+  const copyableStyles = copyable && {
+    div: {
+      background: currentTheme.inputDisabledBackground,
+    },
+    input: {
+      cursor: copyable ? 'pointer' : 'text',
+      color: `${currentTheme.textDisabled} !important`,
+    },
+    'i:before': {
+      color: currentTheme.textDisabled,
+    },
+  };
+
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.6rem',
+    marginBottom: '2.4rem',
+    width: '100%',
+    ...copyableStyles,
+  };
 });
 
 export const InputLabel = styled(Typography)(() => {
@@ -192,8 +186,28 @@ const ErrorDescription = styled(InputDescription)(() => {
   };
 });
 
-export const SOutlinedInput = styled(InputBase)(() => {
+export const SBox = styled(Box)(({ disabled }: { disabled?: boolean }) => {
   const { currentTheme } = useStateContext();
+  const background: string = disabled ? currentTheme.inputDisabledBackground : 'inherit';
+  const color: string = disabled ? currentTheme.textDisabled : 'inherit';
+  return {
+    borderRadius: currentTheme.borderRadius,
+    background,
+    input: {
+      color,
+    },
+  };
+});
+
+export const SOutlinedInput = styled(InputBase)(({ isError }: { isError?: boolean }) => {
+  const { currentTheme } = useStateContext();
+  const errorStyles = isError && {
+    borderColor: currentTheme.error,
+    '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
+      borderColor: currentTheme.error,
+    },
+  };
+
   return {
     fontSize: '1.6rem',
     borderRadius: currentTheme.borderRadius,
@@ -202,16 +216,12 @@ export const SOutlinedInput = styled(InputBase)(() => {
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     input: {
       padding: '1rem 1.4rem',
-      color: currentTheme.textPrimary,
+      borderRadius: currentTheme.borderRadius,
     },
     '& input::placeholder': {
       color: currentTheme.textDisabled,
       fontWeight: 500,
       opacity: 1,
-    },
-    '&:disabled': {
-      backgroundColor: currentTheme.backgroundHover,
-      color: currentTheme.textSecondary,
     },
     ['input::-webkit-outer-spin-button,input::-webkit-inner-spin-button']: {
       '-webkit-appearance': 'none',
@@ -221,6 +231,7 @@ export const SOutlinedInput = styled(InputBase)(() => {
       borderColor: currentTheme.textDisabled,
       transition: currentTheme.basicTransition,
     },
+    ...errorStyles,
   };
 });
 

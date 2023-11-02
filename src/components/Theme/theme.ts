@@ -9,7 +9,6 @@ export const darkTheme: Theme = {
   textTertiary: '#667085',
   textDisabled: '#667085',
   textSecondaryDisabled: '#475467', // gray-600
-  error: '#D92D20',
 
   backgroundPrimary: '#101828',
   backgroundSecondary: '#0A101C',
@@ -20,10 +19,13 @@ export const darkTheme: Theme = {
   border: '1px solid #1D2939',
   inputBorder: '1px solid #344054',
 
-  actionButton: '#444CE7',
+  actionButton: '#555AE5',
   actionButtonHover: '#3538CD',
-  actionButtonDisabled: '#A4BCFD',
+  actionButtonDisabled: '#1D2939',
+  actionButtonColorDisabled: '#475467',
   actionButtonColor: '#ffffff',
+
+  inputDisabledBackground: '#1D2939',
 
   tabColor: '#D0D5DD',
 
@@ -47,7 +49,11 @@ export const darkTheme: Theme = {
 
   checkColor: '#04B163',
   checkBackground: '#07461D',
-  checkBorderColor: '#073221',
+  checkOutlineColor: '#073221',
+
+  error: '#D92D20',
+  errorBackground: 'rgba(217, 45, 32, 0.46)',
+  errorOutlineColor: 'rgba(217, 45, 32, 0.24)',
 };
 
 export const lightTheme: Theme = {
@@ -59,7 +65,6 @@ export const lightTheme: Theme = {
   textTertiary: '#667085', // gray-500
   textDisabled: '#98A2B3', // gray-400
   textSecondaryDisabled: '#D0D5DD', // gray-300
-  error: '#D92D20',
 
   backgroundPrimary: '#ffffff', // gray-100
   backgroundSecondary: '#FCFCFD', // gray-25
@@ -73,7 +78,10 @@ export const lightTheme: Theme = {
   actionButton: '#444CE7',
   actionButtonHover: '#3538CD',
   actionButtonDisabled: '#A4BCFD',
+  actionButtonColorDisabled: '#ffffff',
   actionButtonColor: '#ffffff',
+
+  inputDisabledBackground: '#F9FAFB',
 
   tabColor: '#344054',
 
@@ -97,5 +105,9 @@ export const lightTheme: Theme = {
 
   checkColor: '#039855',
   checkBackground: '#d1fadf',
-  checkBorderColor: '#ecfdf3',
+  checkOutlineColor: '#ecfdf3',
+
+  error: '#D92D20',
+  errorBackground: 'rgba(217, 45, 32, 0.46)',
+  errorOutlineColor: 'rgba(217, 45, 32, 0.24)',
 };

@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, styled } from '@mui/material';
 
 interface Props {
   isLoading?: boolean;
@@ -8,7 +8,13 @@ export const ConfirmText = ({ isLoading }: Props) => {
   return (
     <>
       {!isLoading && 'Confirm'}
-      {isLoading && <CircularProgress color='inherit' size={24} />}
+      {isLoading && <SCircularProgress size={24} />}
     </>
   );
 };
+
+const SCircularProgress = styled(CircularProgress)(() => {
+  return {
+    color: '#fff', // hardcoded because it won't change between themes
+  };
+});

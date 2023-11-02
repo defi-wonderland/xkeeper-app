@@ -2,7 +2,7 @@ export type ThemeName = 'light' | 'dark';
 
 export interface Theme {
   type: ThemeName;
-  error: string;
+
   basicTransition: string;
 
   textPrimary: string;
@@ -24,8 +24,11 @@ export interface Theme {
   actionButton: string;
   actionButtonHover: string;
   actionButtonDisabled: string;
+  actionButtonColorDisabled: string;
   actionButtonColor: string;
   tabColor: string;
+
+  inputDisabledBackground: string;
 
   // Relays Chip
   relayChipColor: string;
@@ -53,7 +56,11 @@ export interface Theme {
   // Snackbar
   checkColor: string;
   checkBackground: string;
-  checkBorderColor: string;
+  checkOutlineColor: string;
+
+  error: string;
+  errorBackground: string;
+  errorOutlineColor: string;
 }
 
 export interface PropTheme {

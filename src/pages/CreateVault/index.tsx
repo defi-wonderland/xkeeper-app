@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import { Address } from 'wagmi';
 import { isAddress } from 'viem';
@@ -13,7 +13,18 @@ export const CreateVault = () => {
   const [vaultName, setVaultName] = useState('');
   const [vaultOwner, setVaultOwner] = useState(userAddress || '');
   const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
-  const { handleSendTransaction, writeAsync } = useVaultFactory({ args: [vaultOwner as Address, vaultName] });
+  const { handleSendTransaction, writeAsync } = useVaultFactory({
+    args: [vaultOwner as Address, vaultName],
+    selectedChain,
+  });
+
+  useEffect(() => {
+    setVaultOwner(userAddress || '');
+  }, [userAddress]);
+
+  useEffect(() => {
+    setSelectedChain(currentNetwork.id.toString());
+  }, [currentNetwork]);
 
   return (
     <PageContainer>

@@ -44,7 +44,7 @@ export const ActiveButton = styled(Button)(() => {
     },
     '&:disabled': {
       backgroundColor: currentTheme.actionButtonDisabled,
-      color: currentTheme.actionButtonColor,
+      color: currentTheme.actionButtonColorDisabled,
       cursor: 'default',
     },
   };
@@ -62,6 +62,7 @@ export const RevokeButton = styled(ActiveButton)(() => {
     },
     '&:disabled': {
       opacity: 0.6,
+      color: currentTheme.actionButtonColorDisabled,
       backgroundColor: currentTheme.error,
       boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     },
