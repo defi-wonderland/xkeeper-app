@@ -4,12 +4,12 @@ import { MenuButton } from '@mui/base/MenuButton';
 import { MenuItem, menuItemClasses } from '@mui/base/MenuItem';
 import { styled, css } from '@mui/system';
 import { blue, grey } from '@mui/material/colors';
+import { useSwitchNetwork } from 'wagmi';
 
 import { useStateContext } from '~/hooks';
 import { ChainIcon, Icon, StyledText } from '~/components';
 import { Chains } from '~/types';
 import { zIndex } from '~/utils';
-import { useSwitchNetwork } from 'wagmi';
 
 interface ChainDropdownProps {
   chains: Chains;
