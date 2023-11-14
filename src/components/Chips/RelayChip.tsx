@@ -22,10 +22,8 @@ export const RelayChip = ({ text }: { text: string }) => {
   );
 };
 
-const SChip = styled(Chip)(() => {
-  return {
-    maxWidth: '20rem',
-    minWidth: '5rem',
-    overflow: 'hidden',
-  };
+const SChip = styled(Chip)({
+  maxWidth: '20rem',
+  minWidth: '5rem',
+  overflow: 'hidden',
 });
