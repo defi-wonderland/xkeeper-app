@@ -20,7 +20,7 @@ export const ConnectButton = () => {
   };
 
   return (
-    <SButton onClick={handleClick} isConnected={!!address}>
+    <SButton onClick={handleClick} connected={address?.toString()}>
       {!address && 'Connect Wallet'}
       {address && truncateAddress(address)}
     </SButton>
@@ -28,12 +28,12 @@ export const ConnectButton = () => {
 };
 
 interface Props {
-  isConnected?: boolean;
+  connected?: string;
 }
-const SButton = styled(CancelButton)(({ isConnected }: Props) => {
+const SButton = styled(CancelButton)(({ connected }: Props) => {
   const { currentTheme } = useStateContext();
 
-  const connectedStyles = isConnected && {
+  const connectedStyles = connected && {
     border: 'none',
     color: currentTheme.infoChipColor,
     backgroundColor: currentTheme.infoChipBackground,

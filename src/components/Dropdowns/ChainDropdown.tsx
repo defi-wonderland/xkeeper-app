@@ -20,30 +20,31 @@ interface ChainDropdownProps {
 }
 
 export function ChainDropdown({ chains, value, setValue, disabled, compact }: ChainDropdownProps) {
-  const { currentTheme } = useStateContext();
+  const { currentTheme, setCurrentNetwork, availableChains } = useStateContext();
   const { switchNetworkAsync } = useSwitchNetwork();
 
   const createHandleMenuClick = (chainId: string) => {
     return async () => {
       switchNetworkAsync && (await switchNetworkAsync(Number(chainId)));
+      setCurrentNetwork(availableChains[chainId]);
       setValue(chainId);
     };
   };
 
-  const availableChains = Object.keys(chains);
+  const availableChainIds = Object.keys(chains);
 
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <DropdownTriggerButton disabled={disabled} compact={compact}>
+      <DropdownTriggerButton disabled={disabled} compact={compact?.toString()}>
         <ChainIcon chainName={chains[value].name} />
         {!compact && <StyledText>{chains[value].name}</StyledText>}
         <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}
-      <SMenu slots={{ listbox: StyledListbox }} compact={compact}>
-        {availableChains.map((chainId: string) => (
+      <SMenu slots={{ listbox: StyledListbox }} compact={compact?.toString()}>
+        {availableChainIds.map((chainId: string) => (
           <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)}>
             <ChainIcon chainName={chains[chainId].name} />
             {chains[chainId].displayName}
@@ -111,7 +112,7 @@ export const StyledMenuItem = styled(MenuItem)(() => {
 });
 
 interface Props {
-  compact?: boolean;
+  compact?: string;
 }
 export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => {
   const { currentTheme } = useStateContext();
@@ -138,11 +139,15 @@ export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => 
     '&:hover:not(:disabled)': {
       borderColor: currentTheme.textDisabled,
       transition: currentTheme.basicTransition,
+      'i:before': {
+        color: currentTheme.textSecondary,
+        transition: currentTheme.basicTransition,
+      },
     },
     '&:disabled': {
       cursor: 'auto',
       color: currentTheme.textSecondary,
-      textTransform: 'none',
+      backgroundColor: currentTheme.inputDisabledBackground,
     },
     p: {
       fontSize: '1.6rem',

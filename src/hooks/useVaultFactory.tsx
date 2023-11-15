@@ -6,6 +6,7 @@ import { TransactionExecutionError } from 'viem';
 import { useStateContext } from './useStateContext';
 import { vaultFactoryABI } from '~/generated';
 import { getViewTransaction } from '~/utils';
+import { getConfig } from '~/config';
 
 interface SendTransactionProps {
   args: [Address, string];
@@ -19,7 +20,8 @@ export const useVaultFactory = ({
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { setLoading, setNotification, addresses, currentNetwork } = useStateContext();
+  const { setLoading, setNotification, currentNetwork } = useStateContext();
+  const { addresses } = getConfig();
   const publicClient = usePublicClient();
   const navigate = useNavigate();
 
@@ -39,7 +41,17 @@ export const useVaultFactory = ({
       if (writeAsync) {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);
-        navigate('/');
+
+        // Fetch the newly created vault
+        const result = await publicClient.readContract({
+          address: addresses.AutomationVaultFactory,
+          abi: vaultFactoryABI,
+          functionName: 'automationVaults',
+        });
+
+        // Redirects to the newly created vault
+        if (result && result.length) navigate('/vault/' + result[result.length - 1]);
+
         setNotification({
           open: true,
           title: 'Vault successfully created',

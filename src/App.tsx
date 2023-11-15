@@ -3,6 +3,7 @@ import '~/assets/kf-icons/style.css';
 import { useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { ScrollToTop, useStateContext } from '~/hooks';
@@ -16,7 +17,8 @@ import {
   RevokeModal,
   WithdrawtModal,
 } from '~/containers';
-import { UseSnackbar } from '~/components';
+import { UseSnackbar, customTheme } from '~/components';
+import { availableChains } from './main';
 import { zIndex } from './utils';
 
 const AppRouter = () => {
@@ -110,12 +112,14 @@ export const App = () => {
   );
 
   return (
-    <ThemeProvider theme={theme}>
-      <Modals />
-      <CssBaseline />
-      <ScrollToTop />
-      <AppRouter />
-      <UseSnackbar />
-    </ThemeProvider>
+    <RainbowKitProvider theme={customTheme(currentTheme)} chains={availableChains}>
+      <ThemeProvider theme={theme}>
+        <Modals />
+        <CssBaseline />
+        <ScrollToTop />
+        <AppRouter />
+        <UseSnackbar />
+      </ThemeProvider>
+    </RainbowKitProvider>
   );
 };

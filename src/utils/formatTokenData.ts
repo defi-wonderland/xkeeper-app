@@ -13,10 +13,10 @@ export const formatTokensData = (
 ): TokenData[] => {
   try {
     const { DEFAULT_WETH_ADDRESS, DEFAULT_ETH_ADDRESS } = getConfig();
-    const ethPrice = prices.coins[`${chainName}:${DEFAULT_WETH_ADDRESS}`].price || 0;
+    const ethPrice = prices?.coins?.[`${chainName}:${DEFAULT_WETH_ADDRESS}`]?.price || 0;
 
     const result = contractCallsResult.map(({ result }, index) => {
-      const price = prices.coins[`${chainName}:${tokenList[index].address}`].price || 0;
+      const price = prices?.coins?.[`${chainName}:${tokenList[index].address}`]?.price || 0;
       return {
         name: tokenList[index].name,
         symbol: tokenList[index].symbol,

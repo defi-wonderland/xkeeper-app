@@ -1,7 +1,7 @@
-import { Box, Breadcrumbs, Typography, IconButton, styled } from '@mui/material';
+import { Box, Breadcrumbs, IconButton, styled } from '@mui/material';
 
 import { useStateContext } from '~/hooks';
-import { Icon, NavigationLink } from '~/components';
+import { Icon, NavigationLink, StyledText } from '~/components';
 
 interface BreadCrumbsProps {
   currentPage: string;
@@ -50,12 +50,12 @@ const BreadCrumbsContainer = styled(Box)({
   gap: '2rem',
 });
 
-const CurrentPage = styled(Typography)({
+const CurrentPage = styled(StyledText)({
   fontSize: '1.4rem',
   fontWeight: 500,
 });
 
-const PreviousPage = styled(Typography)({
+const PreviousPage = styled(StyledText)({
   fontSize: '1.4rem',
   fontWeight: 500,
   opacity: 0.8,

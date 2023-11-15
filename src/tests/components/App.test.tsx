@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { act, render, screen } from '../test-utils';
 
-import { App } from '~/App';
+import { Landing } from '~/pages';
 
 describe('Renders every component', () => {
-  it('Renders App component', async () => {
+  it('Renders Landing page component', async () => {
     await act(async () => {
-      render(<App />);
+      render(<Landing />);
     });
 
     expect(screen.getByTestId('create-vault-btn')).toBeInTheDocument();

@@ -22,6 +22,7 @@ const constants: Constants = {
       id: 5,
       scanner: 'https://goerli.etherscan.io',
       apiUrl: 'https://api-goerli.etherscan.io/api',
+      alchemyUrl: 'https://eth-goerli.alchemyapi.io/v2',
     },
     '1': {
       displayName: 'Ethereum Mainnet',
@@ -29,6 +30,7 @@ const constants: Constants = {
       id: 1,
       scanner: 'https://etherscan.io',
       apiUrl: 'https://api.etherscan.io/api',
+      alchemyUrl: 'https://eth-mainnet.alchemyapi.io/v2',
     },
     '42161': {
       displayName: 'Arbitrum One',
@@ -36,6 +38,7 @@ const constants: Constants = {
       id: 42161,
       scanner: 'https://arbiscan.io',
       apiUrl: 'https://api.arbiscan.io/api',
+      alchemyUrl: 'https://arb-mainnet.g.alchemy.com/v2',
     },
     '137': {
       displayName: 'Polygon',
@@ -43,6 +46,7 @@ const constants: Constants = {
       id: 137,
       scanner: 'https://polygonscan.com',
       apiUrl: 'https://api.polygonscan.com/api',
+      alchemyUrl: 'https://polygon-mainnet.g.alchemy.com/v2',
     },
     '10': {
       displayName: 'OP Mainnet',
@@ -50,6 +54,7 @@ const constants: Constants = {
       id: 10,
       scanner: 'https://optimistic.etherscan.io',
       apiUrl: 'https://api-optimistic.etherscan.io/api',
+      alchemyUrl: 'https://optimism-mainnet.g.alchemy.com/v2',
     },
   },
 };

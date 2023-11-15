@@ -1,10 +1,10 @@
-import { Chip } from '@mui/material';
+import { Chip, styled } from '@mui/material';
 import { useStateContext } from '~/hooks';
 
 export const RelayChip = ({ text }: { text: string }) => {
   const { currentTheme } = useStateContext();
   return (
-    <Chip
+    <SChip
       color='success'
       label={text}
       size='medium'
@@ -21,3 +21,9 @@ export const RelayChip = ({ text }: { text: string }) => {
     />
   );
 };
+
+const SChip = styled(Chip)({
+  maxWidth: '20rem',
+  minWidth: '5rem',
+  overflow: 'hidden',
+});

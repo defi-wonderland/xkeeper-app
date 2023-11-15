@@ -7,12 +7,12 @@ import { STooltip, StyledText, SPagination, IconContainer, Icon } from '~/compon
 import { NoDataContainer } from './EnabledRelays';
 import { Text } from './EnabledJobs';
 import { useStateContext } from '~/hooks';
-import { publicClient } from '~/config';
 import { EventData } from '~/types';
 import {
   copyData,
   formatDataNumber,
   formatTimestamp,
+  getCustomClient,
   getTimestamp,
   getUsdBalance,
   getVaultEvents,
@@ -26,7 +26,8 @@ function createEventData(activity: string, hash: Hex, date: string, tokenAddress
 }
 
 export const Activity = () => {
-  const { currentTheme, currentNetwork, selectedVault, vaults, setVaults, setSelectedVault } = useStateContext();
+  const { currentTheme, currentNetwork, selectedVault, vaults, userAddress, setVaults, setSelectedVault } =
+    useStateContext();
   const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -53,6 +54,7 @@ export const Activity = () => {
     if (selectedVault?.events?.length) return;
     try {
       setIsLoaded(false);
+      const publicClient = getCustomClient(currentNetwork.id, userAddress);
       const events = await getVaultEvents(publicClient, 0n, selectedVault?.address);
 
       const timestampPromises = events.map(async (event) => {
@@ -76,7 +78,7 @@ export const Activity = () => {
       console.error('Error loading activity:', error);
       setIsError(true);
     }
-  }, [selectedVault?.address, selectedVault?.events?.length]);
+  }, [currentNetwork.id, selectedVault?.address, selectedVault?.events?.length, userAddress]);
 
   useEffect(() => {
     getEvents();

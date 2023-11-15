@@ -18,7 +18,8 @@ export const NavigationLink = ({ to, text, children, sx, disabled, external }: N
       {disabled && <>{children ? children : text}</>}
       {!disabled && (
         <Link to={to} target={external ? '_blank' : undefined}>
-          {children ? children : text}
+          {children}
+          {text}
         </Link>
       )}
     </Box>

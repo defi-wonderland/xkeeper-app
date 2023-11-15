@@ -31,6 +31,7 @@ export interface Chain {
   scanner: string;
   id: number;
   apiUrl: string;
+  alchemyUrl: string;
 }
 
 export interface Chains {

@@ -46,7 +46,7 @@ export const RelayModal = () => {
     return isAddress(selectedItem.address);
   }, [selectedItem]);
 
-  const availableValues = useMemo(() => [...Object.values(relays), 'Custom Relay'], [relays]);
+  const availableValues = useMemo(() => [...Object.values(relays), 'Choose Relay'], [relays]);
 
   const { handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
@@ -82,6 +82,11 @@ export const RelayModal = () => {
     }
   };
 
+  const handleCustomRelayAddress = () => {
+    setRelayAddress('');
+    setCustomRelay(!customRelay);
+  };
+
   useEffect(() => {
     if (allowAnyCaller) {
       setCallers([anyCaller]);
@@ -99,8 +104,23 @@ export const RelayModal = () => {
   }, [selectedItem, allowAnyCaller, editRelay]);
 
   useEffect(() => {
+    setCustomRelay(false);
     setRelayAddress(editRelay ? selectedItem.address : '');
   }, [selectedItem, editRelay]);
+
+  const callerIsRepeated = useMemo(() => {
+    return callers.includes(callerAddress);
+  }, [callers, callerAddress]);
+
+  const errorText = useMemo(
+    () => (callerIsRepeated ? 'Caller address already added' : 'Invalid address'),
+    [callerIsRepeated],
+  );
+
+  const dropdownValue = useMemo(
+    () => getRelayName(relayAddress, editRelay ? 'Custom Relay' : 'Choose Relay'),
+    [editRelay, relayAddress],
+  );
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
@@ -116,34 +136,30 @@ export const RelayModal = () => {
         <InputsContainer>
           {/* Relay Input */}
 
-          {!customRelay && (
-            <DropdownContainer>
-              <DropdownLabel>Relay</DropdownLabel>
-              <RelayDropdown
-                value={getRelayName(relayAddress, 'Choose Relay')}
-                setValue={setRelayAddress}
-                availableValues={availableValues}
-                disabled={loading || editRelay}
-                setCustomRelay={setCustomRelay}
-              />
-            </DropdownContainer>
-          )}
+          <DropdownContainer>
+            <DropdownLabel>Relay</DropdownLabel>
+            <RelayDropdown
+              value={dropdownValue}
+              setValue={setRelayAddress}
+              availableValues={availableValues}
+              disabled={loading || editRelay}
+              setCustomRelay={setCustomRelay}
+              customRelay={customRelay}
+            />
+          </DropdownContainer>
 
           {customRelay && (
             <StyledInput
-              label='Relay'
               value={relayAddress}
               setValue={setRelayAddress}
               placeholder='Enter relay address'
               disabled={loading}
               error={!!relayAddress && !isAddress(relayAddress)}
               errorText='Invalid address'
-              customIconName='back'
               isAutoFocus
               removable
-              onClick={() => {
-                setCustomRelay(!customRelay);
-              }}
+              onClick={handleCustomRelayAddress}
+              sx={{ mt: '-1rem' }}
             />
           )}
 
@@ -158,8 +174,8 @@ export const RelayModal = () => {
             setValue={setCallerAddress}
             placeholder='Enter caller address'
             disabled={allowAnyCaller || loading}
-            error={!!callerAddress && !isAddress(callerAddress)}
-            errorText='Invalid address'
+            error={(!!callerAddress && !isAddress(callerAddress)) || callerIsRepeated}
+            errorText={errorText}
             onClick={handleRemoveCallerInput}
             onKeyUp={handleSendTransaction}
             removable={!!callerAddress}

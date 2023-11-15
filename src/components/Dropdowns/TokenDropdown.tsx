@@ -4,10 +4,10 @@ import { Menu } from '@mui/base/Menu';
 
 import { useStateContext } from '~/hooks';
 import {
+  BasicStyledListbox,
   CustomScrollbar,
   DropdownTriggerButton,
   SIcon,
-  StyledListbox,
   StyledMenuItem,
   StyledText,
   TokenIcon,
@@ -46,7 +46,7 @@ export function TokenDropdown({ tokens, value, setValue, disabled }: TokenDropdo
       </DropdownTriggerButton>
 
       {/* Dropdown Options */}
-      <Menu slots={{ listbox: StyledListbox }}>
+      <Menu slots={{ listbox: BasicStyledListbox }}>
         <SCustomScrollbar>
           {!!tokens?.length &&
             tokens.map((token) => (
