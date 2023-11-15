@@ -1,7 +1,7 @@
-import { Chain as WagmiChain, createPublicClient, custom, fallback, http } from 'viem';
-import { goerli, mainnet, optimism, arbitrum, polygon } from 'wagmi/chains';
-import { PublicClient } from 'wagmi';
 import 'viem/window';
+import { Chain as WagmiChain, createPublicClient, custom, fallback, http } from 'viem';
+import { PublicClient } from 'wagmi';
+import { goerli, mainnet, optimism, arbitrum, polygon } from 'wagmi/chains';
 
 import { getConfig } from '~/config';
 
