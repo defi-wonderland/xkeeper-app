@@ -95,15 +95,6 @@ export const RelayModal = () => {
   }, [allowAnyCaller]);
 
   useEffect(() => {
-    if (!allowAnyCaller) {
-      if (selectedItem.params) {
-        setCallerAddress(selectedItem.params[0]);
-        setCallers(selectedItem.params.slice(1));
-      }
-    }
-  }, [selectedItem, allowAnyCaller, editRelay]);
-
-  useEffect(() => {
     setCustomRelay(false);
     setRelayAddress(editRelay ? selectedItem.address : '');
   }, [selectedItem, editRelay]);
