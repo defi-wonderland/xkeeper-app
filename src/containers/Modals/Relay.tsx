@@ -99,6 +99,10 @@ export const RelayModal = () => {
     setRelayAddress(editRelay ? selectedItem.address : '');
   }, [selectedItem, editRelay]);
 
+  useEffect(() => {
+    setCallerAddress('');
+  }, [modalOpen]);
+
   const callerIsRepeated = useMemo(() => {
     return callers.includes(callerAddress);
   }, [callers, callerAddress]);
