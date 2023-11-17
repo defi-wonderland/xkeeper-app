@@ -15,9 +15,16 @@ export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
   const { setModalOpen, userAddress, selectedVault, setSelectedItem, currentTheme } = useStateContext();
   const selectedItem = { type, address, params } as SelectedItem;
 
+  const isConnectedAndOwner = userAddress && selectedVault?.owner === userAddress;
+
   const handleOpenEditModal = () => {
     setSelectedItem(selectedItem);
     setModalOpen(type === 'job' ? ModalType.ADD_JOB : ModalType.ADD_RELAY);
+  };
+
+  const handleOpenEditModalAlias = () => {
+    setSelectedItem(selectedItem);
+    setModalOpen(ModalType.EDIT_ALIAS);
   };
 
   const handleOpenRevokeModal = () => {
@@ -33,21 +40,33 @@ export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
       </TriggerButton>
 
       {/* Dropdown Options */}
-      <Menu slots={{ listbox: StyledListbox }}>
-        <StyledMenuItem onClick={handleOpenEditModal}>
-          <EditContainer>
-            <Icon name='pencil-square' size='2rem' />
-            <p>Edit {type}</p>
-          </EditContainer>
-        </StyledMenuItem>
 
-        {userAddress && selectedVault?.owner === userAddress && (
-          <StyledMenuItem onClick={handleOpenRevokeModal}>
-            <RevokeContainer>
-              <Icon name='x-circle' size='2rem' />
-              <p>Revoke {type}</p>
-            </RevokeContainer>
+      <Menu slots={{ listbox: StyledListbox }}>
+        {!isConnectedAndOwner && (
+          <StyledMenuItem onClick={handleOpenEditModalAlias}>
+            <EditContainer>
+              <Icon name='pencil-square' size='2rem' />
+              <p>Edit alias</p>
+            </EditContainer>
           </StyledMenuItem>
+        )}
+
+        {isConnectedAndOwner && (
+          <>
+            <StyledMenuItem onClick={handleOpenEditModal}>
+              <EditContainer>
+                <Icon name='pencil-square' size='2rem' />
+                <p>Edit {type}</p>
+              </EditContainer>
+            </StyledMenuItem>
+
+            <StyledMenuItem onClick={handleOpenRevokeModal}>
+              <RevokeContainer>
+                <Icon name='x-circle' size='2rem' />
+                <p>Revoke {type}</p>
+              </RevokeContainer>
+            </StyledMenuItem>
+          </>
         )}
       </Menu>
     </Dropdown>
