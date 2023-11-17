@@ -1,32 +1,25 @@
 import { useCallback, useEffect, useState } from 'react';
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
-import { Hex } from 'viem';
 
 import { SectionHeader, Title, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
-import { STooltip, StyledText, SPagination, IconContainer, Icon } from '~/components';
+import { STooltip, StyledText, SPagination } from '~/components';
 import { NoDataContainer } from './EnabledRelays';
-import { Text } from './EnabledJobs';
 import { useStateContext } from '~/hooks';
+import { Text } from './EnabledJobs';
 import { EventData } from '~/types';
 import {
-  copyData,
   formatDataNumber,
-  formatTimestamp,
   getCustomClient,
-  getTimestamp,
   getUsdBalance,
   getVaultEvents,
+  handleOpenAddress,
   handleOpenTx,
   itemsPerPage,
   truncateAddress,
 } from '~/utils';
 
-function createEventData(activity: string, hash: Hex, date: string, tokenAddress?: string, amount?: string): EventData {
-  return { activity, hash, tokenAddress, amount, date };
-}
-
 export const Activity = () => {
-  const { currentTheme, currentNetwork, selectedVault, vaults, userAddress, setVaults, setSelectedVault } =
+  const { currentNetwork, selectedVault, vaults, userAddress, aliasData, setVaults, setSelectedVault } =
     useStateContext();
   const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -47,7 +40,7 @@ export const Activity = () => {
 
     // This is needed to avoid infinite loop when events are updated
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [events, vaults, selectedVault, setVaults]);
+  }, [events, selectedVault, setVaults]);
 
   // Load events when there are no events loaded in the selected vault
   const getEvents = useCallback(async () => {
@@ -57,21 +50,7 @@ export const Activity = () => {
       const publicClient = getCustomClient(currentNetwork.id, userAddress);
       const events = await getVaultEvents(publicClient, 0n, selectedVault?.address);
 
-      const timestampPromises = events.map(async (event) => {
-        const timestamp = await getTimestamp(publicClient, event.blockNumber);
-
-        return createEventData(
-          event.eventName,
-          event.transactionHash,
-          timestamp,
-          (event.args as { _token?: string })?._token,
-          (event.args as { _amount?: string })?._amount?.toString(),
-        );
-      });
-
-      const eventsWithTimestamps = await Promise.all(timestampPromises);
-
-      setEvents(eventsWithTimestamps.reverse()); // Reverse to show latest events first
+      setEvents(events.reverse()); // Reverse to show latest events first
       setIsLoaded(true);
       setIsError(false);
     } catch (error) {
@@ -103,6 +82,16 @@ export const Activity = () => {
     return { usdValue: formattedUsdValue, symbol, amount: formattedAmount, decimals };
   };
 
+  const formatAmountTooltip = (tokenAddress: string, amount: string, recipient: string) => {
+    const data = getTokenValues(tokenAddress, amount);
+    return `${amount}wei ${data.symbol} to ${truncateAddress(recipient)}`;
+  };
+
+  const formatTextAmount = (tokenAddress: string, amount: string) => {
+    const data = getTokenValues(tokenAddress, amount);
+    return `${data.amount} ${data.symbol || truncateAddress(tokenAddress, 2)}`;
+  };
+
   return (
     <SCard variant='outlined'>
       <SectionHeader>
@@ -114,59 +103,85 @@ export const Activity = () => {
           <STable aria-label='simple table'>
             <TableHead>
               <TableRow>
-                <SColumnTitle>Activity</SColumnTitle>
-                <SColumnTitle align='left'>Tx Hash</SColumnTitle>
-                <SColumnTitle align='left'>Token</SColumnTitle>
-                <SColumnTitle align='left'>Amount</SColumnTitle>
+                <SColumnTitle>Hash</SColumnTitle>
+                <SColumnTitle align='left'>Jobs</SColumnTitle>
+                <SColumnTitle align='left'>Relay</SColumnTitle>
+                <SColumnTitle align='left'>Caller</SColumnTitle>
+                <SColumnTitle align='left'>Payment</SColumnTitle>
                 <SColumnTitle align='left'>Date & Time</SColumnTitle>
-                <SColumnTitle align='left'></SColumnTitle>
+
+                {/* temporary commented */}
+                {/* <SColumnTitle align='left'></SColumnTitle> */}
               </TableRow>
             </TableHead>
 
             <TableBody>
               {events.slice(paging.from, paging.to).map((row, index) => (
                 <STableRow key={row.hash + index}>
-                  {/* Activity*/}
-                  <ActivityRowText component='th' scope='row'>
-                    <Text>{row.activity}</Text>
-                  </ActivityRowText>
-
-                  {/* Tx Hash */}
+                  {/* Hash */}
                   <HashRow align='left'>
                     <STooltip text={row.hash} address>
                       <Text onClick={() => handleOpenTx(currentNetwork.scanner, row.hash)}>
-                        {truncateAddress(row.hash)}
+                        {truncateAddress(row.hash, 2)}
                       </Text>
                     </STooltip>
                   </HashRow>
 
-                  {/* Token */}
-                  <SymbolRow align='left' onClick={() => copyData(row?.tokenAddress)}>
-                    <STooltip text={row?.tokenAddress} address>
-                      <Text>
-                        {getTokenValues(row?.tokenAddress, row?.amount).symbol || truncateAddress(row?.tokenAddress, 2)}
-                      </Text>
-                    </STooltip>
+                  {/* Job */}
+                  <SymbolRow align='left'>
+                    {row.jobs.map((job, index) => (
+                      <STooltip key={job.job + index} text={job.job} address>
+                        <Text onClick={() => handleOpenAddress(currentNetwork.scanner, job.job)}>
+                          {aliasData[job.job] || truncateAddress(job.job, 2)}
+                        </Text>
+                      </STooltip>
+                    ))}
                   </SymbolRow>
 
-                  {/* Amount */}
-                  <AmountRow align='left' onClick={() => copyData(row?.amount)}>
-                    <STooltip text={getTokenValues(row?.tokenAddress, row?.amount).usdValue}>
-                      <Text>{getTokenValues(row?.tokenAddress, row?.amount).amount}</Text>
+                  {/* Relay */}
+                  <HashRow align='left'>
+                    <STooltip text={row.jobs[0].relay} address>
+                      <Text onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relay)}>
+                        {truncateAddress(row.jobs[0].relay, 2)}
+                      </Text>
                     </STooltip>
+                  </HashRow>
+
+                  {/* Caller */}
+                  <HashRow align='left'>
+                    <STooltip text={row.jobs[0].relayCaller} address>
+                      <Text onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relayCaller)}>
+                        {truncateAddress(row.jobs[0].relayCaller, 2)}
+                      </Text>
+                    </STooltip>
+                  </HashRow>
+
+                  {/* Amount */}
+                  <AmountRow align='left'>
+                    {row.payments.map((feeData, index) => (
+                      <STooltip
+                        key={feeData.feeToken + index}
+                        text={formatAmountTooltip(feeData.feeToken, feeData.feeAmount, feeData.feeRecipient)}
+                      >
+                        <AmountText>{formatTextAmount(feeData.feeToken, feeData.feeAmount)}</AmountText>
+                      </STooltip>
+                    ))}
+
+                    {!row.payments.length && <Text>-</Text>}
                   </AmountRow>
 
                   {/* Date & Time */}
                   <DateRowText align='left'>
-                    <Text>{formatTimestamp(row.date)}</Text>
+                    <Text>{row.date}</Text>
                   </DateRowText>
 
+                  {/* temproary commented */}
                   {/* External link button */}
-                  <RowText align='left'>
+                  {/* <RowText align='left'>
                     <SIconContainer onClick={() => handleOpenTx(currentNetwork.scanner, row.hash)}>
                       <Icon name='external-link' color={currentTheme.textDisabled} size='1.6rem' />
                     </SIconContainer>
-                  </RowText>
+                  </RowText> */}
                 </STableRow>
               ))}
             </TableBody>
@@ -189,12 +204,12 @@ export const Activity = () => {
 };
 
 const SColumnTitle = styled(ColumnTitle)({
-  padding: '1.6rem 1.8rem',
+  padding: '1.2rem 1.4rem',
 });
 
 const SRowText = styled(RowText)(() => {
   return {
-    padding: '1.6rem 1.8rem',
+    padding: '1.2rem 1.4rem',
     minWidth: '10rem',
   };
 });
@@ -204,6 +219,7 @@ const HashRow = styled(SRowText)(() => {
   return {
     color: currentTheme.infoChipColor,
     cursor: 'pointer',
+    minWidth: '12rem',
   };
 });
 
@@ -216,6 +232,7 @@ const SymbolRow = styled(SRowText)(() => {
 const AmountRow = styled(SRowText)(() => {
   return {
     cursor: 'pointer',
+    minWidth: '12rem',
   };
 });
 
@@ -232,8 +249,15 @@ const DateRowText = styled(ActivityRowText)(() => {
   };
 });
 
-const SIconContainer = styled(IconContainer)(() => {
+const AmountText = styled(Text)(() => {
   return {
-    cursor: 'pointer',
+    fontSize: '1.3rem',
   };
 });
+
+// temporary commented
+// const SIconContainer = styled(IconContainer)(() => {
+//   return {
+//     cursor: 'pointer',
+//   };
+// });

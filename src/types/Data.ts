@@ -44,11 +44,24 @@ export interface TokenData {
 }
 
 export interface EventData {
-  activity: string;
   hash: Hex;
+  blockNumber: bigint;
   date: string;
-  tokenAddress?: string;
-  amount?: string;
+  jobs: JobEventData[];
+  payments: PaymentData[];
+}
+
+export interface JobEventData {
+  job: string;
+  jobData: string;
+  relay: string;
+  relayCaller: string;
+}
+
+export interface PaymentData {
+  feeToken: string;
+  feeRecipient: string;
+  feeAmount: string;
 }
 
 export interface AliasData {
