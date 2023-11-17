@@ -2,7 +2,7 @@ import { Address, Hex, formatUnits, parseUnits } from 'viem';
 import { PublicClient } from 'wagmi';
 
 import { vaultABI } from '~/generated';
-import { AliasData, TokenData } from '~/types';
+import { AliasData, EventData, TokenData } from '~/types';
 
 export const truncateAddress = (address?: string, chars = 4) => {
   if (!address) return '-';
@@ -78,8 +78,12 @@ export const saveLocalStorage = (key: string, data: AliasData) => {
   localStorage.setItem(key, stringifiedData);
 };
 
-export const handleOpenTx = (scanner: string, hash: Hex) => {
+export const handleOpenTx = (scanner: string, hash: Hex | string) => {
   window.open(`${scanner}/tx/${hash}`, '_blank');
+};
+
+export const handleOpenAddress = (scanner: string, address: Hex | string) => {
+  window.open(`${scanner}/address/${address}`, '_blank');
 };
 
 export const formatTimestamp = (timestamp: string): string => {
@@ -100,10 +104,67 @@ export const getTimestamp = async (publicClient: PublicClient, blockNumber: bigi
   return blockData.timestamp.toString();
 };
 
-export const getVaultEvents = async (publicClient: PublicClient, fromBlock: bigint = 0n, vaultAddress?: Address) => {
-  return await publicClient.getContractEvents({
+export const getVaultEvents = async (
+  publicClient: PublicClient,
+  fromBlock: bigint = 0n,
+  vaultAddress?: Address,
+): Promise<EventData[]> => {
+  const jobs = await publicClient.getContractEvents({
     address: vaultAddress,
     abi: vaultABI,
     fromBlock: fromBlock,
+    eventName: 'JobExecuted',
   });
+
+  const payments = await publicClient.getContractEvents({
+    address: vaultAddress,
+    abi: vaultABI,
+    fromBlock: fromBlock,
+    eventName: 'IssuePayment',
+  });
+
+  const formattedDataPromise = jobs.map(async (job) => {
+    const timestamp = await getTimestamp(publicClient, job.blockNumber);
+    const payment = payments.filter((payment) => payment.transactionHash === job.transactionHash);
+    const otherJobs = jobs.filter((j) => j.transactionHash === job.transactionHash);
+
+    const formattedPayments = payment.map((payment) => {
+      return {
+        feeToken: payment.args._feeToken?.toString() || '',
+        feeRecipient: payment.args._feeRecipient?.toString() || '',
+        feeAmount: payment.args._fee?.toString() || '',
+      };
+    });
+
+    const formattedJobs = otherJobs.map((job) => {
+      return {
+        job: job.args._job?.toString() || '',
+        jobData: job.args._jobData?.toString() || '',
+        relay: job.args._relay?.toString() || '',
+        relayCaller: job.args._relayCaller?.toString() || '',
+      };
+    });
+
+    return {
+      hash: job.transactionHash,
+      blockNumber: job.blockNumber,
+      jobs: formattedJobs,
+      payments: formattedPayments,
+      date: formatTimestamp(timestamp),
+    };
+  });
+
+  const formattedData = await Promise.all(formattedDataPromise);
+
+  const uniqueEvents: EventData[] = [];
+  const uniqueHashes: string[] = [];
+
+  formattedData.forEach((event) => {
+    if (!uniqueHashes.includes(event.hash)) {
+      uniqueEvents.push(event);
+      uniqueHashes.push(event.hash);
+    }
+  });
+
+  return uniqueEvents;
 };
