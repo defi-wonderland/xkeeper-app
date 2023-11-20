@@ -139,13 +139,13 @@ export const Activity = () => {
                   </SymbolRow>
 
                   {/* Relay */}
-                  <HashRow align='left'>
+                  <SymbolRow align='left'>
                     <STooltip text={row.jobs[0].relay} address>
                       <SText onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relay)}>
                         {aliasData[row.jobs[0].relay] || truncateAddress(row.jobs[0].relay, 2)}
                       </SText>
                     </STooltip>
-                  </HashRow>
+                  </SymbolRow>
 
                   {/* Caller */}
                   <HashRow align='left'>
