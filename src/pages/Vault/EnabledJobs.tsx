@@ -4,7 +4,7 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
 import { AddressContainer, NoDataContainer, RowButton, SText } from './EnabledRelays';
 import { ActiveButton, OptionsMenu, IconContainer, STooltip, Icon, StyledText } from '~/components';
-import { copyData, truncateAddress } from '~/utils';
+import { aliasKey, copyData, saveLocalStorage, truncateAddress } from '~/utils';
 import { Items, ModalType, OptionsType, SelectedItem } from '~/types';
 import { useStateContext } from '~/hooks';
 
@@ -13,15 +13,26 @@ function createJobsData(alias: string, contractAddress: string, functionSignatur
 }
 
 export const EnabledJobs = () => {
-  const { userAddress, setSelectedItem, setModalOpen, selectedVault, currentTheme, aliasData } = useStateContext();
+  const { userAddress, setSelectedItem, setModalOpen, selectedVault, currentTheme, aliasData, updateAliasData } =
+    useStateContext();
   const [items, setItems] = useState<Items[]>([{ value: '', itemCopied: false }]);
 
   const selectedJobs = useMemo(() => selectedVault?.jobs || {}, [selectedVault?.jobs]);
 
-  const jobs = useMemo(
-    () => Object.keys(selectedJobs).map((key, index) => createJobsData(`Job ${index + 1}`, key, selectedJobs[key])),
-    [selectedJobs],
-  );
+  const jobs = useMemo(() => {
+    return Object.keys(selectedJobs).map((key, index) => {
+      const customAlias = `Job ${index + 1}`;
+
+      // If the job doesn't have an alias, add a customAlias
+      if (!aliasData[key]) {
+        const newAliasData = { ...aliasData, [key]: customAlias };
+        saveLocalStorage(aliasKey, newAliasData);
+        updateAliasData();
+      }
+
+      return createJobsData(customAlias, key, selectedJobs[key]);
+    });
+  }, [aliasData, selectedJobs, updateAliasData]);
 
   useEffect(() => {
     if (jobs.length > 0) setItems(jobs?.map((jobs) => ({ value: jobs.contractAddress, itemCopied: false })));
