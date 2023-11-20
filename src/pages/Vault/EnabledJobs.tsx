@@ -19,20 +19,22 @@ export const EnabledJobs = () => {
 
   const selectedJobs = useMemo(() => selectedVault?.jobs || {}, [selectedVault?.jobs]);
 
-  const jobs = useMemo(() => {
-    return Object.keys(selectedJobs).map((key, index) => {
-      const customAlias = `Job ${index + 1}`;
+  const jobs = useMemo(
+    () =>
+      Object.keys(selectedJobs).map((key, index) => {
+        const customAlias = `Job ${index + 1}`;
 
-      // If the job doesn't have an alias, add a customAlias
-      if (!aliasData[key]) {
-        const newAliasData = { ...aliasData, [key]: customAlias };
-        saveLocalStorage(aliasKey, newAliasData);
-        updateAliasData();
-      }
+        // If the job doesn't have an alias, add a customAlias
+        if (!aliasData[key]) {
+          const newAliasData = { ...aliasData, [key]: customAlias };
+          saveLocalStorage(aliasKey, newAliasData);
+          updateAliasData();
+        }
 
-      return createJobsData(customAlias, key, selectedJobs[key]);
-    });
-  }, [aliasData, selectedJobs, updateAliasData]);
+        return createJobsData(customAlias, key, selectedJobs[key]);
+      }),
+    [aliasData, selectedJobs, updateAliasData],
+  );
 
   useEffect(() => {
     if (jobs.length > 0) setItems(jobs?.map((jobs) => ({ value: jobs.contractAddress, itemCopied: false })));
@@ -150,4 +152,8 @@ export const Text = styled('p')({
   display: 'block',
   margin: '0.2rem 0',
   width: 'fit-content',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '20rem',
 });
