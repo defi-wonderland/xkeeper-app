@@ -4,7 +4,7 @@ import { Address } from 'viem';
 
 import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon, StyledText } from '~/components';
-import { copyData, getRelayName, truncateAddress } from '~/utils';
+import { aliasKey, copyData, getRelayName, saveLocalStorage, truncateAddress } from '~/utils';
 import { ModalType, OptionsType, SelectedItem } from '~/types';
 import { useStateContext } from '~/hooks';
 import { Text } from './EnabledJobs';
@@ -14,13 +14,26 @@ function createRelaysData(alias: string, contractAddress: string, enabledCallers
 }
 
 export const EnabledRelays = () => {
-  const { setModalOpen, setSelectedItem, userAddress, selectedVault, currentTheme, aliasData } = useStateContext();
+  const { setModalOpen, setSelectedItem, updateAliasData, userAddress, selectedVault, currentTheme, aliasData } =
+    useStateContext();
   const [items, setItems] = useState<{ [key: string]: boolean }>({});
   const selectedRelays = useMemo(() => selectedVault?.relays || {}, [selectedVault]);
 
   const relays = useMemo(
-    () => Object.keys(selectedRelays).map((key) => createRelaysData(getRelayName(key), key, selectedRelays[key])),
-    [selectedRelays],
+    () =>
+      Object.keys(selectedRelays).map((key) => {
+        const customAlias = getRelayName(key);
+
+        // If the relay doesn't have an alias, add a customAlias
+        if (!aliasData[key]) {
+          const newAliasData = { ...aliasData, [key]: customAlias };
+          saveLocalStorage(aliasKey, newAliasData);
+          updateAliasData();
+        }
+
+        return createRelaysData(getRelayName(key), key, selectedRelays[key]);
+      }),
+    [aliasData, selectedRelays, updateAliasData],
   );
 
   const flattenRelays = useMemo(() => {

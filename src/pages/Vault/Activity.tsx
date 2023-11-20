@@ -121,9 +121,9 @@ export const Activity = () => {
                   {/* Hash */}
                   <HashRow align='left'>
                     <STooltip text={row.hash} address>
-                      <Text onClick={() => handleOpenTx(currentNetwork.scanner, row.hash)}>
+                      <SText onClick={() => handleOpenTx(currentNetwork.scanner, row.hash)}>
                         {truncateAddress(row.hash, 2)}
-                      </Text>
+                      </SText>
                     </STooltip>
                   </HashRow>
 
@@ -131,28 +131,28 @@ export const Activity = () => {
                   <SymbolRow align='left'>
                     {row.jobs.map((job, index) => (
                       <STooltip key={job.job + index} text={job.job} address>
-                        <Text onClick={() => handleOpenAddress(currentNetwork.scanner, job.job)}>
+                        <SText onClick={() => handleOpenAddress(currentNetwork.scanner, job.job)}>
                           {aliasData[job.job] || truncateAddress(job.job, 2)}
-                        </Text>
+                        </SText>
                       </STooltip>
                     ))}
                   </SymbolRow>
 
                   {/* Relay */}
-                  <HashRow align='left'>
+                  <SymbolRow align='left'>
                     <STooltip text={row.jobs[0].relay} address>
-                      <Text onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relay)}>
-                        {truncateAddress(row.jobs[0].relay, 2)}
-                      </Text>
+                      <SText onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relay)}>
+                        {aliasData[row.jobs[0].relay] || truncateAddress(row.jobs[0].relay, 2)}
+                      </SText>
                     </STooltip>
-                  </HashRow>
+                  </SymbolRow>
 
                   {/* Caller */}
                   <HashRow align='left'>
                     <STooltip text={row.jobs[0].relayCaller} address>
-                      <Text onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relayCaller)}>
+                      <SText onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relayCaller)}>
                         {truncateAddress(row.jobs[0].relayCaller, 2)}
-                      </Text>
+                      </SText>
                     </STooltip>
                   </HashRow>
 
@@ -167,12 +167,12 @@ export const Activity = () => {
                       </STooltip>
                     ))}
 
-                    {!row.payments.length && <Text>-</Text>}
+                    {!row.payments.length && <SText>-</SText>}
                   </AmountRow>
 
                   {/* Date & Time */}
                   <DateRowText align='left'>
-                    <Text>{row.date}</Text>
+                    <SText>{row.date}</SText>
                   </DateRowText>
 
                   {/* temproary commented */}
@@ -202,6 +202,10 @@ export const Activity = () => {
     </SCard>
   );
 };
+
+const SText = styled(Text)({
+  maxWidth: '12rem',
+});
 
 const SColumnTitle = styled(ColumnTitle)({
   padding: '1.2rem 1.4rem',
