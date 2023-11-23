@@ -1,3 +1,4 @@
+export * from './AddMetadata';
 export * from './Deposit';
 export * from './EditAlias';
 export * from './Job';

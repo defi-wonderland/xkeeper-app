@@ -108,11 +108,11 @@ export const StateProvider = ({ children }: StateProps) => {
     const vaultsCall = getVaults(publicClient, addresses.AutomationVaultFactory);
 
     const [vaults, prices] = await Promise.all([vaultsCall, pricesCall]);
-    const vaultsData = await getVaultsData(publicClient, vaults, tokens, prices);
+    const vaultsData = await getVaultsData(publicClient, vaults, tokens, prices, addresses.xKeeperMetadata);
 
     setVaults(vaultsData);
     setLoading(false);
-  }, [DEFAULT_WETH_ADDRESS, address, addresses.AutomationVaultFactory, currentNetwork?.id]);
+  }, [DEFAULT_WETH_ADDRESS, address, addresses.AutomationVaultFactory, addresses.xKeeperMetadata, currentNetwork.id]);
 
   // Update current network when chain changes
   useEffect(() => {

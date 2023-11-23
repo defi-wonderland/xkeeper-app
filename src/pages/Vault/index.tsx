@@ -6,6 +6,7 @@ import { useNetwork } from 'wagmi';
 import { Address } from 'viem';
 
 import {
+  RevokeButton,
   AddressChip,
   BackToTop,
   BasicTabs,
@@ -15,6 +16,7 @@ import {
   InfoChip,
   MadeByWonderland,
   STooltip,
+  StyledText,
 } from '~/components';
 import { getCustomClient, getPrices, getTokenList, getVaultsData } from '~/utils';
 import { useStateContext } from '~/hooks';
@@ -37,7 +39,11 @@ export const Vault = () => {
     setSelectedVault,
     setSelectedItem,
   } = useStateContext();
-  const { DEFAULT_WETH_ADDRESS } = getConfig();
+  const {
+    DEFAULT_WETH_ADDRESS,
+    addresses: { xKeeperMetadata },
+  } = getConfig();
+
   const { address } = useParams();
   const { chain } = useNetwork();
 
@@ -80,7 +86,7 @@ export const Vault = () => {
       const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain;
 
       const prices = await getPrices(chainName, tokenAddressList);
-      const vaultData = await getVaultsData(publicClient, [address as Address], tokens, prices);
+      const vaultData = await getVaultsData(publicClient, [address as Address], tokens, prices, xKeeperMetadata);
 
       setLoading(false);
       setSelectedVault(vaultData[0]);
@@ -88,11 +94,15 @@ export const Vault = () => {
       setLoading(false);
       console.error(`Error loading vault ${address}:`, error);
     }
-  }, [DEFAULT_WETH_ADDRESS, address, chain?.id, currentNetwork.id, setSelectedVault, userAddress]);
+  }, [DEFAULT_WETH_ADDRESS, address, chain?.id, currentNetwork.id, setSelectedVault, userAddress, xKeeperMetadata]);
 
   const handleEditAlias = () => {
     setSelectedItem({ type: 'vault', address: selectedVault?.address || '0x', params: [] });
     setModalOpen(ModalType.EDIT_ALIAS);
+  };
+
+  const handleOpenAddMetadata = () => {
+    setModalOpen(ModalType.ADD_METADATA);
   };
 
   useEffect(() => {
@@ -147,6 +157,29 @@ export const Vault = () => {
               <InfoChip>{chainName}</InfoChip>
             </DataContainer>
           </DataSection>
+
+          <DescriptionContainer>
+            {/* Vault Description */}
+            {selectedVault?.description && (
+              <Description>
+                {selectedVault.description + selectedVault.description + selectedVault.description}
+              </Description>
+            )}
+
+            {!selectedVault?.description && (
+              <>
+                <DescriptionChip>
+                  <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.error} />
+                  No description found
+                  {selectedVault?.owner === userAddress && (
+                    <DescriptionButton disabled={selectedVault?.owner !== userAddress} onClick={handleOpenAddMetadata}>
+                      Add Description
+                    </DescriptionButton>
+                  )}
+                </DescriptionChip>
+              </>
+            )}
+          </DescriptionContainer>
         </Header>
 
         <BasicTabs sections={sections} isLoading={isLoading} />
@@ -243,5 +276,55 @@ const SInfoChip = styled(Box)(() => {
     padding: '0.6rem 0.6rem 0.5rem 0.6rem',
     lineHeight: '2rem',
     width: 'fit-content',
+  };
+});
+
+const DescriptionContainer = styled('div')({
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  flexDirection: 'row',
+  paddingTop: '0.8rem',
+});
+
+export const Description = styled(StyledText)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    color: currentTheme.textSecondary,
+    fontSize: '1.6rem',
+  };
+});
+
+const DescriptionChip = styled(Box)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    color: currentTheme.error,
+    border: `1px solid ${currentTheme.error}`,
+    backgroundColor: 'inherit',
+    borderRadius: currentTheme.borderRadius,
+    fontSize: '1.6rem',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.8rem',
+    fontWeight: '500',
+    height: 'auto',
+    padding: '1rem',
+    paddingLeft: '1.6rem',
+    lineHeight: '2rem',
+    width: '100%',
+    minHeight: '6.65rem',
+  };
+});
+
+const DescriptionButton = styled(RevokeButton)(() => {
+  const { currentTheme } = useStateContext();
+
+  return {
+    marginLeft: 'auto',
+    '&:disabled': {
+      opacity: 0.6,
+      color: currentTheme.actionButtonColor,
+    },
   };
 });

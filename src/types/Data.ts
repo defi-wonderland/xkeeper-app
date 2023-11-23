@@ -16,6 +16,7 @@ export interface VaultData {
   tokens: TokenData[];
   totalValue: string;
   events?: EventData[];
+  description?: string;
 }
 
 export interface RelayData {

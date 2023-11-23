@@ -1,4 +1,5 @@
 export enum ModalType {
+  ADD_METADATA = 'ADD_METADATA',
   EDIT_ALIAS = 'EDIT_ALIAS',
   REVOQUE = 'REVOQUE',
   WITHDRAW = 'WITHDRAW',

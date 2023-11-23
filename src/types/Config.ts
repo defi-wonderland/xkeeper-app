@@ -18,6 +18,7 @@ export interface Constants {
 
 export interface Addresses {
   AutomationVaultFactory: Address;
+  xKeeperMetadata: Address;
   relays: {
     GelatoRelay: Address;
     OpenRelay: Address;
