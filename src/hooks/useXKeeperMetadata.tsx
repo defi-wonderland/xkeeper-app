@@ -12,7 +12,7 @@ import { ModalType } from '~/types';
 interface SendTransactionProps {
   contractAddress?: string;
   functionName: 'setAutomationVaultMetadata';
-  args: string;
+  args: string[];
   notificationTitle?: string;
   notificationMessage?: string | JSX.Element;
   showReceipt?: boolean;

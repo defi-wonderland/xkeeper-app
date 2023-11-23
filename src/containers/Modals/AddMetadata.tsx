@@ -2,22 +2,31 @@ import { useState } from 'react';
 import { Box, styled } from '@mui/material';
 
 import { TitleContainer, ButtonsContainer } from '~/containers';
-import { ActiveButton, CancelButton, StyledTitle, StyledInput, CloseButton, BaseModal, Icon } from '~/components';
+import {
+  ActiveButton,
+  CancelButton,
+  StyledTitle,
+  StyledInput,
+  CloseButton,
+  BaseModal,
+  Icon,
+  StyledText,
+} from '~/components';
 import { useStateContext, useXKeeperMetadata } from '~/hooks';
 import { ModalType } from '~/types';
 import { getConfig } from '~/config';
 
 export const AddMetadataModal = () => {
+  const { addresses } = getConfig();
   const { setModalOpen, modalOpen, currentTheme, loading } = useStateContext();
+
+  const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const {
-    addresses: { xKeeperMetadata },
-  } = getConfig();
 
   const { handleSendTransaction, writeAsync } = useXKeeperMetadata({
-    contractAddress: xKeeperMetadata,
+    contractAddress: addresses.xKeeperMetadata,
     functionName: 'setAutomationVaultMetadata',
-    args: description,
+    args: [name, description],
     notificationTitle: 'Metadata successfully added',
     showReceipt: true,
   });
@@ -38,7 +47,11 @@ export const AddMetadataModal = () => {
               <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
             </CloseButton>
           </TitleContainer>
+
+          <Text>Define your vault metadata for keepers to better understand your jobs</Text>
         </SBox>
+
+        <StyledInput label='Name' value={name} setValue={setName} placeholder='Vault name' />
 
         <InputContainer>
           <StyledInput
@@ -46,7 +59,6 @@ export const AddMetadataModal = () => {
             value={description}
             setValue={setDescription}
             placeholder={`Short description and key urls`}
-            onKeyUp={handleConfirm}
           />
         </InputContainer>
 
@@ -55,7 +67,11 @@ export const AddMetadataModal = () => {
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained' disabled={!writeAsync || loading || !description} onClick={handleConfirm}>
+          <ActiveButton
+            variant='contained'
+            disabled={!writeAsync || loading || !description || !name}
+            onClick={handleConfirm}
+          >
             Confirm
           </ActiveButton>
         </ButtonsContainer>
@@ -77,6 +93,11 @@ const SBox = styled(Box)({
 });
 
 const InputContainer = styled(Box)({
-  marginTop: '2.4rem',
   marginBottom: '4rem',
+});
+
+const Text = styled(StyledText)({
+  span: {
+    textTransform: 'none',
+  },
 });

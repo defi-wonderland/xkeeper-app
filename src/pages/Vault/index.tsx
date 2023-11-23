@@ -167,17 +167,15 @@ export const Vault = () => {
             )}
 
             {!selectedVault?.description && (
-              <>
-                <DescriptionChip>
-                  <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.error} />
-                  No description found
-                  {selectedVault?.owner === userAddress && (
-                    <DescriptionButton disabled={selectedVault?.owner !== userAddress} onClick={handleOpenAddMetadata}>
-                      Add Description
-                    </DescriptionButton>
-                  )}
-                </DescriptionChip>
-              </>
+              <DescriptionChip>
+                <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.warningChipColor} />
+                Define your vault metadata for keepers to better understand your jobs
+                {selectedVault?.owner === userAddress && (
+                  <DescriptionButton disabled={selectedVault?.owner !== userAddress} onClick={handleOpenAddMetadata}>
+                    Add Metadata
+                  </DescriptionButton>
+                )}
+              </DescriptionChip>
             )}
           </DescriptionContainer>
         </Header>
@@ -297,11 +295,11 @@ export const Description = styled(StyledText)(() => {
 });
 
 const DescriptionChip = styled(Box)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme, theme } = useStateContext();
+  const border = theme === 'light' ? `1px solid ${currentTheme.warningChipColor}` : undefined;
   return {
-    color: currentTheme.error,
-    border: `1px solid ${currentTheme.error}`,
-    backgroundColor: 'inherit',
+    color: currentTheme.warningChipColor,
+    backgroundColor: currentTheme.warningChipBackground,
     borderRadius: currentTheme.borderRadius,
     fontSize: '1.6rem',
     display: 'flex',
@@ -314,6 +312,7 @@ const DescriptionChip = styled(Box)(() => {
     lineHeight: '2rem',
     width: '100%',
     minHeight: '6.65rem',
+    border,
   };
 });
 
@@ -322,6 +321,13 @@ const DescriptionButton = styled(RevokeButton)(() => {
 
   return {
     marginLeft: 'auto',
+    color: currentTheme.warningChipColor,
+    backgroundColor: currentTheme.warningChipBackground,
+    border: `1px solid ${currentTheme.warningChipColor}`,
+    '&:hover': {
+      backgroundColor: currentTheme.warningChipColor,
+      color: currentTheme.warningChipBackground,
+    },
     '&:disabled': {
       opacity: 0.6,
       color: currentTheme.actionButtonColor,
