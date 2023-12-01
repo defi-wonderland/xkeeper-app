@@ -52,4 +52,10 @@ export interface Notification {
   error?: boolean;
 }
 
+export enum Status {
+  LOADING = 'LOADING',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
+}
+
 export interface Config extends Env, Constants {}

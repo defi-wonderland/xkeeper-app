@@ -1,9 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNetwork } from 'wagmi';
-import { Address } from 'viem';
 
 import {
   RevokeButton,
@@ -18,36 +14,17 @@ import {
   STooltip,
   StyledText,
 } from '~/components';
-import { getCustomClient, getPrices, getTokenList, getVaultsData } from '~/utils';
-import { useStateContext } from '~/hooks';
+import { useFetchSelectedVault, useStateContext } from '~/hooks';
 import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
-import { ModalType } from '~/types';
-import { getConfig } from '~/config';
+import { ModalType, Status } from '~/types';
 
 export const Vault = () => {
-  const {
-    userAddress,
-    currentTheme,
-    selectedVault,
-    currentNetwork,
-    notification,
-    aliasData,
-    setModalOpen,
-    setSelectedVault,
-    setSelectedItem,
-  } = useStateContext();
-  const {
-    DEFAULT_WETH_ADDRESS,
-    addresses: { xKeeperMetadata },
-  } = getConfig();
+  const { userAddress, currentTheme, currentNetwork, aliasData, setModalOpen, setSelectedItem } = useStateContext();
 
-  const { address } = useParams();
-  const { chain } = useNetwork();
-
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const { requestStatus, data: selectedVault } = useFetchSelectedVault();
 
   const chainName = currentNetwork.displayName;
   const vaultAddress = selectedVault?.address || '';
@@ -66,35 +43,9 @@ export const Vault = () => {
     },
     {
       title: 'Activity',
-      items: (
-        <>
-          <Activity />
-        </>
-      ),
+      items: <Activity />,
     },
   ];
-
-  const loadSelectedVault = useCallback(async () => {
-    setLoading(true);
-    try {
-      const publicClient = getCustomClient(currentNetwork.id, userAddress);
-      const tokens = getTokenList(chain?.id);
-      const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
-
-      const currentChain = publicClient.chain.name.toLocaleLowerCase();
-      // Load tokens from mainnet when on goerli
-      const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain;
-
-      const prices = await getPrices(chainName, tokenAddressList);
-      const vaultData = await getVaultsData(publicClient, [address as Address], tokens, prices, xKeeperMetadata);
-
-      setLoading(false);
-      setSelectedVault(vaultData[0]);
-    } catch (error) {
-      setLoading(false);
-      console.error(`Error loading vault ${address}:`, error);
-    }
-  }, [DEFAULT_WETH_ADDRESS, address, chain?.id, currentNetwork.id, setSelectedVault, userAddress, xKeeperMetadata]);
 
   const handleEditAlias = () => {
     setSelectedItem({ type: 'vault', address: selectedVault?.address || '0x', params: [] });
@@ -104,18 +55,6 @@ export const Vault = () => {
   const handleOpenAddMetadata = () => {
     setModalOpen(ModalType.ADD_METADATA);
   };
-
-  useEffect(() => {
-    if (!selectedVault?.address) {
-      loadSelectedVault();
-    }
-  }, [loadSelectedVault, selectedVault?.address]);
-
-  useEffect(() => {
-    if (notification.open) {
-      loadSelectedVault();
-    }
-  }, [loadSelectedVault, notification.open]);
 
   return (
     <PageContainer>
@@ -180,7 +119,7 @@ export const Vault = () => {
           </DescriptionContainer>
         </Header>
 
-        <BasicTabs sections={sections} isLoading={isLoading} />
+        <BasicTabs sections={sections} isLoading={requestStatus === Status.LOADING} />
       </VaultContainer>
 
       {/* Back To Top Button */}
