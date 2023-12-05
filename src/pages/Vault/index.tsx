@@ -16,8 +16,8 @@ import {
   MadeByWonderland,
   STooltip,
 } from '~/components';
-import { getCustomClient, getPrices, getTokenList, getVaultsData } from '~/utils';
-import { useStateContext } from '~/hooks';
+import { getPrices, getTokenList, getVaultsData } from '~/utils';
+import { useStateContext, useCustomClient } from '~/hooks';
 import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
@@ -27,7 +27,6 @@ import { getConfig } from '~/config';
 
 export const Vault = () => {
   const {
-    userAddress,
     currentTheme,
     selectedVault,
     currentNetwork,
@@ -46,6 +45,8 @@ export const Vault = () => {
   const chainName = currentNetwork.displayName;
   const vaultAddress = selectedVault?.address || '';
   const version = 'V1.0.0';
+
+  const { publicClient } = useCustomClient();
 
   const sections = [
     {
@@ -71,7 +72,6 @@ export const Vault = () => {
   const loadSelectedVault = useCallback(async () => {
     setLoading(true);
     try {
-      const publicClient = getCustomClient(currentNetwork.id, userAddress);
       const tokens = getTokenList(chain?.id);
       const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
 
@@ -88,7 +88,7 @@ export const Vault = () => {
       setLoading(false);
       console.error(`Error loading vault ${address}:`, error);
     }
-  }, [DEFAULT_WETH_ADDRESS, address, chain?.id, currentNetwork.id, setSelectedVault, userAddress]);
+  }, [DEFAULT_WETH_ADDRESS, address, chain?.id, publicClient, setSelectedVault]);
 
   const handleEditAlias = () => {
     setSelectedItem({ type: 'vault', address: selectedVault?.address || '0x', params: [] });

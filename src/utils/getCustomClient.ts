@@ -11,7 +11,7 @@ export const getAlchemyProvider = (chainId: number) => {
   return `${apiUrl}/${ALCHEMY_KEY}`;
 };
 
-export const getCustomClient = (chainId: number, address?: string) => {
+export const getCustomClient = (chainId: number, address?: string, testMode?: boolean) => {
   const alchemy = http(getAlchemyProvider(chainId), { batch: true });
   const customTransport = custom(window.ethereum!);
 
@@ -24,7 +24,7 @@ export const getCustomClient = (chainId: number, address?: string) => {
   const publicClient: PublicClient = createPublicClient({
     batch: { multicall: true },
     chain: selectedChain,
-    transport: transportFallback,
+    transport: testMode ? http('http://127.0.0.1:8545') : transportFallback,
   });
 
   return publicClient;

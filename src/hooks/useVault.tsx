@@ -1,8 +1,9 @@
-import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
+import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { TransactionExecutionError } from 'viem';
 
 import { useStateContext } from './useStateContext';
+import { useCustomClient } from './useCustomClient';
 import { getViewTransaction } from '~/utils';
 import { vaultABI } from '~/generated';
 import { ModalType } from '~/types';
@@ -40,7 +41,7 @@ export const useVault = ({
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
   const { currentNetwork, setLoading, setModalOpen, setNotification } = useStateContext();
-  const publicClient = usePublicClient();
+  const { publicClient } = useCustomClient();
 
   const { config } = usePrepareContractWrite({
     address: contractAddress as Address,

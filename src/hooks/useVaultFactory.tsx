@@ -1,9 +1,10 @@
-import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
+import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { useNavigate } from 'react-router-dom';
 import { TransactionExecutionError } from 'viem';
 
 import { useStateContext } from './useStateContext';
+import { useCustomClient } from './useCustomClient';
 import { vaultFactoryABI } from '~/generated';
 import { getViewTransaction } from '~/utils';
 import { getConfig } from '~/config';
@@ -22,7 +23,7 @@ export const useVaultFactory = ({
 } => {
   const { setLoading, setNotification, currentNetwork } = useStateContext();
   const { addresses } = getConfig();
-  const publicClient = usePublicClient();
+  const { publicClient } = useCustomClient();
   const navigate = useNavigate();
 
   const { config } = usePrepareContractWrite({

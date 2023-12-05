@@ -4,12 +4,11 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 import { SectionHeader, Title, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { STooltip, StyledText, SPagination } from '~/components';
 import { NoDataContainer } from './EnabledRelays';
-import { useStateContext } from '~/hooks';
+import { useStateContext, useCustomClient } from '~/hooks';
 import { Text } from './EnabledJobs';
 import { EventData } from '~/types';
 import {
   formatDataNumber,
-  getCustomClient,
   getUsdBalance,
   getVaultEvents,
   handleOpenAddress,
@@ -19,8 +18,9 @@ import {
 } from '~/utils';
 
 export const Activity = () => {
-  const { currentNetwork, selectedVault, vaults, userAddress, aliasData, setVaults, setSelectedVault } =
-    useStateContext();
+  const { currentNetwork, selectedVault, vaults, aliasData, setVaults, setSelectedVault } = useStateContext();
+  const { publicClient } = useCustomClient();
+
   const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -47,7 +47,6 @@ export const Activity = () => {
     if (selectedVault?.events?.length) return;
     try {
       setIsLoaded(false);
-      const publicClient = getCustomClient(currentNetwork.id, userAddress);
       const events = await getVaultEvents(publicClient, 0n, selectedVault?.address);
 
       setEvents(events.reverse()); // Reverse to show latest events first
@@ -57,7 +56,7 @@ export const Activity = () => {
       console.error('Error loading activity:', error);
       setIsError(true);
     }
-  }, [currentNetwork.id, selectedVault?.address, selectedVault?.events?.length, userAddress]);
+  }, [publicClient, selectedVault?.address, selectedVault?.events?.length]);
 
   useEffect(() => {
     getEvents();
