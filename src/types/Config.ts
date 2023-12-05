@@ -20,6 +20,7 @@ export interface Constants {
 
 export interface Addresses {
   AutomationVaultFactory: Address;
+  xKeeperMetadata: Address;
   relays: {
     GelatoRelay: Address;
     OpenRelay: Address;
@@ -51,6 +52,12 @@ export interface Notification {
   message?: string | JSX.Element;
   type?: string;
   error?: boolean;
+}
+
+export enum Status {
+  LOADING = 'LOADING',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
 }
 
 export interface Config extends Env, Constants {}

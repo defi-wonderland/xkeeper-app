@@ -42,10 +42,6 @@ export const EnabledRelays = () => {
     return [...relaysAddress, ...callers.flat()];
   }, [relays]);
 
-  useEffect(() => {
-    if (flattenRelays.length > 0) setItems(Object.fromEntries(flattenRelays.map((address) => [address, false])));
-  }, [flattenRelays]);
-
   const handleCopy = async (relayAddress: string, callerAddress: string) => {
     const key = relayAddress + callerAddress;
     copyData(callerAddress || relayAddress);
@@ -65,6 +61,10 @@ export const EnabledRelays = () => {
     setSelectedItem(selectedItem);
     setModalOpen(ModalType.EDIT_ALIAS);
   };
+
+  useEffect(() => {
+    if (flattenRelays.length > 0) setItems(Object.fromEntries(flattenRelays.map((address) => [address, false])));
+  }, [flattenRelays]);
 
   return (
     <SCard variant='outlined'>

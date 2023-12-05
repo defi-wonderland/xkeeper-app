@@ -25,12 +25,19 @@ export const getVaultsData = async (
   vaults: Address[],
   tokenList: Token[],
   prices: PriceData,
+  xKeeperMetadata: Address,
 ): Promise<VaultData[]> => {
   const vaultsData: VaultData[] = [];
 
   try {
     for (const vault of vaults) {
-      const { owner, name, relays, jobs, tokens } = await fetchAndFormatData(publicClient, vault, tokenList, prices);
+      const { owner, name, relays, jobs, tokens, description } = await fetchAndFormatData(
+        publicClient,
+        vault,
+        tokenList,
+        prices,
+        xKeeperMetadata,
+      );
 
       vaultsData.push({
         address: vault,
@@ -41,6 +48,7 @@ export const getVaultsData = async (
         relays: relays,
         tokens: tokens,
         totalValue: getTotalUsdBalance(tokens),
+        description,
       });
     }
 
@@ -56,14 +64,21 @@ const fetchAndFormatData = async (
   vaultAddress: Address,
   tokens: Token[],
   prices: PriceData,
+  xKeeperMetadata: Address,
 ): Promise<{
   owner: Address | undefined;
   name: string | undefined;
   relays: RelayData;
   jobs: JobData;
   tokens: TokenData[];
+  description: string;
 }> => {
   const vaultContract = { address: vaultAddress, abi: vaultABI };
+
+  // TODO
+  // const metadataContract = { address: xKeeperMetadata, abi: xKeeperMetadataABI };
+  console.log(xKeeperMetadata);
+
   let relaysData: RelayData = {};
   let jobData: JobData = {};
   let tokensData: TokenData[] = [];
@@ -83,13 +98,14 @@ const fetchAndFormatData = async (
       { ...vaultContract, functionName: 'organizationName' },
       { ...vaultContract, functionName: 'relays' },
       { ...vaultContract, functionName: 'jobs' },
+      // { ...metadataContract, functionName: 'automationVaultMetadata' },
       ...balanceCalls,
     ],
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [owner, name, relays, jobs] = multicallResult.slice(0, 4) as any;
-  const tokensResult = multicallResult.slice(4) as CallResult[];
+  const [owner, name, relays, jobs] = multicallResult.slice(0, 4) as any; // TODO: update to 5 when metadata is added
+  const tokensResult = multicallResult.slice(4) as CallResult[]; // TODO: update to 5 when metadata is added
 
   if (relays?.result && jobs?.result) {
     const relayEnabledCallers = relays.result.map((relayAddress: Address) => ({
@@ -123,11 +139,23 @@ const fetchAndFormatData = async (
     tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, prices);
   }
 
+  // temporary
+  const generateRandonDescription = () => {
+    const random = Math.floor(Math.random() * 10);
+    return random % 2 === 0
+      ? ''
+      : 'Lorem ipsum dolor sit amet consectetur. Euismod blandit dictum lacus penatibus. In morbi et ut amet consectetur arcu. Dui in netus eget nulla lorem nibh erat felis.';
+  };
+
   return {
     owner: owner?.result,
-    name: name?.result,
     relays: relaysData,
     jobs: jobData,
     tokens: tokensData,
+
+    // temporary
+    // these values will fetched from XKeeperMetadata contract in the future
+    name: name?.result,
+    description: generateRandonDescription(),
   };
 };
