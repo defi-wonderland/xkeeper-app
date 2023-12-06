@@ -16,12 +16,12 @@ import {
   ConfirmText,
 } from '~/components';
 import { TitleContainer } from '~/containers';
-import { ModalType } from '~/types';
+import { ModalType, Status } from '~/types';
 import { useStateContext, useVault } from '~/hooks';
 import { getContractAbi, getReceiptMessage } from '~/utils';
 
 export const JobModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, loading, currentTheme, currentNetwork } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, currentTheme, currentNetwork } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [jobAddress, setJobAddress] = useState('');
@@ -36,13 +36,15 @@ export const JobModal = () => {
     setSelectedValue(value);
   };
 
-  const { handleSendTransaction, writeAsync } = useVault({
+  const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'approveJobFunctions',
     args: [jobAddress, [functionSignature]],
     notificationTitle: 'Job successfully approved',
     notificationMessage: getReceiptMessage(jobAddress, 'job is now enabled'),
   });
+
+  const isLoading = requestStatus === Status.LOADING;
 
   useEffect(() => {
     if (isAddress(jobAddress)) {
@@ -65,11 +67,12 @@ export const JobModal = () => {
 
         {/* Job Address */}
         <StyledInput
+          dataTestId='job-address-input'
           label='Job address'
           placeholder='Enter Job address...'
           value={jobAddress}
           setValue={setJobAddress}
-          disabled={loading}
+          disabled={isLoading}
           error={!!jobAddress && !isAddress(jobAddress)}
           errorText='Invalid address'
         />
@@ -79,7 +82,7 @@ export const JobModal = () => {
           value={jobAbi}
           placeholder='Enter contract ABI...'
           spellCheck={false}
-          disabled={loading || selectedValue === 'b'}
+          disabled={isLoading || selectedValue === 'b'}
           onChange={(e) => setJobAbi(e.target.value)}
         />
 
@@ -87,22 +90,24 @@ export const JobModal = () => {
         <RadioContainer>
           <BtnContainer onClick={() => handleChange('a')}>
             <Radio
+              data-test='choose-function-button'
               checked={selectedValue === 'a'}
               value='a'
               name='radio-buttons'
               inputProps={{ 'aria-label': 'A' }}
-              disabled={loading}
+              disabled={isLoading}
             />
             <InputLabel>Choose function</InputLabel>
           </BtnContainer>
 
           <BtnContainer onClick={() => handleChange('b')}>
             <Radio
+              data-test='raw-function-button'
               checked={selectedValue === 'b'}
               value='b'
               name='radio-buttons'
               inputProps={{ 'aria-label': 'B' }}
-              disabled={loading}
+              disabled={isLoading}
             />
             <InputLabel>Enter raw function signature</InputLabel>
           </BtnContainer>
@@ -117,7 +122,7 @@ export const JobModal = () => {
               setValue={setContractFunction}
               setSignature={setFunctionSignature}
               abi={jobAbi}
-              disabled={!jobAbi || loading}
+              disabled={!jobAbi || isLoading}
             />
           </DropdownContainer>
         )}
@@ -128,17 +133,23 @@ export const JobModal = () => {
             label='Function signature'
             value={functionSignature}
             setValue={setFunctionSignature}
-            disabled={loading}
+            disabled={isLoading}
+            dataTestId='function-signature-input'
           />
         )}
 
         <SButtonsContainer>
-          <CancelButton variant='outlined' disabled={loading} onClick={handleClose}>
+          <CancelButton variant='outlined' disabled={isLoading} onClick={handleClose}>
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
-            <ConfirmText isLoading={loading} />
+          <ActiveButton
+            variant='contained'
+            disabled={!writeAsync || isLoading}
+            onClick={handleSendTransaction}
+            data-test='confirm-new-job-button'
+          >
+            <ConfirmText isLoading={isLoading} />
           </ActiveButton>
         </SButtonsContainer>
       </BigModal>

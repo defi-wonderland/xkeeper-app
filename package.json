@@ -14,15 +14,17 @@
     "build": "yarn generate && tsc && vite build",
     "generate": "wagmi generate",
     "preview": "vite preview",
+    "test": "yarn cypress run",
+    "test:dev": "yarn cypress open",
+    "start:test": "VITE_TEST=true yarn dev",
+    "start:fork": "eval $(grep '^VITE_RPC_URL' .env) && anvil --fork-url $VITE_RPC_URL --fork-block-number 9733610",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' 'cypress'",
     "lint:fix": "yarn run lint -- --fix",
     "prettier": "prettier src --check",
     "prettier:fix": "yarn run prettier -- --write",
     "format": "yarn run prettier:fix && yarn run lint:fix",
     "format:check": "yarn run prettier && yarn run lint",
-    "prepare": "husky install && wonderland-crypto-husky-checks install",
-    "test": "yarn generate && vitest run --dir src/tests/",
-    "test:watch": "yarn generate && vitest --dir src/tests/"
+    "prepare": "husky install && wonderland-crypto-husky-checks install"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": "eslint --cache --fix",

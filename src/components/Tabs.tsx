@@ -65,7 +65,7 @@ export const BasicTabs = ({ sections }: BasicTabsProps) => {
         >
           {sections.map((section, index) => (
             <Tab
-              data-testid={`tab-${index}`}
+              data-test={`tab-${index}`}
               label={section.title}
               {...a11yProps(index)}
               sx={{ fontSize: '1.6rem', textTransform: 'none' }}

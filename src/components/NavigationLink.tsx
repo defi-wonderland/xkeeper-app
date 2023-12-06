@@ -10,14 +10,15 @@ interface NavigationLinkProps {
   sx?: SxProps<Theme>;
   disabled?: boolean;
   external?: boolean;
+  dataTestId?: string;
 }
 
-export const NavigationLink = ({ to, text, children, sx, disabled, external }: NavigationLinkProps) => {
+export const NavigationLink = ({ to, text, children, sx, disabled, external, dataTestId }: NavigationLinkProps) => {
   return (
     <Box sx={{ ...sx, a: { textDecoration: 'none', color: 'inherit' } }}>
       {disabled && <>{children ? children : text}</>}
       {!disabled && (
-        <Link to={to} target={external ? '_blank' : undefined}>
+        <Link to={to} target={external ? '_blank' : undefined} data-test={dataTestId}>
           {children}
           {text}
         </Link>

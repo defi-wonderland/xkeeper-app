@@ -58,6 +58,7 @@ export enum Status {
   LOADING = 'LOADING',
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR',
+  IDLE = 'IDLE',
 }
 
 export interface Config extends Env, Constants {}

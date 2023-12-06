@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { useCustomClient } from './useCustomClient';
 import { vaultFactoryABI } from '~/generated';
 import { getViewTransaction } from '~/utils';
 import { getConfig } from '~/config';
+import { Status } from '~/types';
 
 interface SendTransactionProps {
   args: [Address, string];
@@ -18,10 +20,12 @@ export const useVaultFactory = ({
   args,
   selectedChain,
 }: SendTransactionProps): {
+  requestStatus: Status;
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { setLoading, setNotification, currentNetwork } = useStateContext();
+  const { setNotification, currentNetwork } = useStateContext();
+  const [requestStatus, setRequestStatus] = useState(Status.IDLE);
   const { addresses } = getConfig();
   const { publicClient } = useCustomClient();
   const navigate = useNavigate();
@@ -37,7 +41,7 @@ export const useVaultFactory = ({
   const { writeAsync } = useContractWrite(config);
 
   const handleSendTransaction = async () => {
-    setLoading(true);
+    setRequestStatus(Status.LOADING);
     try {
       if (writeAsync) {
         const writeResult = await writeAsync();
@@ -58,6 +62,8 @@ export const useVaultFactory = ({
           title: 'Vault successfully created',
           message: getViewTransaction(writeResult.hash, currentNetwork),
         });
+
+        setRequestStatus(Status.SUCCESS);
       }
     } catch (error) {
       console.error(error);
@@ -68,11 +74,13 @@ export const useVaultFactory = ({
         title: e.name,
         message: e.shortMessage,
       });
+
+      setRequestStatus(Status.ERROR);
     }
-    setLoading(false);
   };
 
   return {
+    requestStatus,
     handleSendTransaction,
     writeAsync,
   };

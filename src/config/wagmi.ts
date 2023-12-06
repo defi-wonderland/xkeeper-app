@@ -57,6 +57,7 @@ const config = {
 
 const testConfig = {
   autoConnect: false,
+
   connectors: [
     new MockConnector({
       options: {

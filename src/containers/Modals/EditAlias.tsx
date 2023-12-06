@@ -51,6 +51,7 @@ export const EditAliasModal = () => {
 
         <InputContainer>
           <StyledInput
+            dataTestId='edit-alias-input'
             label='Alias'
             value={alias}
             setValue={setAlias}
@@ -69,7 +70,7 @@ export const EditAliasModal = () => {
               If the user clicks confirm with the input field empty, 
               the alias will be removed and the default name will be displayed.
           */}
-          <ActiveButton variant='contained' onClick={handleConfirm}>
+          <ActiveButton variant='contained' onClick={handleConfirm} data-test='confirm-edit-alias-button'>
             Confirm
           </ActiveButton>
         </ButtonsContainer>

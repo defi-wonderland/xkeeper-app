@@ -65,7 +65,12 @@ export const EnabledJobs = () => {
         <Title>Enabled Jobs</Title>
 
         {selectedVault?.owner === userAddress && (
-          <ActiveButton variant='contained' disabled={!userAddress} onClick={() => setModalOpen(ModalType.ADD_JOB)}>
+          <ActiveButton
+            data-test='add-job-button'
+            variant='contained'
+            disabled={!userAddress}
+            onClick={() => setModalOpen(ModalType.ADD_JOB)}
+          >
             Add New Job
           </ActiveButton>
         )}
@@ -89,7 +94,10 @@ export const EnabledJobs = () => {
                   {/* Alias */}
                   <RowText component='th' scope='row'>
                     <STooltip text='Edit alias'>
-                      <SText onClick={() => handleOpenAliasModal('job', row.contractAddress, row.functionSignature)}>
+                      <SText
+                        onClick={() => handleOpenAliasModal('job', row.contractAddress, row.functionSignature)}
+                        data-test={`job-alias-${index}`}
+                      >
                         {aliasData[row.contractAddress] || row.alias}
                       </SText>
                     </STooltip>
@@ -125,7 +133,7 @@ export const EnabledJobs = () => {
                   </RowText>
 
                   {/* Options Menu */}
-                  <RowButton align='right'>
+                  <RowButton align='right' data-test={`job-options-${index}`}>
                     <OptionsMenu type='job' address={row.contractAddress} params={row.functionSignature} />
                   </RowButton>
                 </STableRow>
@@ -137,7 +145,7 @@ export const EnabledJobs = () => {
 
       {!jobs.length && (
         <NoDataContainer>
-          <StyledText>No jobs enabled.</StyledText>
+          <StyledText data-test='no-jobs-enabled'>No jobs enabled.</StyledText>
         </NoDataContainer>
       )}
     </SCard>

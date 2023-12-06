@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { TransactionExecutionError } from 'viem';
@@ -6,7 +7,7 @@ import { useStateContext } from './useStateContext';
 import { useCustomClient } from './useCustomClient';
 import { getViewTransaction } from '~/utils';
 import { vaultABI } from '~/generated';
-import { ModalType } from '~/types';
+import { ModalType, Status } from '~/types';
 
 interface SendTransactionProps {
   contractAddress?: string;
@@ -37,11 +38,13 @@ export const useVault = ({
   notificationMessage,
   showReceipt,
 }: SendTransactionProps): {
+  requestStatus: Status;
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { currentNetwork, setLoading, setModalOpen, setNotification } = useStateContext();
+  const { currentNetwork, setModalOpen, setNotification } = useStateContext();
   const { publicClient } = useCustomClient();
+  const [requestStatus, setRequestStatus] = useState(Status.IDLE);
 
   const { config } = usePrepareContractWrite({
     address: contractAddress as Address,
@@ -53,7 +56,7 @@ export const useVault = ({
   const { writeAsync } = useContractWrite(config);
 
   const handleSendTransaction = async () => {
-    setLoading(true);
+    setRequestStatus(Status.LOADING);
     try {
       if (writeAsync) {
         const writeResult = await writeAsync();
@@ -66,6 +69,7 @@ export const useVault = ({
           message: showReceipt ? getViewTransaction(writeResult.hash, currentNetwork) : notificationMessage,
         });
       }
+      setRequestStatus(Status.SUCCESS);
     } catch (error) {
       console.error(error);
       const e = error as TransactionExecutionError;
@@ -75,11 +79,12 @@ export const useVault = ({
         title: e.name,
         message: e.shortMessage,
       });
+      setRequestStatus(Status.ERROR);
     }
-    setLoading(false);
   };
 
   return {
+    requestStatus,
     handleSendTransaction,
     writeAsync,
   };

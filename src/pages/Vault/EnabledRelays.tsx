@@ -72,7 +72,11 @@ export const EnabledRelays = () => {
         <Title>Enabled Relays</Title>
 
         {selectedVault?.owner === userAddress && (
-          <ActiveButton variant='contained' onClick={() => setModalOpen(ModalType.ADD_RELAY)}>
+          <ActiveButton
+            data-test='add-relay-button'
+            variant='contained'
+            onClick={() => setModalOpen(ModalType.ADD_RELAY)}
+          >
             Add New Relay
           </ActiveButton>
         )}
@@ -91,12 +95,15 @@ export const EnabledRelays = () => {
             </TableHead>
 
             <TableBody>
-              {relays.map((row) => (
+              {relays.map((row, index) => (
                 <STableRow key={row.contractAddress}>
                   {/* Alias */}
                   <RowText component='th' scope='row'>
                     <STooltip text='Edit alias'>
-                      <SText onClick={() => handleOpenAliasModal('relay', row.contractAddress, row.enabledCallers)}>
+                      <SText
+                        onClick={() => handleOpenAliasModal('relay', row.contractAddress, row.enabledCallers)}
+                        data-test={`relay-alias-${index}`}
+                      >
                         {aliasData[row.contractAddress] || row.alias}
                       </SText>
                     </STooltip>
@@ -145,7 +152,7 @@ export const EnabledRelays = () => {
                   </RowText>
 
                   {/* Options Menu */}
-                  <RowButton align='right'>
+                  <RowButton align='right' data-test={`relay-options-${index}`}>
                     <OptionsMenu type='relay' address={row.contractAddress} params={row.enabledCallers} />
                   </RowButton>
                 </STableRow>
@@ -157,7 +164,7 @@ export const EnabledRelays = () => {
 
       {!relays.length && (
         <NoDataContainer>
-          <StyledText>No relays enabled.</StyledText>
+          <StyledText data-test='no-relays-enabled'>No relays enabled.</StyledText>
         </NoDataContainer>
       )}
     </SCard>

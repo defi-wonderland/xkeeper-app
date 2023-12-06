@@ -47,7 +47,7 @@ export function RelayDropdown({
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <DropdownTriggerButton disabled={disabled}>
+      <DropdownTriggerButton disabled={disabled} data-test='relay-dropdown-button'>
         <StyledText>
           {customRelay && 'Custom Relay'}
           {!customRelay && value}
@@ -59,8 +59,12 @@ export function RelayDropdown({
       <Menu slots={{ listbox: BasicStyledListbox }}>
         <SCustomScrollbar>
           {!!availableValues &&
-            availableValues.map((value) => (
-              <StyledMenuItem key={value} onClick={createHandleMenuClick(value)}>
+            availableValues.map((value, index) => (
+              <StyledMenuItem
+                key={value}
+                data-test={`relay-dropdown-option-${index}`}
+                onClick={createHandleMenuClick(value)}
+              >
                 {getRelayName(value)}
               </StyledMenuItem>
             ))}

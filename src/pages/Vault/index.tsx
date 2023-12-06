@@ -66,7 +66,7 @@ export const Vault = () => {
           {/* Vault Address | Vault Alias */}
           <TitleContainer>
             <TitleBox>
-              <Title>{aliasData[vaultAddress] || selectedVault?.name}</Title>
+              <Title data-test='vault-name'>{aliasData[vaultAddress] || selectedVault?.name}</Title>
 
               <STooltip text='Edit vault alias'>
                 <EditAliasButton variant='text' onClick={handleEditAlias}>
