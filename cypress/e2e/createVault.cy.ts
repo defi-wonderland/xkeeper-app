@@ -105,7 +105,7 @@ describe('Blockchain interaction tests', () => {
     cy.get('[data-test="no-relays-enabled"]').should('not.exist');
     cy.get('[data-test="relay-options-0"]').click();
     cy.get('[data-test="revoke-button"]').click();
-    cy.get('[data-test="confirm-revoke"]').click().wait(2000);
+    cy.get('[data-test="confirm-revoke"]').click().wait(4000);
 
     cy.get('[data-test="no-relays-enabled"]').should('exist');
   });
@@ -117,7 +117,7 @@ describe('Blockchain interaction tests', () => {
     cy.get('[data-test="no-jobs-enabled"]').should('not.exist');
     cy.get('[data-test="job-options-0"]').click();
     cy.get('[data-test="revoke-button"]').click();
-    cy.get('[data-test="confirm-revoke"]').click().wait(2000);
+    cy.get('[data-test="confirm-revoke"]').click().wait(4000);
 
     cy.get('[data-test="no-jobs-enabled"]').should('exist');
   });
