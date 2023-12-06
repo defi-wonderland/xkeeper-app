@@ -1,4 +1,4 @@
-describe('Blockchain interaction tests', () => {
+describe('xKeeper Blockchain interaction tests', () => {
   beforeEach(() => {
     cy.visit('/');
 
@@ -6,7 +6,7 @@ describe('Blockchain interaction tests', () => {
     cy.get('[data-test="connect-button"]').click();
   });
 
-  it('test create vault', () => {
+  it('create vault', () => {
     cy.visit('#/create');
     const vaultName = 'TestVault';
     const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
@@ -40,7 +40,7 @@ describe('Blockchain interaction tests', () => {
     cy.contains(/No jobs enabled./i).should('exist');
   });
 
-  it('test add new relay', () => {
+  it('add new relay', () => {
     const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     cy.get('[data-test="vault-card-0"]').click();
 
@@ -58,7 +58,7 @@ describe('Blockchain interaction tests', () => {
     cy.get('[data-test="relay-alias-0"]').should('exist');
   });
 
-  it('test add new job', () => {
+  it('add new job', () => {
     const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     const functionSignatue = '0xf39Fd6e5';
     cy.get('[data-test="vault-card-0"]').click();
@@ -77,7 +77,7 @@ describe('Blockchain interaction tests', () => {
     cy.get('[data-test="relay-alias-0"]').should('exist');
   });
 
-  it('test edit relay alias', () => {
+  it('edit relay alias', () => {
     cy.get('[data-test="vault-card-0"]').click();
 
     // Edit relay alias
@@ -88,7 +88,7 @@ describe('Blockchain interaction tests', () => {
     cy.contains(/TestRelay/i).should('exist');
   });
 
-  it('test edit job alias', () => {
+  it('edit job alias', () => {
     cy.get('[data-test="vault-card-0"]').click();
     // Edit job alias
     cy.get('[data-test="job-alias-0"]').click();
@@ -98,7 +98,7 @@ describe('Blockchain interaction tests', () => {
     cy.contains(/TestJob/i).should('exist');
   });
 
-  it('test edit revoke relay', () => {
+  it('revoke relay', () => {
     cy.get('[data-test="vault-card-0"]').click();
 
     // Revokes the relay
@@ -110,7 +110,7 @@ describe('Blockchain interaction tests', () => {
     cy.get('[data-test="no-relays-enabled"]').should('exist');
   });
 
-  it('test edit revoke job', () => {
+  it('revoke job', () => {
     cy.get('[data-test="vault-card-0"]').click();
 
     // Revokes the job
