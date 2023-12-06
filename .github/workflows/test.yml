@@ -25,4 +25,4 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
-          start: yarn start:fork, yarn start:test
+          start: yarn start:fork &> /dev/null, yarn start:test
