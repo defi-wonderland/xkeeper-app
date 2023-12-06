@@ -29,7 +29,7 @@ describe('Blockchain interaction tests', () => {
     cy.contains(/Vault Overview/i).should('not.exist');
 
     // Clicks on the create vault button
-    cy.get('[data-test="confirm-create-vault-button"]').click();
+    cy.get('[data-test="confirm-create-vault-button"]').click().wait(4000);
 
     // Checks if the vault was created
     cy.get('[data-test="vault-name"]').contains(vaultName);
