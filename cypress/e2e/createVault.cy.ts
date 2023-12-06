@@ -1,4 +1,11 @@
 describe('Blockchain interaction tests', () => {
+  beforeEach(() => {
+    cy.visit('/');
+
+    // Connect wallet
+    cy.get('[data-test="connect-button"]').click();
+  });
+
   it('test create vault', () => {
     cy.visit('#/create');
     const vaultName = 'TestVault';
@@ -10,9 +17,6 @@ describe('Blockchain interaction tests', () => {
     // Checks initial state of form
     cy.get('[data-test="create-vault-alias-input"]').find('input').should('have.value', '');
     cy.get('[data-test="create-vault-owner-input"]').find('input').should('have.value', '');
-
-    // Connect wallet
-    cy.get('[data-test="connect-button"]').click();
 
     // Should appear the user address
     cy.get('[data-test="create-vault-owner-input"]').find('input').should('have.value', userAddress);
@@ -34,13 +38,6 @@ describe('Blockchain interaction tests', () => {
     // Checks if the vault is empty
     cy.contains(/No relays enabled./i).should('exist');
     cy.contains(/No jobs enabled./i).should('exist');
-  });
-
-  beforeEach(() => {
-    cy.visit('/');
-
-    // Connect wallet
-    cy.get('[data-test="connect-button"]').click();
   });
 
   it('test add new relay', () => {
