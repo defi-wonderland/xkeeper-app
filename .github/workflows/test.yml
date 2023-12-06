@@ -11,7 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: 'Create env file'
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Create env file
         run: |
           touch .env
           echo VITE_RPC_URL="${{ secrets.VITE_RPC_URL }}" >> .env
