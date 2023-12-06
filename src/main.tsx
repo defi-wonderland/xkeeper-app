@@ -5,8 +5,8 @@ import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 import { WagmiConfig } from 'wagmi';
 
-import { StateProvider } from './providers';
 import { wagmiConfig } from './config';
+import { StateProvider } from './providers';
 import { App } from '~/App';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

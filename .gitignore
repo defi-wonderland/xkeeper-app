@@ -26,3 +26,6 @@ dist-ssr
 .eslintcache
 .env
 src/generated.ts
+
+# Cypress
+cypress/screenshots

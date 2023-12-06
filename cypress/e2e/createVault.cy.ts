@@ -53,7 +53,7 @@ describe('xKeeper Blockchain interaction tests', () => {
     cy.get('[data-test="relay-dropdown-button"]').click();
     cy.get('[data-test="relay-dropdown-option-1"]').click();
     cy.get('[data-test="relay-caller-input"]').find('input').type(userAddress);
-    cy.get('[data-test="confirm-new-relay-button"]').click().wait(2000);
+    cy.get('[data-test="confirm-new-relay-button"]').click();
 
     cy.get('[data-test="relay-alias-0"]').should('exist');
   });
@@ -72,9 +72,9 @@ describe('xKeeper Blockchain interaction tests', () => {
     cy.get('[data-test="job-address-input"]').find('input').type(userAddress);
     cy.get('[data-test="raw-function-button"]').click();
     cy.get('[data-test="function-signature-input"]').find('input').type(functionSignatue);
-    cy.get('[data-test="confirm-new-job-button"]').click().wait(2000);
+    cy.get('[data-test="confirm-new-job-button"]').click();
 
-    cy.get('[data-test="relay-alias-0"]').should('exist');
+    cy.get('[data-test="job-alias-0"]').should('exist');
   });
 
   it('edit relay alias', () => {
@@ -85,7 +85,7 @@ describe('xKeeper Blockchain interaction tests', () => {
     cy.get('[data-test="edit-alias-input"]').find('input').type('{selectAll}{backspace}TestRelay');
     cy.get('[data-test="confirm-edit-alias-button"]').click();
 
-    cy.contains(/TestRelay/i).should('exist');
+    cy.get('[data-test="relay-alias-0"]').contains('TestRelay');
   });
 
   it('edit job alias', () => {
@@ -95,7 +95,7 @@ describe('xKeeper Blockchain interaction tests', () => {
     cy.get('[data-test="edit-alias-input"]').find('input').type('{selectAll}{backspace}TestJob');
     cy.get('[data-test="confirm-edit-alias-button"]').click();
 
-    cy.contains(/TestJob/i).should('exist');
+    cy.get('[data-test="job-alias-0"]').contains('TestJob');
   });
 
   it('revoke relay', () => {
@@ -105,7 +105,7 @@ describe('xKeeper Blockchain interaction tests', () => {
     cy.get('[data-test="no-relays-enabled"]').should('not.exist');
     cy.get('[data-test="relay-options-0"]').click();
     cy.get('[data-test="revoke-button"]').click();
-    cy.get('[data-test="confirm-revoke"]').click().wait(4000);
+    cy.get('[data-test="confirm-revoke"]').click();
 
     cy.get('[data-test="no-relays-enabled"]').should('exist');
   });
@@ -117,7 +117,7 @@ describe('xKeeper Blockchain interaction tests', () => {
     cy.get('[data-test="no-jobs-enabled"]').should('not.exist');
     cy.get('[data-test="job-options-0"]').click();
     cy.get('[data-test="revoke-button"]').click();
-    cy.get('[data-test="confirm-revoke"]').click().wait(4000);
+    cy.get('[data-test="confirm-revoke"]').click();
 
     cy.get('[data-test="no-jobs-enabled"]').should('exist');
   });
