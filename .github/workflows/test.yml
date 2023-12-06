@@ -20,6 +20,7 @@ jobs:
         run: |
           touch .env
           echo VITE_RPC_URL="${{ secrets.VITE_RPC_URL }}" >> .env
+          echo VITE_TEST_PRIVATE_KEY="${{ secrets.VITE_TEST_PRIVATE_KEY }}" >> .env
 
       - name: Cypress run
         uses: cypress-io/github-action@v5
