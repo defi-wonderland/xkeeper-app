@@ -1,6 +1,6 @@
 name: e2e-tests
 
-on: [worfklow_dispatch]
+on: workflow_dispatch
 
 jobs:
   cypress-run:
