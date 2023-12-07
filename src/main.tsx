@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import { injectedWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
@@ -52,11 +52,11 @@ const wagmiConfig = createConfig({
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <WagmiConfig config={wagmiConfig}>
-      <HashRouter>
+      <BrowserRouter>
         <StateProvider>
           <App />
         </StateProvider>
-      </HashRouter>
+      </BrowserRouter>
     </WagmiConfig>
   </React.StrictMode>,
 );
