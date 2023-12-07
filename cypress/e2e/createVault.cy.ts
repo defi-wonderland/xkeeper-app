@@ -5,14 +5,14 @@ describe('xKeeper Blockchain interaction tests', () => {
     const vaultName = 'TestVault';
     const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 
-    cy.visit('create');
-    cy.get('[data-test="connect-button"]').click();
-
+    cy.visit('#/create');
     cy.contains(/Create Vault/i).should('exist');
 
     // Checks initial state of form
     cy.get('[data-test="create-vault-alias-input"]').find('input').should('have.value', '');
     cy.get('[data-test="create-vault-owner-input"]').find('input').should('have.value', '');
+
+    cy.get('[data-test="connect-button"]').click();
 
     // Should appear the user address
     cy.get('[data-test="create-vault-owner-input"]').find('input').should('have.value', userAddress);
