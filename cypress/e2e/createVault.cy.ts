@@ -1,18 +1,12 @@
 /// <reference types="cypress" />
 
 describe('xKeeper Blockchain interaction tests', () => {
-  beforeEach(() => {
-    cy.visit('/');
-
-    // Connect wallet
-    cy.get('[data-test="connect-button"]').click();
-  });
-
   it('create vault', () => {
-    cy.visit('/create');
     const vaultName = 'TestVault';
     const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
-    // const functionSignatue = '0xf39Fd6e5';
+
+    cy.visit('create');
+    cy.get('[data-test="connect-button"]').click();
 
     cy.contains(/Create Vault/i).should('exist');
 
@@ -40,6 +34,13 @@ describe('xKeeper Blockchain interaction tests', () => {
     // Checks if the vault is empty
     cy.contains(/No relays enabled./i).should('exist');
     cy.contains(/No jobs enabled./i).should('exist');
+  });
+
+  beforeEach(() => {
+    cy.visit('/');
+
+    // Connect wallet
+    cy.get('[data-test="connect-button"]').click();
   });
 
   it('add new relay', () => {
