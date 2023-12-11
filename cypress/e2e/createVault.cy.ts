@@ -9,7 +9,7 @@ describe('xKeeper Blockchain interaction tests', () => {
     });
   });
 
-  it.only('create vault', () => {
+  it('create vault', () => {
     const vaultName = 'TestVault';
     const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 
