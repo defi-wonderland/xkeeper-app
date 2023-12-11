@@ -1,7 +1,15 @@
 /// <reference types="cypress" />
 
 describe('xKeeper Blockchain interaction tests', () => {
-  it('create vault', () => {
+  beforeEach(() => {
+    // Mocks the getPrices function
+    cy.intercept('GET', 'https://coins.llama.fi/**', {
+      statusCode: 200,
+      body: {},
+    });
+  });
+
+  it.only('create vault', () => {
     const vaultName = 'TestVault';
     const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 

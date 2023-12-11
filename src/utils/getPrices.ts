@@ -7,14 +7,12 @@ export const getPricesUrl = (chainName: string, address: string[]) => {
 };
 
 export const getPrices = async (chain: string, contractAddress: string[]): Promise<PriceData> => {
-  // temporary disabled
-  // try {
-  //   const url = getPricesUrl(chain, contractAddress);
-  //   const jsonData = await fetchData(url);
-  //   return jsonData;
-  // } catch (error) {
-  // console.error(error);
-  console.log('getPrices', chain, contractAddress, fetchData);
-  return {} as PriceData;
-  // }
+  try {
+    const url = getPricesUrl(chain, contractAddress);
+    const jsonData = await fetchData(url);
+    return jsonData;
+  } catch (error) {
+    console.error(error);
+    return {} as PriceData;
+  }
 };
