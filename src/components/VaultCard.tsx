@@ -110,6 +110,14 @@ const CardTitle = styled(StyledTitle)({
   fontSize: '2rem',
   fontWeight: '600',
   lineHeight: '3rem',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '60%',
+
+  '@media (max-width: 600px)': {
+    maxWidth: '40%',
+  },
 });
 
 const SBox = styled('div')({

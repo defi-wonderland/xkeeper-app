@@ -204,6 +204,10 @@ export const Title = styled(Typography)({
   fontSize: '3rem',
   lineHeight: '3.8rem',
   fontWeight: 600,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '70rem',
 });
 
 export const DataSection = styled(Box)({

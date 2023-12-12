@@ -106,6 +106,10 @@ const HomeContainer = styled(Box)({
   margin: '0 auto',
   padding: '15rem 0',
   backgroundColor: 'inherit',
+
+  '@media (max-width: 600px)': {
+    padding: '10.2rem 1.6rem',
+  },
 });
 
 const FirstSection = styled(Box)({
@@ -115,6 +119,15 @@ const FirstSection = styled(Box)({
   width: '100%',
   gap: '2rem',
   padding: '1rem 0rem',
+
+  '@media (max-width: 600px)': {
+    flexDirection: 'column',
+    gap: 0,
+    marginBottom: '4rem',
+    'div:nth-child(2)': {
+      width: '100%',
+    },
+  },
 });
 
 const CreateVaultBtn = styled(ActiveButton)(() => {
@@ -129,5 +142,11 @@ const CreateVaultBtn = styled(ActiveButton)(() => {
     textTransform: 'none',
     borderRadius: borderRadius,
     backgroundColor: actionButton,
+
+    '@media (max-width: 600px)': {
+      minWidth: '100%',
+      width: '100%',
+      gap: 0,
+    },
   };
 });
