@@ -108,7 +108,7 @@ const HomeContainer = styled(Box)({
   backgroundColor: 'inherit',
 
   '@media (max-width: 600px)': {
-    padding: '10.2rem 1.6rem',
+    padding: '10.2rem 1.6rem  1rem',
   },
 });
 

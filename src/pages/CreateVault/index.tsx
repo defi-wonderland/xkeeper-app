@@ -96,7 +96,7 @@ const PageContainer = styled(Box)({
   minHeight: '100vh',
 
   '@media (max-width: 600px)': {
-    padding: '9.6rem 1.6rem',
+    padding: '9.6rem 1.6rem 3.2rem',
   },
 });
 

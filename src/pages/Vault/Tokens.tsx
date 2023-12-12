@@ -116,6 +116,7 @@ export const SCard = styled(Card)(() => {
     width: '100%',
     boxShadow: '0px 2px 10px 0px rgba(16, 24, 40, 0.02)',
     marginTop: '2.4rem',
+    paddingBottom: '0.4rem',
   };
 });
 
@@ -125,6 +126,12 @@ export const SectionHeader = styled(Box)({
   justifyContent: 'space-between',
   alignItems: 'center',
   marginBottom: '2.4rem',
+
+  '@media (max-width: 600px)': {
+    flexDirection: 'column',
+    alignItems: 'start',
+    gap: '1.6rem',
+  },
 });
 
 export const Title = styled(Typography)({
