@@ -94,6 +94,10 @@ const PageContainer = styled(Box)({
   padding: '9.6rem 4.8rem',
   backgroundColor: 'inherit',
   minHeight: '100vh',
+
+  '@media (max-width: 600px)': {
+    padding: '9.6rem 1.6rem',
+  },
 });
 
 const CreateContainer = styled(Box)({
@@ -147,5 +151,11 @@ const ButtonContainer = styled(Box)({
 const CreateButton = styled(ActiveButton)(() => {
   return {
     width: '18.3rem',
+    fontSize: '1.6rem',
+
+    '@media (max-width: 600px)': {
+      width: '100%',
+      height: '4.8rem',
+    },
   };
 });
