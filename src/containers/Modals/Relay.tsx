@@ -238,6 +238,12 @@ const CallersContainer = styled('div')({
   justifyContent: 'space-between',
   marginTop: '-1.2rem',
   marginBottom: '2.4rem',
+
+  '@media (max-width: 600px)': {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '1.2rem',
+  },
 });
 
 const Container = styled('div')({

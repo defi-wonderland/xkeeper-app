@@ -231,6 +231,12 @@ export const SOutlinedInput = styled(InputBase)(({ isError }: { isError?: boolea
       borderColor: currentTheme.textDisabled,
       transition: currentTheme.basicTransition,
     },
+
+    '@media (max-width: 600px)': {
+      input: {
+        textOverflow: 'ellipsis',
+      },
+    },
     ...errorStyles,
   };
 });

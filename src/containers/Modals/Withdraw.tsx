@@ -173,6 +173,12 @@ const InfoContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   gap: '1.6rem',
+
+  '@media (max-width: 600px)': {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '0.4rem',
+  },
 });
 
 const VaultText = styled(StyledText)(() => {
