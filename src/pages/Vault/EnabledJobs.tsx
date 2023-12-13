@@ -36,10 +36,6 @@ export const EnabledJobs = () => {
     [aliasData, selectedJobs, updateAliasData],
   );
 
-  useEffect(() => {
-    if (jobs.length > 0) setItems(jobs?.map((jobs) => ({ value: jobs.contractAddress, itemCopied: false })));
-  }, [jobs]);
-
   const handleCopy = async (content: string, index: number) => {
     copyData(content);
     const newItems = [...items];
@@ -58,6 +54,10 @@ export const EnabledJobs = () => {
     setSelectedItem(selectedItem);
     setModalOpen(ModalType.EDIT_ALIAS);
   };
+
+  useEffect(() => {
+    if (jobs.length > 0) setItems(jobs?.map((jobs) => ({ value: jobs.contractAddress, itemCopied: false })));
+  }, [jobs]);
 
   return (
     <SCard variant='outlined'>

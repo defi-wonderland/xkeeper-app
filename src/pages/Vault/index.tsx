@@ -1,11 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useNetwork } from 'wagmi';
-import { Address } from 'viem';
 
 import {
+  RevokeButton,
   AddressChip,
   BackToTop,
   BasicTabs,
@@ -15,33 +12,19 @@ import {
   InfoChip,
   MadeByWonderland,
   STooltip,
+  StyledText,
 } from '~/components';
-import { getCustomClient, getPrices, getTokenList, getVaultsData } from '~/utils';
-import { useStateContext } from '~/hooks';
+import { useFetchSelectedVault, useStateContext } from '~/hooks';
 import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
-import { ModalType } from '~/types';
-import { getConfig } from '~/config';
+import { ModalType, Status } from '~/types';
 
 export const Vault = () => {
-  const {
-    userAddress,
-    currentTheme,
-    selectedVault,
-    currentNetwork,
-    notification,
-    aliasData,
-    setModalOpen,
-    setSelectedVault,
-    setSelectedItem,
-  } = useStateContext();
-  const { DEFAULT_WETH_ADDRESS } = getConfig();
-  const { address } = useParams();
-  const { chain } = useNetwork();
+  const { userAddress, currentTheme, currentNetwork, aliasData, setModalOpen, setSelectedItem } = useStateContext();
 
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const { requestStatus, data: selectedVault } = useFetchSelectedVault();
 
   const chainName = currentNetwork.displayName;
   const vaultAddress = selectedVault?.address || '';
@@ -60,52 +43,18 @@ export const Vault = () => {
     },
     {
       title: 'Activity',
-      items: (
-        <>
-          <Activity />
-        </>
-      ),
+      items: <Activity />,
     },
   ];
-
-  const loadSelectedVault = useCallback(async () => {
-    setLoading(true);
-    try {
-      const publicClient = getCustomClient(currentNetwork.id, userAddress);
-      const tokens = getTokenList(chain?.id);
-      const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
-
-      const currentChain = publicClient.chain.name.toLocaleLowerCase();
-      // Load tokens from mainnet when on goerli
-      const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain;
-
-      const prices = await getPrices(chainName, tokenAddressList);
-      const vaultData = await getVaultsData(publicClient, [address as Address], tokens, prices);
-
-      setLoading(false);
-      setSelectedVault(vaultData[0]);
-    } catch (error) {
-      setLoading(false);
-      console.error(`Error loading vault ${address}:`, error);
-    }
-  }, [DEFAULT_WETH_ADDRESS, address, chain?.id, currentNetwork.id, setSelectedVault, userAddress]);
 
   const handleEditAlias = () => {
     setSelectedItem({ type: 'vault', address: selectedVault?.address || '0x', params: [] });
     setModalOpen(ModalType.EDIT_ALIAS);
   };
 
-  useEffect(() => {
-    if (!selectedVault?.address) {
-      loadSelectedVault();
-    }
-  }, [loadSelectedVault, selectedVault?.address]);
-
-  useEffect(() => {
-    if (notification.open) {
-      loadSelectedVault();
-    }
-  }, [loadSelectedVault, notification.open]);
+  const handleOpenAddMetadata = () => {
+    setModalOpen(ModalType.ADD_METADATA);
+  };
 
   return (
     <PageContainer>
@@ -147,9 +96,30 @@ export const Vault = () => {
               <InfoChip>{chainName}</InfoChip>
             </DataContainer>
           </DataSection>
+
+          <DescriptionContainer>
+            {/* Vault Description */}
+            {selectedVault?.description && (
+              <Description>
+                {selectedVault.description + selectedVault.description + selectedVault.description}
+              </Description>
+            )}
+
+            {!selectedVault?.description && (
+              <DescriptionChip>
+                <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.warningChipColor} />
+                Define your vault metadata for keepers to better understand your jobs
+                {selectedVault?.owner === userAddress && (
+                  <DescriptionButton disabled={selectedVault?.owner !== userAddress} onClick={handleOpenAddMetadata}>
+                    Add Metadata
+                  </DescriptionButton>
+                )}
+              </DescriptionChip>
+            )}
+          </DescriptionContainer>
         </Header>
 
-        <BasicTabs sections={sections} isLoading={isLoading} />
+        <BasicTabs sections={sections} isLoading={requestStatus === Status.LOADING} />
       </VaultContainer>
 
       {/* Back To Top Button */}
@@ -243,5 +213,63 @@ const SInfoChip = styled(Box)(() => {
     padding: '0.6rem 0.6rem 0.5rem 0.6rem',
     lineHeight: '2rem',
     width: 'fit-content',
+  };
+});
+
+const DescriptionContainer = styled('div')({
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  flexDirection: 'row',
+  paddingTop: '0.8rem',
+});
+
+export const Description = styled(StyledText)(() => {
+  const { currentTheme } = useStateContext();
+  return {
+    color: currentTheme.textSecondary,
+    fontSize: '1.6rem',
+  };
+});
+
+const DescriptionChip = styled(Box)(() => {
+  const { currentTheme, theme } = useStateContext();
+  const border = theme === 'light' ? `1px solid ${currentTheme.warningChipColor}` : undefined;
+  return {
+    color: currentTheme.warningChipColor,
+    backgroundColor: currentTheme.warningChipBackground,
+    borderRadius: currentTheme.borderRadius,
+    fontSize: '1.6rem',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.8rem',
+    fontWeight: '500',
+    height: 'auto',
+    padding: '1rem',
+    paddingLeft: '1.6rem',
+    lineHeight: '2rem',
+    width: '100%',
+    minHeight: '6.65rem',
+    border,
+  };
+});
+
+const DescriptionButton = styled(RevokeButton)(() => {
+  const { currentTheme } = useStateContext();
+
+  return {
+    marginLeft: 'auto',
+    color: currentTheme.warningChipColor,
+    backgroundColor: currentTheme.warningChipBackground,
+    border: `1px solid ${currentTheme.warningChipColor}`,
+    '&:hover': {
+      backgroundColor: currentTheme.warningChipColor,
+      color: currentTheme.warningChipBackground,
+    },
+    '&:disabled': {
+      opacity: 0.6,
+      color: currentTheme.actionButtonColor,
+    },
   };
 });

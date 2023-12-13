@@ -1,17 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
 import { SectionHeader, Title, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { STooltip, StyledText, SPagination } from '~/components';
 import { NoDataContainer } from './EnabledRelays';
-import { useStateContext } from '~/hooks';
+import { useFetchVaultActivity, useStateContext } from '~/hooks';
 import { Text } from './EnabledJobs';
-import { EventData } from '~/types';
+import { Status } from '~/types';
 import {
   formatDataNumber,
-  getCustomClient,
   getUsdBalance,
-  getVaultEvents,
   handleOpenAddress,
   handleOpenTx,
   itemsPerPage,
@@ -19,56 +17,10 @@ import {
 } from '~/utils';
 
 export const Activity = () => {
-  const { currentNetwork, selectedVault, vaults, userAddress, aliasData, setVaults, setSelectedVault } =
-    useStateContext();
-  const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const { currentNetwork, selectedVault, aliasData } = useStateContext();
+  const { requestStatus, data: events } = useFetchVaultActivity();
+
   const [paging, setPaging] = useState({ from: 0, to: itemsPerPage });
-
-  // Update vault events data in vaults array
-  const updateVaultEvents = useCallback(() => {
-    const updatedVaults = vaults?.map((vault) => {
-      if (vault.address === selectedVault?.address) {
-        const newSelectedVaultData = { ...selectedVault, events };
-        setSelectedVault(newSelectedVaultData);
-        return newSelectedVaultData;
-      }
-      return vault;
-    });
-    setVaults(updatedVaults);
-
-    // This is needed to avoid infinite loop when events are updated
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [events, selectedVault, setVaults]);
-
-  // Load events when there are no events loaded in the selected vault
-  const getEvents = useCallback(async () => {
-    if (selectedVault?.events?.length) return;
-    try {
-      setIsLoaded(false);
-      const publicClient = getCustomClient(currentNetwork.id, userAddress);
-      const events = await getVaultEvents(publicClient, 0n, selectedVault?.address);
-
-      setEvents(events.reverse()); // Reverse to show latest events first
-      setIsLoaded(true);
-      setIsError(false);
-    } catch (error) {
-      console.error('Error loading activity:', error);
-      setIsError(true);
-    }
-  }, [currentNetwork.id, selectedVault?.address, selectedVault?.events?.length, userAddress]);
-
-  useEffect(() => {
-    getEvents();
-  }, [getEvents]);
-
-  // Update vaults data when events are loaded
-  useEffect(() => {
-    if (events.length && !selectedVault?.events?.length) {
-      updateVaultEvents();
-    }
-  }, [events, selectedVault?.events?.length, updateVaultEvents]);
 
   const getTokenValues = (tokenAddress?: string, amount?: string) => {
     const token = selectedVault?.tokens.find((token) => token.address === tokenAddress);
@@ -193,9 +145,9 @@ export const Activity = () => {
       {!events.length && (
         <NoDataContainer>
           <StyledText>
-            {isLoaded && isError && 'Error loading activity.'}
-            {isLoaded && !isError && 'No activity found.'}
-            {!isLoaded && 'Loading activity...'}
+            {requestStatus === Status.ERROR && 'Error loading activity.'}
+            {requestStatus === Status.SUCCESS && 'No activity found.'}
+            {requestStatus === Status.LOADING && 'Loading activity...'}
           </StyledText>
         </NoDataContainer>
       )}

@@ -4,6 +4,7 @@ import { ChainIcon, Icon, InfoChip, NoRelayChip, RelayChip, STooltip, StyledText
 import { formatDataNumber, getRelayName } from '~/utils';
 import { useStateContext } from '~/hooks';
 import { VaultData } from '~/types';
+import { Description } from '~/pages';
 
 interface VaultCardProps {
   vaultData: VaultData;
@@ -42,6 +43,11 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
 
           {/* Vault total balance */}
           <Balance sx={{ color: currentTheme.textDisabled }}>{formatDataNumber(totalValue, 18, 2, true)}</Balance>
+
+          {/* Vault Description */}
+          <DescriptionContainer>
+            <Description>{vaultData?.description || ''}</Description>
+          </DescriptionContainer>
         </Box>
 
         {/* Active Relays */}
@@ -142,4 +148,22 @@ const ChipsContainer = styled(Box)({
   gap: '0.8rem',
   maxWidth: 'calc(100% - 6rem)',
   overflow: 'hidden',
+});
+
+const DescriptionContainer = styled('div')({
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  flexDirection: 'row',
+  marginTop: '0.8rem',
+  maxHeight: '6rem',
+  p: {
+    display: '-webkit-box',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    lineHeight: '2rem',
+  },
 });

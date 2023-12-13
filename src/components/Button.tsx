@@ -79,6 +79,9 @@ export const CloseButton = styled(Button)(() => {
     '&:hover': {
       backgroundColor: 'transparent',
       transition: currentTheme.basicTransition,
+      'i:before': {
+        color: currentTheme.textPrimary,
+      },
     },
   };
 });
