@@ -80,6 +80,10 @@ export const EditAliasModal = () => {
 
 const BigModal = styled(Box)({
   width: '59.6rem',
+
+  '@media (max-width: 600px)': {
+    width: '100%',
+  },
 });
 
 const SBox = styled(Box)({
@@ -99,5 +103,6 @@ const Text = styled(StyledText)({
   textTransform: 'capitalize',
   span: {
     textTransform: 'none',
+    wordBreak: 'break-all',
   },
 });
