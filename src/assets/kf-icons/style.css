@@ -1,11 +1,11 @@
 @font-face {
-  font-family: 'keep3r-framework';
-  src: url('fonts/keep3r-framework.eot?d9rby3');
+  font-family: 'xkeeper';
+  src: url('fonts/xkeeper.eot?ftzoz9');
   src:
-    url('fonts/keep3r-framework.eot?d9rby3#iefix') format('embedded-opentype'),
-    url('fonts/keep3r-framework.ttf?d9rby3') format('truetype'),
-    url('fonts/keep3r-framework.woff?d9rby3') format('woff'),
-    url('fonts/keep3r-framework.svg?d9rby3#keep3r-framework') format('svg');
+    url('fonts/xkeeper.eot?ftzoz9#iefix') format('embedded-opentype'),
+    url('fonts/xkeeper.ttf?ftzoz9') format('truetype'),
+    url('fonts/xkeeper.woff?ftzoz9') format('woff'),
+    url('fonts/xkeeper.svg?ftzoz9#xkeeper') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -14,7 +14,7 @@
 [class^='icon-'],
 [class*=' icon-'] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'keep3r-framework' !important;
+  font-family: 'xkeeper' !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -27,14 +27,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-pencil-square:before {
-  content: '\e90e';
-  color: #98a2b3;
-}
-.icon-back:before {
-  content: '\e914';
-  color: #98a2b3;
-}
 .icon-alert-circle:before {
   content: '\e900';
   color: #f04438;
@@ -83,31 +75,39 @@
   content: '\e90b';
   color: #98a2b3;
 }
-.icon-moon:before {
+.icon-mobile-menu:before {
   content: '\e90c';
+  color: #344054;
+}
+.icon-moon:before {
+  content: '\e90d';
   color: #667085;
 }
 .icon-owned:before {
-  content: '\e90d';
+  content: '\e90e';
   color: #444ce7;
 }
-.icon-plus:before {
+.icon-pencil-square:before {
   content: '\e90f';
+  color: #98a2b3;
+}
+.icon-plus:before {
+  content: '\e910';
   color: #fff;
 }
 .icon-safe:before {
-  content: '\e910';
-  color: #98a2b3;
-}
-.icon-search:before {
   content: '\e911';
   color: #98a2b3;
 }
-.icon-sun:before {
+.icon-search:before {
   content: '\e912';
   color: #98a2b3;
 }
-.icon-x-circle:before {
+.icon-sun:before {
   content: '\e913';
+  color: #98a2b3;
+}
+.icon-x-circle:before {
+  content: '\e914';
   color: #d92d20;
 }

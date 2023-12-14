@@ -172,5 +172,10 @@ const SMenu = styled(Menu)(({ compact }: Props) => {
     zIndex: zIndex.TOAST,
     width,
     maxWidth: width,
+
+    '@media (max-width: 600px)': {
+      width: '100%',
+      padding: '0 1.6rem',
+    },
   };
 });

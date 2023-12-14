@@ -87,5 +87,9 @@ export const BasicStyledListbox = styled('ul')(() => {
     borderRadius: '12px',
     overflow: 'auto',
     outline: '0px',
+
+    '@media (max-width: 600px)': {
+      width: '100%',
+    },
   };
 });
