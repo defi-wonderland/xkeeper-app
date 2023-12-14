@@ -8,6 +8,8 @@ const constants: Constants = {
 
   addresses: {
     AutomationVaultFactory: '0x49f06CfB7e9505b5a704Ca24E4674aa7B1A81D96',
+    // TODO: Update this address
+    xKeeperMetadata: '0x',
     relays: {
       GelatoRelay: '0x74E1b9F9b1Df2fdE9E05bA03e62C0074f383cabB',
       OpenRelay: '0x217742801feBB8220FdEA5D35dD976988a052BEa',

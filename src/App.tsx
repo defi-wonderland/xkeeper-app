@@ -10,6 +10,7 @@ import { ScrollToTop, useStateContext } from '~/hooks';
 import { CreateVault, Landing, Vault } from '~/pages';
 import {
   AppLayout,
+  AddMetadataModal,
   DepositModal,
   EditAliasModal,
   JobModal,
@@ -42,6 +43,7 @@ const Modals = () => {
       <WithdrawtModal />
       <EditAliasModal />
       <RevokeModal />
+      <AddMetadataModal />
     </>
   );
 };
