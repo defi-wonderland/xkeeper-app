@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useStateContext } from './useStateContext';
+import { useCustomClient, useStateContext } from '~/hooks';
 import { getVaultEvents } from '~/utils';
 import { EventData, Status } from '~/types';
-import { useCustomClient } from '.';
 
 /**
  * Fetch vault events

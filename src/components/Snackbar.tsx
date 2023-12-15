@@ -57,6 +57,16 @@ const snackbarInRight = keyframes`
   }
 `;
 
+const snackbarInBottom = keyframes`
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+`;
+
 const CustomSnackbar = styled('div')(() => {
   const { currentTheme } = useStateContext();
   return css`
@@ -83,6 +93,14 @@ const CustomSnackbar = styled('div')(() => {
       border-color: ${currentTheme.textSecondaryDisabled};
       box-shadow: '0px 2px 12px 0px rgba(16, 24, 40, 0.04)';
       transition: ${currentTheme.basicTransition};
+    }
+
+    @media (max-width: 600px) {
+      width: calc(100% - 3.2rem);
+      right: 0rem;
+      bottom: 0rem;
+      margin: 1.6rem;
+      animation: ${snackbarInBottom} 0.1s;
     }
   `;
 });

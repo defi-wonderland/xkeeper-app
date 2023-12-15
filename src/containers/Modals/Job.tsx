@@ -159,6 +159,10 @@ export const JobModal = () => {
 
 export const BigModal = styled(Box)({
   width: '59.6rem',
+
+  '@media (max-width: 600px)': {
+    width: '100%',
+  },
 });
 
 const STitle = styled(StyledTitle)({
@@ -179,6 +183,12 @@ const RadioContainer = styled('div')({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+
+  '@media (max-width: 600px)': {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '0rem',
   },
 });
 

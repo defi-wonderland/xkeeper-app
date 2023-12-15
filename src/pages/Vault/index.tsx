@@ -91,10 +91,10 @@ export const Vault = () => {
             </DataContainer>
 
             {/* Vault version and Chain */}
-            <DataContainer>
+            <SecondDataContainer>
               <Version sx={{ color: currentTheme.textDisabled }}>{version}</Version>
               <InfoChip>{chainName}</InfoChip>
-            </DataContainer>
+            </SecondDataContainer>
           </DataSection>
 
           <DescriptionContainer>
@@ -136,6 +136,10 @@ const PageContainer = styled(Box)({
   margin: '0 auto',
   padding: '9.6rem 4.8rem',
   backgroundColor: 'inherit',
+
+  '@media (max-width: 600px)': {
+    padding: '9.6rem 1.6rem 3.2rem',
+  },
 });
 
 export const VaultContainer = styled(Box)({
@@ -174,6 +178,10 @@ export const Title = styled(Typography)({
   fontSize: '3rem',
   lineHeight: '3.8rem',
   fontWeight: 600,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '70rem',
 });
 
 export const DataSection = styled(Box)({
@@ -182,6 +190,12 @@ export const DataSection = styled(Box)({
   alignItems: 'center',
   justifyContent: 'space-between',
   flexDirection: 'row',
+
+  '@media (max-width: 600px)': {
+    flexDirection: 'column',
+    alignItems: 'start',
+    gap: '1.4rem',
+  },
 });
 
 export const DataContainer = styled(Box)({
@@ -189,6 +203,18 @@ export const DataContainer = styled(Box)({
   flexDirection: 'row',
   alignItems: 'center',
   gap: '0.8rem',
+
+  '@media (max-width: 600px)': {
+    flexDirection: 'column',
+    alignItems: 'start',
+    gap: '1.4rem',
+  },
+});
+
+export const SecondDataContainer = styled(DataContainer)({
+  '@media (max-width: 600px)': {
+    flexDirection: 'row',
+  },
 });
 
 const Version = styled(Typography)({

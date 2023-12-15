@@ -1,4 +1,5 @@
 export * from './Icon';
+export * from './NavigationLink';
 export * from './TokenIcon';
 export * from './Text';
 export * from './TextArea';
@@ -13,7 +14,6 @@ export * from './Dropdowns';
 export * from './ChainIcon';
 export * from './Input';
 export * from './MadeByWonderland';
-export * from './NavigationLink';
 export * from './NoUserVaults';
 export * from './OptionsMenu';
 export * from './Pagination';

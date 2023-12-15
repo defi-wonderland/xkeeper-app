@@ -48,6 +48,10 @@ const BreadCrumbsContainer = styled(Box)({
   alignItems: 'center',
   flexDirection: 'row',
   gap: '2rem',
+
+  '@media (max-width: 600px)': {
+    display: 'none',
+  },
 });
 
 const CurrentPage = styled(StyledText)({

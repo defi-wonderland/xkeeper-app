@@ -2,11 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Address, useNetwork } from 'wagmi';
 
-import { useStateContext } from './useStateContext';
+import { useStateContext, useCustomClient } from '~/hooks';
 import { getPrices, getTokenList, getVaultsData } from '~/utils';
 import { getConfig } from '~/config';
 import { Status } from '~/types';
-import { useCustomClient } from '.';
 
 /**
  * Fetch selected vault data

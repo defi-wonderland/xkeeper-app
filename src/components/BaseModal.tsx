@@ -39,6 +39,10 @@ export const StyledModal = styled(Modal)`
   justify-content: center;
   width: 100%;
   box-shadow: none;
+
+  @media (max-width: 600px) {
+    padding: 0rem 1.6rem;
+  }
 `;
 
 export const StyledBackdrop = styled(Backdrop)`
@@ -58,6 +62,11 @@ export const SModal = styled(Box)(() => {
     borderRadius: '1.2rem',
     padding: '0.6rem',
     boxShadow: 'none',
+
+    '@media (max-width: 600px)': {
+      minWidth: '100%',
+      margin: '0rem 1.6rem',
+    },
   };
 });
 
@@ -66,5 +75,9 @@ const SCustomScrollbar = styled(CustomScrollbar)(() => {
     overflowX: 'hidden',
     maxHeight: '75vh',
     padding: '1.8rem',
+
+    '@media (max-width: 600px)': {
+      maxHeight: '60vh',
+    },
   };
 });

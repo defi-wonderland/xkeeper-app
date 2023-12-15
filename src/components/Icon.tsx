@@ -14,6 +14,7 @@ export type IconName =
   | 'exclamation-triangle'
   | 'external-link'
   | 'menu'
+  | 'mobile-menu'
   | 'moon'
   | 'owned'
   | 'plus'
