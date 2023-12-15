@@ -31,7 +31,8 @@ describe('xKeeper Blockchain interaction tests', () => {
     cy.contains(/Vault Overview/i).should('not.exist');
 
     // Clicks on the create vault button
-    cy.getDataTest('confirm-create-vault-button').click({ timeout: 30000 });
+    cy.getDataTest('confirm-create-vault-button').click();
+    cy.wait(15000);
 
     // Checks if the vault was created
     cy.location('pathname').should('contain', '/vault');
