@@ -7,12 +7,12 @@ import { TransactionExecutionError } from 'viem';
 import { useStateContext } from './useStateContext';
 import { useCustomClient } from './useCustomClient';
 import { vaultFactoryABI } from '~/generated';
-import { getViewTransaction } from '~/utils';
+import { getTotalVaults, getViewTransaction } from '~/utils';
 import { getConfig } from '~/config';
 import { Status } from '~/types';
 
 interface SendTransactionProps {
-  args: [Address, string];
+  args: [Address];
   selectedChain: string;
 }
 
@@ -46,12 +46,14 @@ export const useVaultFactory = ({
       if (writeAsync) {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);
+        const totalRequestCount = await getTotalVaults(publicClient, addresses.AutomationVaultFactory);
 
         // Fetch the newly created vault
         const result = await publicClient.readContract({
           address: addresses.AutomationVaultFactory,
           abi: vaultFactoryABI,
           functionName: 'automationVaults',
+          args: [BigInt(totalRequestCount - 1), 1n],
         });
 
         // Redirects to the newly created vault

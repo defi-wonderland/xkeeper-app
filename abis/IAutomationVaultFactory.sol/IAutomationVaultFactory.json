@@ -1,66 +1,38 @@
 {
   "abi": [
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_owner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "string",
-          "name": "_organizationName",
-          "type": "string"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_automationVault",
-          "type": "address"
-        }
-      ],
-      "name": "DeployAutomationVault",
-      "type": "event"
-    },
-    {
-      "inputs": [],
+      "type": "function",
       "name": "automationVaults",
-      "outputs": [
-        {
-          "internalType": "address[]",
-          "name": "__automationVaults",
-          "type": "address[]"
-        }
+      "inputs": [
+        { "name": "_startFrom", "type": "uint256", "internalType": "uint256" },
+        { "name": "_amount", "type": "uint256", "internalType": "uint256" }
       ],
-      "stateMutability": "view",
-      "type": "function"
+      "outputs": [{ "name": "_list", "type": "address[]", "internalType": "address[]" }],
+      "stateMutability": "view"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_owner",
-          "type": "address"
-        },
-        {
-          "internalType": "string",
-          "name": "_organizationName",
-          "type": "string"
-        }
-      ],
+      "type": "function",
       "name": "deployAutomationVault",
-      "outputs": [
-        {
-          "internalType": "contract IAutomationVault",
-          "name": "_automationVault",
-          "type": "address"
-        }
+      "inputs": [{ "name": "_owner", "type": "address", "internalType": "address" }],
+      "outputs": [{ "name": "_automationVault", "type": "address", "internalType": "contract IAutomationVault" }],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "totalAutomationVaults",
+      "inputs": [],
+      "outputs": [{ "name": "_totalAutomationVaults", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "DeployAutomationVault",
+      "inputs": [
+        { "name": "_owner", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_automationVault", "type": "address", "indexed": true, "internalType": "address" }
       ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
+      "anonymous": false
+    },
+    { "type": "error", "name": "AutomationVaultFactory_AmountZero", "inputs": [] }
   ]
 }

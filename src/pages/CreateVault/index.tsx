@@ -11,11 +11,10 @@ import { Status } from '~/types';
 export const CreateVault = () => {
   const { availableChains, userAddress, currentNetwork } = useStateContext();
 
-  const [vaultName, setVaultName] = useState('');
   const [vaultOwner, setVaultOwner] = useState(userAddress || '');
   const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
   const { requestStatus, handleSendTransaction, writeAsync } = useVaultFactory({
-    args: [vaultOwner as Address, vaultName],
+    args: [vaultOwner as Address],
     selectedChain,
   });
 
@@ -49,15 +48,6 @@ export const CreateVault = () => {
         </Header>
 
         <StyledInput
-          label='Vault alias'
-          description='Your vault alias will only be visible to you.'
-          value={vaultName}
-          setValue={setVaultName}
-          disabled={isLoading}
-          dataTestId='create-vault-alias-input'
-        />
-
-        <StyledInput
           label='Vault owner'
           description='The vault owner will be able to withdraw funds and make changes to the vault.'
           value={vaultOwner}
@@ -83,7 +73,7 @@ export const CreateVault = () => {
           <CreateButton
             data-test='confirm-create-vault-button'
             variant='contained'
-            disabled={!writeAsync || isLoading || !vaultName}
+            disabled={!writeAsync || isLoading}
             onClick={handleSendTransaction}
           >
             <ConfirmText isLoading={isLoading} />

@@ -20,6 +20,7 @@ import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
 import { Tokens } from './Tokens';
 import { ModalType, Status } from '~/types';
+import { truncateAddress } from '~/utils';
 
 export const Vault = () => {
   const { userAddress, currentTheme, currentNetwork, aliasData, setModalOpen, setSelectedItem } = useStateContext();
@@ -66,7 +67,12 @@ export const Vault = () => {
           {/* Vault Address | Vault Alias */}
           <TitleContainer>
             <TitleBox>
-              <Title data-test='vault-name'>{aliasData[vaultAddress] || selectedVault?.name}</Title>
+              <Title data-test='vault-name'>
+                {requestStatus === Status.LOADING && '...'}
+
+                {(requestStatus === Status.SUCCESS || requestStatus === Status.IDLE) &&
+                  (aliasData[vaultAddress] || selectedVault?.name || truncateAddress(selectedVault?.address))}
+              </Title>
 
               <STooltip text='Edit vault alias'>
                 <EditAliasButton variant='text' onClick={handleEditAlias}>

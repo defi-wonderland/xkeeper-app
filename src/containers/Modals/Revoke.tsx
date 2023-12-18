@@ -11,7 +11,7 @@ export const RevokeModal = () => {
   const type = selectedItem.type;
   const value = selectedItem.address;
 
-  const functionName = selectedItem?.type === 'relay' ? 'revokeRelayCallers' : 'revokeJobFunctions';
+  const functionName = selectedItem?.type === 'relay' ? 'revokeRelayCallers' : 'revokeJobSelectors';
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,

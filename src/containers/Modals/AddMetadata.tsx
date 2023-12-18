@@ -18,15 +18,16 @@ import { getConfig } from '~/config';
 
 export const AddMetadataModal = () => {
   const { addresses } = getConfig();
-  const { setModalOpen, modalOpen, currentTheme, loading } = useStateContext();
+  const { setModalOpen, modalOpen, currentTheme, loading, selectedVault } = useStateContext();
 
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
+  const vaultAddress = selectedVault?.address || '0x';
+
   const { handleSendTransaction, writeAsync } = useXKeeperMetadata({
     contractAddress: addresses.xKeeperMetadata,
-    functionName: 'setAutomationVaultMetadata',
-    args: [name, description],
+    args: [vaultAddress, { name, description }],
     notificationTitle: 'Metadata successfully added',
     showReceipt: true,
   });

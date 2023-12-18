@@ -1,18 +1,16 @@
-// TODO: uncomment this file when we have a contract to interact with
-
-// import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
-// import { WriteContractResult } from 'wagmi/actions';
+import { useState } from 'react';
+import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { WriteContractResult } from 'wagmi/actions';
 import { TransactionExecutionError } from 'viem';
 
-import { useStateContext } from './useStateContext';
+import { useStateContext, useCustomClient } from '~/hooks';
 import { getViewTransaction } from '~/utils';
-// import { xKeeperMetadataABI } from '~/generated';
-import { ModalType } from '~/types';
+import { xkeeperMetadataABI } from '~/generated';
+import { ModalType, Status } from '~/types';
 
 interface SendTransactionProps {
   contractAddress?: string;
-  functionName: 'setAutomationVaultMetadata';
-  args: string[];
+  args: [Address, { name: string; description: string }];
   notificationTitle?: string;
   notificationMessage?: string | JSX.Element;
   showReceipt?: boolean;
@@ -20,48 +18,49 @@ interface SendTransactionProps {
 
 export const useXKeeperMetadata = ({
   contractAddress,
-  // functionName,
-  // args,
+  args,
   notificationTitle,
   notificationMessage,
   showReceipt,
 }: SendTransactionProps): {
+  requestStatus: Status;
   handleSendTransaction: () => Promise<void>;
-  writeAsync: (() => void) | undefined;
-  // writeAsync: (() => Promise<WriteContractResult>) | undefined;
+  writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { currentNetwork, setLoading, setModalOpen, setNotification } = useStateContext();
-  // const publicClient = usePublicClient();
+  const { currentNetwork, setModalOpen, setNotification } = useStateContext();
+  const { publicClient } = useCustomClient();
+  const [requestStatus, setRequestStatus] = useState(Status.IDLE);
 
-  // const { config } = usePrepareContractWrite({
-  //   address: contractAddress as Address,
-  //   abi: xKeeperMetadataABI,
-  //   functionName: functionName,
-  //   args: args,
-  // });
+  const { config } = usePrepareContractWrite({
+    address: contractAddress as Address,
+    abi: xkeeperMetadataABI,
+    functionName: 'setAutomationVaultMetadata',
+    args: args,
+  });
 
-  // const { writeAsync } = useContractWrite(config);
-  const writeAsync = () => console.log('calling writeAsync');
+  const { writeAsync } = useContractWrite(config);
 
   const handleSendTransaction = async () => {
-    setLoading(true);
-    console.log('hey');
+    setRequestStatus(Status.LOADING);
     try {
       if (contractAddress) {
-        // if (writeAsync) {
-        // const writeResult = await writeAsync();
-        // await publicClient.waitForTransactionReceipt(writeResult);
-        setModalOpen(ModalType.NONE);
+        if (writeAsync) {
+          const writeResult = await writeAsync();
+          await publicClient.waitForTransactionReceipt(writeResult);
+          setModalOpen(ModalType.NONE);
 
-        setNotification({
-          open: true,
-          title: notificationTitle,
-          message: showReceipt ? getViewTransaction(/* writeResult.hash */ '0x', currentNetwork) : notificationMessage,
-        });
+          setNotification({
+            open: true,
+            title: notificationTitle,
+            message: showReceipt ? getViewTransaction(writeResult.hash, currentNetwork) : notificationMessage,
+          });
+        }
       }
+      setRequestStatus(Status.SUCCESS);
     } catch (error) {
       console.error(error);
       const e = error as TransactionExecutionError;
+
       setNotification({
         open: true,
         error: true,
@@ -69,10 +68,11 @@ export const useXKeeperMetadata = ({
         message: e.shortMessage,
       });
     }
-    setLoading(false);
+    setRequestStatus(Status.ERROR);
   };
 
   return {
+    requestStatus,
     handleSendTransaction,
     writeAsync,
   };

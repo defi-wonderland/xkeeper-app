@@ -7,13 +7,13 @@ const constants: Constants = {
   DEFAULT_WETH_ADDRESS: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
 
   addresses: {
-    AutomationVaultFactory: '0x49f06CfB7e9505b5a704Ca24E4674aa7B1A81D96',
-    // TODO: Update this address
-    xKeeperMetadata: '0x',
+    AutomationVaultFactory: '0x5fc2e933e22ac94d7c80fbca7e0a4d150abf0e4c',
+    xKeeperMetadata: '0xea3635701bf91e4a0ee3491884579f55b4666e9f',
     relays: {
-      GelatoRelay: '0x74E1b9F9b1Df2fdE9E05bA03e62C0074f383cabB',
-      OpenRelay: '0x217742801feBB8220FdEA5D35dD976988a052BEa',
-      Keep3rRelay: '0xcb3eBC14B351F7e9924420b4AFFBCFf1F3F25Fc0',
+      GelatoRelay: '0xb32c197e569cc7fb11cbed0cc716635aa7616bae',
+      OpenRelay: '0xbd57e761324d09d3a3aea775b9a8566865fea817',
+      Keep3rRelay: '0x2055d38a9e14d1f4e16a0efaaf9b6864342510a3',
+      // Keep3rBondedRelay: '0x87e49e78b78deb68cb2823e49ab71a74bf9bb5fe',
     },
   },
 

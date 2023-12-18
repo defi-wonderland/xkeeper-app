@@ -38,7 +38,7 @@ export const JobModal = () => {
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
-    functionName: 'approveJobFunctions',
+    functionName: 'approveJobSelectors',
     args: [jobAddress, [functionSignature]],
     notificationTitle: 'Job successfully approved',
     notificationMessage: getReceiptMessage(jobAddress, 'job is now enabled'),

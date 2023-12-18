@@ -13,11 +13,11 @@ interface SendTransactionProps {
   contractAddress?: string;
   functionName:
     | 'acceptOwner'
-    | 'approveJobFunctions'
+    | 'approveJobSelectors'
     | 'approveRelayCallers'
     | 'changeOwner'
     | 'exec'
-    | 'revokeJobFunctions'
+    | 'revokeJobSelectors'
     | 'revokeRelayCallers'
     | 'withdrawFunds'
     | undefined;

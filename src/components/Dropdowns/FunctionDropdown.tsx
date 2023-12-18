@@ -35,7 +35,7 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
       );
       return res;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return [];
     }
   }, [abi]);

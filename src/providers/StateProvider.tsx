@@ -22,6 +22,7 @@ import {
   getVaults,
   getVaultsData,
   loadLocalStorage,
+  getTotalVaults,
 } from '~/utils';
 import { getConfig } from '~/config';
 import { useCustomClient } from '~/hooks';
@@ -63,7 +64,9 @@ type ContextType = {
   aliasData: AliasData;
   updateAliasData: () => void;
 
-  update: () => void;
+  // update: () => void;
+
+  updateVaults: () => Promise<void>;
 };
 
 interface StateProps {
@@ -99,35 +102,96 @@ export const StateProvider = ({ children }: StateProps) => {
     params: [],
   });
 
+  const REQUESTS_AMOUNT = 3;
+  const [totalRequestCount, setTotalRequestCount] = useState<number>();
+  const [requestAmount, setRequestAmount] = useState<number>(REQUESTS_AMOUNT);
+
   const [modalOpen, setModalOpen] = useState<ModalType>(ModalType.NONE);
   const [currentNetwork, setCurrentNetwork] = useState<Chain>(availableChains[chainId]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const update = useCallback(async () => {
-    setLoading(true);
+  const loadData = useCallback(
+    async (startIndex: number, amountOfVaults: number) => {
+      const tokens = getTokenList(currentNetwork.id);
+      const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
 
-    const tokens = getTokenList(currentNetwork.id);
-    const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
+      const chainName =
+        publicClient.chain.name.toLowerCase() === 'goerli' ? 'ethereum' : publicClient.chain.name.toLowerCase();
+      const prices = await getPrices(chainName, tokenAddresses);
+      const vaultsData = await getVaults(publicClient, addresses.AutomationVaultFactory, startIndex, amountOfVaults);
+      const formattedVaultsData = await getVaultsData(
+        publicClient,
+        vaultsData,
+        tokens,
+        prices,
+        addresses.xKeeperMetadata,
+      );
 
-    const currentChain = publicClient.chain.name.toLocaleLowerCase();
-    const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain; // Load tokens from mainnet when on goerli
+      return formattedVaultsData;
+    },
+    [
+      DEFAULT_WETH_ADDRESS,
+      addresses.AutomationVaultFactory,
+      addresses.xKeeperMetadata,
+      currentNetwork.id,
+      publicClient,
+    ],
+  );
 
-    const pricesCall = getPrices(chainName, tokenAddresses);
-    const vaultsCall = getVaults(publicClient, addresses.AutomationVaultFactory);
+  const fetchData = useCallback(
+    async (startIndex: number, requestAmount: number) => {
+      setLoading(true);
 
-    const [vaults, prices] = await Promise.all([vaultsCall, pricesCall]);
-    const vaultsData = await getVaultsData(publicClient, vaults, tokens, prices, addresses.xKeeperMetadata);
+      try {
+        if (requestAmount === 0) {
+          setLoading(false);
+          return [];
+        }
 
-    setVaults(vaultsData);
-    setLoading(false);
-  }, [
-    DEFAULT_WETH_ADDRESS,
-    addresses.AutomationVaultFactory,
-    addresses.xKeeperMetadata,
-    currentNetwork.id,
-    publicClient,
-  ]);
+        const formattedVaultsData = await loadData(startIndex, requestAmount);
+
+        const newTotalRequestCount = Math.max(startIndex - requestAmount, 0);
+        const newAmount = newTotalRequestCount === 0 ? startIndex : requestAmount;
+        setTotalRequestCount(newTotalRequestCount);
+        setRequestAmount(newAmount);
+
+        setLoading(false);
+        return formattedVaultsData;
+      } catch (error) {
+        console.error('Error loading vaults:', error);
+        setLoading(false);
+        return [];
+      }
+    },
+    [loadData],
+  );
+
+  const updateVaults = async () => {
+    if (typeof totalRequestCount !== 'number') return;
+    const newData = await fetchData(totalRequestCount!, requestAmount);
+    setVaults((prevVaults) => [...prevVaults, ...newData]);
+  };
+
+  const handleLoad = useCallback(async () => {
+    try {
+      if (!totalRequestCount) {
+        setLoading(true);
+        const totalRequestCount = await getTotalVaults(publicClient, addresses.AutomationVaultFactory);
+        const newRequestAmount = Math.min(requestAmount, totalRequestCount);
+
+        const newData = await fetchData(totalRequestCount - newRequestAmount, newRequestAmount);
+        setVaults(newData);
+      }
+    } catch (error) {
+      console.error('Error getting last requests:', error);
+      setLoading(false);
+      setIsError(true);
+    }
+
+    // to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addresses.AutomationVaultFactory, fetchData, publicClient]);
 
   // Update current network when chain changes
   useEffect(() => {
@@ -147,8 +211,8 @@ export const StateProvider = ({ children }: StateProps) => {
 
   // Load vaults on load
   useEffect(() => {
-    update();
-  }, [update]);
+    handleLoad();
+  }, [handleLoad]);
 
   // Load alias data on load
   useEffect(() => {
@@ -158,9 +222,9 @@ export const StateProvider = ({ children }: StateProps) => {
   // Update vaults on notification open
   useEffect(() => {
     if (notification.open) {
-      update();
+      handleLoad();
     }
-  }, [notification.open, update]);
+  }, [notification.open, handleLoad]);
 
   // Reset selected item when modal is close
   useEffect(() => {
@@ -208,9 +272,11 @@ export const StateProvider = ({ children }: StateProps) => {
         setSelectedItem,
         vaults,
         setVaults,
-        update,
+        // update,
         aliasData,
         updateAliasData,
+
+        updateVaults,
       }}
     >
       {children}

@@ -22,7 +22,7 @@ export const useFetchSelectedVault = () => {
 
   const { address } = useParams();
   const { chain } = useNetwork();
-  const [requestStatus, setRequestStatus] = useState(Status.LOADING);
+  const [requestStatus, setRequestStatus] = useState(Status.IDLE);
 
   const loadSelectedVault = useCallback(async () => {
     try {

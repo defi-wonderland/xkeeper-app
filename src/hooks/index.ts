@@ -1,3 +1,4 @@
+export * from './InfiniteScroll';
 export * from './ScrollToTop';
 export * from './useCustomClient';
 export * from './useFetchSelectedVault';
