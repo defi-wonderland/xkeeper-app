@@ -27,10 +27,9 @@ describe('xKeeper Blockchain interaction tests', () => {
 
     // Clicks on the create vault button
     cy.getDataTest('confirm-create-vault-button').click();
-    cy.wait(15000);
 
     // Checks if the vault was created
-    cy.location('pathname').should('contain', '/vault');
+    cy.location('pathname').should('contain', '/vault', { timeout: 15000 });
     cy.contains(/Vault Overview/i).should('exist');
 
     // Checks if the vault is empty
@@ -43,6 +42,33 @@ describe('xKeeper Blockchain interaction tests', () => {
 
     // Connect wallet
     cy.getDataTest('connect-button').click();
+  });
+
+  it('add metadata', () => {
+    const vaultName = 'TestVaultMedatadaName';
+    const description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
+
+    cy.getDataTest('vault-card-0').click();
+
+    // Checks the vault description
+    cy.getDataTest('add-vault-metadata-button').should('exist');
+
+    // Adds a new description and vault name
+    cy.getDataTest('add-vault-metadata-button').click();
+    cy.getDataTest('add-metadata-modal').should('exist');
+
+    cy.getDataTest('name-metadata-input').find('input').type(vaultName);
+    cy.getDataTest('description-metadata-input').find('input').type(description);
+
+    cy.getDataTest('confirm-add-metadata-button').click();
+
+    // Checks if the modal was closed
+    cy.getDataTest('vault-metadata-modal').should('not.exist');
+
+    // Checks if the vault description was added
+    cy.getDataTest('add-vault-metadata-button').should('not.exist');
+    cy.contains(vaultName).should('exist');
+    cy.contains(description).should('exist');
   });
 
   it('add new relay', () => {

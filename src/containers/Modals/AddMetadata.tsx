@@ -41,7 +41,7 @@ export const AddMetadataModal = () => {
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_METADATA}>
-      <BigModal>
+      <BigModal data-test='add-metadata-modal'>
         <SBox>
           <TitleContainer>
             <StyledTitle>Add Metadata</StyledTitle>
@@ -54,14 +54,21 @@ export const AddMetadataModal = () => {
           <Text>Define your vault metadata for keepers to better understand your jobs</Text>
         </SBox>
 
-        <StyledInput label='Name' value={name} setValue={setName} placeholder='Vault name' />
+        <StyledInput
+          label='Name'
+          value={name}
+          setValue={setName}
+          placeholder='Vault name'
+          dataTestId='name-metadata-input'
+        />
 
         <InputContainer>
           <StyledInput
             label='Description'
             value={description}
             setValue={setDescription}
-            placeholder={`Short description and key urls`}
+            placeholder='Short description and key urls'
+            dataTestId='description-metadata-input'
           />
         </InputContainer>
 
@@ -74,6 +81,7 @@ export const AddMetadataModal = () => {
             variant='contained'
             disabled={!writeAsync || loading || !description || !name}
             onClick={handleConfirm}
+            data-test='confirm-add-metadata-button'
           >
             Confirm
           </ActiveButton>

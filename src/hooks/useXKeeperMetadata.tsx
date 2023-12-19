@@ -3,7 +3,7 @@ import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { TransactionExecutionError } from 'viem';
 
-import { useStateContext, useCustomClient } from '~/hooks';
+import { useStateContext, useCustomClient, useModal } from '~/hooks';
 import { getViewTransaction } from '~/utils';
 import { xkeeperMetadataABI } from '~/generated';
 import { ModalType, Status } from '~/types';
@@ -27,7 +27,8 @@ export const useXKeeperMetadata = ({
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { currentNetwork, setModalOpen, setNotification } = useStateContext();
+  const { currentNetwork, setNotification } = useStateContext();
+  const { setModalOpen } = useModal();
   const { publicClient } = useCustomClient();
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
 

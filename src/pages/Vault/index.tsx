@@ -123,7 +123,12 @@ export const Vault = () => {
                 <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.warningChipColor} />
                 Define your vault metadata for keepers to better understand your jobs
                 {selectedVault?.owner === userAddress && (
-                  <DescriptionButton disabled={selectedVault?.owner !== userAddress} onClick={handleOpenAddMetadata}>
+                  // Add vault description button
+                  <DescriptionButton
+                    data-test='add-vault-metadata-button'
+                    disabled={selectedVault?.owner !== userAddress}
+                    onClick={handleOpenAddMetadata}
+                  >
                     Add Metadata
                   </DescriptionButton>
                 )}
