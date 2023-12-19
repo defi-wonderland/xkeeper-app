@@ -2,10 +2,11 @@
 =                Misc Variables               =
 =============================================*/
 
-export const themeKey = 'keep3r-framework-app-theme';
-export const aliasKey = 'keep3r-framework-aliases';
+export const themeKey = 'xkeeper-app-theme';
+export const aliasKey = 'xkeeper-aliases';
 export const anyCaller = '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
 export const itemsPerPage = 7;
+export const vaultsPerBatch = 3;
 
 /*=============================================
 =               Style Variables               =

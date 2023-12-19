@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
-import { getPrices, getTokenList, getVaults, getVaultsData, getTotalVaults } from '~/utils';
+import { getPrices, getTokenList, getVaults, getVaultsData, getTotalVaults, vaultsPerBatch } from '~/utils';
 import { getConfig } from '~/config';
 import { useCustomClient } from '~/hooks';
 import { useModal } from '~/hooks';
@@ -61,9 +61,8 @@ export const StateProvider = ({ children }: StateProps) => {
     params: [],
   });
 
-  const REQUESTS_AMOUNT = 3;
   const [totalRequestCount, setTotalRequestCount] = useState<number>();
-  const [requestAmount, setRequestAmount] = useState<number>(REQUESTS_AMOUNT);
+  const [requestAmount, setRequestAmount] = useState<number>(vaultsPerBatch);
 
   const [currentNetwork, setCurrentNetwork] = useState<Chain>(availableChains[chainId]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -137,7 +136,7 @@ export const StateProvider = ({ children }: StateProps) => {
         if ((!totalRequestCount && !vaults.length) || reset) {
           setLoading(true);
           const totalRequestCount = await getTotalVaults(publicClient, addresses.AutomationVaultFactory);
-          const newRequestAmount = Math.min(REQUESTS_AMOUNT, totalRequestCount);
+          const newRequestAmount = Math.min(vaultsPerBatch, totalRequestCount);
 
           const newData = await fetchData(totalRequestCount - newRequestAmount, newRequestAmount);
           setVaults(newData);
@@ -155,7 +154,7 @@ export const StateProvider = ({ children }: StateProps) => {
 
   const resetVaults = useCallback(() => {
     setTotalRequestCount(undefined);
-    setRequestAmount(REQUESTS_AMOUNT);
+    setRequestAmount(vaultsPerBatch);
     setVaults([]);
   }, []);
 
