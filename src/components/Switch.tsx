@@ -1,9 +1,9 @@
 import { styled, Switch } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 export const SSwitch = styled(Switch)(({ theme }) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return {
     width: '2.8rem',

@@ -17,22 +17,24 @@ import {
 } from '~/components';
 import { BigModal, TitleContainer, DropdownContainer, DropdownLabel } from '~/containers';
 import { anyCaller, getReceiptMessage, getRelayName } from '~/utils';
-import { useStateContext, useVault } from '~/hooks';
+import { useStateContext, useTheme, useVault } from '~/hooks';
 import { ModalType, Status } from '~/types';
 import { getConfig } from '~/config';
 
 export const RelayModal = () => {
-  const { modalOpen, selectedVault, currentTheme, selectedItem, setModalOpen } = useStateContext();
-  const handleClose = () => setModalOpen(ModalType.NONE);
-  const {
-    addresses: { relays },
-  } = getConfig();
+  const { modalOpen, selectedVault, selectedItem, setModalOpen } = useStateContext();
+  const { currentTheme } = useTheme();
 
   const [relayAddress, setRelayAddress] = useState<string>('');
   const [callerAddress, setCallerAddress] = useState<string>('');
   const [callers, setCallers] = useState<string[]>([]);
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
   const [customRelay, setCustomRelay] = useState(false);
+
+  const handleClose = () => setModalOpen(ModalType.NONE);
+  const {
+    addresses: { relays },
+  } = getConfig();
 
   const callerList = useMemo(() => {
     if (allowAnyCaller) {
@@ -262,7 +264,7 @@ const Container = styled('div')({
 });
 
 export const TextButton = styled(Button)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.actionButton,
     width: '23rem',
@@ -282,7 +284,7 @@ export const TextButton = styled(Button)(() => {
 });
 
 const ToggleText = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     fontWeight: 500,
     color: currentTheme.textTertiary,
@@ -290,7 +292,7 @@ const ToggleText = styled(StyledText)(() => {
 });
 
 const ButtonText = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     fontWeight: 500,
     color: currentTheme.actionButton,

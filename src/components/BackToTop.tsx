@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { Icon, StyledText } from '~/components';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 export const BackToTop = () => {
   const handleClick = () => {
@@ -19,7 +19,7 @@ export const BackToTop = () => {
 };
 
 const SBox = styled(Box)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return {
     position: 'fixed',

@@ -5,7 +5,7 @@ import { isAddress } from 'viem';
 
 import { DataSection as DescriptionContainer, Title, Header } from '~/pages';
 import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton, ConfirmText } from '~/components';
-import { useStateContext, useVaultFactory } from '~/hooks';
+import { useStateContext, useTheme, useVaultFactory } from '~/hooks';
 import { Status } from '~/types';
 
 export const CreateVault = () => {
@@ -112,7 +112,7 @@ const TitleBox = styled(Box)({
 });
 
 const Description = styled(Typography)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textTertiary,
     fontSize: '1.4rem',
@@ -127,7 +127,7 @@ const InputContainer = styled(Box)({
 });
 
 const InputLabel = styled(Typography)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textSecondary,
     fontSize: '1.4rem',

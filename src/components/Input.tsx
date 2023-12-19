@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, styled, SxProps, Theme, InputAdornment, InputBase } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 import { Icon, IconName, STooltip, StyledText } from '~/components';
 import { TextButton } from '~/containers';
 
@@ -46,7 +46,7 @@ export const StyledInput = ({
   onClick,
   onKeyUp,
 }: InputProps) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   const [isCopied, setIsCopied] = useState(false);
 
   const onInputClick = () => {
@@ -131,7 +131,7 @@ export const StyledInput = ({
 };
 
 const InputContainer = styled(Box)(({ copyable }: { copyable?: boolean }) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   const copyableStyles = copyable && {
     div: {
@@ -157,7 +157,7 @@ const InputContainer = styled(Box)(({ copyable }: { copyable?: boolean }) => {
 });
 
 export const InputLabel = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textSecondary,
     fontSize: '1.4rem',
@@ -168,7 +168,7 @@ export const InputLabel = styled(StyledText)(() => {
 });
 
 export const InputDescription = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textTertiary,
     margin: 0,
@@ -183,14 +183,14 @@ export const InputDescription = styled(StyledText)(() => {
 });
 
 const ErrorDescription = styled(InputDescription)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.error,
   };
 });
 
 export const SBox = styled(Box)(({ disabled }: { disabled?: boolean }) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   const background: string = disabled ? currentTheme.inputDisabledBackground : 'inherit';
   const color: string = disabled ? currentTheme.textDisabled : 'inherit';
   return {
@@ -203,7 +203,7 @@ export const SBox = styled(Box)(({ disabled }: { disabled?: boolean }) => {
 });
 
 export const SOutlinedInput = styled(InputBase)(({ isError }: { isError?: boolean }) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   const errorStyles = isError && {
     borderColor: currentTheme.error,
     '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
@@ -245,7 +245,7 @@ export const SOutlinedInput = styled(InputBase)(({ isError }: { isError?: boolea
 });
 
 const SIcon = styled(Icon)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return {
     padding: '1rem',
@@ -264,7 +264,7 @@ const SInputAdornment = styled(InputAdornment)(() => {
 });
 
 const AmountInputAdornment = styled(SInputAdornment)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     cursor: 'auto',
     gap: '1.2rem',

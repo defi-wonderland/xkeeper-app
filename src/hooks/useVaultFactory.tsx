@@ -4,8 +4,7 @@ import { WriteContractResult } from 'wagmi/actions';
 import { useNavigate } from 'react-router-dom';
 import { TransactionExecutionError } from 'viem';
 
-import { useStateContext } from './useStateContext';
-import { useCustomClient } from './useCustomClient';
+import { useStateContext, useCustomClient } from '~/hooks';
 import { vaultFactoryABI } from '~/generated';
 import { getTotalVaults, getViewTransaction } from '~/utils';
 import { getConfig } from '~/config';

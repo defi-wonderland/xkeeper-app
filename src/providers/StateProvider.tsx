@@ -1,37 +1,12 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
-import {
-  Theme,
-  ThemeName,
-  ModalType,
-  Addresses,
-  Chains,
-  VaultData,
-  Notification,
-  Chain,
-  SelectedItem,
-  AliasData,
-} from '~/types';
-import {
-  aliasKey,
-  themeKey,
-  getPrices,
-  getTheme,
-  getTokenList,
-  getVaults,
-  getVaultsData,
-  loadLocalStorage,
-  getTotalVaults,
-} from '~/utils';
+import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
+import { getPrices, getTokenList, getVaults, getVaultsData, getTotalVaults } from '~/utils';
 import { getConfig } from '~/config';
 import { useCustomClient } from '~/hooks';
 
 type ContextType = {
-  theme: ThemeName;
-  currentTheme: Theme;
-  setTheme: (val: ThemeName) => void;
-
   loading: boolean;
   setLoading: (val: boolean) => void;
 
@@ -61,9 +36,6 @@ type ContextType = {
   vaults: VaultData[];
   setVaults: (val: VaultData[]) => void;
 
-  aliasData: AliasData;
-  updateAliasData: () => void;
-
   updateVaults: () => Promise<void>;
 };
 
@@ -74,26 +46,16 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const {
-    addresses,
-    availableChains,
-    DEFAULT_CHAIN,
-    DEFAULT_WETH_ADDRESS,
-    DEFAULT_THEME,
-    TEST_MODE: IS_TEST,
-  } = getConfig();
+  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS, TEST_MODE: IS_TEST } = getConfig();
   const { publicClient } = useCustomClient();
   const { address } = useAccount();
   const { chain } = useNetwork();
 
   const chainId = IS_TEST ? DEFAULT_CHAIN : chain?.id || DEFAULT_CHAIN;
 
-  const [theme, setTheme] = useState<ThemeName>(DEFAULT_THEME);
-  const currentTheme = useMemo(() => getTheme(theme), [theme]);
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
   const [vaults, setVaults] = useState<VaultData[]>([]);
-  const [aliasData, setAliasData] = useState<AliasData>({});
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     type: '',
     address: '0x',
@@ -165,31 +127,39 @@ export const StateProvider = ({ children }: StateProps) => {
     [loadData],
   );
 
-  const updateVaults = async () => {
+  const updateVaults = useCallback(async () => {
     if (typeof totalRequestCount !== 'number') return;
     const newData = await fetchData(totalRequestCount!, requestAmount);
     setVaults((prevVaults) => [...prevVaults, ...newData]);
-  };
+  }, [fetchData, requestAmount, totalRequestCount]);
 
-  const handleLoad = useCallback(async () => {
-    try {
-      if (!totalRequestCount) {
-        setLoading(true);
-        const totalRequestCount = await getTotalVaults(publicClient, addresses.AutomationVaultFactory);
-        const newRequestAmount = Math.min(requestAmount, totalRequestCount);
+  const handleLoad = useCallback(
+    async (reset?: boolean) => {
+      try {
+        if ((!totalRequestCount && !vaults.length) || reset) {
+          setLoading(true);
+          const totalRequestCount = await getTotalVaults(publicClient, addresses.AutomationVaultFactory);
+          const newRequestAmount = Math.min(REQUESTS_AMOUNT, totalRequestCount);
 
-        const newData = await fetchData(totalRequestCount - newRequestAmount, newRequestAmount);
-        setVaults(newData);
+          const newData = await fetchData(totalRequestCount - newRequestAmount, newRequestAmount);
+          setVaults(newData);
+        }
+      } catch (error) {
+        console.error('Error getting last requests:', error);
+        setLoading(false);
+        setIsError(true);
       }
-    } catch (error) {
-      console.error('Error getting last requests:', error);
-      setLoading(false);
-      setIsError(true);
-    }
-
+    },
     // to avoid infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addresses.AutomationVaultFactory, fetchData]);
+    [addresses.AutomationVaultFactory, fetchData],
+  );
+
+  const resetVaults = useCallback(() => {
+    setTotalRequestCount(undefined);
+    setRequestAmount(REQUESTS_AMOUNT);
+    setVaults([]);
+  }, []);
 
   // Load vaults on load
   useEffect(() => {
@@ -206,25 +176,13 @@ export const StateProvider = ({ children }: StateProps) => {
     setVaults([]);
   }, [currentNetwork]);
 
-  // Load alias data from local storage
-  const updateAliasData = useCallback(async () => {
-    const data = loadLocalStorage(aliasKey);
-    setAliasData(data);
-  }, []);
-
-  // Load alias data on load
-  useEffect(() => {
-    updateAliasData();
-  }, [updateAliasData]);
-
   // Update vaults on notification open
   useEffect(() => {
     if (notification.open) {
-      setTotalRequestCount(undefined);
-      setVaults([]);
-      handleLoad();
+      resetVaults();
+      handleLoad(true);
     }
-  }, [notification.open, handleLoad]);
+  }, [handleLoad, notification.open, resetVaults]);
 
   // Reset selected item when modal is close
   useEffect(() => {
@@ -237,26 +195,13 @@ export const StateProvider = ({ children }: StateProps) => {
     }
   }, [modalOpen]);
 
-  // Load theme from local storage on load
-  useEffect(() => {
-    const storedTheme = localStorage.getItem(themeKey) as ThemeName;
-    if (!storedTheme) {
-      localStorage.setItem(themeKey, DEFAULT_THEME);
-    } else {
-      setTheme(storedTheme);
-    }
-  }, [DEFAULT_THEME]);
-
   return (
     <StateContext.Provider
       value={{
-        theme,
-        setTheme,
         loading,
         setLoading,
         isError,
         setIsError,
-        currentTheme,
         notification,
         setNotification,
         modalOpen,
@@ -272,9 +217,6 @@ export const StateProvider = ({ children }: StateProps) => {
         setSelectedItem,
         vaults,
         setVaults,
-        // update,
-        aliasData,
-        updateAliasData,
 
         updateVaults,
       }}

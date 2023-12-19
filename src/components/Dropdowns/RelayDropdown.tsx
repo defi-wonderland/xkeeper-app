@@ -10,7 +10,7 @@ import {
   SIcon,
   BasicStyledListbox,
 } from '~/components';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 import { getRelayName } from '~/utils';
 
 interface RelayDropdownProps {
@@ -30,7 +30,7 @@ export function RelayDropdown({
   customRelay,
   setCustomRelay,
 }: RelayDropdownProps) {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   const createHandleMenuClick = (value: string) => {
     return () => {

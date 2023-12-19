@@ -4,7 +4,7 @@ import { useAccount, useConnect } from 'wagmi';
 
 import { CancelButton } from '~/components';
 import { getConfig } from '~/config';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 import { truncateAddress } from '~/utils';
 
 export const ConnectButton = () => {
@@ -40,7 +40,7 @@ interface Props {
   connected?: string;
 }
 const SButton = styled(CancelButton)(({ connected }: Props) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   const connectedStyles = connected && {
     border: 'none',

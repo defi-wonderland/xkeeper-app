@@ -3,8 +3,7 @@ import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { TransactionExecutionError } from 'viem';
 
-import { useStateContext } from './useStateContext';
-import { useCustomClient } from './useCustomClient';
+import { useCustomClient, useStateContext } from '~/hooks';
 import { getViewTransaction } from '~/utils';
 import { vaultABI } from '~/generated';
 import { ModalType, Status } from '~/types';

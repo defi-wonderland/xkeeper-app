@@ -1,8 +1,8 @@
 import { Chip } from '@mui/material';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 export const NoRelayChip = ({ text }: { text: string }) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return (
     <Chip
       label={text}

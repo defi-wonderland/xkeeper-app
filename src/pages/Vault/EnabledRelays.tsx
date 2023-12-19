@@ -6,7 +6,7 @@ import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } 
 import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon, StyledText } from '~/components';
 import { aliasKey, copyData, getRelayName, saveLocalStorage, truncateAddress } from '~/utils';
 import { ModalType, OptionsType, SelectedItem } from '~/types';
-import { useStateContext } from '~/hooks';
+import { useAlias, useStateContext, useTheme } from '~/hooks';
 import { Text } from './EnabledJobs';
 
 function createRelaysData(alias: string, contractAddress: string, enabledCallers: Address[]) {
@@ -14,8 +14,10 @@ function createRelaysData(alias: string, contractAddress: string, enabledCallers
 }
 
 export const EnabledRelays = () => {
-  const { setModalOpen, setSelectedItem, updateAliasData, userAddress, selectedVault, currentTheme, aliasData } =
-    useStateContext();
+  const { setModalOpen, setSelectedItem, userAddress, selectedVault } = useStateContext();
+  const { currentTheme } = useTheme();
+  const { aliasData, updateAliasData } = useAlias();
+
   const [items, setItems] = useState<{ [key: string]: boolean }>({});
   const selectedRelays = useMemo(() => selectedVault?.relays || {}, [selectedVault]);
 
@@ -176,7 +178,7 @@ const SColumnTitle = styled(ColumnTitle)({
 });
 
 export const RowButton = styled(RowText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     padding: '0rem',
     minWidth: '8rem',
@@ -211,7 +213,7 @@ export const SText = styled(Text)(() => {
 });
 
 export const NoDataContainer = styled('div')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     display: 'flex',
     flexDirection: 'column',

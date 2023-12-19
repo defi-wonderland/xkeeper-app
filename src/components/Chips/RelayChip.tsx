@@ -1,8 +1,8 @@
 import { Chip, styled } from '@mui/material';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 export const RelayChip = ({ text }: { text: string }) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return (
     <SChip
       color='success'

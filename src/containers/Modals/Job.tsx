@@ -17,11 +17,12 @@ import {
 } from '~/components';
 import { TitleContainer } from '~/containers';
 import { ModalType, Status } from '~/types';
-import { useStateContext, useVault } from '~/hooks';
+import { useStateContext, useTheme, useVault } from '~/hooks';
 import { getContractAbi, getReceiptMessage } from '~/utils';
 
 export const JobModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, currentTheme, currentNetwork } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, currentNetwork } = useStateContext();
+  const { currentTheme } = useTheme();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [jobAddress, setJobAddress] = useState('');
@@ -201,7 +202,7 @@ export const DropdownContainer = styled(Box)({
 });
 
 export const DropdownLabel = styled(Typography)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textSecondary,
     fontSize: '1.4rem',

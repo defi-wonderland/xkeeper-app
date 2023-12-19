@@ -14,7 +14,7 @@ import {
   STooltip,
   StyledText,
 } from '~/components';
-import { useFetchSelectedVault, useStateContext } from '~/hooks';
+import { useAlias, useFetchSelectedVault, useStateContext, useTheme } from '~/hooks';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
@@ -23,7 +23,9 @@ import { ModalType, Status } from '~/types';
 import { truncateAddress } from '~/utils';
 
 export const Vault = () => {
-  const { userAddress, currentTheme, currentNetwork, aliasData, setModalOpen, setSelectedItem } = useStateContext();
+  const { userAddress, currentNetwork, setModalOpen, setSelectedItem } = useStateContext();
+  const { currentTheme } = useTheme();
+  const { aliasData } = useAlias();
 
   const { requestStatus, data: selectedVault } = useFetchSelectedVault();
 
@@ -231,7 +233,7 @@ const Version = styled(Typography)({
 });
 
 const SInfoChip = styled(Box)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return {
     color: currentTheme.infoChipColor,
@@ -258,7 +260,7 @@ const DescriptionContainer = styled('div')({
 });
 
 export const Description = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textSecondary,
     fontSize: '1.6rem',
@@ -266,7 +268,7 @@ export const Description = styled(StyledText)(() => {
 });
 
 const DescriptionChip = styled(Box)(() => {
-  const { currentTheme, theme } = useStateContext();
+  const { currentTheme, theme } = useTheme();
   const border = theme === 'light' ? `1px solid ${currentTheme.warningChipColor}` : undefined;
   return {
     color: currentTheme.warningChipColor,
@@ -288,7 +290,7 @@ const DescriptionChip = styled(Box)(() => {
 });
 
 const DescriptionButton = styled(RevokeButton)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return {
     marginLeft: 'auto',

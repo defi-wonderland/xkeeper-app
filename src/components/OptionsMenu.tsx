@@ -1,7 +1,7 @@
 import { Dropdown, Menu, MenuButton, MenuItem } from '@mui/base';
 import { styled } from '@mui/system';
 
-import { useStateContext } from '~/hooks';
+import { useStateContext, useTheme } from '~/hooks';
 import { ModalType, OptionsType, SelectedItem } from '~/types';
 import { Icon } from './Icon';
 
@@ -12,7 +12,8 @@ export interface OptionsMenuProps {
 }
 
 export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
-  const { setModalOpen, userAddress, selectedVault, setSelectedItem, currentTheme } = useStateContext();
+  const { setModalOpen, userAddress, selectedVault, setSelectedItem } = useStateContext();
+  const { currentTheme } = useTheme();
   const selectedItem = { type, address, params } as SelectedItem;
 
   const isConnectedAndOwner = userAddress && selectedVault?.owner === userAddress;
@@ -74,7 +75,7 @@ export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
 }
 
 const StyledListbox = styled('ul')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     border: `1px solid ${currentTheme.textSecondaryDisabled}`,
     color: currentTheme.textSecondary,
@@ -99,7 +100,7 @@ const StyledMenuItem = styled(MenuItem)(() => {
 });
 
 const TriggerButton = styled(MenuButton)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     border: 'none',
     borderRadius: currentTheme.borderRadius,
@@ -116,7 +117,7 @@ const TriggerButton = styled(MenuButton)(() => {
 });
 
 const OptionContainer = styled('div')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     background: currentTheme.backgroundPrimary,
     display: 'flex',
@@ -137,7 +138,7 @@ const OptionContainer = styled('div')(() => {
 });
 
 const EditContainer = styled(OptionContainer)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textPrimary,
     borderRadius: currentTheme.borderRadius,
@@ -149,7 +150,7 @@ const EditContainer = styled(OptionContainer)(() => {
 });
 
 const RevokeContainer = styled(EditContainer)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.error,
   };

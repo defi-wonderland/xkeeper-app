@@ -13,10 +13,11 @@ import {
 } from '~/components';
 import { BigModal } from '~/containers';
 import { ModalType } from '~/types';
-import { useStateContext } from '~/hooks';
+import { useStateContext, useTheme } from '~/hooks';
 
 export const DepositModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, currentTheme, currentNetwork } = useStateContext();
+  const { modalOpen, setModalOpen, selectedVault, currentNetwork } = useStateContext();
+  const { currentTheme } = useTheme();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   return (

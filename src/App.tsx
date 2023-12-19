@@ -6,7 +6,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import CssBaseline from '@mui/material/CssBaseline';
 
-import { ScrollToTop, useStateContext } from '~/hooks';
+import { ScrollToTop, useTheme } from '~/hooks';
 import { CreateVault, Landing, Vault } from '~/pages';
 import {
   AppLayout,
@@ -49,7 +49,7 @@ const Modals = () => {
 };
 
 export const App = () => {
-  const { theme: mode, currentTheme } = useStateContext();
+  const { theme: mode, currentTheme } = useTheme();
 
   const theme = useMemo(
     () =>

@@ -2,7 +2,7 @@ import { InputAdornment, FormControl, styled } from '@mui/material';
 
 import { Icon } from './Icon';
 import { SOutlinedInput } from './Input';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 interface SearchInputProps {
   value: string;
@@ -37,7 +37,7 @@ export const SearchInput = ({ value, setValue, placeholder }: SearchInputProps) 
 };
 
 const SInput = styled(SOutlinedInput)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     paddingLeft: '1.4rem',
     '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {

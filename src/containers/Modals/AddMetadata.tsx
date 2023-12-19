@@ -12,13 +12,14 @@ import {
   Icon,
   StyledText,
 } from '~/components';
-import { useStateContext, useXKeeperMetadata } from '~/hooks';
+import { useStateContext, useTheme, useXKeeperMetadata } from '~/hooks';
 import { ModalType } from '~/types';
 import { getConfig } from '~/config';
 
 export const AddMetadataModal = () => {
   const { addresses } = getConfig();
-  const { setModalOpen, modalOpen, currentTheme, loading, selectedVault } = useStateContext();
+  const { setModalOpen, modalOpen, loading, selectedVault } = useStateContext();
+  const { currentTheme } = useTheme();
 
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');

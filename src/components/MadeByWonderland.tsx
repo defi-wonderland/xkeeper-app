@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { StyledText } from '~/components';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 import WonderlandLogo from '~/assets/wonderland.svg';
 
 export const MadeByWonderland = () => {
@@ -17,7 +17,7 @@ export const MadeByWonderland = () => {
 };
 
 const SBox = styled(Box)(() => {
-  const { currentTheme, theme } = useStateContext();
+  const { currentTheme, theme } = useTheme();
   const logoFilter = theme === 'dark' ? 'none' : 'invert(1)';
   return {
     position: 'fixed',

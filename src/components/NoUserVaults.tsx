@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { StyledText, Icon, ActiveButton, IconName } from '~/components';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 interface NoUserVaultsProps {
   text: string;
@@ -38,7 +38,7 @@ const SBox = styled(Box)(() => {
 });
 
 const StyledSafeIcon = styled(Icon)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textDisabled,
     background: currentTheme.backButtonBorderColor,
@@ -51,7 +51,7 @@ const StyledSafeIcon = styled(Icon)(() => {
 });
 
 const SText = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textDisabled,
     fontWeight: 500,

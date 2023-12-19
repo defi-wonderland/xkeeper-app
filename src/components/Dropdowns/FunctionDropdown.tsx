@@ -6,7 +6,7 @@ import { getFunctionSelector } from 'viem';
 import { AbiFunction } from 'abitype';
 
 import { StyledText, CustomScrollbar, DropdownTriggerButton, StyledMenuItem, SIcon } from '~/components';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 interface FunctionDropdownProps {
   value: string;
@@ -17,7 +17,7 @@ interface FunctionDropdownProps {
 }
 
 export function FunctionDropdown({ value, setValue, abi, setSignature, disabled }: FunctionDropdownProps) {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   const createHandleMenuClick = (value: AbiFunction) => {
     return () => {
@@ -74,7 +74,7 @@ const SCustomScrollbar = styled(CustomScrollbar)({
 });
 
 export const BasicStyledListbox = styled('ul')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     border: `1px solid ${currentTheme.textSecondaryDisabled}`,
     color: currentTheme.textSecondary,

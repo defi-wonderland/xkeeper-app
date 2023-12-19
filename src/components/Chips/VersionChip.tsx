@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 interface VersionChipProps {
   text: string;
@@ -12,7 +12,7 @@ export const VersionChip = ({ text, label }: VersionChipProps) => {
 };
 
 const SInfoChip = styled(Box)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.addressChipColor,
     backgroundColor: currentTheme.addressChipBackground,
