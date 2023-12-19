@@ -14,12 +14,13 @@ import {
 
 import { ActiveButton, CancelButton, StyledText, TokenIcon } from '~/components';
 import { formatDataNumber } from '~/utils';
-import { useStateContext, useTheme } from '~/hooks';
+import { useModal, useStateContext, useTheme } from '~/hooks';
 import { ModalType } from '~/types';
 import { getConfig } from '~/config';
 
 export const Tokens = () => {
-  const { userAddress, setModalOpen, selectedVault, currentNetwork } = useStateContext();
+  const { userAddress, selectedVault, currentNetwork } = useStateContext();
+  const { setModalOpen } = useModal();
   const { DEFAULT_ETH_ADDRESS } = getConfig();
 
   const openTokenContract = (address: string) => {

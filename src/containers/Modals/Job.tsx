@@ -17,11 +17,12 @@ import {
 } from '~/components';
 import { TitleContainer } from '~/containers';
 import { ModalType, Status } from '~/types';
-import { useStateContext, useTheme, useVault } from '~/hooks';
+import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
 import { getContractAbi, getReceiptMessage } from '~/utils';
 
 export const JobModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, currentNetwork } = useStateContext();
+  const { selectedVault, currentNetwork } = useStateContext();
+  const { modalOpen, setModalOpen } = useModal();
   const { currentTheme } = useTheme();
   const handleClose = () => setModalOpen(ModalType.NONE);
 

@@ -14,16 +14,18 @@ import {
   STooltip,
   StyledText,
 } from '~/components';
-import { useAlias, useFetchSelectedVault, useStateContext, useTheme } from '~/hooks';
+import { useAlias, useFetchSelectedVault, useModal, useStateContext, useTheme } from '~/hooks';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
 import { Tokens } from './Tokens';
 import { ModalType, Status } from '~/types';
 import { truncateAddress } from '~/utils';
+import { Modals } from './Modals';
 
 export const Vault = () => {
-  const { userAddress, currentNetwork, setModalOpen, setSelectedItem } = useStateContext();
+  const { userAddress, currentNetwork, setSelectedItem } = useStateContext();
+  const { setModalOpen } = useModal();
   const { currentTheme } = useTheme();
   const { aliasData } = useAlias();
 
@@ -61,6 +63,9 @@ export const Vault = () => {
 
   return (
     <PageContainer>
+      {/* Component that contains all modals */}
+      <Modals />
+
       {/* Navigation */}
       <BreadCrumbs previousPage='Home' currentPage='Vault' />
 

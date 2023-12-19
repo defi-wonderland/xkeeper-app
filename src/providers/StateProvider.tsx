@@ -5,6 +5,7 @@ import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedI
 import { getPrices, getTokenList, getVaults, getVaultsData, getTotalVaults } from '~/utils';
 import { getConfig } from '~/config';
 import { useCustomClient } from '~/hooks';
+import { useModal } from '~/hooks';
 
 type ContextType = {
   loading: boolean;
@@ -15,9 +16,6 @@ type ContextType = {
 
   notification: Notification;
   setNotification: (val: Notification) => void;
-
-  modalOpen: ModalType;
-  setModalOpen: (val: ModalType) => void;
 
   selectedVault?: VaultData;
   setSelectedVault: (val: VaultData) => void;
@@ -48,6 +46,7 @@ export const StateContext = createContext({} as ContextType);
 export const StateProvider = ({ children }: StateProps) => {
   const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS, TEST_MODE: IS_TEST } = getConfig();
   const { publicClient } = useCustomClient();
+  const { modalOpen } = useModal();
   const { address } = useAccount();
   const { chain } = useNetwork();
 
@@ -66,7 +65,6 @@ export const StateProvider = ({ children }: StateProps) => {
   const [totalRequestCount, setTotalRequestCount] = useState<number>();
   const [requestAmount, setRequestAmount] = useState<number>(REQUESTS_AMOUNT);
 
-  const [modalOpen, setModalOpen] = useState<ModalType>(ModalType.NONE);
   const [currentNetwork, setCurrentNetwork] = useState<Chain>(availableChains[chainId]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -204,8 +202,6 @@ export const StateProvider = ({ children }: StateProps) => {
         setIsError,
         notification,
         setNotification,
-        modalOpen,
-        setModalOpen,
         userAddress: address,
         addresses,
         currentNetwork,

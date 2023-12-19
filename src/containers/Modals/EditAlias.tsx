@@ -12,12 +12,13 @@ import {
   BaseModal,
   Icon,
 } from '~/components';
-import { useAlias, useStateContext, useTheme } from '~/hooks';
+import { useAlias, useModal, useStateContext, useTheme } from '~/hooks';
 import { ModalType } from '~/types';
 import { aliasKey, saveLocalStorage } from '~/utils';
 
 export const EditAliasModal = () => {
-  const { setModalOpen, modalOpen, selectedItem } = useStateContext();
+  const { selectedItem } = useStateContext();
+  const { modalOpen, setModalOpen } = useModal();
   const { currentTheme } = useTheme();
   const { aliasData, updateAliasData } = useAlias();
   const [alias, setAlias] = useState<string>('');

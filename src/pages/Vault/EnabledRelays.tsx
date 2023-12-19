@@ -6,7 +6,7 @@ import { SectionHeader, SCard, Title, ColumnTitle, RowText, STableRow, STable } 
 import { STooltip, OptionsMenu, ActiveButton, IconContainer, Icon, StyledText } from '~/components';
 import { aliasKey, copyData, getRelayName, saveLocalStorage, truncateAddress } from '~/utils';
 import { ModalType, OptionsType, SelectedItem } from '~/types';
-import { useAlias, useStateContext, useTheme } from '~/hooks';
+import { useAlias, useModal, useStateContext, useTheme } from '~/hooks';
 import { Text } from './EnabledJobs';
 
 function createRelaysData(alias: string, contractAddress: string, enabledCallers: Address[]) {
@@ -14,7 +14,8 @@ function createRelaysData(alias: string, contractAddress: string, enabledCallers
 }
 
 export const EnabledRelays = () => {
-  const { setModalOpen, setSelectedItem, userAddress, selectedVault } = useStateContext();
+  const { setSelectedItem, userAddress, selectedVault } = useStateContext();
+  const { setModalOpen } = useModal();
   const { currentTheme } = useTheme();
   const { aliasData, updateAliasData } = useAlias();
 

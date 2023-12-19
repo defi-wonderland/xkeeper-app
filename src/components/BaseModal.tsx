@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { styled, Box } from '@mui/system';
 import { Modal } from '@mui/base/Modal';
 
-import { useStateContext, useTheme } from '~/hooks';
+import { useModal, useTheme } from '~/hooks';
 import { zIndex } from '~/utils';
 import { ModalType } from '~/types';
 import { CustomScrollbar } from '~/components';
@@ -14,7 +14,7 @@ interface BaseModalProps {
 }
 
 export const BaseModal = ({ children, open }: BaseModalProps) => {
-  const { setModalOpen } = useStateContext();
+  const { setModalOpen } = useModal();
   return (
     <StyledModal open={open} onClose={() => setModalOpen(ModalType.NONE)} slots={{ backdrop: StyledBackdrop }}>
       <SModal>

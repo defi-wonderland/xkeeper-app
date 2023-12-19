@@ -6,7 +6,7 @@ import { WagmiConfig } from 'wagmi';
 import { BrowserRouter } from 'react-router-dom';
 
 import { wagmiConfig } from './config';
-import { AliasProvider, StateProvider, ThemeProvider } from './providers';
+import { AliasProvider, ModalProvider, StateProvider, ThemeProvider } from './providers';
 import { App } from '~/App';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -15,9 +15,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <ThemeProvider>
           <AliasProvider>
-            <StateProvider>
-              <App />
-            </StateProvider>
+            <ModalProvider>
+              <StateProvider>
+                <App />
+              </StateProvider>
+            </ModalProvider>
           </AliasProvider>
         </ThemeProvider>
       </BrowserRouter>

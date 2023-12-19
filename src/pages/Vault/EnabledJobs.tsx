@@ -6,7 +6,7 @@ import { AddressContainer, NoDataContainer, RowButton, SText } from './EnabledRe
 import { ActiveButton, OptionsMenu, IconContainer, STooltip, Icon, StyledText } from '~/components';
 import { aliasKey, copyData, saveLocalStorage, truncateAddress } from '~/utils';
 import { Items, ModalType, OptionsType, SelectedItem } from '~/types';
-import { useAlias, useStateContext, useTheme } from '~/hooks';
+import { useAlias, useModal, useStateContext, useTheme } from '~/hooks';
 
 function createJobsData(alias: string, contractAddress: string, functionSignature: string[]) {
   return { alias, contractAddress, functionSignature };
@@ -14,8 +14,9 @@ function createJobsData(alias: string, contractAddress: string, functionSignatur
 
 export const EnabledJobs = () => {
   const { currentTheme } = useTheme();
-  const { userAddress, setSelectedItem, setModalOpen, selectedVault } = useStateContext();
+  const { userAddress, setSelectedItem, selectedVault } = useStateContext();
   const { aliasData, updateAliasData } = useAlias();
+  const { setModalOpen } = useModal();
 
   const [items, setItems] = useState<Items[]>([{ value: '', itemCopied: false }]);
 

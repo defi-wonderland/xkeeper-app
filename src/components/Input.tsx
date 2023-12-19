@@ -68,7 +68,7 @@ export const StyledInput = ({
   };
 
   return (
-    <InputContainer onClick={handleCopy} copyable={copyable} sx={{ ...sx }}>
+    <InputContainer onClick={handleCopy} isCopyable={copyable} sx={{ ...sx }}>
       {!!label && <InputLabel>{label}</InputLabel>}
 
       <SBox disabled={disabled}>
@@ -130,15 +130,15 @@ export const StyledInput = ({
   );
 };
 
-const InputContainer = styled(Box)(({ copyable }: { copyable?: boolean }) => {
+const InputContainer = styled(Box)(({ isCopyable }: { isCopyable?: boolean }) => {
   const { currentTheme } = useTheme();
 
-  const copyableStyles = copyable && {
+  const copyableStyles = isCopyable && {
     div: {
       background: currentTheme.inputDisabledBackground,
     },
     input: {
-      cursor: copyable ? 'pointer' : 'text',
+      cursor: isCopyable ? 'pointer' : 'text',
       color: `${currentTheme.textDisabled} !important`,
     },
     'i:before': {

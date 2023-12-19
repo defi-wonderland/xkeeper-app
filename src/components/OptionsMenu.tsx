@@ -1,7 +1,7 @@
 import { Dropdown, Menu, MenuButton, MenuItem } from '@mui/base';
 import { styled } from '@mui/system';
 
-import { useStateContext, useTheme } from '~/hooks';
+import { useModal, useStateContext, useTheme } from '~/hooks';
 import { ModalType, OptionsType, SelectedItem } from '~/types';
 import { Icon } from './Icon';
 
@@ -12,7 +12,8 @@ export interface OptionsMenuProps {
 }
 
 export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
-  const { setModalOpen, userAddress, selectedVault, setSelectedItem } = useStateContext();
+  const { userAddress, selectedVault, setSelectedItem } = useStateContext();
+  const { setModalOpen } = useModal();
   const { currentTheme } = useTheme();
   const selectedItem = { type, address, params } as SelectedItem;
 

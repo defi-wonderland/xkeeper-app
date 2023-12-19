@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Box, IconButton, styled } from '@mui/material';
 
-import { useStateContext, useTheme } from '~/hooks';
+import { useModal, useStateContext, useTheme } from '~/hooks';
 import { ChainDropdown, ConnectButton, Icon, NavigationLink, StyledText } from '~/components';
 import { themeKey, zIndex } from '~/utils';
 import { ModalType } from '~/types';
 
 export const Header = () => {
-  const { availableChains, currentNetwork, modalOpen } = useStateContext();
+  const { availableChains, currentNetwork } = useStateContext();
+  const { modalOpen } = useModal();
   const { setTheme, theme, currentTheme } = useTheme();
 
   const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());

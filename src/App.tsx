@@ -8,16 +8,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { ScrollToTop, useTheme } from '~/hooks';
 import { CreateVault, Landing, Vault } from '~/pages';
-import {
-  AppLayout,
-  AddMetadataModal,
-  DepositModal,
-  EditAliasModal,
-  JobModal,
-  RelayModal,
-  RevokeModal,
-  WithdrawtModal,
-} from '~/containers';
+import { AppLayout } from '~/containers';
 import { UseSnackbar, customTheme } from '~/components';
 import { availableChains } from '~/config';
 import { zIndex } from './utils';
@@ -31,20 +22,6 @@ const AppRouter = () => {
         <Route path='/create' element={<CreateVault />} />
       </Route>
     </Routes>
-  );
-};
-
-const Modals = () => {
-  return (
-    <>
-      <DepositModal />
-      <JobModal />
-      <RelayModal />
-      <WithdrawtModal />
-      <EditAliasModal />
-      <RevokeModal />
-      <AddMetadataModal />
-    </>
   );
 };
 
@@ -116,7 +93,6 @@ export const App = () => {
   return (
     <RainbowKitProvider theme={customTheme(currentTheme)} chains={availableChains}>
       <ThemeProvider theme={theme}>
-        <Modals />
         <CssBaseline />
         <ScrollToTop />
         <AppRouter />

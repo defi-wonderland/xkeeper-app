@@ -16,11 +16,12 @@ import {
   ConfirmText,
 } from '~/components';
 import { BigModal, TitleContainer as Header } from '~/containers';
-import { useStateContext, useVault, useTheme } from '~/hooks';
+import { useStateContext, useVault, useTheme, useModal } from '~/hooks';
 import { ModalType, TokenData } from '~/types';
 
 export const WithdrawtModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, currentNetwork, loading, userAddress } = useStateContext();
+  const { selectedVault, currentNetwork, loading, userAddress } = useStateContext();
+  const { modalOpen, setModalOpen } = useModal();
   const { currentTheme } = useTheme();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
