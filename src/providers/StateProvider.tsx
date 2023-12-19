@@ -64,8 +64,6 @@ type ContextType = {
   aliasData: AliasData;
   updateAliasData: () => void;
 
-  // update: () => void;
-
   updateVaults: () => Promise<void>;
 };
 
@@ -191,7 +189,12 @@ export const StateProvider = ({ children }: StateProps) => {
 
     // to avoid infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addresses.AutomationVaultFactory, fetchData, publicClient]);
+  }, [addresses.AutomationVaultFactory, fetchData]);
+
+  // Load vaults on load
+  useEffect(() => {
+    handleLoad();
+  }, [handleLoad]);
 
   // Update current network when chain changes
   useEffect(() => {
@@ -209,11 +212,6 @@ export const StateProvider = ({ children }: StateProps) => {
     setAliasData(data);
   }, []);
 
-  // Load vaults on load
-  useEffect(() => {
-    handleLoad();
-  }, [handleLoad]);
-
   // Load alias data on load
   useEffect(() => {
     updateAliasData();
@@ -222,6 +220,8 @@ export const StateProvider = ({ children }: StateProps) => {
   // Update vaults on notification open
   useEffect(() => {
     if (notification.open) {
+      setTotalRequestCount(undefined);
+      setVaults([]);
       handleLoad();
     }
   }, [notification.open, handleLoad]);

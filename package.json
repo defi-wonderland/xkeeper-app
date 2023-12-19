@@ -70,7 +70,7 @@
     "prettier": "3.0.3",
     "styled-components": "6.0.7",
     "typescript": "5.0.2",
-    "vite": "4.4.5",
+    "vite": "5.0.10",
     "vite-tsconfig-paths": "4.2.0",
     "vitest": "0.34.3"
   }

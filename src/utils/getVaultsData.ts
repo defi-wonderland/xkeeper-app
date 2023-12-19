@@ -119,7 +119,7 @@ const fetchAndFormatData = async (
   const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain; // Load tokens from mainnet when on goerli
   tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, prices);
 
-  if (relays?.result?.length && jobs?.result?.length) {
+  if (relays?.result?.length || jobs?.result?.length) {
     const relayEnabledCallers = relays.result.map((relayAddress: Address) => ({
       ...vaultContract,
       functionName: 'relayEnabledCallers',
@@ -128,7 +128,7 @@ const fetchAndFormatData = async (
 
     const jobEnabledFunctions = jobs.result.map((jobAddress: Address) => ({
       ...vaultContract,
-      functionName: 'jobEnabledFunctions',
+      functionName: 'jobEnabledSelectors',
       args: [jobAddress],
     }));
 
