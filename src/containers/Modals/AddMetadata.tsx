@@ -93,6 +93,10 @@ export const AddMetadataModal = () => {
 
 const BigModal = styled(Box)({
   width: '59.6rem',
+
+  '@media (max-width: 600px)': {
+    width: '100%',
+  },
 });
 
 const SBox = styled(Box)({

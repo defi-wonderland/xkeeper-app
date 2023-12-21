@@ -296,6 +296,15 @@ const DescriptionChip = styled(Box)(() => {
     width: '100%',
     minHeight: '6.65rem',
     border,
+
+    '@media (max-width: 600px)': {
+      flexDirection: 'column',
+      alignItems: 'center',
+      '& button': {
+        marginLeft: '0',
+        width: '100%',
+      },
+    },
   };
 });
 
