@@ -1,5 +1,5 @@
-import { injectedWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import { injectedWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 
 import { configureChains, createConfig } from 'wagmi';
 import { goerli, mainnet, optimism, arbitrum, polygon } from 'wagmi/chains';
@@ -26,8 +26,9 @@ const getWallets = () => {
   }
 };
 
-export const { chains: availableChains, publicClient } = TEST_MODE
-  ? configureChains(
+export const { chains: availableChains, publicClient } = (() => {
+  if (TEST_MODE) {
+    return configureChains(
       [goerli],
       [
         jsonRpcProvider({
@@ -37,12 +38,15 @@ export const { chains: availableChains, publicClient } = TEST_MODE
         }),
       ],
       { batch: { multicall: true } },
-    )
-  : configureChains(
+    );
+  } else {
+    return configureChains(
       [goerli, mainnet, optimism, arbitrum, polygon],
       [alchemyProvider({ apiKey: ALCHEMY_KEY }), publicProvider()],
       { batch: { multicall: true } },
     );
+  }
+})();
 
 const config = {
   autoConnect: true,
