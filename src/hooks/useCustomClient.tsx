@@ -1,9 +1,8 @@
-import 'viem/window';
-
 import { useMemo } from 'react';
 import { useNetwork, PublicClient } from 'wagmi';
 import { goerli, mainnet, optimism, arbitrum, polygon } from 'wagmi/chains';
 import { Chain as WagmiChain, createPublicClient, custom, fallback, http } from 'viem';
+import 'viem/window';
 
 import { getConfig } from '~/config';
 import { useStateContext } from '~/hooks';
