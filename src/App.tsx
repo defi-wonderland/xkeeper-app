@@ -19,7 +19,7 @@ import {
   WithdrawtModal,
 } from '~/containers';
 import { UseSnackbar, customTheme } from '~/components';
-import { availableChains } from './main';
+import { availableChains } from '~/config';
 import { zIndex } from './utils';
 
 const AppRouter = () => {

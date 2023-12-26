@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useStateContext } from './useStateContext';
-import { getCustomClient, getVaultEvents } from '~/utils';
+import { useCustomClient, useStateContext } from '~/hooks';
+import { getVaultEvents } from '~/utils';
 import { EventData, Status } from '~/types';
 
 /**
@@ -10,7 +10,8 @@ import { EventData, Status } from '~/types';
  * @returns {EventData} data - Vault activity data
  */
 export const useFetchVaultActivity = () => {
-  const { currentNetwork, selectedVault, vaults, userAddress, setVaults, setSelectedVault } = useStateContext();
+  const { selectedVault, vaults, setVaults, setSelectedVault } = useStateContext();
+  const { publicClient } = useCustomClient();
   const [requestStatus, setRequestStatus] = useState(Status.LOADING);
   const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
 
@@ -33,11 +34,10 @@ export const useFetchVaultActivity = () => {
   // Load events when there are no events loaded in the selected vault
   const getEvents = useCallback(async () => {
     if (selectedVault?.events?.length) return;
-    const publicClient = getCustomClient(currentNetwork.id, userAddress);
     const events = await getVaultEvents(publicClient, 0n, selectedVault?.address);
 
     setEvents(events.reverse()); // Reverse to show latest events first
-  }, [currentNetwork.id, selectedVault?.address, selectedVault?.events?.length, userAddress]);
+  }, [publicClient, selectedVault?.address, selectedVault?.events?.length]);
 
   useEffect(() => {
     setRequestStatus(Status.LOADING);

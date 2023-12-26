@@ -53,14 +53,14 @@ export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
 
         {isConnectedAndOwner && (
           <>
-            <StyledMenuItem onClick={handleOpenEditModal}>
+            <StyledMenuItem onClick={handleOpenEditModal} data-test={`edit-alias-button`}>
               <EditContainer>
                 <Icon name='pencil-square' size='2rem' />
                 <p>Edit {type}</p>
               </EditContainer>
             </StyledMenuItem>
 
-            <StyledMenuItem onClick={handleOpenRevokeModal}>
+            <StyledMenuItem onClick={handleOpenRevokeModal} data-test={`revoke-button`}>
               <RevokeContainer>
                 <Icon name='x-circle' size='2rem' />
                 <p>Revoke {type}</p>

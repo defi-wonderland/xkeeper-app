@@ -39,7 +39,11 @@ export const Landing = () => {
 
         items: searchedVaults.length ? (
           searchedVaults.map((vault, index) => (
-            <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
+            <NavigationLink
+              to={'/vault/' + vault.address}
+              key={vault.address + '-' + index}
+              dataTestId={`vault-card-${index}`}
+            >
               <VaultCard vaultData={vault} onClick={() => setSelectedVault(vault)} />
             </NavigationLink>
           ))
@@ -56,7 +60,11 @@ export const Landing = () => {
       title: 'My Vaults',
       items: ownedVaults.length ? (
         ownedVaults.map((vault, index) => (
-          <NavigationLink to={'/vault/' + vault.address} key={vault.address + '-' + index}>
+          <NavigationLink
+            to={'/vault/' + vault.address}
+            key={vault.address + '-' + index}
+            dataTestId={`vault-card-${index}`}
+          >
             <VaultCard vaultData={vault} />
           </NavigationLink>
         ))
@@ -79,7 +87,7 @@ export const Landing = () => {
 
         {/* Create Vault Button */}
         <NavigationLink to='/create'>
-          <CreateVaultBtn variant='contained' size='large' data-testid='create-vault-btn'>
+          <CreateVaultBtn variant='contained' size='large' data-test='create-vault-btn'>
             <SIcon name='plus' size='1.8rem' color={currentTheme.actionButtonColor} />
             Create Vault
           </CreateVaultBtn>

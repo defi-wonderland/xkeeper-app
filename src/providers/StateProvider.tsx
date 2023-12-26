@@ -22,9 +22,9 @@ import {
   getVaults,
   getVaultsData,
   loadLocalStorage,
-  getCustomClient,
 } from '~/utils';
 import { getConfig } from '~/config';
+import { useCustomClient } from '~/hooks';
 
 type ContextType = {
   theme: ThemeName;
@@ -73,9 +73,19 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS, DEFAULT_THEME } = getConfig();
+  const {
+    addresses,
+    availableChains,
+    DEFAULT_CHAIN,
+    DEFAULT_WETH_ADDRESS,
+    DEFAULT_THEME,
+    TEST_MODE: IS_TEST,
+  } = getConfig();
+  const { publicClient } = useCustomClient();
   const { address } = useAccount();
   const { chain } = useNetwork();
+
+  const chainId = IS_TEST ? DEFAULT_CHAIN : chain?.id || DEFAULT_CHAIN;
 
   const [theme, setTheme] = useState<ThemeName>(DEFAULT_THEME);
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
@@ -90,13 +100,12 @@ export const StateProvider = ({ children }: StateProps) => {
   });
 
   const [modalOpen, setModalOpen] = useState<ModalType>(ModalType.NONE);
-  const [currentNetwork, setCurrentNetwork] = useState<Chain>(availableChains[chain?.id || DEFAULT_CHAIN]);
+  const [currentNetwork, setCurrentNetwork] = useState<Chain>(availableChains[chainId]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
   const update = useCallback(async () => {
     setLoading(true);
-    const publicClient = getCustomClient(currentNetwork.id, address);
 
     const tokens = getTokenList(currentNetwork.id);
     const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
@@ -112,12 +121,18 @@ export const StateProvider = ({ children }: StateProps) => {
 
     setVaults(vaultsData);
     setLoading(false);
-  }, [DEFAULT_WETH_ADDRESS, address, addresses.AutomationVaultFactory, addresses.xKeeperMetadata, currentNetwork.id]);
+  }, [
+    DEFAULT_WETH_ADDRESS,
+    addresses.AutomationVaultFactory,
+    addresses.xKeeperMetadata,
+    currentNetwork.id,
+    publicClient,
+  ]);
 
   // Update current network when chain changes
   useEffect(() => {
-    if (chain?.id) setCurrentNetwork(availableChains[chain?.id] || availableChains[DEFAULT_CHAIN]);
-  }, [DEFAULT_CHAIN, availableChains, chain, chain?.id]);
+    if (chain?.id) setCurrentNetwork(availableChains[chainId]);
+  }, [DEFAULT_CHAIN, availableChains, chain, chain?.id, chainId]);
 
   // Reset vaults when network changes
   useEffect(() => {

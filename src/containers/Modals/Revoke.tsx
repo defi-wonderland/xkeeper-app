@@ -3,23 +3,24 @@ import { styled, Box } from '@mui/material';
 import { StyledTitle, StyledText, CancelButton, RevokeButton, BaseModal, ConfirmText } from '~/components';
 import { useStateContext, useVault } from '~/hooks';
 import { getReceiptMessage, truncateAddress } from '~/utils';
-import { ModalType } from '~/types';
+import { ModalType, Status } from '~/types';
 
 export const RevokeModal = () => {
-  const { setModalOpen, modalOpen, selectedItem, selectedVault, loading } = useStateContext();
+  const { setModalOpen, modalOpen, selectedItem, selectedVault } = useStateContext();
 
   const type = selectedItem.type;
   const value = selectedItem.address;
 
   const functionName = selectedItem?.type === 'relay' ? 'revokeRelayCallers' : 'revokeJobFunctions';
 
-  const { handleSendTransaction, writeAsync } = useVault({
+  const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: functionName,
     args: [selectedItem.address, selectedItem.params],
     notificationTitle: `${type} successfully revoked`,
     notificationMessage: getReceiptMessage(value, 'has been revoked and is no longer active'),
   });
+  const isLoading = requestStatus === Status.LOADING;
 
   return (
     <BaseModal open={modalOpen === ModalType.REVOQUE}>
@@ -32,12 +33,17 @@ export const RevokeModal = () => {
       </SBox>
 
       <ButtonsContainer>
-        <CancelButton variant='outlined' disabled={loading} onClick={() => setModalOpen(ModalType.NONE)}>
+        <CancelButton variant='outlined' disabled={isLoading} onClick={() => setModalOpen(ModalType.NONE)}>
           Cancel
         </CancelButton>
 
-        <RevokeButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
-          <ConfirmText isLoading={loading} />
+        <RevokeButton
+          data-test='confirm-revoke'
+          variant='contained'
+          disabled={!writeAsync || isLoading}
+          onClick={handleSendTransaction}
+        >
+          <ConfirmText isLoading={isLoading} />
         </RevokeButton>
       </ButtonsContainer>
     </BaseModal>

@@ -18,11 +18,11 @@ import {
 import { BigModal, TitleContainer, DropdownContainer, DropdownLabel } from '~/containers';
 import { anyCaller, getReceiptMessage, getRelayName } from '~/utils';
 import { useStateContext, useVault } from '~/hooks';
-import { ModalType } from '~/types';
+import { ModalType, Status } from '~/types';
 import { getConfig } from '~/config';
 
 export const RelayModal = () => {
-  const { modalOpen, selectedVault, loading, currentTheme, selectedItem, setModalOpen } = useStateContext();
+  const { modalOpen, selectedVault, currentTheme, selectedItem, setModalOpen } = useStateContext();
   const handleClose = () => setModalOpen(ModalType.NONE);
   const {
     addresses: { relays },
@@ -48,13 +48,14 @@ export const RelayModal = () => {
 
   const availableValues = useMemo(() => [...Object.values(relays), 'Choose Relay'], [relays]);
 
-  const { handleSendTransaction, writeAsync } = useVault({
+  const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'approveRelayCallers',
     args: [relayAddress, callerList],
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
   });
+  const isLoading = requestStatus === Status.LOADING;
 
   const handleToggle = () => {
     setCallers([]);
@@ -137,7 +138,7 @@ export const RelayModal = () => {
               value={dropdownValue}
               setValue={setRelayAddress}
               availableValues={availableValues}
-              disabled={loading || editRelay}
+              disabled={isLoading || editRelay}
               setCustomRelay={setCustomRelay}
               customRelay={customRelay}
             />
@@ -148,7 +149,7 @@ export const RelayModal = () => {
               value={relayAddress}
               setValue={setRelayAddress}
               placeholder='Enter relay address'
-              disabled={loading}
+              disabled={isLoading}
               error={!!relayAddress && !isAddress(relayAddress)}
               errorText='Invalid address'
               isAutoFocus
@@ -168,12 +169,13 @@ export const RelayModal = () => {
             value={callerAddress}
             setValue={setCallerAddress}
             placeholder='Enter caller address'
-            disabled={allowAnyCaller || loading}
+            disabled={allowAnyCaller || isLoading}
             error={(!!callerAddress && !isAddress(callerAddress)) || callerIsRepeated}
             errorText={errorText}
             onClick={handleRemoveCallerInput}
             onKeyUp={handleSendTransaction}
             removable={!!callerAddress}
+            dataTestId='relay-caller-input'
           />
 
           {!allowAnyCaller &&
@@ -184,7 +186,7 @@ export const RelayModal = () => {
                 value={caller}
                 setValue={() => {}}
                 onClick={handleRemoveCaller(caller)}
-                disabled={allowAnyCaller || loading}
+                disabled={allowAnyCaller || isLoading}
                 removable
               />
             ))}
@@ -192,7 +194,7 @@ export const RelayModal = () => {
           <CallersContainer>
             <TextButton
               variant='text'
-              disabled={allowAnyCaller || !isAddress(callerAddress) || loading}
+              disabled={allowAnyCaller || !isAddress(callerAddress) || isLoading}
               onClick={handleAddNewCaller}
             >
               <Container>
@@ -202,19 +204,24 @@ export const RelayModal = () => {
             </TextButton>
 
             <Container>
-              <SSwitch disabled={loading} onClick={handleToggle} />
+              <SSwitch disabled={isLoading} onClick={handleToggle} />
               <ToggleText>Allow any caller</ToggleText>
             </Container>
           </CallersContainer>
         </InputsContainer>
 
         <SButtonsContainer>
-          <CancelButton variant='outlined' disabled={loading} onClick={handleClose}>
+          <CancelButton variant='outlined' disabled={isLoading} onClick={handleClose}>
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained' disabled={!writeAsync || loading} onClick={handleSendTransaction}>
-            <ConfirmText isLoading={loading} />
+          <ActiveButton
+            variant='contained'
+            disabled={!writeAsync || isLoading}
+            onClick={handleSendTransaction}
+            data-test='confirm-new-relay-button'
+          >
+            <ConfirmText isLoading={isLoading} />
           </ActiveButton>
         </SButtonsContainer>
       </BigModal>

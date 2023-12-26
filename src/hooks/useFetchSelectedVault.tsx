@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Address, useNetwork } from 'wagmi';
 
-import { useStateContext } from './useStateContext';
-import { getCustomClient, getPrices, getTokenList, getVaultsData } from '~/utils';
+import { useStateContext, useCustomClient } from '~/hooks';
+import { getPrices, getTokenList, getVaultsData } from '~/utils';
 import { getConfig } from '~/config';
 import { Status } from '~/types';
 
@@ -13,7 +13,8 @@ import { Status } from '~/types';
  * @returns {VaultData} data - Vault data
  */
 export const useFetchSelectedVault = () => {
-  const { userAddress, selectedVault, currentNetwork, notification, setSelectedVault } = useStateContext();
+  const { selectedVault, notification, setSelectedVault } = useStateContext();
+  const { publicClient } = useCustomClient();
   const {
     DEFAULT_WETH_ADDRESS,
     addresses: { xKeeperMetadata },
@@ -25,7 +26,6 @@ export const useFetchSelectedVault = () => {
 
   const loadSelectedVault = useCallback(async () => {
     try {
-      const publicClient = getCustomClient(currentNetwork.id, userAddress);
       const tokens = getTokenList(chain?.id);
       const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
 
@@ -40,7 +40,7 @@ export const useFetchSelectedVault = () => {
     } catch (error) {
       console.error(`Error loading vault ${address}:`, error);
     }
-  }, [DEFAULT_WETH_ADDRESS, address, chain?.id, currentNetwork.id, setSelectedVault, userAddress, xKeeperMetadata]);
+  }, [DEFAULT_WETH_ADDRESS, address, chain?.id, publicClient, setSelectedVault, xKeeperMetadata]);
 
   // Load vault data when there is no selected vault
   useEffect(() => {

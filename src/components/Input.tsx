@@ -23,6 +23,7 @@ interface InputProps {
   isAutoFocus?: boolean;
   onClick?: () => void;
   onKeyUp?: () => void;
+  dataTestId?: string;
 }
 
 export const StyledInput = ({
@@ -41,6 +42,7 @@ export const StyledInput = ({
   removable,
   isAutoFocus,
   customIconName,
+  dataTestId,
   onClick,
   onKeyUp,
 }: InputProps) => {
@@ -71,6 +73,7 @@ export const StyledInput = ({
 
       <SBox disabled={disabled}>
         <SOutlinedInput
+          data-test={dataTestId}
           isError={error}
           fullWidth
           value={value}

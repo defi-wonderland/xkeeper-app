@@ -1,7 +1,6 @@
 export * from './Variables';
 export * from './formatTokenData';
 export * from './getMessageComponents';
-export * from './getCustomClient';
 export * from './getPrices';
 export * from './getContractAbi';
 export * from './getRelayName';

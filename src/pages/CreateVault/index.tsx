@@ -6,17 +6,20 @@ import { isAddress } from 'viem';
 import { DataSection as DescriptionContainer, Title, Header } from '~/pages';
 import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton, ConfirmText } from '~/components';
 import { useStateContext, useVaultFactory } from '~/hooks';
+import { Status } from '~/types';
 
 export const CreateVault = () => {
-  const { availableChains, loading, userAddress, currentNetwork } = useStateContext();
+  const { availableChains, userAddress, currentNetwork } = useStateContext();
 
   const [vaultName, setVaultName] = useState('');
   const [vaultOwner, setVaultOwner] = useState(userAddress || '');
   const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
-  const { handleSendTransaction, writeAsync } = useVaultFactory({
+  const { requestStatus, handleSendTransaction, writeAsync } = useVaultFactory({
     args: [vaultOwner as Address, vaultName],
     selectedChain,
   });
+
+  const isLoading = requestStatus === Status.LOADING;
 
   useEffect(() => {
     setVaultOwner(userAddress || '');
@@ -50,7 +53,8 @@ export const CreateVault = () => {
           description='Your vault alias will only be visible to you.'
           value={vaultName}
           setValue={setVaultName}
-          disabled={loading}
+          disabled={isLoading}
+          dataTestId='create-vault-alias-input'
         />
 
         <StyledInput
@@ -60,7 +64,8 @@ export const CreateVault = () => {
           setValue={setVaultOwner}
           error={!!vaultOwner && !isAddress(vaultOwner)}
           errorText='Invalid address'
-          disabled={loading}
+          disabled={isLoading}
+          dataTestId='create-vault-owner-input'
         />
 
         <InputContainer>
@@ -69,18 +74,19 @@ export const CreateVault = () => {
             chains={availableChains}
             value={selectedChain}
             setValue={setSelectedChain}
-            disabled={loading}
+            disabled={isLoading}
           />
         </InputContainer>
 
         {/* Create Button */}
         <ButtonContainer>
           <CreateButton
+            data-test='confirm-create-vault-button'
             variant='contained'
-            disabled={!writeAsync || loading || !vaultName}
+            disabled={!writeAsync || isLoading || !vaultName}
             onClick={handleSendTransaction}
           >
-            <ConfirmText isLoading={loading} />
+            <ConfirmText isLoading={isLoading} />
           </CreateButton>
         </ButtonContainer>
       </CreateContainer>

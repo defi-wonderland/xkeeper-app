@@ -1,17 +1,26 @@
 import { styled } from '@mui/material';
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import { useAccount } from 'wagmi';
+import { useAccount, useConnect } from 'wagmi';
 
 import { CancelButton } from '~/components';
+import { getConfig } from '~/config';
 import { useStateContext } from '~/hooks';
 import { truncateAddress } from '~/utils';
 
 export const ConnectButton = () => {
+  const { TEST_MODE } = getConfig();
+
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
+  const { connect, connectors } = useConnect();
 
   const handleClick = () => {
+    if (TEST_MODE) {
+      connect({ connector: connectors[0] });
+      return;
+    }
+
     if (address && openAccountModal) {
       openAccountModal();
     } else if (openConnectModal) {
@@ -20,7 +29,7 @@ export const ConnectButton = () => {
   };
 
   return (
-    <SButton onClick={handleClick} connected={address?.toString()}>
+    <SButton onClick={handleClick} connected={address?.toString()} data-test='connect-button'>
       {!address && 'Connect Wallet'}
       {address && truncateAddress(address)}
     </SButton>

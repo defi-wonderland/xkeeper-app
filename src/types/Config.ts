@@ -5,6 +5,8 @@ export interface Env {
   RPC_URL: string;
   PROJECT_ID: string;
   ALCHEMY_KEY: string;
+  TEST_MODE: boolean;
+  TEST_PRIVATE_KEY: Address;
 }
 
 export interface Constants {
@@ -56,6 +58,7 @@ export enum Status {
   LOADING = 'LOADING',
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR',
+  IDLE = 'IDLE',
 }
 
 export interface Config extends Env, Constants {}

@@ -15,10 +15,10 @@ import {
   StyledText,
 } from '~/components';
 import { useFetchSelectedVault, useStateContext } from '~/hooks';
-import { Tokens } from './Tokens';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
+import { Tokens } from './Tokens';
 import { ModalType, Status } from '~/types';
 
 export const Vault = () => {
@@ -66,7 +66,7 @@ export const Vault = () => {
           {/* Vault Address | Vault Alias */}
           <TitleContainer>
             <TitleBox>
-              <Title>{aliasData[vaultAddress] || selectedVault?.name}</Title>
+              <Title data-test='vault-name'>{aliasData[vaultAddress] || selectedVault?.name}</Title>
 
               <STooltip text='Edit vault alias'>
                 <EditAliasButton variant='text' onClick={handleEditAlias}>
