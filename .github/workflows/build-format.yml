@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Format
 
 on:
   pull_request:
@@ -53,7 +53,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   format:
-    name: Lint and Test
+    name: Lint and Prettier
     runs-on: ubuntu-latest
 
     steps:
