@@ -16,7 +16,7 @@ import {
 import { InfiniteScroll, useStateContext, useTheme } from '~/hooks';
 
 export const Landing = () => {
-  const { userAddress, setSelectedVault, loading, vaults, updateVaults } = useStateContext();
+  const { userAddress, setSelectedVault, loading, vaults, updateVaultsList } = useStateContext();
   const { currentTheme } = useTheme();
 
   const [searchValue, setSearchValue] = useState('');
@@ -104,7 +104,7 @@ export const Landing = () => {
       {/* Made By Wonderland Button */}
       <MadeByWonderland />
 
-      <InfiniteScroll update={updateVaults} loading={loading} />
+      <InfiniteScroll update={updateVaultsList} loading={loading} />
     </HomeContainer>
   );
 };

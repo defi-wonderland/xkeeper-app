@@ -34,7 +34,7 @@ type ContextType = {
   vaults: VaultData[];
   setVaults: (val: VaultData[]) => void;
 
-  updateVaults: () => Promise<void>;
+  updateVaultsList: () => Promise<void>;
 };
 
 interface StateProps {
@@ -68,7 +68,7 @@ export const StateProvider = ({ children }: StateProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const loadData = useCallback(
+  const loadVaultData = useCallback(
     async (startIndex: number, amountOfVaults: number) => {
       const tokens = getTokenList(currentNetwork.id);
       const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
@@ -96,7 +96,7 @@ export const StateProvider = ({ children }: StateProps) => {
     ],
   );
 
-  const fetchData = useCallback(
+  const fetchVaulsDataWithPagination = useCallback(
     async (startIndex: number, requestAmount: number) => {
       setLoading(true);
 
@@ -106,7 +106,7 @@ export const StateProvider = ({ children }: StateProps) => {
           return [];
         }
 
-        const formattedVaultsData = await loadData(startIndex, requestAmount);
+        const formattedVaultsData = await loadVaultData(startIndex, requestAmount);
 
         const newTotalRequestCount = Math.max(startIndex - requestAmount, 0);
         const newAmount = newTotalRequestCount === 0 ? startIndex : requestAmount;
@@ -121,14 +121,14 @@ export const StateProvider = ({ children }: StateProps) => {
         return [];
       }
     },
-    [loadData],
+    [loadVaultData],
   );
 
-  const updateVaults = useCallback(async () => {
+  const updateVaultsList = useCallback(async () => {
     if (typeof totalRequestCount !== 'number') return;
-    const newData = await fetchData(totalRequestCount!, requestAmount);
+    const newData = await fetchVaulsDataWithPagination(totalRequestCount!, requestAmount);
     setVaults((prevVaults) => [...prevVaults, ...newData]);
-  }, [fetchData, requestAmount, totalRequestCount]);
+  }, [fetchVaulsDataWithPagination, requestAmount, totalRequestCount]);
 
   const handleLoad = useCallback(
     async (reset?: boolean) => {
@@ -138,7 +138,7 @@ export const StateProvider = ({ children }: StateProps) => {
           const totalRequestCount = await getTotalVaults(publicClient, addresses.AutomationVaultFactory);
           const newRequestAmount = Math.min(vaultsPerBatch, totalRequestCount);
 
-          const newData = await fetchData(totalRequestCount - newRequestAmount, newRequestAmount);
+          const newData = await fetchVaulsDataWithPagination(totalRequestCount - newRequestAmount, newRequestAmount);
           setVaults(newData);
         }
       } catch (error) {
@@ -149,7 +149,7 @@ export const StateProvider = ({ children }: StateProps) => {
     },
     // to avoid infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [addresses.AutomationVaultFactory, fetchData],
+    [addresses.AutomationVaultFactory, fetchVaulsDataWithPagination],
   );
 
   const resetVaults = useCallback(() => {
@@ -212,8 +212,7 @@ export const StateProvider = ({ children }: StateProps) => {
         setSelectedItem,
         vaults,
         setVaults,
-
-        updateVaults,
+        updateVaultsList,
       }}
     >
       {children}
