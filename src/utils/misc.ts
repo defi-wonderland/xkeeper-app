@@ -168,3 +168,9 @@ export const getVaultEvents = async (
 
   return uniqueEvents;
 };
+
+// Get the current chain name, if goerli return ethereum
+export const getChainName = (publicClient: PublicClient) => {
+  const currentChain = publicClient.chain.name.toLowerCase();
+  return currentChain === 'goerli' ? 'ethereum' : currentChain;
+};

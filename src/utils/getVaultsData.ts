@@ -3,7 +3,7 @@ import { PublicClient, erc20ABI } from 'wagmi';
 
 import { vaultABI, vaultFactoryABI, xkeeperMetadataABI } from '~/generated';
 import { CallResult, JobData, PriceData, RelayData, Token, TokenData, VaultData } from '~/types';
-import { formatTokensData, getTotalUsdBalance, truncateFunctionSignature } from '~/utils';
+import { formatTokensData, getChainName, getTotalUsdBalance, truncateFunctionSignature } from '~/utils';
 
 export const getVaults = async (
   publicClient: PublicClient,
@@ -115,8 +115,7 @@ const fetchAndFormatData = async (
 
   const tokensResult = multicallResult.slice(4) as CallResult[];
 
-  const currentChain = publicClient.chain.name.toLocaleLowerCase();
-  const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain; // Load tokens from mainnet when on goerli
+  const chainName = getChainName(publicClient);
   tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, prices);
 
   if (relays?.result?.length || jobs?.result?.length) {

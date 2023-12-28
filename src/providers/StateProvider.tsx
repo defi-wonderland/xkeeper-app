@@ -2,7 +2,15 @@ import { createContext, useCallback, useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
-import { getPrices, getTokenList, getVaults, getVaultsData, getTotalVaults, vaultsPerBatch } from '~/utils';
+import {
+  getPrices,
+  getTokenList,
+  getVaults,
+  getVaultsData,
+  getTotalVaults,
+  vaultsPerBatch,
+  getChainName,
+} from '~/utils';
 import { getConfig } from '~/config';
 import { useCustomClient } from '~/hooks';
 import { useModal } from '~/hooks';
@@ -72,9 +80,8 @@ export const StateProvider = ({ children }: StateProps) => {
     async (startIndex: number, amountOfVaults: number) => {
       const tokens = getTokenList(currentNetwork.id);
       const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
+      const chainName = getChainName(publicClient);
 
-      const chainName =
-        publicClient.chain.name.toLowerCase() === 'goerli' ? 'ethereum' : publicClient.chain.name.toLowerCase();
       const prices = await getPrices(chainName, tokenAddresses);
       const vaultsData = await getVaults(publicClient, addresses.AutomationVaultFactory, startIndex, amountOfVaults);
       const formattedVaultsData = await getVaultsData(

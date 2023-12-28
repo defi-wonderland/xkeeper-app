@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Address, useNetwork } from 'wagmi';
 
 import { useStateContext, useCustomClient } from '~/hooks';
-import { getPrices, getTokenList, getVaultsData } from '~/utils';
+import { getChainName, getPrices, getTokenList, getVaultsData } from '~/utils';
 import { getConfig } from '~/config';
 import { Status } from '~/types';
 
@@ -28,10 +28,7 @@ export const useFetchSelectedVault = () => {
     try {
       const tokens = getTokenList(chain?.id);
       const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
-
-      const currentChain = publicClient.chain.name.toLocaleLowerCase();
-      // Load tokens from mainnet when on goerli
-      const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain;
+      const chainName = getChainName(publicClient);
 
       const prices = await getPrices(chainName, tokenAddressList);
       const vaultData = await getVaultsData(publicClient, [address as Address], tokens, prices, xKeeperMetadata);
