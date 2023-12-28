@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -34,6 +35,11 @@ export const Vault = () => {
   const chainName = currentNetwork.displayName;
   const vaultAddress = selectedVault?.address || '';
   const version = 'V1.0.0';
+
+  const VaultTitle = useMemo(() => {
+    if (requestStatus === Status.LOADING) return '...';
+    return aliasData[vaultAddress] || selectedVault?.name || truncateAddress(selectedVault?.address);
+  }, [aliasData, requestStatus, selectedVault?.address, selectedVault?.name, vaultAddress]);
 
   const sections = [
     {
@@ -74,12 +80,7 @@ export const Vault = () => {
           {/* Vault Address | Vault Alias */}
           <TitleContainer>
             <TitleBox>
-              <Title data-test='vault-name'>
-                {requestStatus === Status.LOADING && '...'}
-
-                {(requestStatus === Status.SUCCESS || requestStatus === Status.IDLE) &&
-                  (aliasData[vaultAddress] || selectedVault?.name || truncateAddress(selectedVault?.address))}
-              </Title>
+              <Title data-test='vault-name'>{VaultTitle}</Title>
 
               <STooltip text='Edit vault alias'>
                 <EditAliasButton variant='text' onClick={handleEditAlias}>
