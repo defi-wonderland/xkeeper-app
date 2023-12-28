@@ -105,13 +105,13 @@ export const StateProvider = ({ children }: StateProps) => {
 
   const fetchVaulsDataWithPagination = useCallback(
     async (startIndex: number, requestAmount: number) => {
-      setLoading(true);
+      if (requestAmount === 0) {
+        setLoading(false);
+        return [];
+      }
 
       try {
-        if (requestAmount === 0) {
-          setLoading(false);
-          return [];
-        }
+        setLoading(true);
 
         const formattedVaultsData = await loadVaultData(startIndex, requestAmount);
 
