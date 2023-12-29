@@ -3,8 +3,7 @@ import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { TransactionExecutionError } from 'viem';
 
-import { useStateContext } from './useStateContext';
-import { useCustomClient } from './useCustomClient';
+import { useCustomClient, useModal, useStateContext } from '~/hooks';
 import { getViewTransaction } from '~/utils';
 import { vaultABI } from '~/generated';
 import { ModalType, Status } from '~/types';
@@ -13,11 +12,11 @@ interface SendTransactionProps {
   contractAddress?: string;
   functionName:
     | 'acceptOwner'
-    | 'approveJobFunctions'
+    | 'approveJobSelectors'
     | 'approveRelayCallers'
     | 'changeOwner'
     | 'exec'
-    | 'revokeJobFunctions'
+    | 'revokeJobSelectors'
     | 'revokeRelayCallers'
     | 'withdrawFunds'
     | undefined;
@@ -42,7 +41,8 @@ export const useVault = ({
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { currentNetwork, setModalOpen, setNotification } = useStateContext();
+  const { currentNetwork, setNotification } = useStateContext();
+  const { setModalOpen } = useModal();
   const { publicClient } = useCustomClient();
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
 

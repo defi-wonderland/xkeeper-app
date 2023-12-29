@@ -5,6 +5,7 @@ export * from './getPrices';
 export * from './getContractAbi';
 export * from './getRelayName';
 export * from './getTheme';
+export * from './getTotalVaults';
 export * from './getVaultsData';
 export * from './misc';
 export * from './tokenList';

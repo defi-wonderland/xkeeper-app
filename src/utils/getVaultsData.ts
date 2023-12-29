@@ -1,16 +1,22 @@
 import { Address } from 'viem';
 import { PublicClient, erc20ABI } from 'wagmi';
 
-import { vaultABI, vaultFactoryABI } from '~/generated';
+import { vaultABI, vaultFactoryABI, xkeeperMetadataABI } from '~/generated';
 import { CallResult, JobData, PriceData, RelayData, Token, TokenData, VaultData } from '~/types';
-import { formatTokensData, getTotalUsdBalance, truncateFunctionSignature } from '~/utils';
+import { formatTokensData, getChainName, getTotalUsdBalance, truncateFunctionSignature } from '~/utils';
 
-export const getVaults = async (publicClient: PublicClient, vaultFactoryAddress: Address): Promise<Address[]> => {
+export const getVaults = async (
+  publicClient: PublicClient,
+  vaultFactoryAddress: Address,
+  startIndex: number,
+  endIndex: number,
+): Promise<Address[]> => {
   try {
     const data = await publicClient.readContract({
       address: vaultFactoryAddress,
       abi: vaultFactoryABI,
       functionName: 'automationVaults',
+      args: [BigInt(startIndex), BigInt(endIndex)],
     });
 
     return [...data].reverse();
@@ -75,9 +81,7 @@ const fetchAndFormatData = async (
 }> => {
   const vaultContract = { address: vaultAddress, abi: vaultABI };
 
-  // TODO
-  // const metadataContract = { address: xKeeperMetadata, abi: xKeeperMetadataABI };
-  console.log(xKeeperMetadata);
+  const metadataContract = { address: xKeeperMetadata, abi: xkeeperMetadataABI, args: [vaultAddress] };
 
   let relaysData: RelayData = {};
   let jobData: JobData = {};
@@ -90,24 +94,31 @@ const fetchAndFormatData = async (
     args: [vaultAddress],
   }));
 
-  const ethBalance = await publicClient.getBalance({ address: vaultAddress });
-
-  const multicallResult = await publicClient.multicall({
+  const multicallPromise = publicClient.multicall({
     contracts: [
       { ...vaultContract, functionName: 'owner' },
-      { ...vaultContract, functionName: 'organizationName' },
       { ...vaultContract, functionName: 'relays' },
       { ...vaultContract, functionName: 'jobs' },
-      // { ...metadataContract, functionName: 'automationVaultMetadata' },
+      { ...metadataContract, functionName: 'automationVaultMetadata' },
       ...balanceCalls,
     ],
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [owner, name, relays, jobs] = multicallResult.slice(0, 4) as any; // TODO: update to 5 when metadata is added
-  const tokensResult = multicallResult.slice(4) as CallResult[]; // TODO: update to 5 when metadata is added
+  const [multicallResult, ethBalance] = await Promise.all([
+    multicallPromise,
+    publicClient.getBalance({ address: vaultAddress }),
+  ]);
 
-  if (relays?.result && jobs?.result) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [owner, relays, jobs, metadata] = multicallResult.slice(0, 4) as any;
+  const [name, description] = metadata?.result || [];
+
+  const tokensResult = multicallResult.slice(4) as CallResult[];
+
+  const chainName = getChainName(publicClient);
+  tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, prices);
+
+  if (relays?.result?.length || jobs?.result?.length) {
     const relayEnabledCallers = relays.result.map((relayAddress: Address) => ({
       ...vaultContract,
       functionName: 'relayEnabledCallers',
@@ -116,12 +127,9 @@ const fetchAndFormatData = async (
 
     const jobEnabledFunctions = jobs.result.map((jobAddress: Address) => ({
       ...vaultContract,
-      functionName: 'jobEnabledFunctions',
+      functionName: 'jobEnabledSelectors',
       args: [jobAddress],
     }));
-
-    const currentChain = publicClient.chain.name.toLocaleLowerCase();
-    const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain; // Load tokens from mainnet when on goerli
 
     const [callers, jobFunctions] = await Promise.all([
       publicClient.multicall({ contracts: relayEnabledCallers }),
@@ -135,27 +143,14 @@ const fetchAndFormatData = async (
     jobData = Object.fromEntries(
       jobFunctions.map((func, index) => [jobs.result[index], (func.result as string[]).map(truncateFunctionSignature)]),
     );
-
-    tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, prices);
   }
-
-  // temporary
-  const generateRandonDescription = () => {
-    const random = Math.floor(Math.random() * 10);
-    return random % 2 === 0
-      ? ''
-      : 'Lorem ipsum dolor sit amet consectetur. Euismod blandit dictum lacus penatibus. In morbi et ut amet consectetur arcu. Dui in netus eget nulla lorem nibh erat felis.';
-  };
 
   return {
     owner: owner?.result,
     relays: relaysData,
     jobs: jobData,
     tokens: tokensData,
-
-    // temporary
-    // these values will fetched from XKeeperMetadata contract in the future
-    name: name?.result,
-    description: generateRandonDescription(),
+    name: name,
+    description: description,
   };
 };

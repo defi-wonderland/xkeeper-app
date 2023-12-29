@@ -13,10 +13,11 @@ import {
   BackToTop,
   MadeByWonderland,
 } from '~/components';
-import { useStateContext } from '~/hooks';
+import { InfiniteScroll, useStateContext, useTheme } from '~/hooks';
 
 export const Landing = () => {
-  const { userAddress, setSelectedVault, currentTheme, loading, vaults } = useStateContext();
+  const { userAddress, setSelectedVault, loading, vaults, updateVaultsList } = useStateContext();
+  const { currentTheme } = useTheme();
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -102,6 +103,8 @@ export const Landing = () => {
 
       {/* Made By Wonderland Button */}
       <MadeByWonderland />
+
+      <InfiniteScroll update={updateVaultsList} loading={loading} />
     </HomeContainer>
   );
 };
@@ -141,7 +144,7 @@ const FirstSection = styled(Box)({
 const CreateVaultBtn = styled(ActiveButton)(() => {
   const {
     currentTheme: { borderRadius, actionButton },
-  } = useStateContext();
+  } = useTheme();
   return {
     fontSize: '1.6rem',
     height: '4.8rem',

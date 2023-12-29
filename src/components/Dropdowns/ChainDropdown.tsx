@@ -6,7 +6,7 @@ import { styled, css } from '@mui/system';
 import { blue, grey } from '@mui/material/colors';
 import { useSwitchNetwork } from 'wagmi';
 
-import { useStateContext } from '~/hooks';
+import { useStateContext, useTheme } from '~/hooks';
 import { ChainIcon, Icon, StyledText } from '~/components';
 import { Chains } from '~/types';
 import { zIndex } from '~/utils';
@@ -20,7 +20,8 @@ interface ChainDropdownProps {
 }
 
 export function ChainDropdown({ chains, value, setValue, disabled, compact }: ChainDropdownProps) {
-  const { currentTheme, setCurrentNetwork, availableChains } = useStateContext();
+  const { setCurrentNetwork, availableChains } = useStateContext();
+  const { currentTheme } = useTheme();
   const { switchNetworkAsync } = useSwitchNetwork();
 
   const createHandleMenuClick = (chainId: string) => {
@@ -56,7 +57,7 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
 }
 
 export const StyledListbox = styled('ul')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     border: `1px solid ${currentTheme.textSecondaryDisabled}`,
     color: currentTheme.textSecondary,
@@ -76,7 +77,7 @@ export const StyledMenuItem = styled(MenuItem)(() => {
   const {
     theme,
     currentTheme: { backgroundHover },
-  } = useStateContext();
+  } = useTheme();
   return css`
     display: flex;
     flex-direction: row;
@@ -115,7 +116,7 @@ interface Props {
   compact?: string;
 }
 export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   const iconSize = compact ? '3.15rem' : '2rem';
   const borderRadius = compact ? '10rem' : currentTheme.borderRadius;
   const padding = compact ? '0.6rem 0.8rem 0.6rem 0.6rem' : '1rem 1.4rem';

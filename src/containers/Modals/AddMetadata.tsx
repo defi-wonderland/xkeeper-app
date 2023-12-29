@@ -12,21 +12,24 @@ import {
   Icon,
   StyledText,
 } from '~/components';
-import { useStateContext, useXKeeperMetadata } from '~/hooks';
+import { useModal, useStateContext, useTheme, useXKeeperMetadata } from '~/hooks';
 import { ModalType } from '~/types';
 import { getConfig } from '~/config';
 
 export const AddMetadataModal = () => {
   const { addresses } = getConfig();
-  const { setModalOpen, modalOpen, currentTheme, loading } = useStateContext();
+  const { loading, selectedVault } = useStateContext();
+  const { setModalOpen, modalOpen } = useModal();
+  const { currentTheme } = useTheme();
 
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
+  const vaultAddress = selectedVault?.address || '0x';
+
   const { handleSendTransaction, writeAsync } = useXKeeperMetadata({
     contractAddress: addresses.xKeeperMetadata,
-    functionName: 'setAutomationVaultMetadata',
-    args: [name, description],
+    args: [vaultAddress, { name, description }],
     notificationTitle: 'Metadata successfully added',
     showReceipt: true,
   });
@@ -38,7 +41,7 @@ export const AddMetadataModal = () => {
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_METADATA}>
-      <BigModal>
+      <BigModal data-test='add-metadata-modal'>
         <SBox>
           <TitleContainer>
             <StyledTitle>Add Metadata</StyledTitle>
@@ -51,14 +54,21 @@ export const AddMetadataModal = () => {
           <Text>Define your vault metadata for keepers to better understand your jobs</Text>
         </SBox>
 
-        <StyledInput label='Name' value={name} setValue={setName} placeholder='Vault name' />
+        <StyledInput
+          label='Name'
+          value={name}
+          setValue={setName}
+          placeholder='Vault name'
+          dataTestId='name-metadata-input'
+        />
 
         <InputContainer>
           <StyledInput
             label='Description'
             value={description}
             setValue={setDescription}
-            placeholder={`Short description and key urls`}
+            placeholder='Short description and key urls'
+            dataTestId='description-metadata-input'
           />
         </InputContainer>
 
@@ -71,6 +81,7 @@ export const AddMetadataModal = () => {
             variant='contained'
             disabled={!writeAsync || loading || !description || !name}
             onClick={handleConfirm}
+            data-test='confirm-add-metadata-button'
           >
             Confirm
           </ActiveButton>
@@ -82,6 +93,10 @@ export const AddMetadataModal = () => {
 
 const BigModal = styled(Box)({
   width: '59.6rem',
+
+  '@media (max-width: 600px)': {
+    width: '100%',
+  },
 });
 
 const SBox = styled(Box)({

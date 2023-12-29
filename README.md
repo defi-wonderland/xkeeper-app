@@ -1,6 +1,6 @@
-# Keep3r Framework App
+# xKeeper App
 
-Official interface for Keep3r Framework.
+Official interface for xKeeper.
 
 ## Development
 
@@ -9,7 +9,7 @@ To set up the development environment, follow these steps:
 1. Clone the repository:
 
 ```bash
-git clone [this repo link] && cd keep3r-framework-app
+git clone [this repo link] && cd xkeeper-app
 ```
 
 2. Install dependencies:
@@ -45,7 +45,7 @@ The app should be live at [http://localhost:4173/](http://localhost:4173/)
 
 ## Contributors
 
-Keep3r Framework App was built with ❤️ by [Wonderland](https://defi.sucks).
+xKeeper App was built with ❤️ by [Wonderland](https://defi.sucks).
 
 Wonderland is a team of top Web3 researchers, developers, and operators who believe that the future needs to be open-source, permissionless, and decentralized.
 

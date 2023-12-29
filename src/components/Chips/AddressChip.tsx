@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useStateContext, useTheme } from '~/hooks';
 import { Icon, STooltip, StyledText } from '~/components';
 import { copyData, truncateAddress } from '~/utils';
 
@@ -11,7 +11,8 @@ interface AddressChipProps {
 }
 
 export const AddressChip = ({ text, label }: AddressChipProps) => {
-  const { currentTheme, currentNetwork } = useStateContext();
+  const { currentNetwork } = useStateContext();
+  const { currentTheme } = useTheme();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -48,7 +49,7 @@ export const AddressChip = ({ text, label }: AddressChipProps) => {
 };
 
 const SText = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.addressChipColor,
     fontWeight: '500',
@@ -56,7 +57,7 @@ const SText = styled(StyledText)(() => {
 });
 
 const SBox = styled(Box)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.addressChipColor,
     backgroundColor: currentTheme.addressChipBackground,
@@ -93,7 +94,7 @@ const ExternalLink = styled('a')(() => {
 });
 
 export const IconContainer = styled('div')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.addressChipIconColor,
     'i:hover:before': {

@@ -1,6 +1,6 @@
 import { Box, Breadcrumbs, IconButton, styled } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 import { Icon, NavigationLink, StyledText } from '~/components';
 
 interface BreadCrumbsProps {
@@ -9,7 +9,7 @@ interface BreadCrumbsProps {
 }
 
 export const BreadCrumbs = ({ currentPage, previousPage }: BreadCrumbsProps) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   const breadcrumbs = [
     <PreviousPage key='1' sx={{ color: currentTheme.textDisabled }}>
@@ -66,7 +66,7 @@ const PreviousPage = styled(StyledText)({
 });
 
 const BackBtn = styled(IconButton)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     borderRadius: '0.8rem',
     border: '1px solid ',

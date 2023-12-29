@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Box, IconButton, styled } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useModal, useStateContext, useTheme } from '~/hooks';
 import { ChainDropdown, ConnectButton, Icon, NavigationLink, StyledText } from '~/components';
 import { themeKey, zIndex } from '~/utils';
 import { ModalType } from '~/types';
 
 export const Header = () => {
-  const { setTheme, theme, currentTheme, availableChains, currentNetwork, modalOpen } = useStateContext();
+  const { availableChains, currentNetwork } = useStateContext();
+  const { modalOpen } = useModal();
+  const { setTheme, theme, currentTheme } = useTheme();
 
   const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
   const [menuOpen, setMenuOpen] = useState(false);
@@ -112,7 +114,7 @@ export const Header = () => {
 };
 
 const HeaderContainer = styled(Box)(() => {
-  const { theme, currentTheme } = useStateContext();
+  const { theme, currentTheme } = useTheme();
   return {
     borderBottom: currentTheme.border,
     backgroundColor: theme === 'light' ? currentTheme.backgroundPrimary : currentTheme.backgroundSecondary,
@@ -164,7 +166,7 @@ const RightSection = styled(Box)({
 });
 
 const SIconButton = styled(IconButton)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     textTransform: 'capitalize',
     gap: '1.2rem',
@@ -191,7 +193,7 @@ const SMobileMenu = styled(Icon)(() => {
 });
 
 const MobileMenuContainer = styled(Box)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     position: 'fixed',
     paddingTop: '1.6rem',
@@ -234,7 +236,7 @@ const SText = styled(StyledText)(() => {
 });
 
 const SBox = styled(Box)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     width: '100%',
     padding: '1.6rem',

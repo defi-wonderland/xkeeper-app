@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { Box } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,8 +43,8 @@ interface BasicTabsProps {
 }
 
 export const BasicTabs = ({ sections }: BasicTabsProps) => {
-  const [value, setValue] = React.useState(0);
-  const { currentTheme } = useStateContext();
+  const [value, setValue] = useState(0);
+  const { currentTheme } = useTheme();
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

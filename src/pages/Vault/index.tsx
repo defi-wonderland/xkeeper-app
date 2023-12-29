@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -14,21 +15,31 @@ import {
   STooltip,
   StyledText,
 } from '~/components';
-import { useFetchSelectedVault, useStateContext } from '~/hooks';
+import { useAlias, useFetchSelectedVault, useModal, useStateContext, useTheme } from '~/hooks';
 import { EnabledRelays } from './EnabledRelays';
 import { EnabledJobs } from './EnabledJobs';
 import { Activity } from './Activity';
 import { Tokens } from './Tokens';
 import { ModalType, Status } from '~/types';
+import { truncateAddress } from '~/utils';
+import { Modals } from './Modals';
 
 export const Vault = () => {
-  const { userAddress, currentTheme, currentNetwork, aliasData, setModalOpen, setSelectedItem } = useStateContext();
+  const { userAddress, currentNetwork, setSelectedItem } = useStateContext();
+  const { setModalOpen } = useModal();
+  const { currentTheme } = useTheme();
+  const { aliasData } = useAlias();
 
   const { requestStatus, data: selectedVault } = useFetchSelectedVault();
 
   const chainName = currentNetwork.displayName;
   const vaultAddress = selectedVault?.address || '';
   const version = 'V1.0.0';
+
+  const VaultTitle = useMemo(() => {
+    if (requestStatus === Status.LOADING) return '...';
+    return aliasData[vaultAddress] || selectedVault?.name || truncateAddress(selectedVault?.address);
+  }, [aliasData, requestStatus, selectedVault?.address, selectedVault?.name, vaultAddress]);
 
   const sections = [
     {
@@ -58,6 +69,9 @@ export const Vault = () => {
 
   return (
     <PageContainer>
+      {/* Component that contains all modals */}
+      <Modals />
+
       {/* Navigation */}
       <BreadCrumbs previousPage='Home' currentPage='Vault' />
 
@@ -66,7 +80,7 @@ export const Vault = () => {
           {/* Vault Address | Vault Alias */}
           <TitleContainer>
             <TitleBox>
-              <Title data-test='vault-name'>{aliasData[vaultAddress] || selectedVault?.name}</Title>
+              <Title data-test='vault-name'>{VaultTitle}</Title>
 
               <STooltip text='Edit vault alias'>
                 <EditAliasButton variant='text' onClick={handleEditAlias}>
@@ -110,7 +124,12 @@ export const Vault = () => {
                 <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.warningChipColor} />
                 Define your vault metadata for keepers to better understand your jobs
                 {selectedVault?.owner === userAddress && (
-                  <DescriptionButton disabled={selectedVault?.owner !== userAddress} onClick={handleOpenAddMetadata}>
+                  // Add vault description button
+                  <DescriptionButton
+                    data-test='add-vault-metadata-button'
+                    disabled={selectedVault?.owner !== userAddress}
+                    onClick={handleOpenAddMetadata}
+                  >
                     Add Metadata
                   </DescriptionButton>
                 )}
@@ -225,7 +244,7 @@ const Version = styled(Typography)({
 });
 
 const SInfoChip = styled(Box)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return {
     color: currentTheme.infoChipColor,
@@ -252,7 +271,7 @@ const DescriptionContainer = styled('div')({
 });
 
 export const Description = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textSecondary,
     fontSize: '1.6rem',
@@ -260,7 +279,7 @@ export const Description = styled(StyledText)(() => {
 });
 
 const DescriptionChip = styled(Box)(() => {
-  const { currentTheme, theme } = useStateContext();
+  const { currentTheme, theme } = useTheme();
   const border = theme === 'light' ? `1px solid ${currentTheme.warningChipColor}` : undefined;
   return {
     color: currentTheme.warningChipColor,
@@ -278,11 +297,20 @@ const DescriptionChip = styled(Box)(() => {
     width: '100%',
     minHeight: '6.65rem',
     border,
+
+    '@media (max-width: 600px)': {
+      flexDirection: 'column',
+      alignItems: 'center',
+      '& button': {
+        marginLeft: '0',
+        width: '100%',
+      },
+    },
   };
 });
 
 const DescriptionButton = styled(RevokeButton)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return {
     marginLeft: 'auto',

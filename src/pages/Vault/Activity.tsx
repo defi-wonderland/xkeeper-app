@@ -4,7 +4,7 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 import { SectionHeader, Title, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
 import { STooltip, StyledText, SPagination } from '~/components';
 import { NoDataContainer } from './EnabledRelays';
-import { useFetchVaultActivity, useStateContext } from '~/hooks';
+import { useAlias, useFetchVaultActivity, useStateContext, useTheme } from '~/hooks';
 import { Text } from './EnabledJobs';
 import { Status } from '~/types';
 import {
@@ -17,7 +17,8 @@ import {
 } from '~/utils';
 
 export const Activity = () => {
-  const { currentNetwork, selectedVault, aliasData } = useStateContext();
+  const { currentNetwork, selectedVault } = useStateContext();
+  const { aliasData } = useAlias();
   const { requestStatus, data: events } = useFetchVaultActivity();
 
   const [paging, setPaging] = useState({ from: 0, to: itemsPerPage });
@@ -171,7 +172,7 @@ const SRowText = styled(RowText)(() => {
 });
 
 const HashRow = styled(SRowText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.infoChipColor,
     cursor: 'pointer',

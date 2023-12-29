@@ -8,23 +8,18 @@ describe('xKeeper Blockchain interaction tests', () => {
   });
 
   it('create vault', () => {
-    const vaultName = 'TestVault';
     const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 
     cy.visit('/create');
     cy.contains(/Create Vault/i).should('exist');
 
     // Checks initial state of form
-    cy.getDataTest('create-vault-alias-input').find('input').should('have.value', '');
     cy.getDataTest('create-vault-owner-input').find('input').should('have.value', '');
 
     cy.getDataTest('connect-button').click();
 
     // Should appear the user address
     cy.getDataTest('create-vault-owner-input').find('input').should('have.value', userAddress);
-
-    // Adds a vault alias
-    cy.getDataTest('create-vault-alias-input').find('input').type(vaultName);
 
     // Checks that the vault not exist
     cy.getDataTest('vault-name').should('not.exist');
@@ -48,6 +43,33 @@ describe('xKeeper Blockchain interaction tests', () => {
 
     // Connect wallet
     cy.getDataTest('connect-button').click();
+  });
+
+  it('add metadata', () => {
+    const vaultName = 'TestVaultMedatadaName';
+    const description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
+
+    cy.getDataTest('vault-card-0').click();
+
+    // Checks the vault description
+    cy.getDataTest('add-vault-metadata-button').should('exist');
+
+    // Adds a new description and vault name
+    cy.getDataTest('add-vault-metadata-button').click();
+    cy.getDataTest('add-metadata-modal').should('exist');
+
+    cy.getDataTest('name-metadata-input').find('input').type(vaultName);
+    cy.getDataTest('description-metadata-input').find('input').type(description);
+
+    cy.getDataTest('confirm-add-metadata-button').click();
+
+    // Checks if the modal was closed
+    cy.getDataTest('vault-metadata-modal').should('not.exist');
+
+    // Checks if the vault description was added
+    cy.getDataTest('add-vault-metadata-button').should('not.exist');
+    cy.contains(vaultName).should('exist');
+    cy.contains(description).should('exist');
   });
 
   it('add new relay', () => {

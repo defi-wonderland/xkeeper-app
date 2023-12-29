@@ -1,8 +1,8 @@
 import { styled } from '@mui/material';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 export const StyledTitle = styled('h1')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     textTransform: 'capitalize',
     fontSize: '2rem',
@@ -15,7 +15,7 @@ export const StyledTitle = styled('h1')(() => {
 });
 
 export const StyledText = styled('p')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     fontSize: '1.4rem',
     lineHeight: '2rem',

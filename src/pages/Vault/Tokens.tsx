@@ -14,12 +14,13 @@ import {
 
 import { ActiveButton, CancelButton, StyledText, TokenIcon } from '~/components';
 import { formatDataNumber } from '~/utils';
-import { useStateContext } from '~/hooks';
+import { useModal, useStateContext, useTheme } from '~/hooks';
 import { ModalType } from '~/types';
 import { getConfig } from '~/config';
 
 export const Tokens = () => {
-  const { userAddress, setModalOpen, selectedVault, currentNetwork } = useStateContext();
+  const { userAddress, selectedVault, currentNetwork } = useStateContext();
+  const { setModalOpen } = useModal();
   const { DEFAULT_ETH_ADDRESS } = getConfig();
 
   const openTokenContract = (address: string) => {
@@ -106,7 +107,7 @@ export const Tokens = () => {
 };
 
 export const SCard = styled(Card)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     backgroundColor: currentTheme.backgroundPrimary,
     borderRadius: currentTheme.borderRadius,
@@ -143,7 +144,7 @@ export const Title = styled(Typography)({
 const TotalValue = styled(Typography)(() => {
   const {
     currentTheme: { textDisabled },
-  } = useStateContext();
+  } = useTheme();
   return {
     color: textDisabled,
     fontSize: '1.4rem',
@@ -168,7 +169,7 @@ const ButtonsContainer = styled(Box)({
 export const ColumnTitle = styled(TableCell)(() => {
   const {
     currentTheme: { textTertiary },
-  } = useStateContext();
+  } = useTheme();
   return {
     fontSize: '1.2rem',
     padding: '1.2rem 2.4rem',
@@ -183,7 +184,7 @@ export const STable = styled(Table)({
 export const RowText = styled(TableCell)(() => {
   const {
     currentTheme: { textSecondary },
-  } = useStateContext();
+  } = useTheme();
   return {
     color: textSecondary,
     fontSize: '1.4rem',
@@ -216,7 +217,7 @@ const SRowText = styled(TableCell)({
 const TokenSymbol = styled(StyledText)({});
 
 const TokenName = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textDisabled,
     fontSize: '1.2rem',
@@ -233,7 +234,7 @@ const TokenContainer = styled('div')({
 });
 
 const ColumnText = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     fontSize: '1.2rem',
     fontWeight: 500,

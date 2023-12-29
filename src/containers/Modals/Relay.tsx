@@ -17,22 +17,25 @@ import {
 } from '~/components';
 import { BigModal, TitleContainer, DropdownContainer, DropdownLabel } from '~/containers';
 import { anyCaller, getReceiptMessage, getRelayName } from '~/utils';
-import { useStateContext, useVault } from '~/hooks';
+import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
 import { ModalType, Status } from '~/types';
 import { getConfig } from '~/config';
 
 export const RelayModal = () => {
-  const { modalOpen, selectedVault, currentTheme, selectedItem, setModalOpen } = useStateContext();
-  const handleClose = () => setModalOpen(ModalType.NONE);
-  const {
-    addresses: { relays },
-  } = getConfig();
+  const { selectedVault, selectedItem } = useStateContext();
+  const { modalOpen, setModalOpen } = useModal();
+  const { currentTheme } = useTheme();
 
   const [relayAddress, setRelayAddress] = useState<string>('');
   const [callerAddress, setCallerAddress] = useState<string>('');
   const [callers, setCallers] = useState<string[]>([]);
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
   const [customRelay, setCustomRelay] = useState(false);
+
+  const handleClose = () => setModalOpen(ModalType.NONE);
+  const {
+    addresses: { relays },
+  } = getConfig();
 
   const callerList = useMemo(() => {
     if (allowAnyCaller) {
@@ -88,6 +91,20 @@ export const RelayModal = () => {
     setCustomRelay(!customRelay);
   };
 
+  const callerIsRepeated = useMemo(() => {
+    return callers.includes(callerAddress);
+  }, [callers, callerAddress]);
+
+  const errorText = useMemo(
+    () => (callerIsRepeated ? 'Caller address already added' : 'Invalid address'),
+    [callerIsRepeated],
+  );
+
+  const dropdownValue = useMemo(
+    () => getRelayName(relayAddress, editRelay ? 'Custom Relay' : 'Choose Relay'),
+    [editRelay, relayAddress],
+  );
+
   useEffect(() => {
     if (allowAnyCaller) {
       setCallers([anyCaller]);
@@ -103,20 +120,6 @@ export const RelayModal = () => {
   useEffect(() => {
     setCallerAddress('');
   }, [modalOpen]);
-
-  const callerIsRepeated = useMemo(() => {
-    return callers.includes(callerAddress);
-  }, [callers, callerAddress]);
-
-  const errorText = useMemo(
-    () => (callerIsRepeated ? 'Caller address already added' : 'Invalid address'),
-    [callerIsRepeated],
-  );
-
-  const dropdownValue = useMemo(
-    () => getRelayName(relayAddress, editRelay ? 'Custom Relay' : 'Choose Relay'),
-    [editRelay, relayAddress],
-  );
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
@@ -262,7 +265,7 @@ const Container = styled('div')({
 });
 
 export const TextButton = styled(Button)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.actionButton,
     width: '23rem',
@@ -282,7 +285,7 @@ export const TextButton = styled(Button)(() => {
 });
 
 const ToggleText = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     fontWeight: 500,
     color: currentTheme.textTertiary,
@@ -290,7 +293,7 @@ const ToggleText = styled(StyledText)(() => {
 });
 
 const ButtonText = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     fontWeight: 500,
     color: currentTheme.actionButton,

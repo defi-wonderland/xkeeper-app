@@ -1,10 +1,10 @@
 import { styled } from '@mui/material';
 import { css } from '@mui/system';
 
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 export const STextarea = styled('textarea')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return css`
     font-size: 1.6rem;

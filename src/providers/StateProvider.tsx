@@ -1,36 +1,21 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
+import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
 import {
-  Theme,
-  ThemeName,
-  ModalType,
-  Addresses,
-  Chains,
-  VaultData,
-  Notification,
-  Chain,
-  SelectedItem,
-  AliasData,
-} from '~/types';
-import {
-  aliasKey,
-  themeKey,
   getPrices,
-  getTheme,
   getTokenList,
   getVaults,
   getVaultsData,
-  loadLocalStorage,
+  getTotalVaults,
+  vaultsPerBatch,
+  getChainName,
 } from '~/utils';
 import { getConfig } from '~/config';
 import { useCustomClient } from '~/hooks';
+import { useModal } from '~/hooks';
 
 type ContextType = {
-  theme: ThemeName;
-  currentTheme: Theme;
-  setTheme: (val: ThemeName) => void;
-
   loading: boolean;
   setLoading: (val: boolean) => void;
 
@@ -39,9 +24,6 @@ type ContextType = {
 
   notification: Notification;
   setNotification: (val: Notification) => void;
-
-  modalOpen: ModalType;
-  setModalOpen: (val: ModalType) => void;
 
   selectedVault?: VaultData;
   setSelectedVault: (val: VaultData) => void;
@@ -60,10 +42,7 @@ type ContextType = {
   vaults: VaultData[];
   setVaults: (val: VaultData[]) => void;
 
-  aliasData: AliasData;
-  updateAliasData: () => void;
-
-  update: () => void;
+  updateVaultsList: () => Promise<void>;
 };
 
 interface StateProps {
@@ -73,61 +52,123 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const {
-    addresses,
-    availableChains,
-    DEFAULT_CHAIN,
-    DEFAULT_WETH_ADDRESS,
-    DEFAULT_THEME,
-    TEST_MODE: IS_TEST,
-  } = getConfig();
+  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS, TEST_MODE: IS_TEST } = getConfig();
   const { publicClient } = useCustomClient();
+  const { modalOpen } = useModal();
   const { address } = useAccount();
   const { chain } = useNetwork();
 
   const chainId = IS_TEST ? DEFAULT_CHAIN : chain?.id || DEFAULT_CHAIN;
 
-  const [theme, setTheme] = useState<ThemeName>(DEFAULT_THEME);
-  const currentTheme = useMemo(() => getTheme(theme), [theme]);
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
   const [vaults, setVaults] = useState<VaultData[]>([]);
-  const [aliasData, setAliasData] = useState<AliasData>({});
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     type: '',
     address: '0x',
     params: [],
   });
 
-  const [modalOpen, setModalOpen] = useState<ModalType>(ModalType.NONE);
+  const [totalRequestCount, setTotalRequestCount] = useState<number>();
+  const [requestAmount, setRequestAmount] = useState<number>(vaultsPerBatch);
+
   const [currentNetwork, setCurrentNetwork] = useState<Chain>(availableChains[chainId]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const update = useCallback(async () => {
-    setLoading(true);
+  const loadVaultData = useCallback(
+    async (startIndex: number, amountOfVaults: number) => {
+      const tokens = getTokenList(currentNetwork.id);
+      const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
+      const chainName = getChainName(publicClient);
 
-    const tokens = getTokenList(currentNetwork.id);
-    const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
+      const prices = await getPrices(chainName, tokenAddresses);
+      const vaultsData = await getVaults(publicClient, addresses.AutomationVaultFactory, startIndex, amountOfVaults);
+      const formattedVaultsData = await getVaultsData(
+        publicClient,
+        vaultsData,
+        tokens,
+        prices,
+        addresses.xKeeperMetadata,
+      );
 
-    const currentChain = publicClient.chain.name.toLocaleLowerCase();
-    const chainName = currentChain === 'goerli' ? 'ethereum' : currentChain; // Load tokens from mainnet when on goerli
+      return formattedVaultsData;
+    },
+    [
+      DEFAULT_WETH_ADDRESS,
+      addresses.AutomationVaultFactory,
+      addresses.xKeeperMetadata,
+      currentNetwork.id,
+      publicClient,
+    ],
+  );
 
-    const pricesCall = getPrices(chainName, tokenAddresses);
-    const vaultsCall = getVaults(publicClient, addresses.AutomationVaultFactory);
+  const fetchVaulsDataWithPagination = useCallback(
+    async (startIndex: number, requestAmount: number) => {
+      if (requestAmount === 0) {
+        setLoading(false);
+        return [];
+      }
 
-    const [vaults, prices] = await Promise.all([vaultsCall, pricesCall]);
-    const vaultsData = await getVaultsData(publicClient, vaults, tokens, prices, addresses.xKeeperMetadata);
+      try {
+        setLoading(true);
 
-    setVaults(vaultsData);
-    setLoading(false);
-  }, [
-    DEFAULT_WETH_ADDRESS,
-    addresses.AutomationVaultFactory,
-    addresses.xKeeperMetadata,
-    currentNetwork.id,
-    publicClient,
-  ]);
+        const formattedVaultsData = await loadVaultData(startIndex, requestAmount);
+
+        const newTotalRequestCount = Math.max(startIndex - requestAmount, 0);
+        const newAmount = newTotalRequestCount === 0 ? startIndex : requestAmount;
+        setTotalRequestCount(newTotalRequestCount);
+        setRequestAmount(newAmount);
+
+        setLoading(false);
+        return formattedVaultsData;
+      } catch (error) {
+        console.error('Error loading vaults:', error);
+        setLoading(false);
+        return [];
+      }
+    },
+    [loadVaultData],
+  );
+
+  const updateVaultsList = useCallback(async () => {
+    if (typeof totalRequestCount !== 'number') return;
+    const newData = await fetchVaulsDataWithPagination(totalRequestCount!, requestAmount);
+    setVaults((prevVaults) => [...prevVaults, ...newData]);
+  }, [fetchVaulsDataWithPagination, requestAmount, totalRequestCount]);
+
+  const handleLoad = useCallback(
+    async (reset?: boolean) => {
+      try {
+        if ((!totalRequestCount && !vaults.length) || reset) {
+          setLoading(true);
+          const totalRequestCount = await getTotalVaults(publicClient, addresses.AutomationVaultFactory);
+          const newRequestAmount = Math.min(vaultsPerBatch, totalRequestCount);
+
+          const newData = await fetchVaulsDataWithPagination(totalRequestCount - newRequestAmount, newRequestAmount);
+          setVaults(newData);
+        }
+      } catch (error) {
+        console.error('Error getting last requests:', error);
+        setLoading(false);
+        setIsError(true);
+      }
+    },
+    // to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [addresses.AutomationVaultFactory, fetchVaulsDataWithPagination],
+  );
+
+  const resetVaults = useCallback(() => {
+    setTotalRequestCount(undefined);
+    setRequestAmount(vaultsPerBatch);
+    setVaults([]);
+  }, []);
+
+  // Load vaults on load
+  useEffect(() => {
+    handleLoad();
+  }, [handleLoad]);
 
   // Update current network when chain changes
   useEffect(() => {
@@ -139,28 +180,13 @@ export const StateProvider = ({ children }: StateProps) => {
     setVaults([]);
   }, [currentNetwork]);
 
-  // Load alias data from local storage
-  const updateAliasData = useCallback(async () => {
-    const data = loadLocalStorage(aliasKey);
-    setAliasData(data);
-  }, []);
-
-  // Load vaults on load
-  useEffect(() => {
-    update();
-  }, [update]);
-
-  // Load alias data on load
-  useEffect(() => {
-    updateAliasData();
-  }, [updateAliasData]);
-
   // Update vaults on notification open
   useEffect(() => {
     if (notification.open) {
-      update();
+      resetVaults();
+      handleLoad(true);
     }
-  }, [notification.open, update]);
+  }, [handleLoad, notification.open, resetVaults]);
 
   // Reset selected item when modal is close
   useEffect(() => {
@@ -173,30 +199,15 @@ export const StateProvider = ({ children }: StateProps) => {
     }
   }, [modalOpen]);
 
-  // Load theme from local storage on load
-  useEffect(() => {
-    const storedTheme = localStorage.getItem(themeKey) as ThemeName;
-    if (!storedTheme) {
-      localStorage.setItem(themeKey, DEFAULT_THEME);
-    } else {
-      setTheme(storedTheme);
-    }
-  }, [DEFAULT_THEME]);
-
   return (
     <StateContext.Provider
       value={{
-        theme,
-        setTheme,
         loading,
         setLoading,
         isError,
         setIsError,
-        currentTheme,
         notification,
         setNotification,
-        modalOpen,
-        setModalOpen,
         userAddress: address,
         addresses,
         currentNetwork,
@@ -208,9 +219,7 @@ export const StateProvider = ({ children }: StateProps) => {
         setSelectedItem,
         vaults,
         setVaults,
-        update,
-        aliasData,
-        updateAliasData,
+        updateVaultsList,
       }}
     >
       {children}

@@ -17,11 +17,13 @@ import {
 } from '~/components';
 import { TitleContainer } from '~/containers';
 import { ModalType, Status } from '~/types';
-import { useStateContext, useVault } from '~/hooks';
+import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
 import { getContractAbi, getReceiptMessage } from '~/utils';
 
 export const JobModal = () => {
-  const { modalOpen, setModalOpen, selectedVault, currentTheme, currentNetwork } = useStateContext();
+  const { selectedVault, currentNetwork } = useStateContext();
+  const { modalOpen, setModalOpen } = useModal();
+  const { currentTheme } = useTheme();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [jobAddress, setJobAddress] = useState('');
@@ -38,7 +40,7 @@ export const JobModal = () => {
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
-    functionName: 'approveJobFunctions',
+    functionName: 'approveJobSelectors',
     args: [jobAddress, [functionSignature]],
     notificationTitle: 'Job successfully approved',
     notificationMessage: getReceiptMessage(jobAddress, 'job is now enabled'),
@@ -201,7 +203,7 @@ export const DropdownContainer = styled(Box)({
 });
 
 export const DropdownLabel = styled(Typography)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textSecondary,
     fontSize: '1.4rem',

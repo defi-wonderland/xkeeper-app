@@ -1,8 +1,8 @@
 import { Button, styled } from '@mui/material';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 export const CancelButton = styled(Button)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textPrimary,
     borderColor: currentTheme.textSecondaryDisabled,
@@ -26,7 +26,7 @@ export const CancelButton = styled(Button)(() => {
 });
 
 export const ActiveButton = styled(Button)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.actionButtonColor,
     borderRadius: currentTheme.borderRadius,
@@ -51,7 +51,7 @@ export const ActiveButton = styled(Button)(() => {
 });
 
 export const RevokeButton = styled(ActiveButton)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     backgroundColor: currentTheme.error,
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
@@ -70,7 +70,7 @@ export const RevokeButton = styled(ActiveButton)(() => {
 });
 
 export const CloseButton = styled(Button)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: 'inherit',
     minWidth: 'auto',

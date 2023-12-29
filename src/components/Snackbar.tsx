@@ -2,12 +2,13 @@ import { useSnackbar, ClickAwayListener } from '@mui/base';
 import { css, keyframes, styled } from '@mui/system';
 import { Button } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useStateContext, useTheme } from '~/hooks';
 import { StyledText, StyledTitle, Icon } from '~/components';
 import { zIndex } from '~/utils';
 
 export function UseSnackbar() {
-  const { notification, setNotification, currentTheme } = useStateContext();
+  const { notification, setNotification } = useStateContext();
+  const { currentTheme } = useTheme();
 
   const handleClose = () => {
     setNotification({ ...notification, open: false });
@@ -68,7 +69,7 @@ const snackbarInBottom = keyframes`
 `;
 
 const CustomSnackbar = styled('div')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return css`
     background-color: ${currentTheme.backgroundPrimary};
     border: ${currentTheme.border};
@@ -106,7 +107,7 @@ const CustomSnackbar = styled('div')(() => {
 });
 
 const TextContainer = styled('div')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     display: 'flex',
     flexDirection: 'column',
@@ -122,7 +123,7 @@ const TextContainer = styled('div')(() => {
 });
 
 const Title = styled(StyledTitle)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     fontSize: '1.4rem',
     lineHeight: '2rem',
@@ -135,7 +136,7 @@ const Title = styled(StyledTitle)(() => {
 });
 
 const Text = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     fontSize: '1.4rem',
     lineHeight: '2rem',
@@ -148,7 +149,7 @@ const Text = styled(StyledText)(() => {
 });
 
 const SButton = styled(Button)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     padding: 0,
     minWidth: 'auto',
@@ -168,7 +169,7 @@ interface IconProps {
   isError?: boolean;
 }
 const SCheckIcon = styled(Icon)(({ isError }: IconProps) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   const color = isError ? currentTheme.error : currentTheme.checkColor;
   const background = isError ? currentTheme.errorBackground : currentTheme.checkBackground;
   const outlineColor = isError ? currentTheme.errorOutlineColor : currentTheme.checkOutlineColor;

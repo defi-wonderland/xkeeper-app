@@ -1,7 +1,7 @@
 import { Tooltip, Typography, styled } from '@mui/material';
 import { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 interface Props {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,7 +31,7 @@ const CustomTooltip = styled(({ className, ...props }: TooltipProps) => (
 export const STooltip = ({ children, text, placement, address, open }: Props) => {
   const {
     currentTheme: { tooltipBackground, tooltipColor },
-  } = useStateContext();
+  } = useTheme();
 
   const textStyles = {
     fontSize: '1.2rem',

@@ -16,12 +16,13 @@ import {
   ConfirmText,
 } from '~/components';
 import { BigModal, TitleContainer as Header } from '~/containers';
-import { useStateContext, useVault } from '~/hooks';
+import { useStateContext, useVault, useTheme, useModal } from '~/hooks';
 import { ModalType, TokenData } from '~/types';
 
 export const WithdrawtModal = () => {
-  const { modalOpen, setModalOpen, currentTheme, selectedVault, currentNetwork, loading, userAddress } =
-    useStateContext();
+  const { selectedVault, currentNetwork, loading, userAddress } = useStateContext();
+  const { modalOpen, setModalOpen } = useModal();
+  const { currentTheme } = useTheme();
   const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [widthdrawalAddress, setWithdrawalAddress] = useState(userAddress || '');
@@ -145,7 +146,7 @@ export const WithdrawtModal = () => {
 };
 
 const InputLabel = styled(StyledText)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     color: currentTheme.textSecondary,
     fontSize: '1.4rem',
@@ -203,7 +204,7 @@ const NetworkText = styled(StyledText)(() => {
 });
 
 const Divider = styled('div')(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     width: '0.1rem',
     backgroundColor: currentTheme.backButtonBorderColor,

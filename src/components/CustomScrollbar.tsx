@@ -1,9 +1,9 @@
 import { styled, Box } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 export const CustomScrollbar = styled(Box)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     overflowY: 'auto',
     overflowX: 'hidden',

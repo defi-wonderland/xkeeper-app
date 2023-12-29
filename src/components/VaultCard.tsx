@@ -2,7 +2,7 @@ import { Box, Card, styled } from '@mui/material';
 
 import { ChainIcon, Icon, InfoChip, NoRelayChip, RelayChip, STooltip, StyledText, StyledTitle } from '~/components';
 import { formatDataNumber, getRelayName } from '~/utils';
-import { useStateContext } from '~/hooks';
+import { useAlias, useStateContext, useTheme } from '~/hooks';
 import { VaultData } from '~/types';
 import { Description } from '~/pages';
 
@@ -12,7 +12,9 @@ interface VaultCardProps {
 }
 
 export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
-  const { currentTheme, userAddress, aliasData } = useStateContext();
+  const { userAddress } = useStateContext();
+  const { currentTheme } = useTheme();
+  const { aliasData } = useAlias();
   const { name, totalValue, relays, chain, owner, address } = vaultData;
 
   const activeRelays = Object.keys(relays);
@@ -79,7 +81,7 @@ const SContainer = styled(Box)({
 });
 
 const SCard = styled(Card)(() => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
   return {
     backgroundColor: currentTheme.backgroundPrimary,
     borderColor: currentTheme.backButtonBorderColor,

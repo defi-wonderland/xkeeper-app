@@ -1,12 +1,12 @@
 import { Box } from '@mui/material';
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 interface WarningChipProps {
   children: React.ReactNode;
 }
 
 export const WarningChip = ({ children }: WarningChipProps) => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return (
     <Box

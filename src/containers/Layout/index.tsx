@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import { Box } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useTheme } from '~/hooks';
 import { Header } from '~/containers';
 
 export const AppLayout = () => {
-  const { currentTheme } = useStateContext();
+  const { currentTheme } = useTheme();
 
   return (
     <Box

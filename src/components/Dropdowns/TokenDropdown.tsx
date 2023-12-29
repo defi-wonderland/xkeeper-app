@@ -2,7 +2,7 @@ import { Dropdown } from '@mui/base/Dropdown';
 import { styled } from '@mui/material';
 import { Menu } from '@mui/base/Menu';
 
-import { useStateContext } from '~/hooks';
+import { useStateContext, useTheme } from '~/hooks';
 import {
   BasicStyledListbox,
   CustomScrollbar,
@@ -22,7 +22,8 @@ interface TokenDropdownProps {
 }
 
 export function TokenDropdown({ tokens, value, setValue, disabled }: TokenDropdownProps) {
-  const { currentTheme, currentNetwork } = useStateContext();
+  const { currentNetwork } = useStateContext();
+  const { currentTheme } = useTheme();
   const createHandleMenuClick = (menuItem: TokenData) => {
     return () => {
       setValue(menuItem);

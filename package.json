@@ -17,7 +17,7 @@
     "test": "yarn cypress run",
     "test:dev": "yarn cypress open",
     "test:app": "VITE_TEST=true yarn dev",
-    "test:fork": "eval $(grep '^VITE_RPC_URL' .env) && anvil --fork-url $VITE_RPC_URL --fork-block-number 9733610 --silent",
+    "test:fork": "eval $(grep '^VITE_RPC_URL' .env) && anvil --fork-url $VITE_RPC_URL --fork-block-number 10232427 --silent",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' 'cypress'",
     "lint:fix": "yarn run lint -- --fix",
     "prettier": "prettier src --check",
@@ -70,7 +70,7 @@
     "prettier": "3.0.3",
     "styled-components": "6.0.7",
     "typescript": "5.0.2",
-    "vite": "4.4.5",
+    "vite": "5.0.10",
     "vite-tsconfig-paths": "4.2.0",
     "vitest": "0.34.3"
   }

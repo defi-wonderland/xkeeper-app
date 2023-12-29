@@ -1,0 +1,60 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "automationVaultMetadata",
+      "inputs": [{ "name": "_automationVault", "type": "address", "internalType": "contract IAutomationVault" }],
+      "outputs": [
+        { "name": "_name", "type": "string", "internalType": "string" },
+        { "name": "_description", "type": "string", "internalType": "string" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "automationVaultsMetadata",
+      "inputs": [{ "name": "_automationVault", "type": "address[]", "internalType": "contract IAutomationVault[]" }],
+      "outputs": [
+        {
+          "name": "_metadata",
+          "type": "tuple[]",
+          "internalType": "struct IXKeeperMetadata.AutomationVaultMetadata[]",
+          "components": [
+            { "name": "name", "type": "string", "internalType": "string" },
+            { "name": "description", "type": "string", "internalType": "string" }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "setAutomationVaultMetadata",
+      "inputs": [
+        { "name": "_automationVault", "type": "address", "internalType": "contract IAutomationVault" },
+        {
+          "name": "_automationVaultMetadata",
+          "type": "tuple",
+          "internalType": "struct IXKeeperMetadata.AutomationVaultMetadata",
+          "components": [
+            { "name": "name", "type": "string", "internalType": "string" },
+            { "name": "description", "type": "string", "internalType": "string" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "AutomationVaultMetadataSetted",
+      "inputs": [
+        { "name": "_automationVault", "type": "address", "indexed": true, "internalType": "contract IAutomationVault" },
+        { "name": "_name", "type": "string", "indexed": false, "internalType": "string" },
+        { "name": "_description", "type": "string", "indexed": false, "internalType": "string" }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "XKeeperMetadata_OnlyAutomationVaultOwner", "inputs": [] }
+  ]
+}
