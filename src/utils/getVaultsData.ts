@@ -2,8 +2,8 @@ import { Address } from 'viem';
 import { PublicClient, erc20ABI } from 'wagmi';
 
 import { vaultABI, vaultFactoryABI, xkeeperMetadataABI } from '~/generated';
-import { CallResult, JobData, PriceData, RelayData, Token, TokenData, VaultData } from '~/types';
-import { formatTokensData, getChainName, getTotalUsdBalance, truncateFunctionSignature } from '~/utils';
+import { CallResult, PriceData, RelayData, RelayResult, Token, TokenData, VaultData } from '~/types';
+import { formatTokensData, getChainName, getTotalUsdBalance } from '~/utils';
 
 export const getVaults = async (
   publicClient: PublicClient,
@@ -37,7 +37,7 @@ export const getVaultsData = async (
 
   try {
     for (const vault of vaults) {
-      const { owner, name, relays, jobs, tokens, description } = await fetchAndFormatData(
+      const { owner, name, relays, nativeToken, tokens, description } = await fetchAndFormatData(
         publicClient,
         vault,
         tokenList,
@@ -49,8 +49,8 @@ export const getVaultsData = async (
         address: vault,
         chain: publicClient.chain.name.toLocaleLowerCase(),
         name: name,
+        nativeToken,
         owner: owner,
-        jobs: jobs,
         relays: relays,
         tokens: tokens,
         totalValue: getTotalUsdBalance(tokens),
@@ -74,8 +74,8 @@ const fetchAndFormatData = async (
 ): Promise<{
   owner: Address | undefined;
   name: string | undefined;
+  nativeToken: Address;
   relays: RelayData;
-  jobs: JobData;
   tokens: TokenData[];
   description: string;
 }> => {
@@ -84,7 +84,6 @@ const fetchAndFormatData = async (
   const metadataContract = { address: xKeeperMetadata, abi: xkeeperMetadataABI, args: [vaultAddress] };
 
   let relaysData: RelayData = {};
-  let jobData: JobData = {};
   let tokensData: TokenData[] = [];
 
   const balanceCalls = tokens.map((token) => ({
@@ -98,8 +97,9 @@ const fetchAndFormatData = async (
     contracts: [
       { ...vaultContract, functionName: 'owner' },
       { ...vaultContract, functionName: 'relays' },
-      { ...vaultContract, functionName: 'jobs' },
+      { ...vaultContract, functionName: 'NATIVE_TOKEN' },
       { ...metadataContract, functionName: 'automationVaultMetadata' },
+
       ...balanceCalls,
     ],
   });
@@ -110,7 +110,7 @@ const fetchAndFormatData = async (
   ]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [owner, relays, jobs, metadata] = multicallResult.slice(0, 4) as any;
+  const [owner, relays, nativeToken, metadata] = multicallResult.slice(0, 4) as any;
   const [name, description] = metadata?.result || [];
 
   const tokensResult = multicallResult.slice(4) as CallResult[];
@@ -118,38 +118,33 @@ const fetchAndFormatData = async (
   const chainName = getChainName(publicClient);
   tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, prices);
 
-  if (relays?.result?.length || jobs?.result?.length) {
+  if (relays?.result?.length) {
     const relayEnabledCallers = relays.result.map((relayAddress: Address) => ({
       ...vaultContract,
-      functionName: 'relayEnabledCallers',
+      functionName: 'getRelayData',
       args: [relayAddress],
     }));
 
-    const jobEnabledFunctions = jobs.result.map((jobAddress: Address) => ({
-      ...vaultContract,
-      functionName: 'jobEnabledSelectors',
-      args: [jobAddress],
-    }));
+    const [callers] = (await Promise.all([publicClient.multicall({ contracts: relayEnabledCallers })])) as [
+      RelayResult,
+    ];
 
-    const [callers, jobFunctions] = await Promise.all([
-      publicClient.multicall({ contracts: relayEnabledCallers }),
-      publicClient.multicall({ contracts: jobEnabledFunctions }),
-    ]);
-
-    // format RelayData
-    relaysData = Object.fromEntries(callers.map((caller, index) => [relays.result[index], caller.result as Address[]]));
-
-    // format JobData
-    jobData = Object.fromEntries(
-      jobFunctions.map((func, index) => [jobs.result[index], (func.result as string[]).map(truncateFunctionSignature)]),
+    relaysData = Object.fromEntries(
+      callers.map((relayData, index) => [
+        relays.result[index],
+        {
+          callers: relayData.result?.[0],
+          jobsData: relayData.result?.[1],
+        },
+      ]),
     );
   }
 
   return {
     owner: owner?.result,
     relays: relaysData,
-    jobs: jobData,
     tokens: tokensData,
+    nativeToken,
     name: name,
     description: description,
   };
