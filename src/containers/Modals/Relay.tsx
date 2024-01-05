@@ -53,8 +53,16 @@ export const RelayModal = () => {
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
-    functionName: 'approveRelayCallers',
-    args: [relayAddress, callerList],
+    functionName: 'approveRelayData',
+    args: [
+      relayAddress,
+      callerList,
+      // temporary fixed values
+      [
+        { job: '0x08b9F5FDb8aBDF42e9A23A96ee333d6B9b594A81', functionSelectors: ['0xfffffff2'] },
+        { job: '0x600e5B634258155010c0934c988056A4DE42f712', functionSelectors: ['0xfffffff3'] },
+      ],
+    ],
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
   });

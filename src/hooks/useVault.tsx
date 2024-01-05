@@ -12,13 +12,12 @@ interface SendTransactionProps {
   contractAddress?: string;
   functionName:
     | 'acceptOwner'
-    | 'approveJobSelectors'
-    | 'approveRelayCallers'
+    | 'approveRelayData'
     | 'changeOwner'
     | 'exec'
-    | 'revokeJobSelectors'
-    | 'revokeRelayCallers'
     | 'withdrawFunds'
+    | 'getRelayData'
+    | 'revokeRelayData'
     | undefined;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

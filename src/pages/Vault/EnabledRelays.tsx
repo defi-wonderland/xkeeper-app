@@ -34,7 +34,7 @@ export const EnabledRelays = () => {
           updateAliasData();
         }
 
-        return createRelaysData(getRelayName(key), key, selectedRelays[key]);
+        return createRelaysData(getRelayName(key), key, selectedRelays[key].callers);
       }),
     [aliasData, selectedRelays, updateAliasData],
   );

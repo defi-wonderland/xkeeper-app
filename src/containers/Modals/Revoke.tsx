@@ -12,12 +12,11 @@ export const RevokeModal = () => {
   const type = selectedItem.type;
   const value = selectedItem.address;
 
-  const functionName = selectedItem?.type === 'relay' ? 'revokeRelayCallers' : 'revokeJobSelectors';
-
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
-    functionName: functionName,
-    args: [selectedItem.address, selectedItem.params],
+    functionName: 'revokeRelayData',
+    // temporary fixed values
+    args: [selectedItem.address, selectedItem.params, []],
     notificationTitle: `${type} successfully revoked`,
     notificationMessage: getReceiptMessage(value, 'has been revoked and is no longer active'),
   });
