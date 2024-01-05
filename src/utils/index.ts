@@ -4,6 +4,7 @@ export * from './getMessageComponents';
 export * from './getPrices';
 export * from './getContractAbi';
 export * from './getRelayName';
+export * from './getSalt';
 export * from './getTheme';
 export * from './getTotalVaults';
 export * from './getVaultsData';

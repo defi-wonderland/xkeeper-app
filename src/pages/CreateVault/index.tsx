@@ -14,7 +14,7 @@ export const CreateVault = () => {
   const [vaultOwner, setVaultOwner] = useState(userAddress || '');
   const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
   const { requestStatus, handleSendTransaction, writeAsync } = useVaultFactory({
-    args: [vaultOwner as Address],
+    ownerAddress: vaultOwner as Address,
     selectedChain,
   });
 
