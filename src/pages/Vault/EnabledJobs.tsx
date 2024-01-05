@@ -3,7 +3,7 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 
 import { ColumnTitle, SCard, SectionHeader, Title, RowText, STableRow, STable } from './Tokens';
 import { AddressContainer, NoDataContainer, RowButton, SText } from './EnabledRelays';
-import { ActiveButton, OptionsMenu, IconContainer, STooltip, Icon, StyledText } from '~/components';
+import { OptionsMenu, IconContainer, STooltip, Icon, StyledText } from '~/components';
 import { aliasKey, copyData, saveLocalStorage, truncateAddress } from '~/utils';
 import { Items, ModalType, OptionsType, SelectedItem } from '~/types';
 import { useAlias, useModal, useStateContext, useTheme } from '~/hooks';
@@ -14,7 +14,7 @@ function createJobsData(alias: string, relayAddress: string, jobAddress: string,
 
 export const EnabledJobs = () => {
   const { currentTheme } = useTheme();
-  const { userAddress, setSelectedItem, selectedVault } = useStateContext();
+  const { setSelectedItem, selectedVault } = useStateContext();
   const { aliasData, updateAliasData } = useAlias();
   const { setModalOpen } = useModal();
 
@@ -68,7 +68,8 @@ export const EnabledJobs = () => {
       <SectionHeader>
         <Title>Enabled Jobs</Title>
 
-        {selectedVault?.owner === userAddress && (
+        {/* Temporary commented */}
+        {/* {selectedVault?.owner === userAddress && (
           <ActiveButton
             data-test='add-job-button'
             variant='contained'
@@ -77,7 +78,7 @@ export const EnabledJobs = () => {
           >
             Add New Job
           </ActiveButton>
-        )}
+        )} */}
       </SectionHeader>
 
       {!!jobs.length && (
