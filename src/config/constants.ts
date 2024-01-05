@@ -7,13 +7,13 @@ const constants: Constants = {
   DEFAULT_WETH_ADDRESS: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
 
   addresses: {
-    AutomationVaultFactory: '0x5fc2e933e22ac94d7c80fbca7e0a4d150abf0e4c',
-    xKeeperMetadata: '0xea3635701bf91e4a0ee3491884579f55b4666e9f',
+    AutomationVaultFactory: '0x28c92F26fAE5176B366042C2cA63A4955AFC310D',
+    xKeeperMetadata: '0x37d9EEF8c61075C03fC7710175822dAa33Ce3e4b',
     relays: {
-      GelatoRelay: '0xb32c197e569cc7fb11cbed0cc716635aa7616bae',
-      OpenRelay: '0xbd57e761324d09d3a3aea775b9a8566865fea817',
-      Keep3rRelay: '0x2055d38a9e14d1f4e16a0efaaf9b6864342510a3',
-      // Keep3rBondedRelay: '0x87e49e78b78deb68cb2823e49ab71a74bf9bb5fe',
+      GelatoRelay: '0xbAba0774d23Cbc8CbDE744a9829c22469c1395E0',
+      OpenRelay: '0xE8E1b32340f527125721903a3947c937dc72e140',
+      Keep3rRelay: '0x7B4BC4E9304EeaE8B5a4C914B25b0C00FeB6eD29',
+      // Keep3rBondedRelay: '0x55D10038A1114F341Bd0CDB8a2d61C46eD57149b',
     },
   },
 
