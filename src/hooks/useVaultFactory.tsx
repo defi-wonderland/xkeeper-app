@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { useNavigate } from 'react-router-dom';
@@ -6,17 +6,17 @@ import { TransactionExecutionError } from 'viem';
 
 import { useStateContext, useCustomClient } from '~/hooks';
 import { vaultFactoryABI } from '~/generated';
-import { getTotalVaults, getViewTransaction } from '~/utils';
+import { getTotalVaults, getViewTransaction, getSalt } from '~/utils';
 import { getConfig } from '~/config';
 import { Status } from '~/types';
 
 interface SendTransactionProps {
-  args: [Address];
+  ownerAddress: Address;
   selectedChain: string;
 }
 
 export const useVaultFactory = ({
-  args,
+  ownerAddress,
   selectedChain,
 }: SendTransactionProps): {
   requestStatus: Status;
@@ -25,9 +25,14 @@ export const useVaultFactory = ({
 } => {
   const { setNotification, currentNetwork } = useStateContext();
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
-  const { addresses } = getConfig();
+  const { addresses, DEFAULT_ETH_ADDRESS } = getConfig();
   const { publicClient } = useCustomClient();
   const navigate = useNavigate();
+
+  const args = useMemo(
+    () => [ownerAddress, DEFAULT_ETH_ADDRESS as Address, getSalt()] as [Address, Address, bigint],
+    [DEFAULT_ETH_ADDRESS, ownerAddress],
+  );
 
   const { config } = usePrepareContractWrite({
     address: addresses.AutomationVaultFactory,

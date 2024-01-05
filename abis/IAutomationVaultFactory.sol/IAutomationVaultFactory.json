@@ -13,7 +13,11 @@
     {
       "type": "function",
       "name": "deployAutomationVault",
-      "inputs": [{ "name": "_owner", "type": "address", "internalType": "address" }],
+      "inputs": [
+        { "name": "_owner", "type": "address", "internalType": "address" },
+        { "name": "_nativeToken", "type": "address", "internalType": "address" },
+        { "name": "_salt", "type": "uint256", "internalType": "uint256" }
+      ],
       "outputs": [{ "name": "_automationVault", "type": "address", "internalType": "contract IAutomationVault" }],
       "stateMutability": "nonpayable"
     },
@@ -33,6 +37,6 @@
       ],
       "anonymous": false
     },
-    { "type": "error", "name": "AutomationVaultFactory_AmountZero", "inputs": [] }
+    { "type": "error", "name": "AutomationVaultFactory_Create2Failed", "inputs": [] }
   ]
 }
