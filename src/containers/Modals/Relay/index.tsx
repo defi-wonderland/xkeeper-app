@@ -47,10 +47,15 @@ export const RelayModal = () => {
 
   const availableValues = useMemo(() => [...Object.values(relays), 'Choose Relay'], [relays]);
 
+  const jobsData = useMemo(
+    () => (editRelay ? [] : [{ job: jobAddress, functionSelectors: [functionSignature] }]),
+    [editRelay, jobAddress, functionSignature],
+  );
+
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'approveRelayData',
-    args: [relayAddress, callerList, [{ job: jobAddress, functionSelectors: [functionSignature] }]],
+    args: [relayAddress, callerList, jobsData],
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
   });
@@ -112,19 +117,21 @@ export const RelayModal = () => {
           availableValues={availableValues}
         />
 
-        <JobSection
-          jobAddress={jobAddress}
-          setJobAddress={setJobAddress}
-          jobAbi={jobAbi}
-          setJobAbi={setJobAbi}
-          contractFunction={contractFunction}
-          setContractFunction={setContractFunction}
-          functionSignature={functionSignature}
-          setFunctionSignature={setFunctionSignature}
-          selectedValue={selectedValue}
-          handleChange={handleChange}
-          isLoading={isLoading}
-        />
+        {!editRelay && (
+          <JobSection
+            jobAddress={jobAddress}
+            setJobAddress={setJobAddress}
+            jobAbi={jobAbi}
+            setJobAbi={setJobAbi}
+            contractFunction={contractFunction}
+            setContractFunction={setContractFunction}
+            functionSignature={functionSignature}
+            setFunctionSignature={setFunctionSignature}
+            selectedValue={selectedValue}
+            handleChange={handleChange}
+            isLoading={isLoading}
+          />
+        )}
 
         <SButtonsContainer>
           <CancelButton variant='outlined' disabled={isLoading} onClick={handleClose}>

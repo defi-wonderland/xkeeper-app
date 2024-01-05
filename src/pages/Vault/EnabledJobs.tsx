@@ -67,18 +67,6 @@ export const EnabledJobs = () => {
     <SCard variant='outlined'>
       <SectionHeader>
         <Title>Enabled Jobs</Title>
-
-        {/* Temporary commented */}
-        {/* {selectedVault?.owner === userAddress && (
-          <ActiveButton
-            data-test='add-job-button'
-            variant='contained'
-            disabled={!userAddress}
-            onClick={() => setModalOpen(ModalType.ADD_JOB)}
-          >
-            Add New Job
-          </ActiveButton>
-        )} */}
       </SectionHeader>
 
       {!!jobs.length && (
@@ -87,7 +75,7 @@ export const EnabledJobs = () => {
             <TableHead>
               <TableRow>
                 <SColumnTitle>Alias</SColumnTitle>
-                <ColumnTitle align='left'>Relay Address</ColumnTitle>
+                <ColumnTitle align='left'>Relay</ColumnTitle>
                 <ColumnTitle align='left'>Job Address</ColumnTitle>
                 <ColumnTitle align='left'>Function Signature</ColumnTitle>
                 <ColumnTitle align='right'></ColumnTitle>
@@ -111,20 +99,9 @@ export const EnabledJobs = () => {
 
                   {/* Relay Address */}
                   <RowText align='left'>
-                    <AddressContainer onClick={() => handleCopy(row.relayAddress, index)}>
+                    <AddressContainer onClick={() => handleOpenAliasModal('relay', row.relayAddress, [])}>
                       <STooltip text={row.relayAddress} address>
-                        <Text>{truncateAddress(row.relayAddress)}</Text>
-                      </STooltip>
-
-                      <STooltip text={items[index]?.itemCopied ? 'Copied!' : 'Copy Address'}>
-                        <IconContainer>
-                          {!items[index]?.itemCopied && (
-                            <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />
-                          )}
-                          {!!items[index]?.itemCopied && (
-                            <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />
-                          )}
-                        </IconContainer>
+                        <Text> {aliasData[row.relayAddress] || row.alias}</Text>
                       </STooltip>
                     </AddressContainer>
                   </RowText>
@@ -160,7 +137,7 @@ export const EnabledJobs = () => {
 
                   {/* Options Menu */}
                   <RowButton align='right' data-test={`job-options-${index}`}>
-                    <OptionsMenu type='job' address={row.relayAddress} params={row.functionSignature} />
+                    <OptionsMenu type='job' address={row.relayAddress} params={[row.jobAddress]} />
                   </RowButton>
                 </STableRow>
               ))}
@@ -178,7 +155,9 @@ export const EnabledJobs = () => {
   );
 };
 
-const SColumnTitle = styled(ColumnTitle)({});
+const SColumnTitle = styled(ColumnTitle)({
+  minWidth: '12rem',
+});
 
 export const Text = styled('p')({
   display: 'block',
