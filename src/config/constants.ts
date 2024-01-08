@@ -7,7 +7,7 @@ const constants: Constants = {
   DEFAULT_WETH_ADDRESS: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
 
   addresses: {
-    AutomationVaultFactory: '0x28c92F26fAE5176B366042C2cA63A4955AFC310D',
+    AutomationVaultFactory: '0xC3377b30feD174e65778e7E1DaFBb7686082B428',
     xKeeperMetadata: '0x37d9EEF8c61075C03fC7710175822dAa33Ce3e4b',
     relays: {
       GelatoRelay: '0xbAba0774d23Cbc8CbDE744a9829c22469c1395E0',
