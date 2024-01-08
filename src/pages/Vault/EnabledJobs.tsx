@@ -23,7 +23,7 @@ export const EnabledJobs = () => {
   const selectedJobs = useMemo(() => selectedVault?.relays || {}, [selectedVault?.relays]);
 
   const jobs = useMemo(() => {
-    const test2 = Object.entries(selectedJobs).map(([key, values], relayIndex) => {
+    const jobsList = Object.entries(selectedJobs).map(([key, values], relayIndex) => {
       return values.jobsData.map((jobData, jobIndex) => {
         const customAlias = `Job ${relayIndex + jobIndex + 1}`;
 
@@ -37,7 +37,7 @@ export const EnabledJobs = () => {
         return createJobsData(customAlias, key, jobData.job, jobData.functionSelectors);
       });
     });
-    return test2.flat();
+    return jobsList.flat();
   }, [aliasData, selectedJobs, updateAliasData]);
 
   const handleCopy = async (content: string, index: number) => {
