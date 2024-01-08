@@ -60,7 +60,7 @@ export const EnabledRelays = () => {
   };
 
   const handleOpenAliasModal = (type: OptionsType, address: string, params: string[]) => {
-    const selectedItem = { type, address, params } as SelectedItem;
+    const selectedItem = { type, relayAddress: address, params } as SelectedItem;
     setSelectedItem(selectedItem);
     setModalOpen(ModalType.EDIT_ALIAS);
   };
@@ -156,7 +156,7 @@ export const EnabledRelays = () => {
 
                   {/* Options Menu */}
                   <RowButton align='right' data-test={`relay-options-${index}`}>
-                    <OptionsMenu type='relay' address={row.contractAddress} params={row.enabledCallers} />
+                    <OptionsMenu type='relay' relayAddress={row.contractAddress} params={row.enabledCallers} />
                   </RowButton>
                 </STableRow>
               ))}

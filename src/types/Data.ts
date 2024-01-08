@@ -45,7 +45,9 @@ export interface RelayData {
 
 export interface SelectedItem {
   type: string;
-  address: Address;
+  vaultAddress?: Address;
+  jobAddress: Address;
+  relayAddress: Address;
   params: Hex[];
 }
 

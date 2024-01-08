@@ -6,16 +6,17 @@ import { ModalType, OptionsType, SelectedItem } from '~/types';
 import { Icon } from './Icon';
 
 export interface OptionsMenuProps {
-  address: string;
+  relayAddress: string;
+  jobAddress?: string;
   params: string[];
   type: OptionsType;
 }
 
-export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
+export function OptionsMenu({ type, jobAddress, relayAddress, params }: OptionsMenuProps) {
   const { userAddress, selectedVault, setSelectedItem } = useStateContext();
   const { setModalOpen } = useModal();
   const { currentTheme } = useTheme();
-  const selectedItem = { type, address, params } as SelectedItem;
+  const selectedItem = { type, jobAddress, relayAddress, params } as SelectedItem;
 
   const isConnectedAndOwner = userAddress && selectedVault?.owner === userAddress;
 
@@ -55,14 +56,14 @@ export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
 
         {isConnectedAndOwner && (
           <>
-            <StyledMenuItem onClick={handleOpenEditModal} data-test={`edit-alias-button`}>
+            <StyledMenuItem onClick={handleOpenEditModal} data-test='edit-options-button'>
               <EditContainer>
                 <Icon name='pencil-square' size='2rem' />
                 <p>Edit {type}</p>
               </EditContainer>
             </StyledMenuItem>
 
-            <StyledMenuItem onClick={handleOpenRevokeModal} data-test={`revoke-button`}>
+            <StyledMenuItem onClick={handleOpenRevokeModal} data-test='revoke-button'>
               <RevokeContainer>
                 <Icon name='x-circle' size='2rem' />
                 <p>Revoke {type}</p>

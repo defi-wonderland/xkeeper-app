@@ -65,7 +65,8 @@ export const StateProvider = ({ children }: StateProps) => {
   const [vaults, setVaults] = useState<VaultData[]>([]);
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     type: '',
-    address: '0x',
+    jobAddress: '0x',
+    relayAddress: '0x',
     params: [],
   });
 
@@ -193,7 +194,8 @@ export const StateProvider = ({ children }: StateProps) => {
     if (modalOpen === ModalType.NONE) {
       setSelectedItem({
         type: '',
-        address: '0x',
+        jobAddress: '0x',
+        relayAddress: '0x',
         params: [],
       });
     }

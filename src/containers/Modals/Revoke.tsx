@@ -10,16 +10,20 @@ export const RevokeModal = () => {
   const { setModalOpen, modalOpen } = useModal();
 
   const type = selectedItem.type;
-  const value = selectedItem.address;
+  const value = type === 'job' ? selectedItem.jobAddress : selectedItem.relayAddress;
+  const args =
+    type === 'job'
+      ? [selectedItem.relayAddress, [], [{ job: selectedItem.jobAddress, functionSelectors: selectedItem.params }]]
+      : [selectedItem.relayAddress, selectedItem.params, []];
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'revokeRelayData',
-    // temporary fixed values
-    args: [selectedItem.address, selectedItem.params, []],
+    args: args,
     notificationTitle: `${type} successfully revoked`,
     notificationMessage: getReceiptMessage(value, 'has been revoked and is no longer active'),
   });
+
   const isLoading = requestStatus === Status.LOADING;
 
   return (

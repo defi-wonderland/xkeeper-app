@@ -42,7 +42,7 @@ export const RelayModal = () => {
   }, [allowAnyCaller, callerAddress, callers]);
 
   const editRelay = useMemo(() => {
-    return isAddress(selectedItem.address);
+    return isAddress(selectedItem.relayAddress);
   }, [selectedItem]);
 
   const availableValues = useMemo(() => [...Object.values(relays), 'Choose Relay'], [relays]);
@@ -75,7 +75,7 @@ export const RelayModal = () => {
 
   useEffect(() => {
     setCustomRelay(false);
-    setRelayAddress(editRelay ? selectedItem.address : '');
+    setRelayAddress(editRelay ? selectedItem.relayAddress : '');
   }, [selectedItem, editRelay]);
 
   useEffect(() => {

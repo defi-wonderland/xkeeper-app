@@ -1,4 +1,10 @@
 describe('xKeeper Blockchain interaction tests', () => {
+  const jobAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92262';
+  const caller1 = '0xca11e5e51aad88F6F4ce6aB8827279cffFb11111';
+  const caller2 = '0xca11e5e51aad88F6F4ce6aB8827279cffFb22222';
+  const functionSignatue = '0x11111111';
+  const functionSignature2 = '0x22222222';
+
   beforeEach(() => {
     // Mocks the getPrices function
     cy.intercept('GET', 'https://coins.llama.fi/**', {
@@ -73,40 +79,67 @@ describe('xKeeper Blockchain interaction tests', () => {
   });
 
   it('add new relay', () => {
-    const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
     cy.getDataTest('vault-card-0').click();
 
     // Checks if the vault is empty
     cy.contains(/No relays enabled./i).should('exist');
+    cy.contains(/No jobs enabled./i).should('exist');
 
-    // Adds a new relay
+    // Adds relay data
     cy.contains(/Open Relay/i).should('not.exist');
     cy.getDataTest('add-relay-button').click();
     cy.getDataTest('relay-dropdown-button').click();
     cy.getDataTest('relay-dropdown-option-1').click();
-    cy.getDataTest('relay-caller-input').find('input').type(userAddress);
+    cy.getDataTest('relay-caller-input').find('input').type(caller1);
+
+    // Adds job data
+    cy.getDataTest('job-address-input').find('input').type(jobAddress);
+    cy.getDataTest('raw-function-button').click();
+    cy.getDataTest('function-signature-input').find('input').type(functionSignatue);
+
     cy.getDataTest('confirm-new-relay-button').click();
 
     cy.getDataTest('relay-alias-0').should('exist');
+    cy.getDataTest('job-alias-0').should('exist');
   });
 
-  it('add new job', () => {
-    const userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
-    const functionSignatue = '0xf39Fd6e5';
+  it('add new caller', () => {
+    cy.getDataTest('0xcA11...2211').should('not.exist');
+
+    cy.getDataTest('vault-card-0').click();
+    cy.getDataTest('relay-options-0').click();
+    cy.getDataTest('edit-options-button').click();
+
+    // Adds a new caller
+    cy.getDataTest('relay-caller-input').find('input').type(caller2);
+    cy.getDataTest('confirm-new-relay-button').click();
+
+    // Checks if the caller was added
+    cy.contains('0xcA11...2222').should('exist');
+  });
+
+  it('edit relay alias', () => {
     cy.getDataTest('vault-card-0').click();
 
-    // Checks if the vault is empty
-    cy.contains(/No jobs enabled./i).should('exist');
+    // Edit relay alias
+    cy.getDataTest('relay-alias-0').click();
+    cy.getDataTest('edit-alias-input').find('input').type('{selectAll}{backspace}TestRelay');
+    cy.getDataTest('confirm-edit-alias-button').click();
 
-    // Adds a new job
-    cy.contains(/Job 1/i).should('not.exist');
-    cy.getDataTest('add-job-button').click();
-    cy.getDataTest('job-address-input').find('input').type(userAddress);
+    cy.getDataTest('relay-alias-0').contains('TestRelay');
+  });
+
+  it('add a new function selector', () => {
+    cy.getDataTest('vault-card-0').click();
+    cy.getDataTest('job-options-0').click();
+    cy.getDataTest('edit-options-button').click();
+
+    // Adds a new function selector
     cy.getDataTest('raw-function-button').click();
-    cy.getDataTest('function-signature-input').find('input').type(functionSignatue);
+    cy.getDataTest('function-signature-input').find('input').type(functionSignature2);
     cy.getDataTest('confirm-new-job-button').click();
 
-    cy.getDataTest('job-alias-0').should('exist');
+    cy.contains(functionSignatue).should('exist');
   });
 
   it('edit relay alias', () => {
@@ -130,18 +163,6 @@ describe('xKeeper Blockchain interaction tests', () => {
     cy.getDataTest('job-alias-0').contains('TestJob');
   });
 
-  it('revoke relay', () => {
-    cy.getDataTest('vault-card-0').click();
-
-    // Revokes the relay
-    cy.getDataTest('no-relays-enabled').should('not.exist');
-    cy.getDataTest('relay-options-0').click();
-    cy.getDataTest('revoke-button').click();
-    cy.getDataTest('confirm-revoke').click();
-
-    cy.getDataTest('no-relays-enabled').should('exist');
-  });
-
   it('revoke job', () => {
     cy.getDataTest('vault-card-0').click();
 
@@ -152,5 +173,17 @@ describe('xKeeper Blockchain interaction tests', () => {
     cy.getDataTest('confirm-revoke').click();
 
     cy.getDataTest('no-jobs-enabled').should('exist');
+  });
+
+  it('revoke relay', () => {
+    cy.getDataTest('vault-card-0').click();
+
+    // Revokes the relay
+    cy.getDataTest('no-relays-enabled').should('not.exist');
+    cy.getDataTest('relay-options-0').click();
+    cy.getDataTest('revoke-button').click();
+    cy.getDataTest('confirm-revoke').click();
+
+    cy.getDataTest('no-relays-enabled').should('exist');
   });
 });

@@ -59,7 +59,13 @@ export const Vault = () => {
   ];
 
   const handleEditAlias = () => {
-    setSelectedItem({ type: 'vault', address: selectedVault?.address || '0x', params: [] });
+    setSelectedItem({
+      type: 'vault',
+      vaultAddress: selectedVault?.address || '0x',
+      params: [],
+      relayAddress: '0x',
+      jobAddress: '0x',
+    });
     setModalOpen(ModalType.EDIT_ALIAS);
   };
 

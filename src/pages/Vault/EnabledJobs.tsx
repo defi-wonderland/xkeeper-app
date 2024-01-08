@@ -54,7 +54,7 @@ export const EnabledJobs = () => {
   };
 
   const handleOpenAliasModal = (type: OptionsType, address: string, params: string[]) => {
-    const selectedItem = { type, address, params } as SelectedItem;
+    const selectedItem = { type, jobAddress: address, params } as SelectedItem;
     setSelectedItem(selectedItem);
     setModalOpen(ModalType.EDIT_ALIAS);
   };
@@ -137,7 +137,12 @@ export const EnabledJobs = () => {
 
                   {/* Options Menu */}
                   <RowButton align='right' data-test={`job-options-${index}`}>
-                    <OptionsMenu type='job' address={row.relayAddress} params={[row.jobAddress]} />
+                    <OptionsMenu
+                      type='job'
+                      relayAddress={row.relayAddress}
+                      jobAddress={row.jobAddress}
+                      params={row.functionSignature}
+                    />
                   </RowButton>
                 </STableRow>
               ))}

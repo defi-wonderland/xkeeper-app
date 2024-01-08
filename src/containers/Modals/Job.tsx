@@ -31,8 +31,8 @@ export const JobModal = () => {
 
   const [selectedValue, setSelectedValue] = useState('a');
 
-  const relayAddress = useMemo(() => selectedItem.address as Address, [selectedItem]);
-  const selectedJobAddress = useMemo(() => selectedItem.params[0] as Address, [selectedItem]);
+  const relayAddress = useMemo(() => selectedItem.relayAddress as Address, [selectedItem]);
+  const selectedJobAddress = useMemo(() => selectedItem.jobAddress as Address, [selectedItem]);
 
   const handleChange = (value: string) => {
     setFunctionSignature('');

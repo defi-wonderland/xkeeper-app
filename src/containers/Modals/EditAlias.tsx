@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Box, styled } from '@mui/material';
 
 import { TitleContainer, ButtonsContainer } from '~/containers';
@@ -23,8 +23,21 @@ export const EditAliasModal = () => {
   const { aliasData, updateAliasData } = useAlias();
   const [alias, setAlias] = useState<string>('');
 
+  const selectedAddress = useMemo(() => {
+    switch (selectedItem.type) {
+      case 'relay':
+        return selectedItem.relayAddress;
+      case 'job':
+        return selectedItem.jobAddress;
+      case 'vault':
+        return selectedItem.vaultAddress || '';
+      default:
+        return '';
+    }
+  }, [selectedItem]);
+
   const handleConfirm = () => {
-    aliasData[selectedItem.address] = alias;
+    aliasData[selectedAddress] = alias;
     saveLocalStorage(aliasKey, aliasData);
     updateAliasData();
     setAlias('');
@@ -32,8 +45,8 @@ export const EditAliasModal = () => {
   };
 
   useEffect(() => {
-    setAlias(aliasData[selectedItem.address] || '');
-  }, [aliasData, selectedItem.address]);
+    setAlias(aliasData[selectedAddress] || '');
+  }, [aliasData, selectedAddress]);
 
   return (
     <BaseModal open={modalOpen === ModalType.EDIT_ALIAS}>
@@ -48,7 +61,7 @@ export const EditAliasModal = () => {
           </TitleContainer>
 
           <Text>
-            {selectedItem.type} address: <span>{selectedItem.address}</span>
+            {selectedItem.type} address: <span>{selectedAddress}</span>
           </Text>
         </SBox>
 
