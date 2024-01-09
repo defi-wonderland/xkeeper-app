@@ -128,7 +128,7 @@ export const Vault = () => {
             {!selectedVault?.description && (
               <DescriptionChip>
                 <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.warningChipColor} />
-                Define your vault metadata for keepers to better understand your jobs
+                Define your vault metadata for keepers to better understand your jobs.
                 {selectedVault?.owner === userAddress && (
                   // Add vault description button
                   <DescriptionButton
