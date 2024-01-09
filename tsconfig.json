@@ -8,7 +8,6 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    // "allowImportingTsExtensions": true, //<-- temporary disabled because it breaks cypress
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
