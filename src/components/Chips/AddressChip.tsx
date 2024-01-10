@@ -96,6 +96,9 @@ const ExternalLink = styled('a')(() => {
 export const IconContainer = styled('div')(() => {
   const { currentTheme } = useTheme();
   return {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     color: currentTheme.addressChipIconColor,
     'i:hover:before': {
       color: currentTheme.textSecondary,

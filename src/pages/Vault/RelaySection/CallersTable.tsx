@@ -3,7 +3,7 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 
 import { Icon, IconContainer, OptionsMenu, STooltip } from '~/components';
 import { ColumnTitle, RowText, STable, STableRow } from '~/pages/Vault/Tokens';
-import { copyData, truncateAddress } from '~/utils';
+import { copyData } from '~/utils';
 import { NoDataContainer } from '~/containers';
 import { useTheme } from '~/hooks';
 import { Items } from '~/types';
@@ -53,7 +53,7 @@ export const CallersTable = ({ relayAddress, callers }: CallersProps) => {
                   <RowText align='left'>
                     <AddressContainer onClick={() => handleCopy(callerAddress, index)}>
                       <STooltip text={callerAddress} address>
-                        <Text>{truncateAddress(callerAddress)}</Text>
+                        <Text>{callerAddress}</Text>
                       </STooltip>
 
                       <STooltip text={items[index]?.itemCopied ? 'Copied!' : 'Copy Address'}>
@@ -113,7 +113,6 @@ const Text = styled('p')({
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  maxWidth: '20rem',
 });
 
 const AddressContainer = styled('div')(() => {
