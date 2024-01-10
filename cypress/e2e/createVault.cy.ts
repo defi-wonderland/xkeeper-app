@@ -95,7 +95,7 @@ describe('xKeeper Blockchain interaction tests', () => {
     // Adds job data
     cy.getDataTest('job-address-input').find('input').type(jobAddress);
     cy.getDataTest('raw-function-button').click();
-    cy.getDataTest('function-signature-input').find('input').type(functionSignatue);
+    cy.getDataTest('function-selector-input').find('input').type(functionSignatue);
 
     cy.getDataTest('confirm-new-relay-button').click();
 
@@ -136,7 +136,7 @@ describe('xKeeper Blockchain interaction tests', () => {
 
     // Adds a new function selector
     cy.getDataTest('raw-function-button').click();
-    cy.getDataTest('function-signature-input').find('input').type(functionSignature2);
+    cy.getDataTest('function-selector-input').find('input').type(functionSignature2);
     cy.getDataTest('confirm-new-job-button').click();
 
     cy.contains(functionSignatue).should('exist');

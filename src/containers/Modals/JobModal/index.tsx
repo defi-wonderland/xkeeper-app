@@ -16,7 +16,7 @@ import { TitleContainer } from '~/containers';
 import { ModalType, Status } from '~/types';
 import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
 import { getContractAbi, getReceiptMessage } from '~/utils';
-import { JobSection } from './Relay/JobSection';
+import { JobSection } from './JobSection';
 
 export const JobModal = () => {
   const { selectedVault, currentNetwork, selectedItem } = useStateContext();

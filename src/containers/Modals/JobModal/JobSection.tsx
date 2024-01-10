@@ -56,6 +56,7 @@ export const JobSection = ({
       {/* Radio Buttons section */}
       <RadioContainer>
         <BtnContainer onClick={() => !isLoading && handleChange('a')}>
+          {/* Choose function button */}
           <Radio
             data-test='choose-function-button'
             checked={selectedValue === 'a'}
@@ -67,6 +68,7 @@ export const JobSection = ({
           <InputLabel>Choose function</InputLabel>
         </BtnContainer>
 
+        {/* Raw function selector */}
         <BtnContainer onClick={() => !isLoading && handleChange('b')}>
           <Radio
             data-test='raw-function-button'
@@ -76,7 +78,7 @@ export const JobSection = ({
             inputProps={{ 'aria-label': 'B' }}
             disabled={isLoading}
           />
-          <InputLabel>Enter raw function signature</InputLabel>
+          <InputLabel>Enter raw function selector</InputLabel>
         </BtnContainer>
       </RadioContainer>
 
@@ -97,11 +99,11 @@ export const JobSection = ({
       {/* Function signature */}
       {selectedValue === 'b' && (
         <StyledInput
-          label='Function signature'
+          label='Function selector'
           value={functionSignature}
           setValue={setFunctionSignature}
           disabled={isLoading}
-          dataTestId='function-signature-input'
+          dataTestId='function-selector-input'
         />
       )}
     </>

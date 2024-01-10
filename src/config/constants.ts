@@ -13,7 +13,7 @@ const constants: Constants = {
       GelatoRelay: '0xbAba0774d23Cbc8CbDE744a9829c22469c1395E0',
       OpenRelay: '0xE8E1b32340f527125721903a3947c937dc72e140',
       Keep3rRelay: '0x7B4BC4E9304EeaE8B5a4C914B25b0C00FeB6eD29',
-      // Keep3rBondedRelay: '0x55D10038A1114F341Bd0CDB8a2d61C46eD57149b',
+      Keep3rBondedRelay: '0x55D10038A1114F341Bd0CDB8a2d61C46eD57149b',
     },
   },
 

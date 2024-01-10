@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, styled } from '@mui/material';
-import { isAddress } from 'viem';
 
 import { ActiveButton, BaseModal, CancelButton, StyledTitle, CloseButton, Icon, ConfirmText } from '~/components';
 import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
@@ -11,6 +10,7 @@ import { ModalType, Status } from '~/types';
 import { getConfig } from '~/config';
 
 export const RelayModal = () => {
+  const { addresses } = getConfig();
   const { selectedVault, selectedItem } = useStateContext();
   const { modalOpen, setModalOpen } = useModal();
   const { currentTheme } = useTheme();
@@ -21,26 +21,15 @@ export const RelayModal = () => {
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
   const [customRelay, setCustomRelay] = useState(false);
 
-  const selectedRelayAddress = useMemo(() => selectedItem?.relayAddress || '', [selectedItem]);
+  const { relayAddress: selectedRelayAddress } = selectedItem || {};
 
   const handleClose = () => setModalOpen(ModalType.NONE);
-  const {
-    addresses: { relays },
-  } = getConfig();
 
   const callerList = useMemo(() => {
-    if (allowAnyCaller) {
-      return [anyCaller];
-    } else {
-      return [callerAddress, ...callers];
-    }
+    return allowAnyCaller ? [anyCaller] : [callerAddress, ...callers];
   }, [allowAnyCaller, callerAddress, callers]);
 
-  const editRelay = useMemo(() => {
-    return isAddress(selectedRelayAddress);
-  }, [selectedRelayAddress]);
-
-  const availableValues = useMemo(() => [...Object.values(relays), 'Choose Relay'], [relays]);
+  const availableValues = useMemo(() => [...Object.values(addresses.relays), 'Choose Relay'], [addresses.relays]);
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
@@ -59,19 +48,15 @@ export const RelayModal = () => {
   }, [allowAnyCaller]);
 
   useEffect(() => {
-    setCustomRelay(false);
-    setRelayAddress(editRelay ? selectedRelayAddress : '');
-  }, [selectedItem, editRelay, selectedRelayAddress]);
-
-  useEffect(() => {
-    setCallerAddress('');
-    setAllowAnyCaller(false);
-  }, [modalOpen]);
+    setRelayAddress(selectedRelayAddress || '');
+  }, [selectedItem, selectedRelayAddress]);
 
   // Reset values when modal is closed
   useEffect(() => {
     if (modalOpen === ModalType.NONE) {
       setRelayAddress('');
+      setCallerAddress('');
+      setAllowAnyCaller(false);
       setCallers([]);
     }
   }, [availableValues, modalOpen, setCallers, setRelayAddress]);
@@ -80,7 +65,7 @@ export const RelayModal = () => {
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
       <BigModal>
         <TitleContainer>
-          <StyledTitle>{`Add New ${editRelay ? 'Caller' : 'Relay'}`}</StyledTitle>
+          <StyledTitle>{`Add New ${selectedRelayAddress ? 'Caller' : 'Relay'}`}</StyledTitle>
 
           <CloseButton variant='text' onClick={handleClose}>
             <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
@@ -99,7 +84,7 @@ export const RelayModal = () => {
           setAllowAnyCaller={setAllowAnyCaller}
           customRelay={customRelay}
           setCustomRelay={setCustomRelay}
-          editRelay={editRelay}
+          editRelay={!!selectedRelayAddress}
           availableValues={availableValues}
         />
 

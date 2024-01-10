@@ -25,6 +25,7 @@ export interface Addresses {
     GelatoRelay: Address;
     OpenRelay: Address;
     Keep3rRelay: Address;
+    Keep3rBondedRelay: Address;
   };
 }
 

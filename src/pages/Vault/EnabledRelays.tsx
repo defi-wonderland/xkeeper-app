@@ -9,19 +9,21 @@ export const EnabledRelays = () => {
   const { setModalOpen } = useModal();
 
   return (
-    <SCard variant='outlined'>
+    <>
       {selectedVault?.owner === userAddress && (
-        <SContainer>
-          <ActiveButton
-            data-test='add-relay-button'
-            variant='contained'
-            onClick={() => setModalOpen(ModalType.ADD_RELAY)}
-          >
-            Add New Relay
-          </ActiveButton>
-        </SContainer>
+        <SCard variant='outlined'>
+          <SContainer>
+            <ActiveButton
+              data-test='add-relay-button'
+              variant='contained'
+              onClick={() => setModalOpen(ModalType.ADD_RELAY)}
+            >
+              Add New Relay
+            </ActiveButton>
+          </SContainer>
+        </SCard>
       )}
-    </SCard>
+    </>
   );
 };
 
