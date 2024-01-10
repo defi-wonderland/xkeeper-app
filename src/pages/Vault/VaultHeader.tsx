@@ -10,6 +10,7 @@ import {
   STooltip,
   StyledText,
 } from '~/components';
+import { getConfig } from '~/config';
 import { useTheme } from '~/hooks';
 import { VaultData } from '~/types';
 
@@ -30,7 +31,7 @@ export const VaultHeader = ({
   userAddress,
   chainName,
 }: VaultHeaderProps) => {
-  const version = 'V1.0.0';
+  const { vaultFactoryVersion } = getConfig();
   const { currentTheme } = useTheme();
 
   return (
@@ -65,7 +66,7 @@ export const VaultHeader = ({
 
           {/* Vault version and Chain */}
           <SecondDataContainer>
-            <Version sx={{ color: currentTheme.textDisabled }}>{version}</Version>
+            <Version sx={{ color: currentTheme.textDisabled }}>{vaultFactoryVersion}</Version>
             <InfoChip>{chainName}</InfoChip>
           </SecondDataContainer>
         </DataSection>
@@ -83,7 +84,7 @@ export const VaultHeader = ({
               <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.warningChipColor} />
               Define your vault metadata for keepers to better understand your jobs.
               {selectedVault?.owner === userAddress && (
-                // Add vault description button
+                // Add vault metadata button
                 <DescriptionButton
                   data-test='add-vault-metadata-button'
                   disabled={selectedVault?.owner !== userAddress}

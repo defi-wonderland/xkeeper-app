@@ -5,6 +5,7 @@ const constants: Constants = {
   DEFAULT_CHAIN: 5,
   DEFAULT_ETH_ADDRESS: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
   DEFAULT_WETH_ADDRESS: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+  vaultFactoryVersion: 'V1.0.0',
 
   addresses: {
     AutomationVaultFactory: '0xC3377b30feD174e65778e7E1DaFBb7686082B428',

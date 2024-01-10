@@ -16,6 +16,7 @@ export interface Constants {
   DEFAULT_WETH_ADDRESS: string;
   addresses: Addresses;
   availableChains: Chains;
+  vaultFactoryVersion: string;
 }
 
 export interface Addresses {

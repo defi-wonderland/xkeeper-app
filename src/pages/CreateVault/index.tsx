@@ -7,8 +7,10 @@ import { DataSection as DescriptionContainer, Header, Title } from '~/pages/Vaul
 import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton, ConfirmText } from '~/components';
 import { useStateContext, useTheme, useVaultFactory } from '~/hooks';
 import { Status } from '~/types';
+import { getConfig } from '~/config';
 
 export const CreateVault = () => {
+  const { vaultFactoryVersion } = getConfig();
   const { availableChains, userAddress, currentNetwork } = useStateContext();
 
   const [vaultOwner, setVaultOwner] = useState(userAddress || '');
@@ -36,7 +38,7 @@ export const CreateVault = () => {
         <Header>
           <TitleBox>
             <Title>Create Vault</Title>
-            <VersionChip text='V1.0.0' />
+            <VersionChip text={vaultFactoryVersion} />
           </TitleBox>
 
           <DescriptionContainer>
