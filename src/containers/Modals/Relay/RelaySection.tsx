@@ -1,5 +1,5 @@
-import { Button, styled } from '@mui/material';
 import { useMemo } from 'react';
+import { Button, styled } from '@mui/material';
 import { isAddress } from 'viem';
 
 import { SSwitch, StyledInput, StyledText, Icon, RelayDropdown } from '~/components';
@@ -42,8 +42,8 @@ export const RelaySection = ({
   const { currentTheme } = useTheme();
 
   const callerIsRepeated = useMemo(() => {
-    return callers.includes(callerAddress);
-  }, [callers, callerAddress]);
+    return !allowAnyCaller && callers.includes(callerAddress);
+  }, [allowAnyCaller, callers, callerAddress]);
 
   const errorText = useMemo(
     () => (callerIsRepeated ? 'Caller address already added' : 'Invalid address'),

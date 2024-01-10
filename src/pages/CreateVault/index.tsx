@@ -3,7 +3,7 @@ import { Box, Typography, styled } from '@mui/material';
 import { Address } from 'wagmi';
 import { isAddress } from 'viem';
 
-import { DataSection as DescriptionContainer, Title, Header } from '~/pages';
+import { DataSection as DescriptionContainer, Header, Title } from '~/pages/Vault/VaultHeader';
 import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton, ConfirmText } from '~/components';
 import { useStateContext, useTheme, useVaultFactory } from '~/hooks';
 import { Status } from '~/types';

@@ -4,15 +4,14 @@ import { isAddress } from 'viem';
 
 import { ActiveButton, BaseModal, CancelButton, StyledTitle, CloseButton, Icon, ConfirmText } from '~/components';
 import { BigModal, TitleContainer } from '~/containers';
-import { anyCaller, getContractAbi, getReceiptMessage } from '~/utils';
+import { anyCaller, getReceiptMessage } from '~/utils';
 import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
 import { ModalType, Status } from '~/types';
 import { getConfig } from '~/config';
-import { JobSection } from './JobSection';
 import { RelaySection } from './RelaySection';
 
 export const RelayModal = () => {
-  const { selectedVault, selectedItem, currentNetwork } = useStateContext();
+  const { selectedVault, selectedItem } = useStateContext();
   const { modalOpen, setModalOpen } = useModal();
   const { currentTheme } = useTheme();
 
@@ -21,12 +20,8 @@ export const RelayModal = () => {
   const [callers, setCallers] = useState<string[]>([]);
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
   const [customRelay, setCustomRelay] = useState(false);
-  const [jobAddress, setJobAddress] = useState('');
-  const [jobAbi, setJobAbi] = useState('');
-  const [contractFunction, setContractFunction] = useState('');
-  const [functionSignature, setFunctionSignature] = useState('');
 
-  const [selectedValue, setSelectedValue] = useState('a');
+  const selectedRelayAddress = useMemo(() => selectedItem?.relayAddress || '', [selectedItem]);
 
   const handleClose = () => setModalOpen(ModalType.NONE);
   const {
@@ -42,29 +37,19 @@ export const RelayModal = () => {
   }, [allowAnyCaller, callerAddress, callers]);
 
   const editRelay = useMemo(() => {
-    return isAddress(selectedItem.relayAddress);
-  }, [selectedItem]);
+    return isAddress(selectedRelayAddress);
+  }, [selectedRelayAddress]);
 
   const availableValues = useMemo(() => [...Object.values(relays), 'Choose Relay'], [relays]);
-
-  const jobsData = useMemo(
-    () => (editRelay ? [] : [{ job: jobAddress, functionSelectors: [functionSignature] }]),
-    [editRelay, jobAddress, functionSignature],
-  );
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'approveRelayData',
-    args: [relayAddress, callerList, jobsData],
+    args: [relayAddress, callerList, []],
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
   });
   const isLoading = requestStatus === Status.LOADING;
-
-  const handleChange = (value: string) => {
-    setFunctionSignature('');
-    setSelectedValue(value);
-  };
 
   useEffect(() => {
     if (allowAnyCaller) {
@@ -75,20 +60,21 @@ export const RelayModal = () => {
 
   useEffect(() => {
     setCustomRelay(false);
-    setRelayAddress(editRelay ? selectedItem.relayAddress : '');
-  }, [selectedItem, editRelay]);
+    setRelayAddress(editRelay ? selectedRelayAddress : '');
+  }, [selectedItem, editRelay, selectedRelayAddress]);
 
   useEffect(() => {
     setCallerAddress('');
+    setAllowAnyCaller(false);
   }, [modalOpen]);
 
+  // Reset values when modal is closed
   useEffect(() => {
-    if (isAddress(jobAddress)) {
-      getContractAbi(currentNetwork.name, currentNetwork.apiUrl, jobAddress).then((abi) => {
-        setJobAbi(abi || '');
-      });
+    if (modalOpen === ModalType.NONE) {
+      setRelayAddress('');
+      setCallers([]);
     }
-  }, [currentNetwork, jobAddress]);
+  }, [availableValues, modalOpen, setCallers, setRelayAddress]);
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
@@ -116,22 +102,6 @@ export const RelayModal = () => {
           editRelay={editRelay}
           availableValues={availableValues}
         />
-
-        {!editRelay && (
-          <JobSection
-            jobAddress={jobAddress}
-            setJobAddress={setJobAddress}
-            jobAbi={jobAbi}
-            setJobAbi={setJobAbi}
-            contractFunction={contractFunction}
-            setContractFunction={setContractFunction}
-            functionSignature={functionSignature}
-            setFunctionSignature={setFunctionSignature}
-            selectedValue={selectedValue}
-            handleChange={handleChange}
-            isLoading={isLoading}
-          />
-        )}
 
         <SButtonsContainer>
           <CancelButton variant='outlined' disabled={isLoading} onClick={handleClose}>

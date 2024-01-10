@@ -20,11 +20,6 @@ export function OptionsMenu({ type, jobAddress, relayAddress, params }: OptionsM
 
   const isConnectedAndOwner = userAddress && selectedVault?.owner === userAddress;
 
-  const handleOpenEditModal = () => {
-    setSelectedItem(selectedItem);
-    setModalOpen(type === 'job' ? ModalType.ADD_JOB : ModalType.ADD_RELAY);
-  };
-
   const handleOpenEditModalAlias = () => {
     setSelectedItem(selectedItem);
     setModalOpen(ModalType.EDIT_ALIAS);
@@ -56,12 +51,14 @@ export function OptionsMenu({ type, jobAddress, relayAddress, params }: OptionsM
 
         {isConnectedAndOwner && (
           <>
-            <StyledMenuItem onClick={handleOpenEditModal} data-test='edit-options-button'>
-              <EditContainer>
-                <Icon name='pencil-square' size='2rem' />
-                <p>Edit {type}</p>
-              </EditContainer>
-            </StyledMenuItem>
+            {type === 'job' && (
+              <StyledMenuItem onClick={handleOpenEditModalAlias} data-test='edit-options-button'>
+                <EditContainer>
+                  <Icon name='pencil-square' size='2rem' />
+                  <p>Edit {type}</p>
+                </EditContainer>
+              </StyledMenuItem>
+            )}
 
             <StyledMenuItem onClick={handleOpenRevokeModal} data-test='revoke-button'>
               <RevokeContainer>
@@ -104,6 +101,7 @@ const StyledMenuItem = styled(MenuItem)(() => {
 const TriggerButton = styled(MenuButton)(() => {
   const { currentTheme } = useTheme();
   return {
+    maxWidth: '8.5rem',
     border: 'none',
     borderRadius: currentTheme.borderRadius,
     fontsize: '1.6rem',

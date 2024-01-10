@@ -23,18 +23,20 @@ export const EditAliasModal = () => {
   const { aliasData, updateAliasData } = useAlias();
   const [alias, setAlias] = useState<string>('');
 
+  const { type, relayAddress, jobAddress, vaultAddress } = selectedItem || {};
+
   const selectedAddress = useMemo(() => {
-    switch (selectedItem.type) {
-      case 'relay':
-        return selectedItem.relayAddress;
+    switch (type) {
+      case 'caller':
+        return relayAddress || '';
       case 'job':
-        return selectedItem.jobAddress;
+        return jobAddress || '';
       case 'vault':
-        return selectedItem.vaultAddress || '';
+        return vaultAddress || '';
       default:
         return '';
     }
-  }, [selectedItem]);
+  }, [jobAddress, relayAddress, type, vaultAddress]);
 
   const handleConfirm = () => {
     aliasData[selectedAddress] = alias;
@@ -53,7 +55,7 @@ export const EditAliasModal = () => {
       <BigModal>
         <SBox>
           <TitleContainer>
-            <StyledTitle>Edit {selectedItem.type} Alias</StyledTitle>
+            <StyledTitle>Edit {type} Alias</StyledTitle>
 
             <CloseButton variant='text' onClick={() => setModalOpen(ModalType.NONE)}>
               <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
@@ -61,7 +63,7 @@ export const EditAliasModal = () => {
           </TitleContainer>
 
           <Text>
-            {selectedItem.type} address: <span>{selectedAddress}</span>
+            {type} address: <span>{selectedAddress}</span>
           </Text>
         </SBox>
 
@@ -72,7 +74,7 @@ export const EditAliasModal = () => {
             value={alias}
             setValue={setAlias}
             description='This will only be visible to you.'
-            placeholder={`My custom ${selectedItem.type}`}
+            placeholder={`My custom ${type}`}
             onKeyUp={handleConfirm}
           />
         </InputContainer>

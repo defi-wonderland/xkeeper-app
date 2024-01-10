@@ -28,3 +28,19 @@ export const StyledText = styled('p')(() => {
     },
   };
 });
+
+export const SubTitle = styled(StyledText)(() => {
+  const {
+    currentTheme: { textDisabled },
+  } = useTheme();
+  return {
+    color: textDisabled,
+    fontSize: '1.4rem',
+    lineHeight: '2rem',
+    fontWeight: 400,
+    marginTop: '0.8rem',
+    span: {
+      fontWeight: 500,
+    },
+  };
+});

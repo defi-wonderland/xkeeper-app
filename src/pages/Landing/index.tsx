@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 
 import {
   SearchInput,
-  VaultCard,
   BasicTabs,
   NavigationLink,
   ActiveButton,
@@ -14,6 +13,7 @@ import {
   MadeByWonderland,
 } from '~/components';
 import { InfiniteScroll, useStateContext, useTheme } from '~/hooks';
+import { VaultCard } from '~/containers';
 
 export const Landing = () => {
   const { userAddress, setSelectedVault, loading, vaults, updateVaultsList } = useStateContext();

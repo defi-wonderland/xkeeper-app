@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, styled, Typography } from '@mui/material';
-import { Address, isAddress } from 'viem';
+import { isAddress } from 'viem';
 
 import {
   ActiveButton,
@@ -31,8 +31,7 @@ export const JobModal = () => {
 
   const [selectedValue, setSelectedValue] = useState('a');
 
-  const relayAddress = useMemo(() => selectedItem.relayAddress as Address, [selectedItem]);
-  const selectedJobAddress = useMemo(() => selectedItem.jobAddress as Address, [selectedItem]);
+  const { relayAddress, jobAddress: selectedJobAddress } = selectedItem || {};
 
   const handleChange = (value: string) => {
     setFunctionSignature('');
@@ -50,7 +49,7 @@ export const JobModal = () => {
   const isLoading = requestStatus === Status.LOADING;
 
   useEffect(() => {
-    setJobAddress(selectedJobAddress);
+    selectedJobAddress && setJobAddress(selectedJobAddress);
   }, [selectedItem, selectedJobAddress]);
 
   useEffect(() => {
@@ -60,6 +59,17 @@ export const JobModal = () => {
       });
     }
   }, [currentNetwork, jobAddress]);
+
+  // Reset form when modal is closed
+  useEffect(() => {
+    if (modalOpen === ModalType.NONE) {
+      setJobAddress('');
+      setJobAbi('');
+      setContractFunction('');
+      setFunctionSignature('');
+      setSelectedValue('a');
+    }
+  }, [modalOpen]);
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_JOB}>
@@ -72,7 +82,7 @@ export const JobModal = () => {
           </CloseButton>
         </TitleContainer>
 
-        <StyledInput label='Relay Address' value={relayAddress} setValue={() => null} disabled />
+        <StyledInput label='Relay Address' value={relayAddress || ''} setValue={() => null} disabled />
 
         <JobSection
           jobAddress={jobAddress}

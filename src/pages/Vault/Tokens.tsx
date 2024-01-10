@@ -1,18 +1,7 @@
 import React from 'react';
-import {
-  Card,
-  styled,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Box,
-  Typography,
-} from '@mui/material';
+import { Card, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box } from '@mui/material';
 
-import { ActiveButton, CancelButton, StyledText, TokenIcon } from '~/components';
+import { ActiveButton, CancelButton, StyledText, StyledTitle, SubTitle, TokenIcon } from '~/components';
 import { formatDataNumber } from '~/utils';
 import { useModal, useStateContext, useTheme } from '~/hooks';
 import { ModalType } from '~/types';
@@ -32,11 +21,11 @@ export const Tokens = () => {
     <SCard variant='outlined'>
       <SectionHeader>
         <Box>
-          <Title>Tokens</Title>
+          <StyledTitle>Tokens</StyledTitle>
 
-          <TotalValue>
+          <SubTitle>
             Total Value: <span>{formatDataNumber(selectedVault?.totalValue || '0', 18, 2, true)}</span>
-          </TotalValue>
+          </SubTitle>
         </Box>
 
         <ButtonsContainer>
@@ -135,28 +124,7 @@ export const SectionHeader = styled(Box)({
   },
 });
 
-export const Title = styled(Typography)({
-  fontSize: '2rem',
-  lineHeight: '3rem',
-  fontWeight: 700,
-});
-
-const TotalValue = styled(Typography)(() => {
-  const {
-    currentTheme: { textDisabled },
-  } = useTheme();
-  return {
-    color: textDisabled,
-    fontSize: '1.4rem',
-    lineHeight: '2rem',
-    fontWeight: 400,
-    span: {
-      fontWeight: 500,
-    },
-  };
-});
-
-const ButtonsContainer = styled(Box)({
+export const ButtonsContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',

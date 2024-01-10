@@ -24,4 +24,3 @@ export * from './Snackbar';
 export * from './Switch';
 export * from './Tabs';
 export * from './Tooltip';
-export * from './VaultCard';
