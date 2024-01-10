@@ -34,6 +34,10 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
 
   const availableChainIds = Object.keys(chains);
 
+  const getBorderColor = (chainId: string) => ({
+    border: `${Number(chainId) === chains[value].id && currentTheme.border}`,
+  });
+
   return (
     <Dropdown>
       {/* Dropdown button */}
@@ -46,9 +50,12 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
       {/* Dropdown Options */}
       <SMenu slots={{ listbox: StyledListbox }} compact={compact?.toString()}>
         {availableChainIds.map((chainId: string) => (
-          <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)}>
+          <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)} sx={getBorderColor(chainId)}>
             <ChainIcon chainName={chains[chainId].name} />
             {chains[chainId].displayName}
+            {Number(chainId) === chains[value].id && (
+              <SIcon name='check' color={currentTheme.textSecondary} size='1.6rem' />
+            )}
           </StyledMenuItem>
         ))}
       </SMenu>
@@ -90,10 +97,6 @@ export const StyledMenuItem = styled(MenuItem)(() => {
     border-radius: 8px;
     cursor: pointer;
     user-select: none;
-
-    &:last-of-type {
-      border-bottom: none;
-    }
 
     &.${menuItemClasses.focusVisible} {
       outline: 3px solid ${theme === 'dark' ? blue[600] : blue[200]};
@@ -168,7 +171,7 @@ export const SIcon = styled(Icon)(() => {
 });
 
 const SMenu = styled(Menu)(({ compact }: Props) => {
-  const width = compact ? '20rem' : '60rem';
+  const width = compact ? '22rem' : '60rem';
   return {
     zIndex: zIndex.TOAST,
     width,
