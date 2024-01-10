@@ -64,6 +64,10 @@ export const WithdrawtModal = () => {
     }
   }, [selectedVault]);
 
+  useEffect(() => {
+    setAmount('');
+  }, [token]);
+
   const AmountFieldDescription = (
     <>
       Available:{' '}
