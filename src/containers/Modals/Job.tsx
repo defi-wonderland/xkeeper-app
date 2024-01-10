@@ -75,7 +75,7 @@ export const JobModal = () => {
     <BaseModal open={modalOpen === ModalType.ADD_JOB}>
       <BigModal>
         <TitleContainer>
-          <STitle>Edit Job</STitle>
+          <STitle>Add New Job</STitle>
 
           <CloseButton variant='text' onClick={handleClose}>
             <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />

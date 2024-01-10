@@ -3,12 +3,12 @@ import { Box, Button, styled } from '@mui/material';
 import { isAddress } from 'viem';
 
 import { ActiveButton, BaseModal, CancelButton, StyledTitle, CloseButton, Icon, ConfirmText } from '~/components';
+import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
 import { BigModal, TitleContainer } from '~/containers';
 import { anyCaller, getReceiptMessage } from '~/utils';
-import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
+import { RelaySection } from './RelaySection';
 import { ModalType, Status } from '~/types';
 import { getConfig } from '~/config';
-import { RelaySection } from './RelaySection';
 
 export const RelayModal = () => {
   const { selectedVault, selectedItem } = useStateContext();
@@ -80,7 +80,7 @@ export const RelayModal = () => {
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
       <BigModal>
         <TitleContainer>
-          <StyledTitle>Add New Relay</StyledTitle>
+          <StyledTitle>{`Add New ${editRelay ? 'Caller' : 'Relay'}`}</StyledTitle>
 
           <CloseButton variant='text' onClick={handleClose}>
             <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />

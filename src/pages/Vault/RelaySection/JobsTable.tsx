@@ -50,9 +50,9 @@ export const JobsTable = ({ relayAddress, jobsData }: JobsTableProps) => {
           <STable>
             <TableHead>
               <TableRow>
-                <SColumnTitle>Job Alias</SColumnTitle>
+                <SColumnTitle>Enabled Jobs</SColumnTitle>
                 <ColumnTitle align='left'>Job Address</ColumnTitle>
-                <ColumnTitle align='left'>Function Signature</ColumnTitle>
+                <ColumnTitle align='left'>Function Selectors</ColumnTitle>
                 <ColumnTitle align='right'></ColumnTitle>
               </TableRow>
             </TableHead>

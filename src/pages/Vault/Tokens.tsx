@@ -139,7 +139,7 @@ export const ColumnTitle = styled(TableCell)(() => {
     currentTheme: { textTertiary },
   } = useTheme();
   return {
-    fontSize: '1.2rem',
+    fontSize: '1.4rem',
     padding: '1.2rem 2.4rem',
     color: textTertiary,
   };
@@ -147,6 +147,7 @@ export const ColumnTitle = styled(TableCell)(() => {
 
 export const STable = styled(Table)({
   minWidth: '65rem',
+  marginBottom: '2.4rem',
 });
 
 export const RowText = styled(TableCell)(() => {

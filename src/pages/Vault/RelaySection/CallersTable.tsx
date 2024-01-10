@@ -41,7 +41,7 @@ export const CallersTable = ({ relayAddress, callers }: CallersProps) => {
           <STable>
             <TableHead>
               <TableRow>
-                <ColumnTitle>Caller Address</ColumnTitle>
+                <ColumnTitle>Enabled Callers</ColumnTitle>
                 <ColumnTitle align='right'></ColumnTitle>
               </TableRow>
             </TableHead>
