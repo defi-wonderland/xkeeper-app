@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
-import { Items, JobsData, ModalType, OptionsType, SelectedItem } from '~/types';
+import { Items, JobsData, ModalType } from '~/types';
 import { Icon, IconContainer, STooltip } from '~/components';
 import { useAlias, useModal, useStateContext, useTheme } from '~/hooks';
 import { ColumnTitle, RowText, STable, STableRow } from '../Tokens';
@@ -33,9 +33,8 @@ export const JobsTable = ({ jobsData }: JobsTableProps) => {
     }, 800);
   };
 
-  const handleOpenAliasModal = (type: OptionsType, address: string, params: string[]) => {
-    const selectedItem = { type, jobAddress: address, params } as SelectedItem;
-    setSelectedItem(selectedItem);
+  const handleOpenAliasModal = (address: string) => {
+    setSelectedItem({ selectedAddress: address, type: 'job' });
     setModalOpen(ModalType.EDIT_ALIAS);
   };
 
@@ -61,10 +60,7 @@ export const JobsTable = ({ jobsData }: JobsTableProps) => {
                   {/* Alias */}
                   <RowText component='th' scope='row'>
                     <STooltip text='Edit alias'>
-                      <Text
-                        onClick={() => handleOpenAliasModal('job', jobAddress, functionSelectors)}
-                        data-test={`job-alias-${index}`}
-                      >
+                      <Text onClick={() => handleOpenAliasModal(jobAddress)} data-test={`job-alias-${index}`}>
                         {aliasData[jobAddress] || `Job ${index + 1}`}
                       </Text>
                     </STooltip>
