@@ -3,20 +3,16 @@ import { styled } from '@mui/system';
 
 import { useModal, useStateContext, useTheme } from '~/hooks';
 import { ModalType } from '~/types';
-import { Icon } from './Icon';
+import { Icon } from '../components/Icon';
 
 export interface OptionsMenuProps {
   relayAddress: string;
 }
 
 export function OptionsMenu({ relayAddress }: OptionsMenuProps) {
-  // temporary
-  const type = 'relay';
-  const { userAddress, selectedVault, setSelectedItem } = useStateContext();
+  const { setSelectedItem } = useStateContext();
   const { setModalOpen } = useModal();
   const { currentTheme } = useTheme();
-
-  const isConnectedAndOwner = userAddress && selectedVault?.owner === userAddress;
 
   const handleOpenEditModalAlias = () => {
     setSelectedItem({ selectedAddress: relayAddress });
@@ -38,32 +34,21 @@ export function OptionsMenu({ relayAddress }: OptionsMenuProps) {
       {/* Dropdown Options */}
 
       <Menu slots={{ listbox: StyledListbox }}>
-        {!isConnectedAndOwner && (
-          <StyledMenuItem onClick={handleOpenEditModalAlias}>
+        <>
+          <StyledMenuItem onClick={handleOpenEditModalAlias} data-test='edit-options-button'>
             <EditContainer>
               <Icon name='pencil-square' size='2rem' />
-              <p>Edit alias</p>
+              <p>Edit Relay</p>
             </EditContainer>
           </StyledMenuItem>
-        )}
 
-        {isConnectedAndOwner && (
-          <>
-            <StyledMenuItem onClick={handleOpenEditModalAlias} data-test='edit-options-button'>
-              <EditContainer>
-                <Icon name='pencil-square' size='2rem' />
-                <p>Edit {type}</p>
-              </EditContainer>
-            </StyledMenuItem>
-
-            <StyledMenuItem onClick={handleOpenRevokeModal} data-test='revoke-button'>
-              <RevokeContainer>
-                <Icon name='x-circle' size='2rem' />
-                <p>Revoke {type}</p>
-              </RevokeContainer>
-            </StyledMenuItem>
-          </>
-        )}
+          <StyledMenuItem onClick={handleOpenRevokeModal} data-test='revoke-button'>
+            <RevokeContainer>
+              <Icon name='x-circle' size='2rem' />
+              <p>Revoke Relay</p>
+            </RevokeContainer>
+          </StyledMenuItem>
+        </>
       </Menu>
     </Dropdown>
   );

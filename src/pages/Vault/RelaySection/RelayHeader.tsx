@@ -1,19 +1,11 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
 
-import {
-  AddressChip,
-  Icon,
-  IconContainer,
-  OptionsMenu,
-  STooltip,
-  StyledText,
-  StyledTitle,
-  SubTitle,
-} from '~/components';
+import { AddressChip, Icon, IconContainer, STooltip, StyledText, StyledTitle, SubTitle } from '~/components';
 import { copyData, getRelayName, truncateAddress } from '~/utils';
-import { ButtonsContainer } from '../Tokens';
 import { useAlias, useStateContext, useTheme } from '~/hooks';
+import { ButtonsContainer } from '../Tokens';
+import { OptionsMenu } from '~/containers';
 
 interface RelayHeaderProps {
   relayAddress: string;
@@ -96,6 +88,7 @@ const TitleContainer = styled(Box)({
   flexDirection: 'row',
   width: '100%',
   minWidth: '65rem',
+  height: '4.5rem',
   div: {
     display: 'flex',
     flexDirection: 'row',

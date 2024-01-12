@@ -15,7 +15,6 @@ export * from './ChainIcon';
 export * from './Input';
 export * from './MadeByWonderland';
 export * from './NoUserVaults';
-export * from './OptionsMenu';
 export * from './Pagination';
 export * from './Theme';
 export * from './Chips';

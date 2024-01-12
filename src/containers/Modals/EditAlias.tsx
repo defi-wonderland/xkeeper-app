@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, styled } from '@mui/material';
 
 import { TitleContainer, ButtonsContainer } from '~/containers';
@@ -23,23 +23,10 @@ export const EditAliasModal = () => {
   const { aliasData, updateAliasData } = useAlias();
   const [alias, setAlias] = useState<string>('');
 
-  const { type, relayAddress, jobAddress, vaultAddress } = selectedItem || {};
-
-  const selectedAddress = useMemo(() => {
-    switch (type) {
-      case 'caller':
-        return relayAddress || '';
-      case 'job':
-        return jobAddress || '';
-      case 'vault':
-        return vaultAddress || '';
-      default:
-        return '';
-    }
-  }, [jobAddress, relayAddress, type, vaultAddress]);
+  const { type, selectedAddress } = selectedItem || {};
 
   const handleConfirm = () => {
-    aliasData[selectedAddress] = alias;
+    aliasData[selectedAddress || ''] = alias;
     saveLocalStorage(aliasKey, aliasData);
     updateAliasData();
     setAlias('');
@@ -47,7 +34,7 @@ export const EditAliasModal = () => {
   };
 
   useEffect(() => {
-    setAlias(aliasData[selectedAddress] || '');
+    setAlias(aliasData[selectedAddress || ''] || '');
   }, [aliasData, selectedAddress]);
 
   return (

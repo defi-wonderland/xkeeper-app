@@ -49,7 +49,7 @@ export const JobsTable = ({ jobsData }: JobsTableProps) => {
           <STable>
             <TableHead>
               <TableRow>
-                <SColumnTitle>Enabled Jobs</SColumnTitle>
+                <SColumnTitle>Jobs</SColumnTitle>
                 <ColumnTitle align='left'>Job Address</ColumnTitle>
                 <ColumnTitle align='left'>Function Selectors</ColumnTitle>
               </TableRow>
