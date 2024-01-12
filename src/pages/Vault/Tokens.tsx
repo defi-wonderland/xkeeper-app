@@ -114,7 +114,7 @@ export const SectionHeader = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  alignItems: 'center',
+  alignItems: 'start',
   marginBottom: '2.4rem',
 
   '@media (max-width: 600px)': {

@@ -34,7 +34,8 @@ export type RelayResult = (
 
 export type RelayDataResult = [Address[], JobsData];
 
-export type JobsData = { job: Address; functionSelectors: Hex[] }[];
+export type JobData = { job: string; functionSelectors: string[] };
+export type JobsData = JobData[];
 
 export interface RelayData {
   [relayAddress: string]: {
@@ -44,11 +45,8 @@ export interface RelayData {
 }
 
 export interface SelectedItem {
-  type: OptionsType;
-  vaultAddress?: Address;
-  jobAddress?: Address;
-  relayAddress?: Address;
-  params?: Hex[];
+  type?: OptionsType;
+  selectedAddress?: string;
 }
 
 export interface TokenData {
@@ -98,4 +96,4 @@ export interface PriceData {
     };
   };
 }
-export type OptionsType = 'vault' | 'job' | 'caller';
+export type OptionsType = 'vault' | 'job' | 'caller' | 'relay';

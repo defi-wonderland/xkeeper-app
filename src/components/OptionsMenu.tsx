@@ -2,31 +2,29 @@ import { Dropdown, Menu, MenuButton, MenuItem } from '@mui/base';
 import { styled } from '@mui/system';
 
 import { useModal, useStateContext, useTheme } from '~/hooks';
-import { ModalType, OptionsType, SelectedItem } from '~/types';
+import { ModalType } from '~/types';
 import { Icon } from './Icon';
 
 export interface OptionsMenuProps {
   relayAddress: string;
-  jobAddress?: string;
-  params: string[];
-  type: OptionsType;
 }
 
-export function OptionsMenu({ type, jobAddress, relayAddress, params }: OptionsMenuProps) {
+export function OptionsMenu({ relayAddress }: OptionsMenuProps) {
+  // temporary
+  const type = 'relay';
   const { userAddress, selectedVault, setSelectedItem } = useStateContext();
   const { setModalOpen } = useModal();
   const { currentTheme } = useTheme();
-  const selectedItem = { type, jobAddress, relayAddress, params } as SelectedItem;
 
   const isConnectedAndOwner = userAddress && selectedVault?.owner === userAddress;
 
   const handleOpenEditModalAlias = () => {
-    setSelectedItem(selectedItem);
+    setSelectedItem({ selectedAddress: relayAddress });
     setModalOpen(ModalType.EDIT_ALIAS);
   };
 
   const handleOpenRevokeModal = () => {
-    setSelectedItem(selectedItem);
+    setSelectedItem({ selectedAddress: relayAddress });
     setModalOpen(ModalType.REVOQUE);
   };
 
@@ -51,14 +49,12 @@ export function OptionsMenu({ type, jobAddress, relayAddress, params }: OptionsM
 
         {isConnectedAndOwner && (
           <>
-            {type === 'job' && (
-              <StyledMenuItem onClick={handleOpenEditModalAlias} data-test='edit-options-button'>
-                <EditContainer>
-                  <Icon name='pencil-square' size='2rem' />
-                  <p>Edit {type}</p>
-                </EditContainer>
-              </StyledMenuItem>
-            )}
+            <StyledMenuItem onClick={handleOpenEditModalAlias} data-test='edit-options-button'>
+              <EditContainer>
+                <Icon name='pencil-square' size='2rem' />
+                <p>Edit {type}</p>
+              </EditContainer>
+            </StyledMenuItem>
 
             <StyledMenuItem onClick={handleOpenRevokeModal} data-test='revoke-button'>
               <RevokeContainer>

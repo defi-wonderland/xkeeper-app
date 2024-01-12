@@ -2,18 +2,17 @@ import { useEffect, useState } from 'react';
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
 import { Items, JobsData, ModalType, OptionsType, SelectedItem } from '~/types';
-import { Icon, IconContainer, OptionsMenu, STooltip } from '~/components';
+import { Icon, IconContainer, STooltip } from '~/components';
 import { useAlias, useModal, useStateContext, useTheme } from '~/hooks';
 import { ColumnTitle, RowText, STable, STableRow } from '../Tokens';
 import { copyData, truncateAddress } from '~/utils';
 import { NoDataContainer } from '~/containers';
 
 interface JobsTableProps {
-  relayAddress: string;
   jobsData: JobsData;
 }
 
-export const JobsTable = ({ relayAddress, jobsData }: JobsTableProps) => {
+export const JobsTable = ({ jobsData }: JobsTableProps) => {
   const { currentTheme } = useTheme();
   const { setSelectedItem } = useStateContext();
   const { aliasData } = useAlias();
@@ -53,7 +52,6 @@ export const JobsTable = ({ relayAddress, jobsData }: JobsTableProps) => {
                 <SColumnTitle>Enabled Jobs</SColumnTitle>
                 <ColumnTitle align='left'>Job Address</ColumnTitle>
                 <ColumnTitle align='left'>Function Selectors</ColumnTitle>
-                <ColumnTitle align='right'></ColumnTitle>
               </TableRow>
             </TableHead>
 
@@ -100,16 +98,6 @@ export const JobsTable = ({ relayAddress, jobsData }: JobsTableProps) => {
                       </STooltip>
                     ))}
                   </RowText>
-
-                  {/* Options Menu */}
-                  <RowButton align='right' data-test={`job-options-${index}`}>
-                    <OptionsMenu
-                      type='job'
-                      relayAddress={relayAddress}
-                      jobAddress={jobAddress}
-                      params={functionSelectors}
-                    />
-                  </RowButton>
                 </STableRow>
               ))}
             </TableBody>
@@ -124,27 +112,6 @@ export const JobsTable = ({ relayAddress, jobsData }: JobsTableProps) => {
 
 const SColumnTitle = styled(ColumnTitle)({
   minWidth: '28rem',
-});
-
-const RowButton = styled(RowText)(() => {
-  const { currentTheme } = useTheme();
-  return {
-    padding: '0rem',
-    minWidth: '8rem',
-    width: '8.5rem',
-    '&:hover': {
-      transition: currentTheme.basicTransition,
-      backgroundColor: currentTheme.backgroundHover,
-    },
-    button: {
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-  };
 });
 
 const Text = styled('p')({

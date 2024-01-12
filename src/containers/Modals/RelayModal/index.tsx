@@ -1,93 +1,53 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Box, Button, styled } from '@mui/material';
 
-import { ActiveButton, BaseModal, CancelButton, StyledTitle, CloseButton, Icon, ConfirmText } from '~/components';
+import { ActiveButton, BaseModal, CancelButton, StyledTitle, CloseButton, ConfirmText, Icon } from '~/components';
 import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
-import { BigModal, TitleContainer } from '~/containers';
-import { anyCaller, getReceiptMessage } from '~/utils';
+import { TitleContainer } from '~/containers';
+import { getReceiptMessage } from '~/utils';
+import { StyledAccordion } from './Accordion';
 import { RelaySection } from './RelaySection';
 import { ModalType, Status } from '~/types';
-import { getConfig } from '~/config';
 
 export const RelayModal = () => {
-  const { addresses } = getConfig();
-  const { selectedVault, selectedItem } = useStateContext();
+  const { selectedVault } = useStateContext();
   const { modalOpen, setModalOpen } = useModal();
   const { currentTheme } = useTheme();
 
   const [relayAddress, setRelayAddress] = useState<string>('');
-  const [callerAddress, setCallerAddress] = useState<string>('');
-  const [callers, setCallers] = useState<string[]>([]);
-  const [allowAnyCaller, setAllowAnyCaller] = useState(false);
-  const [customRelay, setCustomRelay] = useState(false);
-
-  const { relayAddress: selectedRelayAddress } = selectedItem || {};
+  const [callersList, setCallersList] = useState<string[]>([]);
 
   const handleClose = () => setModalOpen(ModalType.NONE);
-
-  const callerList = useMemo(() => {
-    return allowAnyCaller ? [anyCaller] : [callerAddress, ...callers];
-  }, [allowAnyCaller, callerAddress, callers]);
-
-  const availableValues = useMemo(() => [...Object.values(addresses.relays), 'Choose Relay'], [addresses.relays]);
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'approveRelayData',
-    args: [relayAddress, callerList, []],
+    args: [relayAddress, callersList, []],
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
   });
+
   const isLoading = requestStatus === Status.LOADING;
-
-  useEffect(() => {
-    if (allowAnyCaller) {
-      setCallers([anyCaller]);
-      setCallerAddress(anyCaller);
-    }
-  }, [allowAnyCaller]);
-
-  useEffect(() => {
-    setRelayAddress(selectedRelayAddress || '');
-  }, [selectedItem, selectedRelayAddress]);
-
-  // Reset values when modal is closed
-  useEffect(() => {
-    if (modalOpen === ModalType.NONE) {
-      setRelayAddress('');
-      setCallerAddress('');
-      setAllowAnyCaller(false);
-      setCallers([]);
-    }
-  }, [availableValues, modalOpen, setCallers, setRelayAddress]);
 
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
       <BigModal>
-        <TitleContainer>
-          <StyledTitle>{`Add New ${selectedRelayAddress ? 'Caller' : 'Relay'}`}</StyledTitle>
+        {/* Header */}
+        <STitleContainer>
+          <StyledTitle>Add New Relay</StyledTitle>
 
           <CloseButton variant='text' onClick={handleClose}>
             <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
           </CloseButton>
-        </TitleContainer>
+        </STitleContainer>
 
-        <RelaySection
-          isLoading={isLoading}
-          relayAddress={relayAddress}
-          setRelayAddress={setRelayAddress}
-          callerAddress={callerAddress}
-          setCallerAddress={setCallerAddress}
-          callers={callers}
-          setCallers={setCallers}
-          allowAnyCaller={allowAnyCaller}
-          setAllowAnyCaller={setAllowAnyCaller}
-          customRelay={customRelay}
-          setCustomRelay={setCustomRelay}
-          editRelay={!!selectedRelayAddress}
-          availableValues={availableValues}
-        />
+        {/* Relay Section */}
+        <RelaySection relayAddress={relayAddress} setRelayAddress={setRelayAddress} isLoading={isLoading} />
 
+        {/* Accordion Section */}
+        <StyledAccordion callersList={callersList} setCallersList={setCallersList} isLoading={isLoading} />
+
+        {/* Buttons Section */}
         <SButtonsContainer>
           <CancelButton variant='outlined' disabled={isLoading} onClick={handleClose}>
             Cancel
@@ -127,12 +87,32 @@ export const TextButton = styled(Button)(() => {
   };
 });
 
+export const BigModal = styled(Box)({
+  width: '59.6rem',
+
+  '@media (max-width: 600px)': {
+    width: '100%',
+  },
+});
+
+export const DropdownContainer = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.6rem',
+  marginBottom: '2.4rem',
+  width: '100%',
+});
+
 const SButtonsContainer = styled(Box)({
   display: 'flex',
   flexDirection: 'row',
   gap: '1.2rem',
-  paddingTop: '0.4rem',
+  paddingTop: '1.6rem',
   button: {
     width: '100%',
   },
+});
+
+const STitleContainer = styled(TitleContainer)({
+  marginBottom: '1.6rem',
 });

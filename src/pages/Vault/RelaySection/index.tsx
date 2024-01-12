@@ -2,7 +2,6 @@ import { Address } from 'viem';
 
 import { JobsData } from '~/types';
 import { RelayHeader } from './RelayHeader';
-import { CallersTable } from './CallersTable';
 import { JobsTable } from './JobsTable';
 import { SCard } from '../Tokens';
 
@@ -18,13 +17,10 @@ export const RelaySection = ({ relayAddress, relayData: { callers, jobsData } }:
   return (
     <SCard variant='outlined'>
       {/* Relay Section Header */}
-      <RelayHeader relayAddress={relayAddress} />
-
-      {/* Callers Table */}
-      <CallersTable relayAddress={relayAddress} callers={callers} />
+      <RelayHeader relayAddress={relayAddress} callers={callers} />
 
       {/* Jobs Table */}
-      <JobsTable relayAddress={relayAddress} jobsData={jobsData} />
+      <JobsTable jobsData={jobsData} />
     </SCard>
   );
 };

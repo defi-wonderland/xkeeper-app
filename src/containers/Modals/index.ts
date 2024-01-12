@@ -1,4 +1,3 @@
-export * from './JobModal';
 export * from './AddMetadata';
 export * from './Deposit';
 export * from './EditAlias';

@@ -8,19 +8,14 @@ import { ModalType, Status } from '~/types';
 export const RevokeModal = () => {
   const { selectedItem, selectedVault } = useStateContext();
   const { setModalOpen, modalOpen } = useModal();
-
-  const { type, relayAddress, jobAddress, params } = selectedItem || {};
-
-  const value = type === 'job' ? jobAddress : params?.[0];
-  const args =
-    type === 'job' ? [relayAddress, [], [{ job: jobAddress, functionSelectors: params }]] : [relayAddress, params, []];
+  const { selectedAddress } = selectedItem || {};
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'revokeRelayData',
-    args: args,
-    notificationTitle: `${type} successfully revoked`,
-    notificationMessage: getReceiptMessage(value || '0x', 'has been revoked and is no longer active'),
+    args: [selectedAddress, [], []],
+    notificationTitle: `Relay successfully revoked`,
+    notificationMessage: getReceiptMessage(selectedAddress || '0x', 'has been revoked and is no longer active'),
   });
 
   const isLoading = requestStatus === Status.LOADING;
@@ -28,10 +23,10 @@ export const RevokeModal = () => {
   return (
     <BaseModal open={modalOpen === ModalType.REVOQUE}>
       <SBox>
-        <StyledTitle>Revoke {type}</StyledTitle>
+        <StyledTitle>Revoke Relay</StyledTitle>
 
         <StyledText>
-          Are you sure you want to revoke <span>{truncateAddress(value)}</span>? This action cannot be undone.
+          Are you sure you want to revoke <span>{truncateAddress(selectedAddress)}</span>? This action cannot be undone.
         </StyledText>
       </SBox>
 

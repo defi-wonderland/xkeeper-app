@@ -29,13 +29,14 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
 
   const availableValues: AbiFunction[] = useMemo(() => {
     try {
+      if (!abi) return [];
       const res: AbiFunction[] = JSON.parse(abi).filter(
         (x: AbiFunction) =>
           x.type === 'function' && (x.stateMutability === 'nonpayable' || x.stateMutability === 'payable'),
       );
       return res;
     } catch (error) {
-      console.error(error);
+      console.error('Error parsing ABI');
       return [];
     }
   }, [abi]);
@@ -48,7 +49,7 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
       <DropdownTriggerButton disabled={disabled || noWriteFunctionsFound}>
         <StyledText>
           {noWriteFunctionsFound && 'No write functions found'}
-          {!noWriteFunctionsFound && (value || availableValues[0]?.name)}
+          {!noWriteFunctionsFound && (value || 'Choose Function Selector')}
         </StyledText>
         {!noWriteFunctionsFound && <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />}
       </DropdownTriggerButton>

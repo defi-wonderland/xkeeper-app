@@ -1,22 +1,29 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
-import { Address } from 'abitype';
 
-import { ActiveButton, Icon, IconContainer, STooltip, StyledTitle, SubTitle } from '~/components';
+import {
+  AddressChip,
+  Icon,
+  IconContainer,
+  OptionsMenu,
+  STooltip,
+  StyledText,
+  StyledTitle,
+  SubTitle,
+} from '~/components';
 import { copyData, getRelayName, truncateAddress } from '~/utils';
-import { ModalType } from '~/types';
-import { ButtonsContainer, SectionHeader } from '../Tokens';
-import { useAlias, useModal, useStateContext, useTheme } from '~/hooks';
+import { ButtonsContainer } from '../Tokens';
+import { useAlias, useStateContext, useTheme } from '~/hooks';
 
 interface RelayHeaderProps {
   relayAddress: string;
+  callers: string[];
 }
 
-export const RelayHeader = ({ relayAddress }: RelayHeaderProps) => {
+export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
   const { currentTheme } = useTheme();
-  const { setModalOpen } = useModal();
   const { aliasData } = useAlias();
-  const { userAddress, selectedVault, setSelectedItem } = useStateContext();
+  const { userAddress, selectedVault } = useStateContext();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -28,31 +35,15 @@ export const RelayHeader = ({ relayAddress }: RelayHeaderProps) => {
     }, 800);
   };
 
-  const handleAddJob = () => {
-    setSelectedItem({
-      type: 'job',
-      relayAddress: relayAddress as Address,
-    });
-    setModalOpen(ModalType.ADD_JOB);
-  };
-  const handleAddCaller = () => {
-    setSelectedItem({
-      type: 'caller',
-      relayAddress: relayAddress as Address,
-    });
-    setModalOpen(ModalType.ADD_RELAY);
-  };
-
   return (
     <SectionHeader>
-      <Box>
-        <StyledTitle>{aliasData[relayAddress] || getRelayName(relayAddress)}</StyledTitle>
+      <TitleContainer>
+        <Box>
+          <StyledTitle>{aliasData[relayAddress] || getRelayName(relayAddress)}</StyledTitle>
 
-        <SSubTitle onClick={handleCopy}>
-          Address:
           <STooltip text={relayAddress} address>
             {' '}
-            {truncateAddress(relayAddress)}
+            <StyledText onClick={handleCopy}>{truncateAddress(relayAddress)}</StyledText>
           </STooltip>
           <STooltip text={copied ? 'Copied!' : 'Copy Address'}>
             <IconContainer>
@@ -60,28 +51,105 @@ export const RelayHeader = ({ relayAddress }: RelayHeaderProps) => {
               {!!copied && <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />}
             </IconContainer>
           </STooltip>
-        </SSubTitle>
-      </Box>
+        </Box>
 
-      {selectedVault?.owner === userAddress && (
-        <ButtonsContainer>
-          <ActiveButton data-test='add-job-button' variant='contained' onClick={handleAddJob}>
-            Add Job
-          </ActiveButton>
+        {selectedVault?.owner === userAddress && (
+          <ButtonsContainer>
+            {/* Options Menu */}
+            <RowButton data-test='relay-options'>
+              <OptionsMenu relayAddress={relayAddress} />
+            </RowButton>
+          </ButtonsContainer>
+        )}
+      </TitleContainer>
 
-          <ActiveButton data-test='add-caller-button' variant='contained' onClick={handleAddCaller}>
-            Add Caller
-          </ActiveButton>
-        </ButtonsContainer>
-      )}
+      <SSubTitle>
+        Callers:{' '}
+        <CallersContainers>
+          {callers.map((caller) => (
+            <AddressChip key={caller} text={caller} externalLink={false} />
+          ))}
+        </CallersContainers>
+      </SSubTitle>
     </SectionHeader>
   );
 };
 
+const SectionHeader = styled(Box)({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  alignItems: 'start',
+  marginBottom: '2.4rem',
+
+  '@media (max-width: 600px)': {
+    flexDirection: 'column',
+    alignItems: 'start',
+    gap: '1.6rem',
+  },
+});
+
+const TitleContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  flexDirection: 'row',
+  width: '100%',
+  minWidth: '65rem',
+  div: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '0.6rem',
+    alignItems: 'center',
+    i: {
+      cursor: 'pointer',
+    },
+    span: {
+      paddingTop: '0.2rem',
+      cursor: 'pointer',
+      marginLeft: '0.4rem',
+    },
+  },
+});
+
 const SSubTitle = styled(SubTitle)({
   display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'start',
+  justifyContent: 'start',
+  gap: '0.6rem',
+  span: { cursor: 'pointer' },
+});
+
+const CallersContainers = styled(Box)({
+  display: 'flex',
+  flexWrap: 'wrap',
   flexDirection: 'row',
   alignItems: 'center',
   gap: '0.6rem',
   span: { cursor: 'pointer' },
+});
+
+const RowButton = styled(Box)(() => {
+  const { currentTheme } = useTheme();
+  return {
+    padding: '0rem',
+    height: '4.5rem',
+    minWidth: '4.5rem',
+    width: '4.5rem',
+    borderRadius: '100%',
+    '&:hover': {
+      transition: currentTheme.basicTransition,
+      backgroundColor: currentTheme.backgroundHover,
+    },
+    button: {
+      borderRadius: '100%',
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  };
 });
