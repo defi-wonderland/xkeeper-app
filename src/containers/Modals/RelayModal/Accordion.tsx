@@ -13,15 +13,24 @@ import { JobSection } from './JobSection';
 import { truncateAddress } from '~/utils';
 
 interface StyledAccordionProps {
+  relayAddress: string;
   callersList: string[];
   setCallersList: (value: string[]) => void;
+  jobsData: JobsData;
+  setJobsData: (value: JobsData) => void;
   isLoading: boolean;
 }
 
-export const StyledAccordion = ({ callersList, setCallersList, isLoading }: StyledAccordionProps) => {
+export const StyledAccordion = ({
+  relayAddress,
+  callersList,
+  setCallersList,
+  jobsData,
+  setJobsData,
+  isLoading,
+}: StyledAccordionProps) => {
   const { currentTheme } = useTheme();
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
-  const [jobsData, setJobsData] = useState<JobsData>([]);
   const [jobsCount, setJobsCount] = useState<number>(0);
 
   const handleAddCaller = () => {
@@ -54,6 +63,7 @@ export const StyledAccordion = ({ callersList, setCallersList, isLoading }: Styl
       <AccordionBox disableGutters>
         <SAccordionSummary
           onClick={handleAddCaller}
+          disabled={!isAddress(relayAddress)}
           expandIcon={
             <Icon
               name={!callersList.length && addCallerOpen ? 'plus' : 'chevron-down'}
@@ -103,7 +113,7 @@ export const StyledAccordion = ({ callersList, setCallersList, isLoading }: Styl
 
       <AccordionBox disableGutters expanded={false}>
         <SAccordionSummary
-          disabled={!allowAddNewJob}
+          disabled={!isAddress(relayAddress) || !allowAddNewJob}
           onClick={handleAddJob}
           expandIcon={<Icon name='plus' color={currentTheme.textDisabled} size='2rem' />}
         >

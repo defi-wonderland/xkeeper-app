@@ -19,7 +19,7 @@ import { getConfig } from '~/config';
 export const AddMetadataModal = () => {
   const { addresses } = getConfig();
   const { loading, selectedVault } = useStateContext();
-  const { setModalOpen, modalOpen } = useModal();
+  const { modalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
 
   const [name, setName] = useState<string>('');
@@ -46,7 +46,7 @@ export const AddMetadataModal = () => {
           <TitleContainer>
             <StyledTitle>Add Metadata</StyledTitle>
 
-            <CloseButton variant='text' onClick={() => setModalOpen(ModalType.NONE)}>
+            <CloseButton variant='text' onClick={closeModal}>
               <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
             </CloseButton>
           </TitleContainer>
@@ -73,7 +73,7 @@ export const AddMetadataModal = () => {
         </InputContainer>
 
         <ButtonsContainer>
-          <CancelButton variant='outlined' onClick={() => setModalOpen(ModalType.NONE)}>
+          <CancelButton variant='outlined' onClick={closeModal}>
             Cancel
           </CancelButton>
 

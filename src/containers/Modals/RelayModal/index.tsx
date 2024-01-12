@@ -3,26 +3,25 @@ import { Box, Button, styled } from '@mui/material';
 
 import { ActiveButton, BaseModal, CancelButton, StyledTitle, CloseButton, ConfirmText, Icon } from '~/components';
 import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
+import { JobsData, ModalType, Status } from '~/types';
 import { TitleContainer } from '~/containers';
 import { getReceiptMessage } from '~/utils';
 import { StyledAccordion } from './Accordion';
 import { RelaySection } from './RelaySection';
-import { ModalType, Status } from '~/types';
 
 export const RelayModal = () => {
   const { selectedVault } = useStateContext();
-  const { modalOpen, setModalOpen } = useModal();
+  const { modalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
 
   const [relayAddress, setRelayAddress] = useState<string>('');
   const [callersList, setCallersList] = useState<string[]>([]);
-
-  const handleClose = () => setModalOpen(ModalType.NONE);
+  const [jobsData, setJobsData] = useState<JobsData>([]);
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'approveRelayData',
-    args: [relayAddress, callersList, []],
+    args: [relayAddress, callersList, jobsData],
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
   });
@@ -36,7 +35,7 @@ export const RelayModal = () => {
         <STitleContainer>
           <StyledTitle>Add New Relay</StyledTitle>
 
-          <CloseButton variant='text' onClick={handleClose}>
+          <CloseButton variant='text' onClick={closeModal}>
             <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
           </CloseButton>
         </STitleContainer>
@@ -45,11 +44,18 @@ export const RelayModal = () => {
         <RelaySection relayAddress={relayAddress} setRelayAddress={setRelayAddress} isLoading={isLoading} />
 
         {/* Accordion Section */}
-        <StyledAccordion callersList={callersList} setCallersList={setCallersList} isLoading={isLoading} />
+        <StyledAccordion
+          relayAddress={relayAddress}
+          jobsData={jobsData}
+          setJobsData={setJobsData}
+          callersList={callersList}
+          setCallersList={setCallersList}
+          isLoading={isLoading}
+        />
 
         {/* Buttons Section */}
         <SButtonsContainer>
-          <CancelButton variant='outlined' disabled={isLoading} onClick={handleClose}>
+          <CancelButton variant='outlined' disabled={isLoading} onClick={closeModal}>
             Cancel
           </CancelButton>
 

@@ -18,7 +18,7 @@ import { aliasKey, saveLocalStorage } from '~/utils';
 
 export const EditAliasModal = () => {
   const { selectedItem } = useStateContext();
-  const { modalOpen, setModalOpen } = useModal();
+  const { modalOpen, setModalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
   const { aliasData, updateAliasData } = useAlias();
   const [alias, setAlias] = useState<string>('');
@@ -57,7 +57,7 @@ export const EditAliasModal = () => {
           <TitleContainer>
             <StyledTitle>Edit {type} Alias</StyledTitle>
 
-            <CloseButton variant='text' onClick={() => setModalOpen(ModalType.NONE)}>
+            <CloseButton variant='text' onClick={closeModal}>
               <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
             </CloseButton>
           </TitleContainer>
@@ -80,7 +80,7 @@ export const EditAliasModal = () => {
         </InputContainer>
 
         <ButtonsContainer>
-          <CancelButton variant='outlined' onClick={() => setModalOpen(ModalType.NONE)}>
+          <CancelButton variant='outlined' onClick={closeModal}>
             Cancel
           </CancelButton>
 

@@ -21,9 +21,8 @@ import { ModalType, TokenData } from '~/types';
 
 export const WithdrawtModal = () => {
   const { selectedVault, currentNetwork, loading, userAddress } = useStateContext();
-  const { modalOpen, setModalOpen } = useModal();
+  const { modalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
-  const handleClose = () => setModalOpen(ModalType.NONE);
 
   const [widthdrawalAddress, setWithdrawalAddress] = useState(userAddress || '');
   const [token, setToken] = useState<TokenData>({} as TokenData);
@@ -84,7 +83,7 @@ export const WithdrawtModal = () => {
           <Header>
             <StyledTitle>Withdraw Funds</StyledTitle>
 
-            <CloseButton variant='text' onClick={handleClose}>
+            <CloseButton variant='text' onClick={closeModal}>
               <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
             </CloseButton>
           </Header>
@@ -132,7 +131,7 @@ export const WithdrawtModal = () => {
         />
 
         <SButtonsContainer>
-          <CancelButton variant='outlined' disabled={loading} onClick={handleClose}>
+          <CancelButton variant='outlined' disabled={loading} onClick={closeModal}>
             Cancel
           </CancelButton>
 

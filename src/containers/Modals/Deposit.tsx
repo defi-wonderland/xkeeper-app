@@ -17,9 +17,8 @@ import { useModal, useStateContext, useTheme } from '~/hooks';
 
 export const DepositModal = () => {
   const { selectedVault, currentNetwork } = useStateContext();
-  const { modalOpen, setModalOpen } = useModal();
+  const { modalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
-  const handleClose = () => setModalOpen(ModalType.NONE);
 
   return (
     <BaseModal open={modalOpen === ModalType.DEPOSIT}>
@@ -28,7 +27,7 @@ export const DepositModal = () => {
           <TitleContainer>
             <StyledTitle>Deposit Funds</StyledTitle>
 
-            <CloseButton variant='text' onClick={handleClose}>
+            <CloseButton variant='text' onClick={closeModal}>
               <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
             </CloseButton>
           </TitleContainer>
@@ -51,11 +50,11 @@ export const DepositModal = () => {
         </WarningChip>
 
         <SButtonsContainer>
-          <CancelButton variant='outlined' onClick={handleClose}>
+          <CancelButton variant='outlined' onClick={closeModal}>
             Cancel
           </CancelButton>
 
-          <ActiveButton variant='contained' onClick={handleClose}>
+          <ActiveButton variant='contained' onClick={closeModal}>
             Done
           </ActiveButton>
         </SButtonsContainer>

@@ -7,7 +7,7 @@ import { ModalType, Status } from '~/types';
 
 export const RevokeModal = () => {
   const { selectedItem, selectedVault } = useStateContext();
-  const { setModalOpen, modalOpen } = useModal();
+  const { modalOpen, closeModal } = useModal();
   const { selectedAddress } = selectedItem || {};
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
@@ -31,7 +31,7 @@ export const RevokeModal = () => {
       </SBox>
 
       <ButtonsContainer>
-        <CancelButton variant='outlined' disabled={isLoading} onClick={() => setModalOpen(ModalType.NONE)}>
+        <CancelButton variant='outlined' disabled={isLoading} onClick={closeModal}>
           Cancel
         </CancelButton>
 
