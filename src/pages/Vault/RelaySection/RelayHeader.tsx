@@ -56,7 +56,7 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
       </TitleContainer>
 
       <SSubTitle>
-        Callers:{' '}
+        <StyledText>Callers: </StyledText>
         <CallersContainers>
           {callers.map((caller) => (
             <AddressChip key={caller} text={caller} externalLink={false} />
@@ -100,17 +100,18 @@ const TitleContainer = styled(Box)({
     span: {
       paddingTop: '0.2rem',
       cursor: 'pointer',
-      marginLeft: '0.4rem',
+      marginLeft: '0.6rem',
     },
   },
 });
 
 const SSubTitle = styled(SubTitle)({
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: 'column',
   alignItems: 'start',
   justifyContent: 'start',
-  gap: '0.6rem',
+  gap: '1.2rem',
+  paddingTop: '0.6rem',
   span: { cursor: 'pointer' },
 });
 
