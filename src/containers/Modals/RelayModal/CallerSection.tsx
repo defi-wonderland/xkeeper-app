@@ -11,12 +11,15 @@ interface CallerSectionProps {
   callersList: string[];
   setCallersList: (value: string[]) => void;
   isLoading: boolean;
+  isError: boolean;
+  setIsError: (value: boolean) => void;
+  isEdit: boolean;
 }
 
-export const CallerSection = ({ setCallersList, isLoading }: CallerSectionProps) => {
-  const [callers, setCallers] = useState<string[]>([]);
+export const CallerSection = ({ callersList, setCallersList, isLoading, setIsError, isEdit }: CallerSectionProps) => {
   const { currentTheme } = useTheme();
   const { modalOpen } = useModal();
+  const [callers, setCallers] = useState<string[]>([]);
   const [callerAddress, setCallerAddress] = useState<string>('');
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
 
@@ -43,10 +46,19 @@ export const CallerSection = ({ setCallersList, isLoading }: CallerSectionProps)
   };
 
   const handleRemoveCaller = (caller: string) => () => {
+    setCallersList(callersList.filter((c) => c !== caller));
     setCallers(callers.filter((c) => c !== caller));
   };
 
+  const handleCallerAddressChange = (value: string) => {
+    setCallerAddress(value);
+    if (isAddress(value)) setCallersList(allowAnyCaller ? [anyCaller] : [value, ...callersList.slice(1)]);
+    setIsError(false);
+  };
+
   const handleRemoveCallerInput = () => {
+    setCallersList(callersList.filter((c) => c !== callerAddress));
+
     if (callers.length > 0) {
       setCallerAddress(callers[0]);
       handleRemoveCaller(callers[0])();
@@ -56,10 +68,11 @@ export const CallerSection = ({ setCallersList, isLoading }: CallerSectionProps)
   };
 
   useEffect(() => {
-    if (callerAddress) {
-      allowAnyCaller ? setCallersList([anyCaller]) : setCallersList([callerAddress, ...callers]);
+    if (isEdit) {
+      setCallerAddress(callersList[0]);
+      setCallers(callersList.slice(1));
     }
-  }, [allowAnyCaller, callerAddress, callers, setCallersList]);
+  }, [isEdit, callersList]);
 
   useEffect(() => {
     if (allowAnyCaller) {
@@ -67,6 +80,12 @@ export const CallerSection = ({ setCallersList, isLoading }: CallerSectionProps)
       setCallerAddress(anyCaller);
     }
   }, [allowAnyCaller, setCallers]);
+
+  useEffect(() => {
+    if ((!!callerAddress && !isAddress(callerAddress)) || callerIsRepeated) {
+      setIsError(true);
+    }
+  }, [callerAddress, callerIsRepeated, setIsError]);
 
   // Reset values when modal is closed
   useEffect(() => {
@@ -78,54 +97,54 @@ export const CallerSection = ({ setCallersList, isLoading }: CallerSectionProps)
   }, [modalOpen, setAllowAnyCaller, setCallerAddress, setCallers]);
 
   return (
-    <>
-      <InputsContainer>
-        {/* Callers Input */}
-        <StyledInput
-          label='Callers'
-          value={callerAddress}
-          setValue={setCallerAddress}
-          placeholder='Enter caller address'
-          disabled={allowAnyCaller || isLoading}
-          error={(!!callerAddress && !isAddress(callerAddress)) || callerIsRepeated}
-          errorText={errorText}
-          onClick={handleRemoveCallerInput}
-          removable={!!callerAddress}
-          dataTestId='relay-caller-input'
-        />
+    <InputsContainer>
+      {/* Callers Input */}
+      <InputLabel>Callers</InputLabel>
 
-        {!allowAnyCaller &&
-          callers.map((caller) => (
-            <StyledInput
-              sx={{ mt: '-1rem' }}
-              key={caller}
-              value={caller}
-              setValue={() => {}}
-              onClick={handleRemoveCaller(caller)}
-              disabled={allowAnyCaller || isLoading}
-              removable
-            />
-          ))}
+      {!allowAnyCaller &&
+        callers.map((caller) => (
+          <StyledInput
+            sx={{ mt: '-1rem' }}
+            key={caller}
+            value={caller}
+            setValue={() => {}}
+            onClick={handleRemoveCaller(caller)}
+            disabled={allowAnyCaller || isLoading}
+            removable
+          />
+        ))}
 
-        <CallersContainer>
-          <TextButton
-            variant='text'
-            disabled={allowAnyCaller || !isAddress(callerAddress) || isLoading || callerIsRepeated}
-            onClick={handleAddNewCaller}
-          >
-            <Container>
-              <Icon name='plus' size='2rem' color={currentTheme.actionButton} />
-              <ButtonText>Add additional caller address</ButtonText>
-            </Container>
-          </TextButton>
+      <StyledInput
+        value={callerAddress}
+        setValue={handleCallerAddressChange}
+        placeholder='Enter caller address'
+        disabled={allowAnyCaller || isLoading}
+        error={(!!callerAddress && !isAddress(callerAddress)) || callerIsRepeated}
+        errorText={errorText}
+        onClick={handleRemoveCallerInput}
+        removable={!!callerAddress}
+        dataTestId='relay-caller-input'
+        sx={{ mt: '-1rem' }}
+      />
 
+      <CallersContainer>
+        <TextButton
+          variant='text'
+          disabled={allowAnyCaller || !isAddress(callerAddress) || isLoading || callerIsRepeated}
+          onClick={handleAddNewCaller}
+        >
           <Container>
-            <SSwitch disabled={isLoading} onClick={handleToggle} />
-            <ToggleText>Allow any caller</ToggleText>
+            <Icon name='plus' size='2rem' color={currentTheme.actionButton} />
+            <ButtonText>Add additional caller address</ButtonText>
           </Container>
-        </CallersContainer>
-      </InputsContainer>
-    </>
+        </TextButton>
+
+        <Container>
+          <SSwitch disabled={isLoading} onClick={handleToggle} />
+          <ToggleText>Allow any caller</ToggleText>
+        </Container>
+      </CallersContainer>
+    </InputsContainer>
   );
 };
 
@@ -194,5 +213,18 @@ const ButtonText = styled(StyledText)(() => {
     fontWeight: 500,
     color: currentTheme.actionButton,
     textTransform: 'none',
+  };
+});
+
+export const InputLabel = styled(StyledText)(() => {
+  const { currentTheme } = useTheme();
+  return {
+    color: currentTheme.textSecondary,
+    fontSize: '1.4rem',
+    lineHeight: '2rem',
+    fontWeight: 500,
+    cursor: 'default',
+    marginBottom: '1.6rem',
+    marginRight: 'auto',
   };
 });

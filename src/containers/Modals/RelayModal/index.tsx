@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, styled } from '@mui/material';
 
 import { ActiveButton, BaseModal, CancelButton, StyledTitle, CloseButton, ConfirmText, Icon } from '~/components';
@@ -10,13 +10,14 @@ import { StyledAccordion } from './Accordion';
 import { RelaySection } from './RelaySection';
 
 export const RelayModal = () => {
-  const { selectedVault } = useStateContext();
+  const { selectedVault, selectedItem } = useStateContext();
   const { modalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
 
   const [relayAddress, setRelayAddress] = useState<string>('');
   const [callersList, setCallersList] = useState<string[]>([]);
   const [jobsData, setJobsData] = useState<JobsData>([]);
+  const [isError, setIsError] = useState<boolean>(false);
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
@@ -28,12 +29,33 @@ export const RelayModal = () => {
 
   const isLoading = requestStatus === Status.LOADING;
 
+  // If selectedItem exists, fill the modal with the selected relay
+  useEffect(() => {
+    if (selectedItem?.selectedAddress && selectedVault) {
+      const relays = Object.entries(selectedVault.relays);
+      const selectedRelay = relays.find((relay) => relay[0] === selectedItem?.selectedAddress);
+      if (!selectedRelay) return;
+      setRelayAddress(selectedRelay[0]);
+      setCallersList(selectedRelay[1].callers);
+      setJobsData(selectedRelay[1].jobsData);
+    }
+  }, [selectedItem?.selectedAddress, selectedVault]);
+
+  // Reset values when modal is closed
+  useEffect(() => {
+    if (modalOpen === ModalType.NONE) {
+      setRelayAddress('');
+      setCallersList([]);
+      setJobsData([]);
+    }
+  }, [modalOpen]);
+
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
       <BigModal>
         {/* Header */}
         <STitleContainer>
-          <StyledTitle>Add New Relay</StyledTitle>
+          <StyledTitle>{selectedItem?.selectedAddress ? 'Edit Relay' : 'Add New Relay'}</StyledTitle>
 
           <CloseButton variant='text' onClick={closeModal}>
             <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
@@ -51,6 +73,8 @@ export const RelayModal = () => {
           callersList={callersList}
           setCallersList={setCallersList}
           isLoading={isLoading}
+          isError={isError}
+          setIsError={setIsError}
         />
 
         {/* Buttons Section */}
@@ -61,7 +85,7 @@ export const RelayModal = () => {
 
           <ActiveButton
             variant='contained'
-            disabled={!writeAsync || isLoading}
+            disabled={!writeAsync || isLoading || isError}
             onClick={handleSendTransaction}
             data-test='confirm-new-relay-button'
           >

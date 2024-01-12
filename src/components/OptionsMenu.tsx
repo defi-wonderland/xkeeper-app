@@ -20,7 +20,7 @@ export function OptionsMenu({ relayAddress }: OptionsMenuProps) {
 
   const handleOpenEditModalAlias = () => {
     setSelectedItem({ selectedAddress: relayAddress });
-    setModalOpen(ModalType.EDIT_ALIAS);
+    setModalOpen(ModalType.ADD_RELAY);
   };
 
   const handleOpenRevokeModal = () => {

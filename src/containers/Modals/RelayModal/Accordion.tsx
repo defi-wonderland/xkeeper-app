@@ -19,6 +19,8 @@ interface StyledAccordionProps {
   jobsData: JobsData;
   setJobsData: (value: JobsData) => void;
   isLoading: boolean;
+  isError: boolean;
+  setIsError: (value: boolean) => void;
 }
 
 export const StyledAccordion = ({
@@ -28,6 +30,8 @@ export const StyledAccordion = ({
   jobsData,
   setJobsData,
   isLoading,
+  isError,
+  setIsError,
 }: StyledAccordionProps) => {
   const { currentTheme } = useTheme();
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
@@ -77,7 +81,14 @@ export const StyledAccordion = ({
 
         <SAccordionDetails>
           {/* Callers section */}
-          <CallerSection callersList={callersList} setCallersList={setCallersList} isLoading={isLoading} />
+          <CallerSection
+            callersList={callersList}
+            setCallersList={setCallersList}
+            isLoading={isLoading}
+            isError={isError}
+            setIsError={setIsError}
+            isEdit={!!relayAddress}
+          />
         </SAccordionDetails>
       </AccordionBox>
 
