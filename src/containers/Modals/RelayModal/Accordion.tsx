@@ -93,7 +93,7 @@ export const StyledAccordion = ({
       </AccordionBox>
 
       {jobsData.map((job, index) => (
-        <AccordionBox disableGutters key={job.job}>
+        <JobAccordionBox disableGutters key={job.job}>
           <SAccordionSummary
             expandIcon={
               <>
@@ -119,18 +119,18 @@ export const StyledAccordion = ({
             {/* Job section */}
             <JobSection jobsData={jobsData} setJobsData={setJobsData} jobIndex={index} isLoading={isLoading} />
           </SAccordionDetails>
-        </AccordionBox>
+        </JobAccordionBox>
       ))}
 
-      <AccordionBox disableGutters expanded={false}>
+      <JobAccordionBox disableGutters expanded={false}>
         <SAccordionSummary
-          disabled={!isAddress(relayAddress) || !allowAddNewJob}
+          disabled={!isAddress(relayAddress) || !allowAddNewJob || isLoading}
           onClick={handleAddJob}
           expandIcon={<Icon name='plus' color={currentTheme.textDisabled} size='2rem' />}
         >
           <STitle>Add Job</STitle>
         </SAccordionSummary>
-      </AccordionBox>
+      </JobAccordionBox>
     </AccordionContainer>
   );
 };
@@ -165,9 +165,17 @@ const SAccordionSummary = styled(AccordionSummary)(() => {
 const AccordionBox = styled(Accordion)(() => {
   const { currentTheme } = useTheme();
   return {
+    position: 'inherit',
     backgroundColor: currentTheme.backgroundPrimary,
     backgroundImage: 'none',
     boxShadow: 'none',
+  };
+});
+
+const JobAccordionBox = styled(AccordionBox)(() => {
+  const { currentTheme } = useTheme();
+  return {
+    borderTop: `${currentTheme.inputBorder}`,
   };
 });
 
