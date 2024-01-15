@@ -36,10 +36,10 @@ export const Vault = () => {
       items: (
         <>
           <Tokens />
+          <EnabledRelays />
           {Object.entries(relays).map(([relayAddress, relayData]) => (
             <RelaySection relayAddress={relayAddress} relayData={relayData} key={relayAddress} />
           ))}
-          <EnabledRelays />
         </>
       ),
     },

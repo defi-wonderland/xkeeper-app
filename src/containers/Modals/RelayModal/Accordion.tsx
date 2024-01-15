@@ -76,7 +76,7 @@ export const StyledAccordion = ({
             />
           }
         >
-          <StyledTitle>{callersList.length ? `Callers (${callersList.length})` : 'Add Callers'}</StyledTitle>
+          <STitle>{callersList.length ? `Callers (${callersList.length})` : 'Add Callers'}</STitle>
         </SAccordionSummary>
 
         <SAccordionDetails>
@@ -110,9 +110,9 @@ export const StyledAccordion = ({
               </>
             }
           >
-            <StyledTitle>
+            <STitle>
               Job {index + 1} {isAddress(job.job) ? `(${truncateAddress(job.job)})` : ''}
-            </StyledTitle>
+            </STitle>
           </SAccordionSummary>
 
           <SAccordionDetails>
@@ -128,12 +128,19 @@ export const StyledAccordion = ({
           onClick={handleAddJob}
           expandIcon={<Icon name='plus' color={currentTheme.textDisabled} size='2rem' />}
         >
-          <StyledTitle>Add Job</StyledTitle>
+          <STitle>Add Job</STitle>
         </SAccordionSummary>
       </AccordionBox>
     </AccordionContainer>
   );
 };
+
+const STitle = styled(StyledTitle)(() => {
+  return {
+    fontSize: '1.6rem',
+    fontWeight: '600',
+  };
+});
 
 const AccordionContainer = styled(Box)(() => {
   const { currentTheme } = useTheme();

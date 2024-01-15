@@ -32,17 +32,18 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
       <TitleContainer>
         <Box>
           <StyledTitle>{aliasData[relayAddress] || getRelayName(relayAddress)}</StyledTitle>
-
-          <STooltip text={relayAddress} address>
-            {' '}
-            <StyledText onClick={handleCopy}>{truncateAddress(relayAddress)}</StyledText>
-          </STooltip>
-          <STooltip text={copied ? 'Copied!' : 'Copy Address'}>
-            <IconContainer>
-              {!copied && <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />}
-              {!!copied && <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />}
-            </IconContainer>
-          </STooltip>
+          <Box>
+            <STooltip text={relayAddress} address>
+              {' '}
+              <StyledText onClick={handleCopy}>{truncateAddress(relayAddress)}</StyledText>
+            </STooltip>
+            <STooltip text={copied ? 'Copied!' : 'Copy Address'}>
+              <IconContainer>
+                {!copied && <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />}
+                {!!copied && <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />}
+              </IconContainer>
+            </STooltip>
+          </Box>
         </Box>
 
         {selectedVault?.owner === userAddress && (
@@ -56,7 +57,7 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
       </TitleContainer>
 
       <SSubTitle>
-        <StyledText>Callers: </StyledText>
+        <CallersText>Callers: </CallersText>
         <CallersContainers>
           {callers.map((caller) => (
             <AddressChip key={caller} text={caller} externalLink={false} />
@@ -87,7 +88,7 @@ const TitleContainer = styled(Box)({
   justifyContent: 'space-between',
   flexDirection: 'row',
   width: '100%',
-  minWidth: '65rem',
+  minWidth: '100%',
   height: '4.5rem',
   div: {
     display: 'flex',
@@ -101,6 +102,14 @@ const TitleContainer = styled(Box)({
       paddingTop: '0.2rem',
       cursor: 'pointer',
       marginLeft: '0.6rem',
+    },
+  },
+  '@media (max-width: 600px)': {
+    'div:first-child': {
+      diplay: 'flex',
+      flexDirection: 'column',
+      alignItems: 'start',
+      gap: '0.6rem',
     },
   },
 });
@@ -146,4 +155,8 @@ const RowButton = styled(Box)(() => {
       alignItems: 'center',
     },
   };
+});
+
+const CallersText = styled(StyledText)({
+  fontWeight: '500',
 });

@@ -136,12 +136,12 @@ export const ButtonsContainer = styled(Box)({
 
 export const ColumnTitle = styled(TableCell)(() => {
   const {
-    currentTheme: { textTertiary },
+    currentTheme: { textSecondary },
   } = useTheme();
   return {
-    fontSize: '1.4rem',
+    fontSize: '1.2rem',
     padding: '1.2rem 2.4rem',
-    color: textTertiary,
+    color: textSecondary,
   };
 });
 
@@ -152,10 +152,10 @@ export const STable = styled(Table)({
 
 export const RowText = styled(TableCell)(() => {
   const {
-    currentTheme: { textSecondary },
+    currentTheme: { textPrimary },
   } = useTheme();
   return {
-    color: textSecondary,
+    color: textPrimary,
     fontSize: '1.4rem',
     height: '3.2rem',
     fontWeight: 500,
@@ -203,10 +203,8 @@ const TokenContainer = styled('div')({
 });
 
 const ColumnText = styled(StyledText)(() => {
-  const { currentTheme } = useTheme();
   return {
     fontSize: '1.2rem',
     fontWeight: 500,
-    color: currentTheme.textTertiary,
   };
 });

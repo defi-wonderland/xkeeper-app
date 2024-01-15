@@ -1,7 +1,7 @@
 import { Box, Card, styled } from '@mui/material';
 
 import { ChainIcon, Icon, InfoChip, NoRelayChip, RelayChip, STooltip, StyledText, StyledTitle } from '~/components';
-import { formatDataNumber, getRelayName } from '~/utils';
+import { formatDataNumber, getRelayName, truncateAddress } from '~/utils';
 import { useAlias, useStateContext, useTheme } from '~/hooks';
 import { VaultData } from '~/types';
 import { Description } from '~/pages/Vault/VaultHeader';
@@ -19,7 +19,7 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
 
   const activeRelays = Object.keys(relays);
   const vaultAlias = aliasData[address];
-  const vaultName = name ? name : address;
+  const vaultName = name ? name : truncateAddress(address);
 
   return (
     <SContainer onClick={onClick}>
@@ -27,7 +27,7 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
         <Box>
           <TitleContainer>
             {/* Vault Alias | Vault Address */}
-            <STooltip text='Custom Alias (only you can see this)'>
+            <STooltip text={address} address>
               <CardTitle sx={{ color: currentTheme.textPrimary }}>{vaultAlias ? vaultAlias : vaultName}</CardTitle>
             </STooltip>
 
