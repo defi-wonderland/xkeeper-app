@@ -33,7 +33,6 @@ export const StyledAccordion = ({
   isError,
   setIsError,
 }: StyledAccordionProps) => {
-  const { currentTheme } = useTheme();
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
   const [jobsCount, setJobsCount] = useState<number>(0);
 
@@ -68,13 +67,7 @@ export const StyledAccordion = ({
         <SAccordionSummary
           onClick={handleAddCaller}
           disabled={!isAddress(relayAddress)}
-          expandIcon={
-            <Icon
-              name={!callersList.length && addCallerOpen ? 'plus' : 'chevron-down'}
-              color={currentTheme.textDisabled}
-              size='2rem'
-            />
-          }
+          expandIcon={<Icon name={!callersList.length && addCallerOpen ? 'plus' : 'chevron-down'} />}
         >
           <StyledTitle>{callersList.length ? `Callers (${callersList.length})` : 'Add Callers'}</StyledTitle>
         </SAccordionSummary>
@@ -97,16 +90,8 @@ export const StyledAccordion = ({
           <SAccordionSummary
             expandIcon={
               <>
-                {!job.job && <Icon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />}
-
-                {!!job.job && (
-                  <SIcon
-                    name='close'
-                    color={currentTheme.textDisabled}
-                    size='2rem'
-                    onClick={() => handleRemoveJob(index)}
-                  />
-                )}
+                {!job.job && <Icon name='chevron-down' />}
+                {!!job.job && <SIcon name='close' onClick={() => handleRemoveJob(index)} />}
               </>
             }
           >
@@ -126,7 +111,7 @@ export const StyledAccordion = ({
         <SAccordionSummary
           disabled={!isAddress(relayAddress) || !allowAddNewJob}
           onClick={handleAddJob}
-          expandIcon={<Icon name='plus' color={currentTheme.textDisabled} size='2rem' />}
+          expandIcon={<Icon name='plus' />}
         >
           <StyledTitle>Add Job</StyledTitle>
         </SAccordionSummary>
@@ -149,8 +134,16 @@ const AccordionContainer = styled(Box)(() => {
   };
 });
 
-const SAccordionSummary = styled(AccordionSummary)({
-  padding: '1.2rem 0',
+const SAccordionSummary = styled(AccordionSummary)(() => {
+  const { currentTheme } = useTheme();
+
+  return {
+    padding: '1.2rem 0',
+    i: {
+      fontSize: '2rem',
+      color: currentTheme.textDisabled,
+    },
+  };
 });
 
 const AccordionBox = styled(Accordion)(() => {
