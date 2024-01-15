@@ -2,75 +2,89 @@ import { Box, Radio, styled } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { isAddress, isHex } from 'viem';
 
-import { StyledInput, StyledText, STextarea, FunctionDropdown, InputLabel } from '~/components';
-import { useModal, useStateContext, useTheme } from '~/hooks';
+import { StyledInput, StyledText, FunctionDropdown, STextarea } from '~/components';
+import { useAbi, useModal, useSelectorName, useTheme } from '~/hooks';
 import { JobsData, ModalType } from '~/types';
-import { getContractAbi } from '~/utils';
 
 interface JobSectionProps {
-  setJobsData: (value: JobsData) => void;
   jobIndex: number;
-  jobsData: JobsData;
   isLoading: boolean;
+  jobsData: JobsData;
+  setJobsData: (value: JobsData) => void;
 }
-export const JobSection = ({ jobsData, setJobsData, isLoading, jobIndex }: JobSectionProps) => {
-  const { currentNetwork } = useStateContext();
-  const { modalOpen } = useModal();
 
-  const [jobAddress, setJobAddress] = useState('');
-  const [jobAbi, setJobAbi] = useState('');
-  const [contractFunction, setContractFunction] = useState('');
+export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSectionProps) => {
+  const [jobAddress, setJobAddress] = useState(jobsData[jobIndex]?.job || '');
+  const { modalOpen } = useModal();
+  const { getAbi } = useAbi();
+  const { selectors: selectorsName, setSelectorName } = useSelectorName();
+  const [abi, setAbi] = useState('');
   const [functionSelector, setFunctionSelector] = useState('');
+  const [selectors, setSelectors] = useState<string[]>(jobsData[jobIndex]?.functionSelectors || []);
 
   const CONTRACT_METHOD = 'a';
   const RAW_SELECTOR = 'b';
   const [selectedValue, setSelectedValue] = useState(CONTRACT_METHOD);
+
+  const addContractMethod = (selector: string) => {
+    if (!selectors.includes(selector)) {
+      setSelectors([...selectors, selector]);
+    }
+  };
+
+  const addContractMethodName = (name: string) => {
+    setSelectorName(functionSelector, name);
+  };
+
+  const selectorRepeated = useMemo(() => {
+    return selectors.includes(functionSelector);
+  }, [selectors, functionSelector]);
+
+  const errorText = useMemo(
+    () => (selectorRepeated ? 'Selector already added' : 'Invalid selector'),
+    [selectorRepeated],
+  );
 
   const handleChange = (value: string) => {
     setFunctionSelector('');
     setSelectedValue(value);
   };
 
-  useEffect(() => {
-    if (isAddress(jobAddress) && functionSelector.length > 8) {
-      const newJobsData = [...jobsData];
-      newJobsData[jobIndex] = { job: jobAddress, functionSelectors: [functionSelector] };
-      setJobsData(newJobsData);
+  const addNewSelector = () => {
+    if (!selectors.includes(functionSelector)) {
+      setSelectorName(functionSelector, '');
+      setSelectors([...selectors, functionSelector]);
+      setFunctionSelector('');
     }
-    // disabled to avoid infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [functionSelector, jobAddress]);
+  };
 
   useEffect(() => {
     if (isAddress(jobAddress)) {
-      getContractAbi(currentNetwork.name, currentNetwork.apiUrl, jobAddress).then((abi) => {
-        setJobAbi(abi || '');
-      });
+      const newJobsData = [...jobsData];
+      newJobsData[jobIndex] = { job: jobAddress, functionSelectors: selectors };
+      setJobsData(newJobsData);
     }
-  }, [currentNetwork, jobAddress]);
+  }, [jobAddress, jobIndex, selectors]);
 
   useEffect(() => {
-    isAddress(jobsData[jobIndex].job) && setJobAddress(jobsData[jobIndex].job);
+    isAddress(jobsData[jobIndex]?.job) && setJobAddress(jobsData[jobIndex]?.job);
+    isHex(jobsData[jobIndex]?.functionSelectors[0]) && setSelectors(jobsData[jobIndex]?.functionSelectors);
   }, [jobIndex, jobsData]);
 
   useEffect(() => {
-    isHex(jobsData[jobIndex].functionSelectors[0]) && setFunctionSelector(jobsData[jobIndex].functionSelectors[0]);
-  }, [jobIndex, jobsData]);
+    if (!abi) {
+      getAbi(jobAddress).then((result) => setAbi(result));
+    }
+  }, [getAbi, jobAddress]);
 
   // Reset form when modal is closed
   useEffect(() => {
     if (modalOpen === ModalType.NONE) {
       setJobAddress('');
-      setJobAbi('');
-      setContractFunction('');
       setFunctionSelector('');
       setSelectedValue(CONTRACT_METHOD);
     }
   }, [modalOpen]);
-
-  const editJob = useMemo(() => {
-    return isAddress(jobsData[jobIndex].job) && isHex(jobsData[jobIndex].functionSelectors[0]);
-  }, [jobIndex, jobsData]);
 
   return (
     <>
@@ -81,96 +95,106 @@ export const JobSection = ({ jobsData, setJobsData, isLoading, jobIndex }: JobSe
         placeholder='Enter Job address...'
         value={jobAddress}
         setValue={setJobAddress}
-        disabled={isLoading || editJob}
+        disabled={isLoading}
         error={!!jobAddress && !isAddress(jobAddress)}
         errorText='Invalid address'
       />
 
-      {editJob && (
+      {/* Function selector */}
+      {!!selectors.length && (
         <>
-          {/* Function selector */}
-          <StyledInput
-            label='Function selector'
-            value={jobsData[jobIndex].functionSelectors[0]}
-            setValue={() => null}
-            disabled
-            dataTestId='function-selector-input'
-          />
-        </>
-      )}
-
-      {!editJob && (
-        <>
-          {/* ABI input */}
-          <AbiTextarea
-            value={jobAbi}
-            placeholder='Enter contract ABI...'
-            spellCheck={false}
-            disabled={isLoading || selectedValue === RAW_SELECTOR}
-            onChange={(e) => setJobAbi(e.target.value)}
-          />
-
-          {/* Radio Buttons section */}
-          <RadioContainer>
-            <BtnContainer onClick={() => !isLoading && handleChange(CONTRACT_METHOD)}>
-              {/* Choose function button */}
-              <Radio
-                data-test='choose-function-button'
-                checked={selectedValue === CONTRACT_METHOD}
-                value={CONTRACT_METHOD}
-                name='radio-buttons'
-                inputProps={{ 'aria-label': CONTRACT_METHOD }}
-                disabled={isLoading}
-              />
-              <InputLabel>Choose function</InputLabel>
-            </BtnContainer>
-
-            {/* Raw function selector */}
-            <BtnContainer onClick={() => !isLoading && handleChange(RAW_SELECTOR)}>
-              <Radio
-                data-test='raw-function-button'
-                checked={selectedValue === RAW_SELECTOR}
-                value={RAW_SELECTOR}
-                name='radio-buttons'
-                inputProps={{ 'aria-label': RAW_SELECTOR }}
-                disabled={isLoading}
-              />
-              <InputLabel>Enter raw function selector</InputLabel>
-            </BtnContainer>
-          </RadioContainer>
-
-          {/* Function dropdown */}
-          {selectedValue === CONTRACT_METHOD && (
-            <DropdownContainer>
-              <DropdownLabel>Contract selector</DropdownLabel>
-              <FunctionDropdown
-                value={contractFunction}
-                setValue={setContractFunction}
-                setSignature={setFunctionSelector}
-                abi={jobAbi}
-                disabled={!jobAbi || isLoading}
-              />
-            </DropdownContainer>
-          )}
-
-          {/* Function selector */}
-          {selectedValue === RAW_SELECTOR && (
+          <InputLabel sx={{ mb: '1.6rem' }}>Selectors</InputLabel>
+          {selectors.map((selector, index) => (
             <StyledInput
-              label='Function selector'
-              value={functionSelector}
-              setValue={setFunctionSelector}
-              disabled={isLoading}
+              key={selector + index}
+              value={selectorsName[selector] ? `${selectorsName[selector]} (${selector})` : selector}
+              setValue={() => null}
               dataTestId='function-selector-input'
+              onClick={() => {
+                console.log(selectors, index);
+                setSelectors([...selectors].splice(index, 1));
+              }}
+              removable
+              sx={{ mt: '-1rem' }}
             />
-          )}
+          ))}
         </>
       )}
+
+      {/* ABI input */}
+      {/* Temporary commented: until design is approved */}
+      <DropdownLabel>New function selector</DropdownLabel>
+      <AbiTextarea
+        value={abi}
+        placeholder='Enter contract ABI...'
+        spellCheck={false}
+        disabled={isLoading || selectedValue === RAW_SELECTOR}
+        onChange={(e) => setAbi(e.target.value)}
+      />
+
+      {/* Function dropdown */}
+      {selectedValue === CONTRACT_METHOD && (
+        <DropdownContainer>
+          <FunctionDropdown
+            value={''}
+            setValue={addContractMethodName}
+            setSignature={addContractMethod}
+            abi={abi}
+            disabled={!abi || isLoading}
+          />
+        </DropdownContainer>
+      )}
+
+      {/* Function selector */}
+      {selectedValue === RAW_SELECTOR && (
+        <StyledInput
+          // label='New function selector'
+          value={functionSelector}
+          setValue={setFunctionSelector}
+          onClick={addNewSelector}
+          disabled={isLoading}
+          dataTestId='function-selector-input'
+          error={selectorRepeated}
+          errorText={errorText}
+          addable={!!functionSelector && !isLoading && isHex(functionSelector) && functionSelector.length === 10}
+          sx={{ marginTop: '1rem' }}
+        />
+      )}
+
+      {/* Radio Buttons section */}
+      <RadioContainer>
+        <BtnContainer onClick={() => !isLoading && handleChange(CONTRACT_METHOD)}>
+          {/* Choose function button */}
+          <Radio
+            data-test='choose-function-button'
+            checked={selectedValue === CONTRACT_METHOD}
+            value={CONTRACT_METHOD}
+            name='radio-buttons'
+            inputProps={{ 'aria-label': CONTRACT_METHOD }}
+            disabled={isLoading}
+          />
+          <InputLabel>Choose function</InputLabel>
+        </BtnContainer>
+
+        {/* Raw function selector */}
+        <BtnContainer onClick={() => !isLoading && handleChange(RAW_SELECTOR)}>
+          <Radio
+            data-test='raw-function-button'
+            checked={selectedValue === RAW_SELECTOR}
+            value={RAW_SELECTOR}
+            name='radio-buttons'
+            inputProps={{ 'aria-label': RAW_SELECTOR }}
+            disabled={isLoading}
+          />
+          <InputLabel>Enter raw function selector</InputLabel>
+        </BtnContainer>
+      </RadioContainer>
     </>
   );
 };
 
 const AbiTextarea = styled(STextarea)({
-  marginTop: '-0.8rem',
+  marginTop: '1rem',
 });
 
 const RadioContainer = styled('div')({
@@ -178,7 +202,7 @@ const RadioContainer = styled('div')({
   flexDirection: 'row',
   gap: '2.4rem',
   alignItems: 'center',
-  margin: '1.6rem 0 2rem 0',
+  margin: '-1rem 0 2rem 0',
   div: {
     display: 'flex',
     flexDirection: 'row',
@@ -198,6 +222,7 @@ const DropdownContainer = styled(Box)({
   gap: '0.6rem',
   marginBottom: '2.4rem',
   width: '100%',
+  marginTop: '1rem',
 });
 
 const DropdownLabel = styled(StyledText)(() => {
@@ -214,4 +239,17 @@ const BtnContainer = styled(Box)({
   p: {
     cursor: 'pointer',
   },
+});
+
+const InputLabel = styled(StyledText)(() => {
+  const { currentTheme } = useTheme();
+  return {
+    color: currentTheme.textSecondary,
+    fontSize: '1.4rem',
+    lineHeight: '2rem',
+    fontWeight: 500,
+    cursor: 'default',
+    // marginBottom: '1.6rem',
+    marginRight: 'auto',
+  };
 });

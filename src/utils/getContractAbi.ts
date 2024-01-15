@@ -15,7 +15,7 @@ export const getAbiFromSafeApi = async (chainName: string, address: string) => {
     const jsonData = await response.json();
     return JSON.stringify(jsonData.contractAbi.abi);
   } catch (error) {
-    console.error('Error fetching ABI from safe');
+    console.error('Error fetching ABI from safe API');
   }
 };
 

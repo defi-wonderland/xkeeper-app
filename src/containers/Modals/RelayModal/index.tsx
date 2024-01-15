@@ -16,7 +16,10 @@ export const RelayModal = () => {
 
   const [relayAddress, setRelayAddress] = useState<string>('');
   const [callersList, setCallersList] = useState<string[]>([]);
+
+  const [jobsCount, setJobsCount] = useState<number>(0);
   const [jobsData, setJobsData] = useState<JobsData>([]);
+
   const [isError, setIsError] = useState<boolean>(false);
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
@@ -38,6 +41,7 @@ export const RelayModal = () => {
       setRelayAddress(selectedRelay[0]);
       setCallersList(selectedRelay[1].callers);
       setJobsData(selectedRelay[1].jobsData);
+      setJobsCount(selectedRelay[1].jobsData.length);
     }
   }, [selectedItem?.selectedAddress, selectedVault]);
 
@@ -47,6 +51,7 @@ export const RelayModal = () => {
       setRelayAddress('');
       setCallersList([]);
       setJobsData([]);
+      setJobsCount(0);
     }
   }, [modalOpen]);
 
@@ -68,10 +73,12 @@ export const RelayModal = () => {
         {/* Accordion Section */}
         <StyledAccordion
           relayAddress={relayAddress}
-          jobsData={jobsData}
-          setJobsData={setJobsData}
           callersList={callersList}
           setCallersList={setCallersList}
+          jobsData={jobsData}
+          setJobsData={setJobsData}
+          jobsCount={jobsCount}
+          setJobsCount={setJobsCount}
           isLoading={isLoading}
           isError={isError}
           setIsError={setIsError}

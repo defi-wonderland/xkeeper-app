@@ -8,9 +8,9 @@ import { isAddress } from 'viem';
 import { useTheme } from '~/hooks';
 import { Icon, StyledTitle } from '~/components';
 import { CallerSection } from './CallerSection';
-import { JobsData } from '~/types';
 import { JobSection } from './JobSection';
 import { truncateAddress } from '~/utils';
+import { JobsData } from '~/types';
 
 interface StyledAccordionProps {
   relayAddress: string;
@@ -18,6 +18,8 @@ interface StyledAccordionProps {
   setCallersList: (value: string[]) => void;
   jobsData: JobsData;
   setJobsData: (value: JobsData) => void;
+  jobsCount: number;
+  setJobsCount: (value: number) => void;
   isLoading: boolean;
   isError: boolean;
   setIsError: (value: boolean) => void;
@@ -27,31 +29,33 @@ export const StyledAccordion = ({
   relayAddress,
   callersList,
   setCallersList,
-  jobsData,
-  setJobsData,
   isLoading,
   isError,
   setIsError,
+  jobsData,
+  setJobsData,
+  jobsCount,
+  setJobsCount,
 }: StyledAccordionProps) => {
   const { currentTheme } = useTheme();
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
-  const [jobsCount, setJobsCount] = useState<number>(0);
 
   const handleAddCaller = () => {
     setAddCallerOpen(!addCallerOpen);
   };
 
   const handleAddJob = () => {
-    setJobsCount(jobsCount + 1);
     const newJobsData = [...jobsData];
     newJobsData.push({ job: '', functionSelectors: [] });
     setJobsData(newJobsData);
+    setJobsCount(jobsCount + 1);
   };
 
   const handleRemoveJob = (index: number) => {
     const newJobsData = [...jobsData];
     newJobsData.splice(index, 1);
     setJobsData(newJobsData);
+    setJobsCount(jobsCount - 1);
   };
 
   const allowAddNewJob = useMemo(() => {
@@ -61,6 +65,8 @@ export const StyledAccordion = ({
     // if there are jobs, check if the last job has an address
     return jobsData[jobsData.length - 1].job !== '';
   }, [jobsData]);
+
+  const jobsList = new Array(jobsCount).fill(0);
 
   return (
     <AccordionContainer>
@@ -92,32 +98,28 @@ export const StyledAccordion = ({
         </SAccordionDetails>
       </AccordionBox>
 
-      {jobsData.map((job, index) => (
-        <JobAccordionBox disableGutters key={job.job}>
+      {jobsList.map((_value, index) => (
+        <JobAccordionBox disableGutters key={jobsData[index]?.job} defaultExpanded={!jobsData[index]?.job}>
           <SAccordionSummary
             expandIcon={
               <>
-                {!job.job && <Icon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />}
-
-                {!!job.job && (
-                  <SIcon
-                    name='close'
-                    color={currentTheme.textDisabled}
-                    size='2rem'
-                    onClick={() => handleRemoveJob(index)}
-                  />
-                )}
+                <SIcon
+                  name='close'
+                  color={currentTheme.textDisabled}
+                  size='2rem'
+                  onClick={() => handleRemoveJob(index)}
+                />
               </>
             }
           >
             <STitle>
-              Job {index + 1} {isAddress(job.job) ? `(${truncateAddress(job.job)})` : ''}
+              Job {index + 1} {isAddress(jobsData[index]?.job) ? `(${truncateAddress(jobsData[index]?.job)})` : ''}
             </STitle>
           </SAccordionSummary>
 
           <SAccordionDetails>
             {/* Job section */}
-            <JobSection jobsData={jobsData} setJobsData={setJobsData} jobIndex={index} isLoading={isLoading} />
+            <JobSection jobIndex={index} isLoading={isLoading} jobsData={jobsData} setJobsData={setJobsData} />
           </SAccordionDetails>
         </JobAccordionBox>
       ))}
