@@ -39,14 +39,18 @@ export const StyledAccordion = ({
 }: StyledAccordionProps) => {
   const { currentTheme } = useTheme();
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
+  const [callerExpanded, setCallerExpanded] = useState<boolean>(false);
+  const jobsList = new Array(jobsData.length).fill(0);
 
   const handleAddCaller = () => {
     setAddCallerOpen(!addCallerOpen);
+    setCallerExpanded(!callerExpanded);
   };
 
   const handleAddJob = () => {
     const newJobsData = [...jobsData];
     newJobsData.push({ job: '', functionSelectors: [] });
+    setCallerExpanded(false);
     setJobsData(newJobsData);
     setJobsCount(jobsCount + 1);
   };
@@ -66,11 +70,9 @@ export const StyledAccordion = ({
     return jobsData[jobsData.length - 1].job !== '';
   }, [jobsData]);
 
-  const jobsList = new Array(jobsCount).fill(0);
-
   return (
     <AccordionContainer>
-      <AccordionBox disableGutters>
+      <AccordionBox disableGutters expanded={callerExpanded}>
         <SAccordionSummary
           onClick={handleAddCaller}
           disabled={!isAddress(relayAddress)}
@@ -99,7 +101,7 @@ export const StyledAccordion = ({
       </AccordionBox>
 
       {jobsList.map((_value, index) => (
-        <JobAccordionBox disableGutters key={jobsData[index]?.job} defaultExpanded={!jobsData[index]?.job}>
+        <JobAccordionBox disableGutters key={jobsData[index]?.job} defaultExpanded={index === jobsCount - 1}>
           <SAccordionSummary
             expandIcon={
               <>

@@ -26,6 +26,12 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
   const RAW_SELECTOR = 'b';
   const [selectedValue, setSelectedValue] = useState(CONTRACT_METHOD);
 
+  const removeSelector = (index: number) => {
+    const newSelectors = [...selectors];
+    newSelectors.splice(index, 1);
+    setSelectors(newSelectors);
+  };
+
   const addContractMethod = (selector: string) => {
     if (!selectors.includes(selector)) {
       setSelectors([...selectors, selector]);
@@ -110,10 +116,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
               value={selectorsName[selector] ? `${selectorsName[selector]} (${selector})` : selector}
               setValue={() => null}
               dataTestId='function-selector-input'
-              onClick={() => {
-                console.log(selectors, index);
-                setSelectors([...selectors].splice(index, 1));
-              }}
+              onClick={() => removeSelector(index)}
               removable
               sx={{ mt: '-1rem' }}
             />
