@@ -9,7 +9,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ScrollToTop, useTheme } from '~/hooks';
 import { CreateVault, Landing, Vault } from '~/pages';
 import { AppLayout } from '~/containers';
-import { UseSnackbar, customTheme, getMuiThemeConfig } from '~/components';
+import { UseSnackbar, customTheme, getMuiGLobalConfig } from '~/components';
 import { availableChains } from '~/config';
 
 const AppRouter = () => {
@@ -26,7 +26,7 @@ const AppRouter = () => {
 
 export const App = () => {
   const { theme: mode, currentTheme } = useTheme();
-  const theme = useMemo(() => getMuiThemeConfig(currentTheme, mode), [currentTheme, mode]);
+  const theme = useMemo(() => getMuiGLobalConfig(currentTheme, mode), [currentTheme, mode]);
 
   return (
     <RainbowKitProvider theme={customTheme(currentTheme)} chains={availableChains}>
