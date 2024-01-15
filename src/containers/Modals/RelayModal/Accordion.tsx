@@ -149,10 +149,8 @@ const AccordionContainer = styled(Box)(() => {
   };
 });
 
-const SAccordionSummary = styled(AccordionSummary)(() => {
-  return {
-    padding: '1.2rem 0',
-  };
+const SAccordionSummary = styled(AccordionSummary)({
+  padding: '1.2rem 0',
 });
 
 const AccordionBox = styled(Accordion)(() => {
@@ -164,15 +162,12 @@ const AccordionBox = styled(Accordion)(() => {
   };
 });
 
-const SAccordionDetails = styled(AccordionDetails)(() => {
-  return {
-    padding: '0',
-  };
+const SAccordionDetails = styled(AccordionDetails)({
+  padding: '0',
 });
 
 const SIcon = styled(Icon)(() => {
   const { currentTheme } = useTheme();
-
   return {
     cursor: 'pointer',
     '&:hover::before': {
