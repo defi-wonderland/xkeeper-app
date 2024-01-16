@@ -7,6 +7,7 @@ export interface Env {
   ALCHEMY_KEY: string;
   TEST_MODE: boolean;
   TEST_PRIVATE_KEY: Address;
+  ETHERSCAN_KEY: string;
 }
 
 export interface Constants {

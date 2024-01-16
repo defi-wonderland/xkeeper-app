@@ -16,9 +16,10 @@ interface JobSectionProps {
 export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSectionProps) => {
   const [jobAddress, setJobAddress] = useState(jobsData[jobIndex]?.job || '');
   const { modalOpen } = useModal();
-  const { getAbi } = useAbi();
+  const { getAbi, abi: abiData } = useAbi();
   const { selectors: selectorsName, setSelectorName } = useSelectorName();
   const [abi, setAbi] = useState('');
+  const [searchAbi, setSearchAbi] = useState(true);
   const [functionSelector, setFunctionSelector] = useState('');
   const [selectors, setSelectors] = useState<string[]>(jobsData[jobIndex]?.functionSelectors || []);
 
@@ -51,6 +52,11 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
     [selectorRepeated],
   );
 
+  const handleChangeJobAddress = (value: string) => {
+    setJobAddress(value);
+    setSearchAbi(true);
+  };
+
   const handleChange = (value: string) => {
     setFunctionSelector('');
     setSelectedValue(value);
@@ -70,18 +76,25 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
       newJobsData[jobIndex] = { job: jobAddress, functionSelectors: selectors };
       setJobsData(newJobsData);
     }
+    // to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobAddress, jobIndex, selectors]);
 
   useEffect(() => {
     isAddress(jobsData[jobIndex]?.job) && setJobAddress(jobsData[jobIndex]?.job);
-    isHex(jobsData[jobIndex]?.functionSelectors[0]) && setSelectors(jobsData[jobIndex]?.functionSelectors);
+    isHex(jobsData[jobIndex]?.functionSelectors) && setSelectors(jobsData[jobIndex]?.functionSelectors);
   }, [jobIndex, jobsData]);
 
   useEffect(() => {
-    if (!abi) {
-      getAbi(jobAddress).then((result) => setAbi(result));
+    if (abiData[jobAddress]) {
+      setAbi(abiData[jobAddress]);
+    } else if (jobAddress && searchAbi) {
+      getAbi(jobAddress).then((result) => {
+        setSearchAbi(false);
+        setAbi(result);
+      });
     }
-  }, [getAbi, jobAddress]);
+  }, [abiData, searchAbi, getAbi, jobAddress]);
 
   // Reset form when modal is closed
   useEffect(() => {
@@ -100,7 +113,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
         label='Job address'
         placeholder='Enter Job address...'
         value={jobAddress}
-        setValue={setJobAddress}
+        setValue={handleChangeJobAddress}
         disabled={isLoading}
         error={!!jobAddress && !isAddress(jobAddress)}
         errorText='Invalid address'
