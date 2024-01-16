@@ -10,7 +10,7 @@ export const useSelectorName = () => {
   const setSelectorName = useCallback(async (functionSelector: string, name: string) => {
     const data = loadLocalStorage(selectorsKey);
 
-    const newAbiData = { ...data, [functionSelector]: name || '' };
+    const newAbiData = { ...data, [functionSelector]: name };
     saveLocalStorage(selectorsKey, newAbiData);
     setSelectors(newAbiData);
   }, []);

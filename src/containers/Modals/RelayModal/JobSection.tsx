@@ -14,10 +14,10 @@ interface JobSectionProps {
 }
 
 export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSectionProps) => {
-  const [jobAddress, setJobAddress] = useState(jobsData[jobIndex]?.job || '');
   const { modalOpen } = useModal();
   const { getAbi, abi: abiData } = useAbi();
   const { selectors: selectorsName, setSelectorName } = useSelectorName();
+  const [jobAddress, setJobAddress] = useState(jobsData[jobIndex]?.job || '');
   const [abi, setAbi] = useState('');
   const [searchAbi, setSearchAbi] = useState(true);
   const [functionSelector, setFunctionSelector] = useState('');
@@ -26,6 +26,15 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
   const CONTRACT_METHOD = 'a';
   const RAW_SELECTOR = 'b';
   const [selectedValue, setSelectedValue] = useState(CONTRACT_METHOD);
+
+  const selectorRepeated = useMemo(() => {
+    return selectors.includes(functionSelector);
+  }, [selectors, functionSelector]);
+
+  const errorText = useMemo(
+    () => (selectorRepeated ? 'Selector already added' : 'Invalid selector'),
+    [selectorRepeated],
+  );
 
   const removeSelector = (index: number) => {
     const newSelectors = [...selectors];
@@ -39,19 +48,6 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
     }
   };
 
-  const addContractMethodName = (selector: string, name: string) => {
-    setSelectorName(selector, name);
-  };
-
-  const selectorRepeated = useMemo(() => {
-    return selectors.includes(functionSelector);
-  }, [selectors, functionSelector]);
-
-  const errorText = useMemo(
-    () => (selectorRepeated ? 'Selector already added' : 'Invalid selector'),
-    [selectorRepeated],
-  );
-
   const handleChangeJobAddress = (value: string) => {
     setJobAddress(value);
     setSearchAbi(true);
@@ -64,7 +60,6 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
 
   const addNewSelector = () => {
     if (!selectors.includes(functionSelector)) {
-      setSelectorName(functionSelector, '');
       setSelectors([...selectors, functionSelector]);
       setFunctionSelector('');
     }
@@ -79,11 +74,6 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
     // to avoid infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobAddress, jobIndex, selectors]);
-
-  useEffect(() => {
-    isAddress(jobsData[jobIndex]?.job) && setJobAddress(jobsData[jobIndex]?.job);
-    isHex(jobsData[jobIndex]?.functionSelectors) && setSelectors(jobsData[jobIndex]?.functionSelectors);
-  }, [jobIndex, jobsData]);
 
   useEffect(() => {
     if (abiData[jobAddress]) {
@@ -101,6 +91,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
     if (modalOpen === ModalType.NONE) {
       setJobAddress('');
       setFunctionSelector('');
+      setSelectors([]);
       setSelectedValue(CONTRACT_METHOD);
     }
   }, [modalOpen]);
@@ -153,7 +144,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
         <DropdownContainer>
           <FunctionDropdown
             value={''}
-            setValue={addContractMethodName}
+            setValue={setSelectorName}
             setSignature={addContractMethod}
             abi={abi}
             disabled={!abi || isLoading}
