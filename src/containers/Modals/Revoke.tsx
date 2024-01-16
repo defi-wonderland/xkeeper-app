@@ -15,7 +15,7 @@ export const RevokeModal = () => {
     functionName: 'revokeRelayData',
     args: [selectedAddress, [], []],
     notificationTitle: `Relay successfully revoked`,
-    notificationMessage: getReceiptMessage(selectedAddress || '0x', 'has been revoked and is no longer active'),
+    notificationMessage: getReceiptMessage(selectedAddress!, 'has been revoked and is no longer active'),
   });
 
   const isLoading = requestStatus === Status.LOADING;
