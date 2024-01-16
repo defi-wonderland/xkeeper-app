@@ -129,7 +129,6 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
       )}
 
       {/* ABI input */}
-      {/* Temporary commented: until design is approved */}
       <DropdownLabel>New function selector</DropdownLabel>
       <AbiTextarea
         value={abi}
@@ -155,7 +154,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
       {/* Function selector */}
       {selectedValue === RAW_SELECTOR && (
         <StyledInput
-          // label='New function selector'
+          placeholder='Enter function selector...'
           value={functionSelector}
           setValue={setFunctionSelector}
           onClick={addNewSelector}
@@ -256,7 +255,6 @@ const InputLabel = styled(StyledText)(() => {
     lineHeight: '2rem',
     fontWeight: 500,
     cursor: 'default',
-    // marginBottom: '1.6rem',
     marginRight: 'auto',
   };
 });

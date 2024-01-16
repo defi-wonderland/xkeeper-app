@@ -138,7 +138,7 @@ export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => 
     fontsize: '1.6rem',
     textAlign: 'start',
     backgroundColor: 'inherit',
-    height: '4.3rem',
+    height: '4.5rem',
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     '&:hover:not(:disabled)': {
       borderColor: currentTheme.textDisabled,
