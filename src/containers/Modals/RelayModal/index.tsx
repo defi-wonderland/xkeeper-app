@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, styled } from '@mui/material';
 
 import { ActiveButton, BaseModal, CancelButton, StyledTitle, CloseButton, ConfirmText, Icon } from '~/components';
@@ -22,10 +22,12 @@ export const RelayModal = () => {
 
   const [isError, setIsError] = useState<boolean>(false);
 
+  const args = useMemo(() => [relayAddress, callersList, jobsData], [callersList, jobsData, relayAddress]);
+
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'approveRelayData',
-    args: [relayAddress, callersList, jobsData],
+    args: args,
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
   });

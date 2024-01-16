@@ -43,10 +43,9 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
   };
 
   const handleAddNewCaller = () => {
-    if (isAddress(callerAddress)) {
-      setCallersList([...callersList, callerAddress]);
-      setCallerAddress('');
-    }
+    setCallersList([...callersList, callerAddress]);
+    setCallerAddress('');
+    setIsError(false);
   };
 
   const handleRemoveCaller = (caller: string) => () => {
