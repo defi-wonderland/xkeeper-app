@@ -10,7 +10,7 @@ import { useTheme } from '~/hooks';
 
 interface FunctionDropdownProps {
   value: string;
-  setValue: (val: string) => void;
+  setValue: (selector: string, name: string) => void;
   setSignature: (val: string) => void;
   disabled?: boolean;
   abi: string;
@@ -23,7 +23,7 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
     return () => {
       const signature = getFunctionSelector(value);
       setSignature(signature);
-      setValue(value.name);
+      setValue(signature, value.name);
     };
   };
 

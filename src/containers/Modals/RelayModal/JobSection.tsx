@@ -38,8 +38,8 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
     }
   };
 
-  const addContractMethodName = (name: string) => {
-    setSelectorName(functionSelector, name);
+  const addContractMethodName = (selector: string, name: string) => {
+    setSelectorName(selector, name);
   };
 
   const selectorRepeated = useMemo(() => {
