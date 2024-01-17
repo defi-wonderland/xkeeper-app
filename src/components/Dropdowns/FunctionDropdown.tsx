@@ -59,9 +59,9 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
         <SCustomScrollbar>
           {!!availableValues &&
             availableValues.map((value: AbiFunction) => (
-              <StyledMenuItem key={value.name} onClick={createHandleMenuClick(value)}>
-                {value.name}
-              </StyledMenuItem>
+              <FunctionMenuItem key={value.name} onClick={createHandleMenuClick(value)}>
+                {`${value.name} (${getFunctionSelector(value)})`}
+              </FunctionMenuItem>
             ))}
         </SCustomScrollbar>
       </Menu>
@@ -93,4 +93,8 @@ export const BasicStyledListbox = styled('ul')(() => {
       width: '100%',
     },
   };
+});
+
+const FunctionMenuItem = styled(StyledMenuItem)({
+  textTransform: 'none',
 });
