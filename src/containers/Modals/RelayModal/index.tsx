@@ -19,6 +19,7 @@ export const RelayModal = () => {
 
   const [jobsCount, setJobsCount] = useState<number>(0);
   const [jobsData, setJobsData] = useState<JobsData>([]);
+  const [isEditRelay, setIsEditRelay] = useState<boolean>(false);
 
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -44,6 +45,7 @@ export const RelayModal = () => {
       setCallersList(selectedRelay[1].callers);
       setJobsData(selectedRelay[1].jobsData);
       setJobsCount(selectedRelay[1].jobsData.length);
+      setIsEditRelay(true);
     }
   }, [selectedItem?.selectedAddress, selectedVault]);
 
@@ -54,6 +56,7 @@ export const RelayModal = () => {
       setCallersList([]);
       setJobsData([]);
       setJobsCount(0);
+      setIsEditRelay(false);
     }
   }, [modalOpen]);
 
@@ -84,6 +87,7 @@ export const RelayModal = () => {
           isLoading={isLoading}
           isError={isError}
           setIsError={setIsError}
+          isEditRelay={isEditRelay}
         />
 
         {/* Buttons Section */}

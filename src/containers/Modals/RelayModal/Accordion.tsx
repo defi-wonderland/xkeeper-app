@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Box, styled } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -23,6 +23,7 @@ interface StyledAccordionProps {
   isLoading: boolean;
   isError: boolean;
   setIsError: (value: boolean) => void;
+  isEditRelay?: boolean;
 }
 
 export const StyledAccordion = ({
@@ -36,6 +37,7 @@ export const StyledAccordion = ({
   setJobsData,
   jobsCount,
   setJobsCount,
+  isEditRelay,
 }: StyledAccordionProps) => {
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
   const [callerExpanded, setCallerExpanded] = useState<boolean>(false);
@@ -69,6 +71,14 @@ export const StyledAccordion = ({
     return jobsData[jobsData.length - 1].job !== '';
   }, [jobsData]);
 
+  const isDefaultExpanded = useCallback(
+    (index: number) => {
+      if (isEditRelay) return false;
+      return index === jobsCount - 1;
+    },
+    [isEditRelay, jobsCount],
+  );
+
   return (
     <AccordionContainer>
       <AccordionBox disableGutters expanded={callerExpanded}>
@@ -94,7 +104,7 @@ export const StyledAccordion = ({
       </AccordionBox>
 
       {jobsList.map((_value, index) => (
-        <JobAccordionBox disableGutters key={jobsData[index]?.job} defaultExpanded={index === jobsCount - 1}>
+        <JobAccordionBox disableGutters key={jobsData[index]?.job} defaultExpanded={isDefaultExpanded(index)}>
           <SAccordionSummary
             expandIcon={
               <>
