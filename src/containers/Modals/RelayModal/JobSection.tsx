@@ -36,6 +36,10 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
     [selectorRepeated],
   );
 
+  const isAddable = useMemo(() => {
+    return !!functionSelector && !isLoading && isHex(functionSelector) && functionSelector.length === 10;
+  }, [functionSelector, isLoading]);
+
   const removeSelector = (index: number) => {
     const newSelectors = [...selectors];
     newSelectors.splice(index, 1);
@@ -173,7 +177,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
           dataTestId='function-selector-input'
           error={selectorRepeated}
           errorText={errorText}
-          addable={!!functionSelector && !isLoading && isHex(functionSelector) && functionSelector.length === 10}
+          addable={isAddable}
         />
       )}
 
