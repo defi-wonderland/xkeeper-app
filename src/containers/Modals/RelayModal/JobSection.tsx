@@ -180,7 +180,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
       {/* Selected function selectors */}
       {!!selectors.length && (
         <>
-          <InputLabel>Selectors</InputLabel>
+          <SelectorsLabel>Selectors</SelectorsLabel>
           {selectors.map((selector, index) => (
             <StyledInput
               key={selector + index}
@@ -254,6 +254,9 @@ const InputLabel = styled(StyledText)(() => {
     fontWeight: 500,
     cursor: 'default',
     marginRight: 'auto',
-    marginBottom: '1.6rem',
   };
+});
+
+const SelectorsLabel = styled(InputLabel)({
+  marginBottom: '1.6rem',
 });
