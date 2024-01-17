@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, styled } from '@mui/material';
 
 import { TitleContainer, ButtonsContainer } from '~/containers';
@@ -26,6 +26,7 @@ export const AddMetadataModal = () => {
   const [description, setDescription] = useState<string>('');
 
   const vaultAddress = selectedVault?.address || '0x';
+  const isEditMetadata = !!selectedVault?.name || !!selectedVault?.description;
 
   const { handleSendTransaction, writeAsync } = useXKeeperMetadata({
     contractAddress: addresses.xKeeperMetadata,
@@ -39,12 +40,26 @@ export const AddMetadataModal = () => {
     setDescription('');
   };
 
+  useEffect(() => {
+    if (selectedVault?.name || selectedVault?.description) {
+      setName(selectedVault?.name || '');
+      setDescription(selectedVault?.description || '');
+    }
+  }, [selectedVault?.description, selectedVault?.name]);
+
+  useEffect(() => {
+    if (modalOpen === ModalType.NONE) {
+      setName('');
+      setDescription('');
+    }
+  }, [modalOpen]);
+
   return (
     <BaseModal open={modalOpen === ModalType.ADD_METADATA}>
       <BigModal data-test='add-metadata-modal'>
         <SBox>
           <TitleContainer>
-            <StyledTitle>Add Metadata</StyledTitle>
+            <StyledTitle>{isEditMetadata ? 'Edit' : 'Add'} Metadata</StyledTitle>
 
             <CloseButton variant='text' onClick={closeModal}>
               <Icon name='close' size='2.4rem' color={currentTheme.textTertiary} />
