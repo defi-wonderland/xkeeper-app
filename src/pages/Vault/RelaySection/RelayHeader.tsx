@@ -114,7 +114,7 @@ const TitleContainer = styled(Box)({
 
 const SSubTitle = styled(SubTitle)({
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'row',
   alignItems: 'start',
   justifyContent: 'start',
   gap: '1.2rem',
@@ -157,4 +157,5 @@ const RowButton = styled(Box)(() => {
 
 const CallersText = styled(StyledText)({
   fontWeight: '500',
+  paddingTop: '0.3rem',
 });
