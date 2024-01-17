@@ -16,7 +16,7 @@ export const NoUserVaults = ({ text, icon, button }: NoUserVaultsProps) => {
       <SText>{text}</SText>
 
       {button && (
-        <ActiveButton href='#/create'>
+        <ActiveButton href='create'>
           <Icon name='plus' size='2rem' />
           Create Vault
         </ActiveButton>

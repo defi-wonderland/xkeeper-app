@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 
-import { SectionHeader, Title, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
-import { STooltip, StyledText, SPagination } from '~/components';
-import { NoDataContainer } from './EnabledRelays';
+import { SectionHeader, SCard, ColumnTitle, RowText, STableRow, STable } from './Tokens';
+import { STooltip, StyledText, SPagination, StyledTitle } from '~/components';
 import { useAlias, useFetchVaultActivity, useStateContext, useTheme } from '~/hooks';
-import { Text } from './EnabledJobs';
+import { NoDataContainer } from '~/containers';
 import { Status } from '~/types';
 import {
   formatDataNumber,
@@ -48,7 +47,7 @@ export const Activity = () => {
   return (
     <SCard variant='outlined'>
       <SectionHeader>
-        <Title>Activity</Title>
+        <StyledTitle>Activity</StyledTitle>
       </SectionHeader>
 
       {!!events.length && (
@@ -144,7 +143,7 @@ export const Activity = () => {
       )}
 
       {!events.length && (
-        <NoDataContainer>
+        <NoDataContainer dataTest='no-activity'>
           <StyledText>
             {requestStatus === Status.ERROR && 'Error loading activity.'}
             {requestStatus === Status.SUCCESS && 'No activity found.'}
@@ -155,6 +154,16 @@ export const Activity = () => {
     </SCard>
   );
 };
+
+const Text = styled('p')({
+  display: 'block',
+  margin: '0.2rem 0',
+  width: 'fit-content',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  maxWidth: '20rem',
+});
 
 const SText = styled(Text)({
   maxWidth: '12rem',

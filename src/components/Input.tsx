@@ -7,7 +7,7 @@ import { TextButton } from '~/containers';
 
 interface InputProps {
   value: string;
-  setValue: (value: string) => void;
+  setValue?: (value: string) => void;
   label?: string;
   description?: string | React.ReactNode;
   placeholder?: string;
@@ -77,7 +77,7 @@ export const StyledInput = ({
           isError={error}
           fullWidth
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => setValue && setValue(e.target.value)}
           onKeyUp={onKeyPress}
           placeholder={placeholder}
           error={error}

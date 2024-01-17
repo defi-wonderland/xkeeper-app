@@ -8,9 +8,10 @@ import { copyData, truncateAddress } from '~/utils';
 interface AddressChipProps {
   text: string;
   label?: string;
+  externalLink?: boolean;
 }
 
-export const AddressChip = ({ text, label }: AddressChipProps) => {
+export const AddressChip = ({ text, label, externalLink = true }: AddressChipProps) => {
   const { currentNetwork } = useStateContext();
   const { currentTheme } = useTheme();
   const [copied, setCopied] = useState(false);
@@ -26,7 +27,7 @@ export const AddressChip = ({ text, label }: AddressChipProps) => {
   return (
     <SBox onClick={handleCopy}>
       <TextContainer>
-        <SText>{label}:</SText>
+        {label && <SText>{`${label}:`}</SText>}
         <STooltip text={text} address>
           <SText>{truncateAddress(text)}</SText>
         </STooltip>
@@ -39,11 +40,13 @@ export const AddressChip = ({ text, label }: AddressChipProps) => {
         </IconContainer>
       </STooltip>
 
-      <ExternalLink href={`${currentNetwork.scanner}/address/${text}`} target='_blank'>
-        <IconContainer>
-          <Icon name='external-link' color={currentTheme.textDisabled} size='1.6rem' />
-        </IconContainer>
-      </ExternalLink>
+      {externalLink && (
+        <ExternalLink href={`${currentNetwork.scanner}/address/${text}`} target='_blank'>
+          <IconContainer>
+            <Icon name='external-link' color={currentTheme.textDisabled} size='1.6rem' />
+          </IconContainer>
+        </ExternalLink>
+      )}
     </SBox>
   );
 };
@@ -96,6 +99,9 @@ const ExternalLink = styled('a')(() => {
 export const IconContainer = styled('div')(() => {
   const { currentTheme } = useTheme();
   return {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     color: currentTheme.addressChipIconColor,
     'i:hover:before': {
       color: currentTheme.textSecondary,

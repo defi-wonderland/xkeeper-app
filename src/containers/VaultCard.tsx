@@ -4,7 +4,7 @@ import { ChainIcon, Icon, InfoChip, NoRelayChip, RelayChip, STooltip, StyledText
 import { formatDataNumber, getRelayName } from '~/utils';
 import { useAlias, useStateContext, useTheme } from '~/hooks';
 import { VaultData } from '~/types';
-import { Description } from '~/pages';
+import { Description } from '~/pages/Vault/VaultHeader';
 
 interface VaultCardProps {
   vaultData: VaultData;

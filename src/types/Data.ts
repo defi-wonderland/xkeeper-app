@@ -11,26 +11,42 @@ export interface VaultData {
   chain: string;
   owner: Address | undefined;
   name: string | undefined;
+  nativeToken: Address;
   relays: RelayData;
-  jobs: JobData;
   tokens: TokenData[];
   totalValue: string;
   events?: EventData[];
   description?: string;
 }
 
-export interface RelayData {
-  [relayAddress: string]: Address[];
-}
+export type RelayResult = (
+  | {
+      error: Error;
+      result?: undefined;
+      status: 'failure';
+    }
+  | {
+      error?: undefined;
+      result: RelayData;
+      status: 'success';
+    }
+)[];
 
-export interface JobData {
-  [jobAddress: string]: string[];
+export type RelayDataResult = [Address[], JobsData];
+
+export type JobData = { job: string; functionSelectors: string[] };
+export type JobsData = JobData[];
+
+export interface RelayData {
+  [relayAddress: string]: {
+    callers: Address[];
+    jobsData: JobsData;
+  };
 }
 
 export interface SelectedItem {
-  type: string;
-  address: Address;
-  params: Hex[];
+  type?: OptionsType;
+  selectedAddress?: string;
 }
 
 export interface TokenData {
@@ -80,4 +96,4 @@ export interface PriceData {
     };
   };
 }
-export type OptionsType = 'vault' | 'job' | 'relay';
+export type OptionsType = 'vault' | 'job' | 'caller' | 'relay';

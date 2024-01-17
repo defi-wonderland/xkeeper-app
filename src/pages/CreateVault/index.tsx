@@ -3,18 +3,20 @@ import { Box, Typography, styled } from '@mui/material';
 import { Address } from 'wagmi';
 import { isAddress } from 'viem';
 
-import { DataSection as DescriptionContainer, Title, Header } from '~/pages';
+import { DataSection as DescriptionContainer, Header, Title } from '~/pages/Vault/VaultHeader';
 import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton, ConfirmText } from '~/components';
 import { useStateContext, useTheme, useVaultFactory } from '~/hooks';
 import { Status } from '~/types';
+import { getConfig } from '~/config';
 
 export const CreateVault = () => {
+  const { vaultFactoryVersion } = getConfig();
   const { availableChains, userAddress, currentNetwork } = useStateContext();
 
   const [vaultOwner, setVaultOwner] = useState(userAddress || '');
   const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
   const { requestStatus, handleSendTransaction, writeAsync } = useVaultFactory({
-    args: [vaultOwner as Address],
+    ownerAddress: vaultOwner as Address,
     selectedChain,
   });
 
@@ -36,7 +38,7 @@ export const CreateVault = () => {
         <Header>
           <TitleBox>
             <Title>Create Vault</Title>
-            <VersionChip text='V1.0.0' />
+            <VersionChip text={vaultFactoryVersion} />
           </TitleBox>
 
           <DescriptionContainer>

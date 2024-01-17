@@ -7,34 +7,31 @@ import { ModalType, Status } from '~/types';
 
 export const RevokeModal = () => {
   const { selectedItem, selectedVault } = useStateContext();
-  const { setModalOpen, modalOpen } = useModal();
-
-  const type = selectedItem.type;
-  const value = selectedItem.address;
-
-  const functionName = selectedItem?.type === 'relay' ? 'revokeRelayCallers' : 'revokeJobSelectors';
+  const { modalOpen, closeModal } = useModal();
+  const { selectedAddress } = selectedItem || {};
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
-    functionName: functionName,
-    args: [selectedItem.address, selectedItem.params],
-    notificationTitle: `${type} successfully revoked`,
-    notificationMessage: getReceiptMessage(value, 'has been revoked and is no longer active'),
+    functionName: 'revokeRelayData',
+    args: [selectedAddress, [], []],
+    notificationTitle: `Relay successfully revoked`,
+    notificationMessage: getReceiptMessage(selectedAddress || '0x', 'has been revoked and is no longer active'),
   });
+
   const isLoading = requestStatus === Status.LOADING;
 
   return (
     <BaseModal open={modalOpen === ModalType.REVOQUE}>
       <SBox>
-        <StyledTitle>Revoke {type}</StyledTitle>
+        <StyledTitle>Revoke Relay</StyledTitle>
 
         <StyledText>
-          Are you sure you want to revoke <span>{truncateAddress(value)}</span>? This action cannot be undone.
+          Are you sure you want to revoke <span>{truncateAddress(selectedAddress)}</span>? This action cannot be undone.
         </StyledText>
       </SBox>
 
       <ButtonsContainer>
-        <CancelButton variant='outlined' disabled={isLoading} onClick={() => setModalOpen(ModalType.NONE)}>
+        <CancelButton variant='outlined' disabled={isLoading} onClick={closeModal}>
           Cancel
         </CancelButton>
 

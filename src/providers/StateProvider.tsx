@@ -36,8 +36,8 @@ type ContextType = {
 
   availableChains: Chains;
 
-  selectedItem: SelectedItem;
-  setSelectedItem: (val: SelectedItem) => void;
+  selectedItem?: SelectedItem;
+  setSelectedItem: (val?: SelectedItem) => void;
 
   vaults: VaultData[];
   setVaults: (val: VaultData[]) => void;
@@ -63,11 +63,7 @@ export const StateProvider = ({ children }: StateProps) => {
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
   const [vaults, setVaults] = useState<VaultData[]>([]);
-  const [selectedItem, setSelectedItem] = useState<SelectedItem>({
-    type: '',
-    address: '0x',
-    params: [],
-  });
+  const [selectedItem, setSelectedItem] = useState<SelectedItem | undefined>();
 
   const [totalRequestCount, setTotalRequestCount] = useState<number>();
   const [requestAmount, setRequestAmount] = useState<number>(vaultsPerBatch);
@@ -191,11 +187,7 @@ export const StateProvider = ({ children }: StateProps) => {
   // Reset selected item when modal is close
   useEffect(() => {
     if (modalOpen === ModalType.NONE) {
-      setSelectedItem({
-        type: '',
-        address: '0x',
-        params: [],
-      });
+      setSelectedItem(undefined);
     }
   }, [modalOpen]);
 

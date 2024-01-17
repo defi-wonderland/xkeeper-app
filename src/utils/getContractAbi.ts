@@ -15,7 +15,7 @@ export const getAbiFromSafeApi = async (chainName: string, address: string) => {
     const jsonData = await response.json();
     return JSON.stringify(jsonData.contractAbi.abi);
   } catch (error) {
-    console.error('error fetching abi from safe', error);
+    console.error('Error fetching ABI from safe');
   }
 };
 
@@ -27,7 +27,7 @@ export const getAbiFromEtherscanApi = async (apiUrl: string, address: string) =>
     const formattedAbi = JSON.parse(jsonData.result);
     return JSON.stringify(formattedAbi);
   } catch (error) {
-    console.error('error fetching abi from etherscan', error);
+    console.error('Error fetching ABI from etherscan');
   }
 };
 
@@ -41,7 +41,7 @@ export const getContractAbi = async (chain: string, apiUrl: string, contractAddr
 
     return safeAbi || etherscanAbi;
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching ABI');
     return '';
   }
 };

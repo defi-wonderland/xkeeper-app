@@ -16,6 +16,7 @@ export interface Constants {
   DEFAULT_WETH_ADDRESS: string;
   addresses: Addresses;
   availableChains: Chains;
+  vaultFactoryVersion: string;
 }
 
 export interface Addresses {
@@ -25,6 +26,7 @@ export interface Addresses {
     GelatoRelay: Address;
     OpenRelay: Address;
     Keep3rRelay: Address;
+    Keep3rBondedRelay: Address;
   };
 }
 

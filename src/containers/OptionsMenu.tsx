@@ -2,35 +2,25 @@ import { Dropdown, Menu, MenuButton, MenuItem } from '@mui/base';
 import { styled } from '@mui/system';
 
 import { useModal, useStateContext, useTheme } from '~/hooks';
-import { ModalType, OptionsType, SelectedItem } from '~/types';
-import { Icon } from './Icon';
+import { ModalType } from '~/types';
+import { Icon } from '../components/Icon';
 
 export interface OptionsMenuProps {
-  address: string;
-  params: string[];
-  type: OptionsType;
+  relayAddress: string;
 }
 
-export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
-  const { userAddress, selectedVault, setSelectedItem } = useStateContext();
+export function OptionsMenu({ relayAddress }: OptionsMenuProps) {
+  const { setSelectedItem } = useStateContext();
   const { setModalOpen } = useModal();
   const { currentTheme } = useTheme();
-  const selectedItem = { type, address, params } as SelectedItem;
-
-  const isConnectedAndOwner = userAddress && selectedVault?.owner === userAddress;
-
-  const handleOpenEditModal = () => {
-    setSelectedItem(selectedItem);
-    setModalOpen(type === 'job' ? ModalType.ADD_JOB : ModalType.ADD_RELAY);
-  };
 
   const handleOpenEditModalAlias = () => {
-    setSelectedItem(selectedItem);
-    setModalOpen(ModalType.EDIT_ALIAS);
+    setSelectedItem({ selectedAddress: relayAddress });
+    setModalOpen(ModalType.ADD_RELAY);
   };
 
   const handleOpenRevokeModal = () => {
-    setSelectedItem(selectedItem);
+    setSelectedItem({ selectedAddress: relayAddress });
     setModalOpen(ModalType.REVOQUE);
   };
 
@@ -44,32 +34,21 @@ export function OptionsMenu({ type, address, params }: OptionsMenuProps) {
       {/* Dropdown Options */}
 
       <Menu slots={{ listbox: StyledListbox }}>
-        {!isConnectedAndOwner && (
-          <StyledMenuItem onClick={handleOpenEditModalAlias}>
+        <>
+          <StyledMenuItem onClick={handleOpenEditModalAlias} data-test='edit-options-button'>
             <EditContainer>
               <Icon name='pencil-square' size='2rem' />
-              <p>Edit alias</p>
+              <p>Edit Relay</p>
             </EditContainer>
           </StyledMenuItem>
-        )}
 
-        {isConnectedAndOwner && (
-          <>
-            <StyledMenuItem onClick={handleOpenEditModal} data-test={`edit-alias-button`}>
-              <EditContainer>
-                <Icon name='pencil-square' size='2rem' />
-                <p>Edit {type}</p>
-              </EditContainer>
-            </StyledMenuItem>
-
-            <StyledMenuItem onClick={handleOpenRevokeModal} data-test={`revoke-button`}>
-              <RevokeContainer>
-                <Icon name='x-circle' size='2rem' />
-                <p>Revoke {type}</p>
-              </RevokeContainer>
-            </StyledMenuItem>
-          </>
-        )}
+          <StyledMenuItem onClick={handleOpenRevokeModal} data-test='revoke-button'>
+            <RevokeContainer>
+              <Icon name='x-circle' size='2rem' />
+              <p>Revoke Relay</p>
+            </RevokeContainer>
+          </StyledMenuItem>
+        </>
       </Menu>
     </Dropdown>
   );
@@ -103,6 +82,7 @@ const StyledMenuItem = styled(MenuItem)(() => {
 const TriggerButton = styled(MenuButton)(() => {
   const { currentTheme } = useTheme();
   return {
+    maxWidth: '8.5rem',
     border: 'none',
     borderRadius: currentTheme.borderRadius,
     fontsize: '1.6rem',
