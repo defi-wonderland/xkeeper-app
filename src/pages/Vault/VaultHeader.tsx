@@ -16,7 +16,7 @@ import { VaultData } from '~/types';
 
 interface VaultHeaderProps {
   handleOpenAddMetadata: () => void;
-  handleEditAlias: () => void;
+  handleEditMetadata: () => void;
   selectedVault?: VaultData;
   userAddress?: string;
   vaultTitle: string;
@@ -25,7 +25,7 @@ interface VaultHeaderProps {
 
 export const VaultHeader = ({
   handleOpenAddMetadata,
-  handleEditAlias,
+  handleEditMetadata,
   selectedVault,
   vaultTitle,
   userAddress,
@@ -42,19 +42,23 @@ export const VaultHeader = ({
           <TitleBox>
             <Title data-test='vault-name'>{vaultTitle}</Title>
 
-            <STooltip text='Edit vault alias'>
-              <EditAliasButton variant='text' onClick={handleEditAlias}>
-                <Icon name='pencil-square' color={currentTheme.textDisabled} size='2rem' />
-              </EditAliasButton>
-            </STooltip>
+            {userAddress && selectedVault?.owner === userAddress && (
+              <STooltip text='Edit vault metadata'>
+                <EditAliasButton variant='text' onClick={handleEditMetadata}>
+                  <Icon name='pencil-square' color={currentTheme.textDisabled} size='2rem' />
+                </EditAliasButton>
+              </STooltip>
+            )}
           </TitleBox>
 
           {/* Owner Icon */}
-          <STooltip text='You own this vault'>
-            <SInfoChip>
-              <Icon name='owned' />
-            </SInfoChip>
-          </STooltip>
+          {userAddress && selectedVault?.owner === userAddress && (
+            <STooltip text='You own this vault'>
+              <SInfoChip>
+                <Icon name='owned' />
+              </SInfoChip>
+            </STooltip>
+          )}
         </TitleContainer>
 
         <DataSection>
@@ -79,7 +83,7 @@ export const VaultHeader = ({
             <DescriptionChip>
               <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.warningChipColor} />
               Define your vault metadata for keepers to better understand your jobs.
-              {selectedVault?.owner === userAddress && (
+              {userAddress && selectedVault?.owner === userAddress && (
                 // Add vault metadata button
                 <DescriptionButton
                   data-test='add-vault-metadata-button'

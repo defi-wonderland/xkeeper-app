@@ -44,7 +44,7 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
           </STooltip>
         </Box>
 
-        {selectedVault?.owner === userAddress && (
+        {userAddress && selectedVault?.owner === userAddress && (
           <ButtonsContainer>
             {/* Options Menu */}
             <RowButton data-test='relay-options'>

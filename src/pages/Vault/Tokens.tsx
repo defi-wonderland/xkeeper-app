@@ -29,7 +29,7 @@ export const Tokens = () => {
         </Box>
 
         <ButtonsContainer>
-          {selectedVault?.owner === userAddress && (
+          {userAddress && selectedVault?.owner === userAddress && (
             <CancelButton
               variant='outlined'
               onClick={() => setModalOpen(ModalType.WITHDRAW)}

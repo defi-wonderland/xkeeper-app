@@ -10,7 +10,7 @@ export const EnabledRelays = () => {
 
   return (
     <>
-      {selectedVault?.owner === userAddress && (
+      {userAddress && selectedVault?.owner === userAddress && (
         <SContainer>
           <StyledTitle>Enabled Relays</StyledTitle>
           <ActiveButton
