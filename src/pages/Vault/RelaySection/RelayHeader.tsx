@@ -32,18 +32,16 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
       <TitleContainer>
         <Box>
           <StyledTitle>{aliasData[relayAddress] || getRelayName(relayAddress)}</StyledTitle>
-          <Box>
-            <STooltip text={relayAddress} address>
-              {' '}
-              <StyledText onClick={handleCopy}>{truncateAddress(relayAddress)}</StyledText>
-            </STooltip>
-            <STooltip text={copied ? 'Copied!' : 'Copy Address'}>
-              <IconContainer>
-                {!copied && <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />}
-                {!!copied && <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />}
-              </IconContainer>
-            </STooltip>
-          </Box>
+
+          <STooltip text={relayAddress} address>
+            <StyledText onClick={handleCopy}>{truncateAddress(relayAddress)}</StyledText>
+          </STooltip>
+          <STooltip text={copied ? 'Copied!' : 'Copy Address'}>
+            <IconContainer>
+              {!copied && <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />}
+              {!!copied && <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />}
+            </IconContainer>
+          </STooltip>
         </Box>
 
         {selectedVault?.owner === userAddress && (
@@ -93,7 +91,7 @@ const TitleContainer = styled(Box)({
   div: {
     display: 'flex',
     flexDirection: 'row',
-    gap: '0.6rem',
+    gap: '1rem',
     alignItems: 'center',
     i: {
       cursor: 'pointer',

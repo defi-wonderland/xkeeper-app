@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material';
 import { Theme, ThemeName } from '~/types';
 import { zIndex } from '~/utils';
 
-export const getMuiThemeConfig = (currentTheme: Theme, mode: ThemeName) => {
+export const getMuiGLobalConfig = (currentTheme: Theme, mode: ThemeName) => {
   return createTheme({
     palette: {
       mode,

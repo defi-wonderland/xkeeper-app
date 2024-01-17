@@ -74,9 +74,7 @@ export const RelaySection = ({ relayAddress, setRelayAddress, isLoading }: Relay
         />
       )}
 
-      {isAddress(relayAddress) && !customRelay && (
-        <StyledInput sx={{ mt: '-1rem' }} value={relayAddress} setValue={() => {}} onClick={() => {}} copyable />
-      )}
+      {isAddress(relayAddress) && !customRelay && <StyledInput sx={{ mt: '-1rem' }} value={relayAddress} copyable />}
     </>
   );
 };

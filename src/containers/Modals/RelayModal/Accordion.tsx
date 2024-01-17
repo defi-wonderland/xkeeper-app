@@ -37,7 +37,6 @@ export const StyledAccordion = ({
   jobsCount,
   setJobsCount,
 }: StyledAccordionProps) => {
-  const { currentTheme } = useTheme();
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
   const [callerExpanded, setCallerExpanded] = useState<boolean>(false);
   const jobsList = new Array(jobsData.length).fill(0);
@@ -76,13 +75,7 @@ export const StyledAccordion = ({
         <SAccordionSummary
           onClick={handleAddCaller}
           disabled={!isAddress(relayAddress)}
-          expandIcon={
-            <Icon
-              name={!callersList.length && addCallerOpen ? 'plus' : 'chevron-down'}
-              color={currentTheme.textDisabled}
-              size='2rem'
-            />
-          }
+          expandIcon={<Icon name={!callersList.length && addCallerOpen ? 'plus' : 'chevron-down'} />}
         >
           <STitle>{callersList.length ? `Callers (${callersList.length})` : 'Add Callers'}</STitle>
         </SAccordionSummary>
@@ -105,12 +98,7 @@ export const StyledAccordion = ({
           <SAccordionSummary
             expandIcon={
               <>
-                <SIcon
-                  name='close'
-                  color={currentTheme.textDisabled}
-                  size='2rem'
-                  onClick={() => handleRemoveJob(index)}
-                />
+                <SIcon name='close' onClick={() => handleRemoveJob(index)} />
               </>
             }
           >
@@ -130,7 +118,7 @@ export const StyledAccordion = ({
         <SAccordionSummary
           disabled={!isAddress(relayAddress) || !allowAddNewJob || isLoading}
           onClick={handleAddJob}
-          expandIcon={<Icon name='plus' color={currentTheme.textDisabled} size='2rem' />}
+          expandIcon={<Icon name='plus' />}
         >
           <STitle>Add Job</STitle>
         </SAccordionSummary>
@@ -161,8 +149,14 @@ const AccordionContainer = styled(Box)(() => {
 });
 
 const SAccordionSummary = styled(AccordionSummary)(() => {
+  const { currentTheme } = useTheme();
+
   return {
     padding: '1.2rem 0',
+    i: {
+      fontSize: '2rem',
+      color: currentTheme.textDisabled,
+    },
   };
 });
 
@@ -183,15 +177,12 @@ const JobAccordionBox = styled(AccordionBox)(() => {
   };
 });
 
-const SAccordionDetails = styled(AccordionDetails)(() => {
-  return {
-    padding: '0',
-  };
+const SAccordionDetails = styled(AccordionDetails)({
+  padding: '0',
 });
 
 const SIcon = styled(Icon)(() => {
   const { currentTheme } = useTheme();
-
   return {
     cursor: 'pointer',
     '&:hover::before': {
