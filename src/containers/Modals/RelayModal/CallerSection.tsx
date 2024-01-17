@@ -3,7 +3,7 @@ import { Button, styled } from '@mui/material';
 import { isAddress } from 'viem';
 
 import { SSwitch, StyledInput, StyledText } from '~/components';
-import { useModal, useTheme } from '~/hooks';
+import { useModal, useStateContext, useTheme } from '~/hooks';
 import { anyCaller } from '~/utils';
 import { ModalType } from '~/types';
 
@@ -17,6 +17,7 @@ interface CallerSectionProps {
 }
 
 export const CallerSection = ({ callersList, setCallersList, isLoading, setIsError }: CallerSectionProps) => {
+  const { selectedVault, selectedItem } = useStateContext();
   const { modalOpen } = useModal();
   const [callerAddress, setCallerAddress] = useState<string>('');
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
@@ -36,7 +37,9 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
       setCallersList([anyCaller]);
       setCallerAddress(anyCaller);
     } else {
-      setCallersList([]);
+      const relays = Object.entries(selectedVault?.relays || {});
+      const selectedRelay = relays.find((relay) => relay[0] === selectedItem?.selectedAddress);
+      setCallersList(selectedRelay ? selectedRelay[1].callers : []);
       setCallerAddress('');
     }
     setAllowAnyCaller(newValue);
