@@ -4,7 +4,15 @@ import { Address } from 'wagmi';
 import { isAddress } from 'viem';
 
 import { DataSection as DescriptionContainer, Header, Title } from '~/pages/Vault/VaultHeader';
-import { BreadCrumbs, VersionChip, ChainDropdown, StyledInput, ActiveButton, ConfirmText } from '~/components';
+import {
+  BreadCrumbs,
+  VersionChip,
+  ChainDropdown,
+  StyledInput,
+  ActiveButton,
+  ConfirmText,
+  MadeByWonderland,
+} from '~/components';
 import { useStateContext, useTheme, useVaultFactory } from '~/hooks';
 import { Status } from '~/types';
 import { getConfig } from '~/config';
@@ -82,6 +90,9 @@ export const CreateVault = () => {
           </CreateButton>
         </ButtonContainer>
       </CreateContainer>
+
+      {/* Made By Wonderland Button */}
+      <MadeByWonderland />
     </PageContainer>
   );
 };
