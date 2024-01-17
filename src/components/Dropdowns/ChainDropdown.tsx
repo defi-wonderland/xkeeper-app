@@ -72,7 +72,7 @@ export const StyledListbox = styled('ul')(() => {
     boxSizing: 'border-box',
     padding: '6px',
     margin: '12px 0',
-    borderRadius: '12px',
+    borderRadius: currentTheme.borderRadius,
     overflow: 'auto',
     outline: '0px',
     background: 'inherit',
