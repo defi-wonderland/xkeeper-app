@@ -2,7 +2,7 @@ import { Box, Radio, styled } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { isAddress, isHex } from 'viem';
 
-import { StyledInput, StyledText, FunctionDropdown, STextarea } from '~/components';
+import { StyledText, FunctionDropdown, STextarea, StyledInput } from '~/components';
 import { useAbi, useModal, useSelectorName, useTheme } from '~/hooks';
 import { JobsData, ModalType } from '~/types';
 
@@ -110,24 +110,6 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
         errorText='Invalid address'
       />
 
-      {/* Function selector */}
-      {!!selectors.length && (
-        <>
-          <InputLabel sx={{ mb: '1.6rem' }}>Selectors</InputLabel>
-          {selectors.map((selector, index) => (
-            <StyledInput
-              key={selector + index}
-              value={selectorsName[selector] ? `${selectorsName[selector]} (${selector})` : selector}
-              setValue={() => null}
-              dataTestId='function-selector-input'
-              onClick={() => removeSelector(index)}
-              removable
-              sx={{ mt: '-1rem' }}
-            />
-          ))}
-        </>
-      )}
-
       {/* ABI input */}
       <DropdownLabel>New function selector</DropdownLabel>
       <AbiTextarea
@@ -192,8 +174,24 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
           error={selectorRepeated}
           errorText={errorText}
           addable={!!functionSelector && !isLoading && isHex(functionSelector) && functionSelector.length === 10}
-          sx={{ marginTop: '1rem' }}
         />
+      )}
+
+      {/* Selected function selectors */}
+      {!!selectors.length && (
+        <>
+          <InputLabel>Selectors</InputLabel>
+          {selectors.map((selector, index) => (
+            <StyledInput
+              key={selector + index}
+              value={selectorsName[selector] ? `${selectorsName[selector]} (${selector})` : selector}
+              dataTestId='function-selector-item'
+              onClick={() => removeSelector(index)}
+              sx={{ mt: '-1rem' }}
+              removable
+            />
+          ))}
+        </>
       )}
     </>
   );
@@ -256,5 +254,6 @@ const InputLabel = styled(StyledText)(() => {
     fontWeight: 500,
     cursor: 'default',
     marginRight: 'auto',
+    marginBottom: '1.6rem',
   };
 });
