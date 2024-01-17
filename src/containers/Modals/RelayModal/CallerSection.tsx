@@ -70,7 +70,7 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
     <InputsContainer>
       {/* Callers Input */}
 
-      <InputLabel>New Caller</InputLabel>
+      <InputLabel>New caller</InputLabel>
       <StyledInput
         value={callerAddress}
         setValue={setCallerAddress}
@@ -98,7 +98,6 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
               sx={{ mt: '-1rem' }}
               key={caller}
               value={caller}
-              setValue={() => {}}
               onClick={handleRemoveCaller(caller)}
               disabled={allowAnyCaller || isLoading}
               removable

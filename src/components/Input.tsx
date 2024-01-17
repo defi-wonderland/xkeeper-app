@@ -77,7 +77,7 @@ export const StyledInput = ({
         <SOutlinedInput
           data-test={dataTestId}
           isError={error}
-          isRemovable={removable}
+          isRemovable={!setValue && removable}
           fullWidth
           value={value}
           onChange={(e) => setValue && setValue(e.target.value)}

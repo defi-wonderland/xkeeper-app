@@ -18,14 +18,14 @@ interface RelaySectionProps {
 export const RelaySection = ({ relayAddress, setRelayAddress, isLoading }: RelaySectionProps) => {
   const { addresses } = getConfig();
   const { modalOpen } = useModal();
-  const availableValues = useMemo(() => [...Object.values(addresses.relays), 'Choose Relay'], [addresses.relays]);
   const [customRelay, setCustomRelay] = useState(false);
   const { selectedItem } = useStateContext();
-
   const { selectedAddress: selectedRelayAddress } = selectedItem || {};
 
+  const availableValues = useMemo(() => [...Object.values(addresses.relays), 'Choose relay'], [addresses.relays]);
+
   const dropdownValue = useMemo(
-    () => getRelayName(relayAddress, selectedRelayAddress ? 'Custom Relay' : 'Choose Relay'),
+    () => getRelayName(relayAddress, selectedRelayAddress ? 'Custom relay' : 'Choose relay'),
     [relayAddress, selectedRelayAddress],
   );
 

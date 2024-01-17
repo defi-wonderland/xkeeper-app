@@ -155,6 +155,7 @@ export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => 
     },
     p: {
       fontSize: '1.6rem',
+      textTransform: 'none',
     },
     img: {
       width: iconSize,
