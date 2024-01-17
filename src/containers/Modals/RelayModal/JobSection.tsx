@@ -102,7 +102,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
       <StyledInput
         dataTestId='job-address-input'
         label='Job address'
-        placeholder='Enter Job address...'
+        placeholder='Enter job address...'
         value={jobAddress}
         setValue={handleChangeJobAddress}
         disabled={isLoading}
@@ -138,35 +138,6 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
         onChange={(e) => setAbi(e.target.value)}
       />
 
-      {/* Function dropdown */}
-      {selectedValue === CONTRACT_METHOD && (
-        <DropdownContainer>
-          <FunctionDropdown
-            value={''}
-            setValue={setSelectorName}
-            setSignature={addContractMethod}
-            abi={abi}
-            disabled={!abi || isLoading}
-          />
-        </DropdownContainer>
-      )}
-
-      {/* Function selector */}
-      {selectedValue === RAW_SELECTOR && (
-        <StyledInput
-          placeholder='Enter function selector...'
-          value={functionSelector}
-          setValue={setFunctionSelector}
-          onClick={addNewSelector}
-          disabled={isLoading}
-          dataTestId='function-selector-input'
-          error={selectorRepeated}
-          errorText={errorText}
-          addable={!!functionSelector && !isLoading && isHex(functionSelector) && functionSelector.length === 10}
-          sx={{ marginTop: '1rem' }}
-        />
-      )}
-
       {/* Radio Buttons section */}
       <RadioContainer>
         <BtnContainer onClick={() => !isLoading && handleChange(CONTRACT_METHOD)}>
@@ -195,6 +166,35 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
           <InputLabel>Enter raw function selector</InputLabel>
         </BtnContainer>
       </RadioContainer>
+
+      {/* Function dropdown */}
+      {selectedValue === CONTRACT_METHOD && (
+        <DropdownContainer>
+          <FunctionDropdown
+            value={''}
+            setValue={setSelectorName}
+            setSignature={addContractMethod}
+            abi={abi}
+            disabled={!abi || isLoading}
+          />
+        </DropdownContainer>
+      )}
+
+      {/* Function selector */}
+      {selectedValue === RAW_SELECTOR && (
+        <StyledInput
+          placeholder='Enter function selector...'
+          value={functionSelector}
+          setValue={setFunctionSelector}
+          onClick={addNewSelector}
+          disabled={isLoading}
+          dataTestId='function-selector-input'
+          error={selectorRepeated}
+          errorText={errorText}
+          addable={!!functionSelector && !isLoading && isHex(functionSelector) && functionSelector.length === 10}
+          sx={{ marginTop: '1rem' }}
+        />
+      )}
     </>
   );
 };
@@ -208,7 +208,7 @@ const RadioContainer = styled('div')({
   flexDirection: 'row',
   gap: '2.4rem',
   alignItems: 'center',
-  margin: '-1rem 0 2rem 0',
+  margin: '1rem 0 2rem 0',
   div: {
     display: 'flex',
     flexDirection: 'row',

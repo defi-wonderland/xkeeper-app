@@ -77,6 +77,7 @@ export const StyledInput = ({
         <SOutlinedInput
           data-test={dataTestId}
           isError={error}
+          isRemovable={removable}
           fullWidth
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -212,13 +213,24 @@ export const SBox = styled(Box)(({ disabled }: { disabled?: boolean }) => {
   };
 });
 
-export const SOutlinedInput = styled(InputBase)(({ isError }: { isError?: boolean }) => {
+export const SOutlinedInput = styled(InputBase)(({
+  isError,
+  isRemovable,
+}: {
+  isError?: boolean;
+  isRemovable?: boolean;
+}) => {
   const { currentTheme } = useTheme();
   const errorStyles = isError && {
     borderColor: currentTheme.error,
     '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
       borderColor: currentTheme.error,
     },
+  };
+
+  const removableStyles = isRemovable && {
+    background: currentTheme.inputDisabledBackground,
+    color: currentTheme.textDisabled,
   };
 
   return {
@@ -251,6 +263,7 @@ export const SOutlinedInput = styled(InputBase)(({ isError }: { isError?: boolea
       },
     },
     ...errorStyles,
+    ...removableStyles,
   };
 });
 

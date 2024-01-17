@@ -70,6 +70,26 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
     <InputsContainer>
       {/* Callers Input */}
 
+      <InputLabel>New Caller</InputLabel>
+      <StyledInput
+        value={callerAddress}
+        setValue={setCallerAddress}
+        placeholder='Enter caller address'
+        disabled={allowAnyCaller || isLoading}
+        error={(!!callerAddress && !isAddress(callerAddress)) || callerIsRepeated}
+        errorText={errorText}
+        onClick={handleAddNewCaller}
+        dataTestId='relay-caller-input'
+        sx={{ mt: '-1rem' }}
+        addable={!!callerAddress && !allowAnyCaller}
+      />
+      <CallersContainer>
+        <Container>
+          <SSwitch disabled={isLoading} onClick={handleToggle} />
+          <ToggleText>Allow any caller</ToggleText>
+        </Container>
+      </CallersContainer>
+
       {!allowAnyCaller && !!callersList.length && (
         <>
           {!!callersList.length && <InputLabel>Callers list</InputLabel>}
@@ -86,27 +106,6 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
           ))}
         </>
       )}
-
-      <InputLabel>New Caller</InputLabel>
-      <StyledInput
-        value={callerAddress}
-        setValue={setCallerAddress}
-        placeholder='Enter caller address'
-        disabled={allowAnyCaller || isLoading}
-        error={(!!callerAddress && !isAddress(callerAddress)) || callerIsRepeated}
-        errorText={errorText}
-        onClick={handleAddNewCaller}
-        dataTestId='relay-caller-input'
-        sx={{ mt: '-1rem' }}
-        addable={!!callerAddress && !allowAnyCaller}
-      />
-
-      <CallersContainer>
-        <Container>
-          <SSwitch disabled={isLoading} onClick={handleToggle} />
-          <ToggleText>Allow any caller</ToggleText>
-        </Container>
-      </CallersContainer>
     </InputsContainer>
   );
 };
