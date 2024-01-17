@@ -14,7 +14,6 @@ export const useAbi = () => {
 
   const getAbi = useCallback(
     async (contractAddress: string) => {
-      console.log('getAbi', contractAddress);
       const data = loadLocalStorage(aliasKey);
 
       if (data[contractAddress]) return data[contractAddress];
