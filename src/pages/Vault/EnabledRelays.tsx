@@ -8,13 +8,14 @@ import { SCard } from './Tokens';
 export const EnabledRelays = () => {
   const { userAddress, selectedVault } = useStateContext();
   const { setModalOpen } = useModal();
+  const enabledRelays = Object.keys(selectedVault?.relays || {});
 
   return (
     <SCard variant='outlined'>
       <SContainer>
-        <StyledTitle>Enabled Relays</StyledTitle>
+        <StyledTitle>Enabled Relays {!!enabledRelays.length && '(' + enabledRelays.length + ')'}</StyledTitle>
         <ActiveButton
-          disabled={selectedVault?.owner !== userAddress}
+          disabled={!userAddress || selectedVault?.owner !== userAddress}
           data-test='add-relay-button'
           variant='contained'
           onClick={() => setModalOpen(ModalType.ADD_RELAY)}
