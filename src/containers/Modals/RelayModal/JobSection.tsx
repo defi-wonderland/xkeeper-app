@@ -86,17 +86,15 @@ export const JobSection = ({ jobsData, setJobsData, isLoading, jobIndex }: JobSe
         errorText='Invalid address'
       />
 
+      {/* Function selector */}
       {editJob && (
-        <>
-          {/* Function selector */}
-          <StyledInput
-            label='Function selector'
-            value={jobsData[jobIndex].functionSelectors[0]}
-            setValue={() => null}
-            disabled
-            dataTestId='function-selector-input'
-          />
-        </>
+        <StyledInput
+          label='Function selector'
+          value={jobsData[jobIndex].functionSelectors[0]}
+          setValue={() => null}
+          disabled
+          dataTestId='function-selector-input'
+        />
       )}
 
       {!editJob && (
