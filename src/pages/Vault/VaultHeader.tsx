@@ -73,11 +73,7 @@ export const VaultHeader = ({
 
         <DescriptionContainer>
           {/* Vault Description */}
-          {selectedVault?.description && (
-            <Description>
-              {selectedVault.description + selectedVault.description + selectedVault.description}
-            </Description>
-          )}
+          {selectedVault?.description && <Description>{selectedVault.description}</Description>}
 
           {!selectedVault?.description && (
             <DescriptionChip>
