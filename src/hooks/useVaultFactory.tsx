@@ -23,7 +23,7 @@ export const useVaultFactory = ({
   handleSendTransaction: () => Promise<void>;
   writeAsync: (() => Promise<WriteContractResult>) | undefined;
 } => {
-  const { setNotification, currentNetwork } = useStateContext();
+  const { setNotification, currentNetwork, setSelectedVault } = useStateContext();
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
   const { addresses, DEFAULT_ETH_ADDRESS } = getConfig();
   const { publicClient } = useCustomClient();
@@ -59,6 +59,9 @@ export const useVaultFactory = ({
           functionName: 'automationVaults',
           args: [BigInt(totalRequestCount - 1), 1n],
         });
+
+        // reset selected vault
+        setSelectedVault();
 
         // Redirects to the newly created vault
         if (result && result.length) navigate('/vault/' + result[result.length - 1]);
