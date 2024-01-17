@@ -107,7 +107,6 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
             sx={{ mt: '-1rem' }}
             key={caller}
             value={caller}
-            setValue={() => {}}
             onClick={handleRemoveCaller(caller)}
             disabled={allowAnyCaller || isLoading}
             removable

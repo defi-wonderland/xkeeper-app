@@ -37,12 +37,7 @@ export const DepositModal = () => {
           </StyledText>
         </SBox>
 
-        <StyledInput
-          label='Deposit address'
-          value={(selectedVault?.address as string) || ''}
-          setValue={() => {}}
-          copyable
-        />
+        <StyledInput label='Deposit address' value={(selectedVault?.address as string) || ''} copyable />
 
         <WarningChip>
           <Icon name='exclamation-triangle' size='2rem' color={currentTheme.warningChipColor} />
