@@ -32,8 +32,7 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
   );
 
   const handleToggle = () => {
-    const newValue = !allowAnyCaller;
-    if (newValue) {
+    if (!allowAnyCaller) {
       setCallersList([anyCaller]);
       setCallerAddress(anyCaller);
     } else {
@@ -42,7 +41,7 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
       setCallersList(selectedRelay ? selectedRelay[1].callers : []);
       setCallerAddress('');
     }
-    setAllowAnyCaller(newValue);
+    setAllowAnyCaller(!allowAnyCaller);
   };
 
   const handleAddNewCaller = () => {
