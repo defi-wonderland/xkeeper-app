@@ -34,7 +34,6 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
           <StyledTitle>{aliasData[relayAddress] || getRelayName(relayAddress)}</StyledTitle>
 
           <STooltip text={relayAddress} address>
-            {' '}
             <StyledText onClick={handleCopy}>{truncateAddress(relayAddress)}</StyledText>
           </STooltip>
           <STooltip text={copied ? 'Copied!' : 'Copy Address'}>
@@ -92,7 +91,7 @@ const TitleContainer = styled(Box)({
   div: {
     display: 'flex',
     flexDirection: 'row',
-    gap: '0.6rem',
+    gap: '1rem',
     alignItems: 'center',
     i: {
       cursor: 'pointer',
