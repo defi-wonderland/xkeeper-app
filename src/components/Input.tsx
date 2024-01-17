@@ -231,6 +231,9 @@ export const SOutlinedInput = styled(InputBase)(({
   const removableStyles = isRemovable && {
     background: currentTheme.inputDisabledBackground,
     color: currentTheme.textDisabled,
+    '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
+      borderColor: 'none',
+    },
   };
 
   return {
