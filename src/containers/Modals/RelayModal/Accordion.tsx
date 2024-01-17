@@ -139,7 +139,6 @@ const AccordionContainer = styled(Box)(() => {
 
   return {
     marginTop: '-1.2rem',
-    padding: '0 0 2.4rem',
     '& .MuiPaper-root.Mui-disabled': {
       backgroundColor: currentTheme.actionButtonDisabled,
       color: currentTheme.actionButtonColorDisabled,
