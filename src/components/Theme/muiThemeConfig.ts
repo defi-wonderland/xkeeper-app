@@ -39,6 +39,9 @@ export const getMuiGLobalConfig = (currentTheme: Theme, mode: ThemeName) => {
           ['&::-webkit-scrollbar-thumb:active']: {
             background: currentTheme.textDisabled,
           },
+          body: {
+            overflowY: 'scroll',
+          },
         },
       },
     },

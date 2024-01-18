@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
@@ -60,6 +60,11 @@ export const StateProvider = ({ children }: StateProps) => {
 
   const chainId = IS_TEST ? DEFAULT_CHAIN : chain?.id || DEFAULT_CHAIN;
 
+  const defaultCurrentNetwork = useMemo(
+    () => (availableChains[chainId]?.alchemyUrl ? availableChains[chainId] : availableChains[DEFAULT_CHAIN]),
+    [DEFAULT_CHAIN, availableChains, chainId],
+  );
+
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
   const [vaults, setVaults] = useState<VaultData[]>([]);
@@ -68,13 +73,13 @@ export const StateProvider = ({ children }: StateProps) => {
   const [totalRequestCount, setTotalRequestCount] = useState<number>();
   const [requestAmount, setRequestAmount] = useState<number>(vaultsPerBatch);
 
-  const [currentNetwork, setCurrentNetwork] = useState<Chain>(availableChains[chainId]);
+  const [currentNetwork, setCurrentNetwork] = useState<Chain>(defaultCurrentNetwork);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
   const loadVaultData = useCallback(
     async (startIndex: number, amountOfVaults: number) => {
-      const tokens = getTokenList(currentNetwork.id);
+      const tokens = getTokenList(currentNetwork?.id);
       const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
       const chainName = getChainName(publicClient);
 
@@ -94,7 +99,7 @@ export const StateProvider = ({ children }: StateProps) => {
       DEFAULT_WETH_ADDRESS,
       addresses.AutomationVaultFactory,
       addresses.xKeeperMetadata,
-      currentNetwork.id,
+      currentNetwork?.id,
       publicClient,
     ],
   );
@@ -202,7 +207,7 @@ export const StateProvider = ({ children }: StateProps) => {
         setNotification,
         userAddress: address,
         addresses,
-        currentNetwork,
+        currentNetwork: currentNetwork || defaultCurrentNetwork,
         setCurrentNetwork,
         availableChains,
         selectedVault,

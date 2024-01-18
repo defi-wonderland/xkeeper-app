@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useNetwork, PublicClient } from 'wagmi';
+import { PublicClient, useNetwork } from 'wagmi';
 import { goerli, mainnet, optimism, arbitrum, polygon } from 'wagmi/chains';
 import { Chain as WagmiChain, createPublicClient, custom, fallback, http } from 'viem';
 import 'viem/window';
@@ -14,7 +14,7 @@ export const useCustomClient = () => {
 
   const customClient = useMemo(() => {
     const getAlchemyProvider = (chainId: number) => {
-      const apiUrl = availableChains[chainId].alchemyUrl;
+      const apiUrl = availableChains[chainId]?.alchemyUrl || availableChains[DEFAULT_CHAIN]?.alchemyUrl;
       return `${apiUrl}/${ALCHEMY_KEY}`;
     };
 
