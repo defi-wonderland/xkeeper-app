@@ -15,7 +15,6 @@ export const SearchInput = ({ value, setValue, placeholder }: SearchInputProps) 
     <FormControl sx={{ my: '2rem' }} fullWidth>
       <SInput
         fullWidth
-        type='search'
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
@@ -23,6 +22,13 @@ export const SearchInput = ({ value, setValue, placeholder }: SearchInputProps) 
           <InputAdornment position='start'>
             <Icon name='search' size='2rem' />
           </InputAdornment>
+        }
+        endAdornment={
+          !!value && (
+            <InputAdornment position='end'>
+              <CloseIcon name='close' onClick={() => setValue('')} />
+            </InputAdornment>
+          )
         }
         sx={{
           fontSize: 16,
@@ -42,6 +48,20 @@ const SInput = styled(SOutlinedInput)(() => {
     paddingLeft: '1.4rem',
     '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
       borderColor: currentTheme.textDisabled,
+      transition: currentTheme.basicTransition,
+    },
+  };
+});
+
+const CloseIcon = styled(Icon)(() => {
+  const { currentTheme } = useTheme();
+  return {
+    color: currentTheme.textSecondary,
+    cursor: 'pointer',
+    fontSize: '2rem',
+    marginRight: '1.4rem',
+    '&:hover': {
+      color: currentTheme.textPrimary,
       transition: currentTheme.basicTransition,
     },
   };

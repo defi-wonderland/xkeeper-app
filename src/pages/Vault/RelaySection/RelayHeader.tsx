@@ -44,7 +44,7 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
           </STooltip>
         </Box>
 
-        {selectedVault?.owner === userAddress && (
+        {userAddress && selectedVault?.owner === userAddress && (
           <ButtonsContainer>
             {/* Options Menu */}
             <RowButton data-test='relay-options'>
@@ -55,7 +55,7 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
       </TitleContainer>
 
       <SSubTitle>
-        <StyledText>Callers: </StyledText>
+        <CallersText>Callers: </CallersText>
         <CallersContainers>
           {callers.map((caller) => (
             <AddressChip key={caller} text={caller} externalLink={false} />
@@ -86,7 +86,7 @@ const TitleContainer = styled(Box)({
   justifyContent: 'space-between',
   flexDirection: 'row',
   width: '100%',
-  minWidth: '65rem',
+  minWidth: '100%',
   height: '4.5rem',
   div: {
     display: 'flex',
@@ -102,11 +102,19 @@ const TitleContainer = styled(Box)({
       marginLeft: '0.6rem',
     },
   },
+  '@media (max-width: 600px)': {
+    'div:first-child': {
+      diplay: 'flex',
+      flexDirection: 'column',
+      alignItems: 'start',
+      gap: '0.6rem',
+    },
+  },
 });
 
 const SSubTitle = styled(SubTitle)({
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'row',
   alignItems: 'start',
   justifyContent: 'start',
   gap: '1.2rem',
@@ -145,4 +153,9 @@ const RowButton = styled(Box)(() => {
       alignItems: 'center',
     },
   };
+});
+
+const CallersText = styled(StyledText)({
+  fontWeight: '500',
+  paddingTop: '0.3rem',
 });

@@ -34,7 +34,7 @@ export function RelayDropdown({
 
   const createHandleMenuClick = (value: string) => {
     return () => {
-      if (value === 'Choose Relay') {
+      if (value === 'Choose relay') {
         setValue('');
         setCustomRelay(true);
         return;
@@ -49,7 +49,7 @@ export function RelayDropdown({
       {/* Dropdown button */}
       <DropdownTriggerButton disabled={disabled} data-test='relay-dropdown-button'>
         <StyledText>
-          {customRelay && 'Custom Relay'}
+          {customRelay && 'Custom relay'}
           {!customRelay && value}
         </StyledText>
         {!disabled && <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />}

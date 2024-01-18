@@ -72,7 +72,7 @@ export const StyledListbox = styled('ul')(() => {
     boxSizing: 'border-box',
     padding: '6px',
     margin: '12px 0',
-    borderRadius: '12px',
+    borderRadius: currentTheme.borderRadius,
     overflow: 'auto',
     outline: '0px',
     background: 'inherit',
@@ -138,7 +138,7 @@ export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => 
     fontsize: '1.6rem',
     textAlign: 'start',
     backgroundColor: 'inherit',
-    height: '4.3rem',
+    height: '4.5rem',
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     '&:hover:not(:disabled)': {
       borderColor: currentTheme.textDisabled,
@@ -155,6 +155,7 @@ export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => 
     },
     p: {
       fontSize: '1.6rem',
+      textTransform: 'none',
     },
     img: {
       width: iconSize,

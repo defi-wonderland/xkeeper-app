@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Box, styled } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -8,9 +8,9 @@ import { isAddress } from 'viem';
 import { useTheme } from '~/hooks';
 import { Icon, StyledTitle } from '~/components';
 import { CallerSection } from './CallerSection';
-import { JobsData } from '~/types';
 import { JobSection } from './JobSection';
 import { truncateAddress } from '~/utils';
+import { JobsData } from '~/types';
 
 interface StyledAccordionProps {
   relayAddress: string;
@@ -18,39 +18,49 @@ interface StyledAccordionProps {
   setCallersList: (value: string[]) => void;
   jobsData: JobsData;
   setJobsData: (value: JobsData) => void;
+  jobsCount: number;
+  setJobsCount: (value: number) => void;
   isLoading: boolean;
   isError: boolean;
   setIsError: (value: boolean) => void;
+  isEditRelay?: boolean;
 }
 
 export const StyledAccordion = ({
   relayAddress,
   callersList,
   setCallersList,
-  jobsData,
-  setJobsData,
   isLoading,
   isError,
   setIsError,
+  jobsData,
+  setJobsData,
+  jobsCount,
+  setJobsCount,
+  isEditRelay,
 }: StyledAccordionProps) => {
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
-  const [jobsCount, setJobsCount] = useState<number>(0);
+  const [callerExpanded, setCallerExpanded] = useState<boolean>(false);
+  const jobsList = new Array(jobsData.length).fill(0);
 
   const handleAddCaller = () => {
     setAddCallerOpen(!addCallerOpen);
+    setCallerExpanded(!callerExpanded);
   };
 
   const handleAddJob = () => {
-    setJobsCount(jobsCount + 1);
     const newJobsData = [...jobsData];
     newJobsData.push({ job: '', functionSelectors: [] });
+    setCallerExpanded(false);
     setJobsData(newJobsData);
+    setJobsCount(jobsCount + 1);
   };
 
   const handleRemoveJob = (index: number) => {
     const newJobsData = [...jobsData];
     newJobsData.splice(index, 1);
     setJobsData(newJobsData);
+    setJobsCount(jobsCount - 1);
   };
 
   const allowAddNewJob = useMemo(() => {
@@ -61,15 +71,23 @@ export const StyledAccordion = ({
     return jobsData[jobsData.length - 1].job !== '';
   }, [jobsData]);
 
+  const isDefaultExpanded = useCallback(
+    (index: number) => {
+      if (isEditRelay) return false;
+      return index === jobsCount - 1;
+    },
+    [isEditRelay, jobsCount],
+  );
+
   return (
     <AccordionContainer>
-      <AccordionBox disableGutters>
+      <AccordionBox disableGutters expanded={callerExpanded}>
         <SAccordionSummary
           onClick={handleAddCaller}
           disabled={!isAddress(relayAddress)}
           expandIcon={<Icon name={!callersList.length && addCallerOpen ? 'plus' : 'chevron-down'} />}
         >
-          <StyledTitle>{callersList.length ? `Callers (${callersList.length})` : 'Add Callers'}</StyledTitle>
+          <STitle>{callersList.length ? `Callers (${callersList.length})` : 'Add Callers'}</STitle>
         </SAccordionSummary>
 
         <SAccordionDetails>
@@ -85,47 +103,52 @@ export const StyledAccordion = ({
         </SAccordionDetails>
       </AccordionBox>
 
-      {jobsData.map((job, index) => (
-        <AccordionBox disableGutters key={job.job}>
+      {jobsList.map((_value, index) => (
+        <JobAccordionBox disableGutters key={jobsData[index]?.job} defaultExpanded={isDefaultExpanded(index)}>
           <SAccordionSummary
             expandIcon={
               <>
-                {!job.job && <Icon name='chevron-down' />}
-                {!!job.job && <SIcon name='close' onClick={() => handleRemoveJob(index)} />}
+                <SIcon name='close' onClick={() => handleRemoveJob(index)} />
               </>
             }
           >
-            <StyledTitle>
-              Job {index + 1} {isAddress(job.job) ? `(${truncateAddress(job.job)})` : ''}
-            </StyledTitle>
+            <STitle>
+              Job {index + 1} {isAddress(jobsData[index]?.job) ? `(${truncateAddress(jobsData[index]?.job)})` : ''}
+            </STitle>
           </SAccordionSummary>
 
           <SAccordionDetails>
             {/* Job section */}
-            <JobSection jobsData={jobsData} setJobsData={setJobsData} jobIndex={index} isLoading={isLoading} />
+            <JobSection jobIndex={index} isLoading={isLoading} jobsData={jobsData} setJobsData={setJobsData} />
           </SAccordionDetails>
-        </AccordionBox>
+        </JobAccordionBox>
       ))}
 
-      <AccordionBox disableGutters expanded={false}>
+      <JobAccordionBox disableGutters expanded={false}>
         <SAccordionSummary
-          disabled={!isAddress(relayAddress) || !allowAddNewJob}
+          disabled={!isAddress(relayAddress) || !allowAddNewJob || isLoading}
           onClick={handleAddJob}
           expandIcon={<Icon name='plus' />}
         >
-          <StyledTitle>Add Job</StyledTitle>
+          <STitle>Add Job</STitle>
         </SAccordionSummary>
-      </AccordionBox>
+      </JobAccordionBox>
     </AccordionContainer>
   );
 };
+
+const STitle = styled(StyledTitle)(() => {
+  return {
+    fontSize: '1.6rem',
+    fontWeight: '600',
+  };
+});
 
 const AccordionContainer = styled(Box)(() => {
   const { currentTheme } = useTheme();
 
   return {
     marginTop: '-1.2rem',
-    padding: '0 0 2.4rem',
     '& .MuiPaper-root.Mui-disabled': {
       backgroundColor: currentTheme.actionButtonDisabled,
       color: currentTheme.actionButtonColorDisabled,
@@ -149,9 +172,17 @@ const SAccordionSummary = styled(AccordionSummary)(() => {
 const AccordionBox = styled(Accordion)(() => {
   const { currentTheme } = useTheme();
   return {
+    position: 'inherit',
     backgroundColor: currentTheme.backgroundPrimary,
     backgroundImage: 'none',
     boxShadow: 'none',
+  };
+});
+
+const JobAccordionBox = styled(AccordionBox)(() => {
+  const { currentTheme } = useTheme();
+  return {
+    borderTop: `${currentTheme.inputBorder}`,
   };
 });
 

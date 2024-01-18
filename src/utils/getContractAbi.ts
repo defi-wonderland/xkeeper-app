@@ -15,27 +15,33 @@ export const getAbiFromSafeApi = async (chainName: string, address: string) => {
     const jsonData = await response.json();
     return JSON.stringify(jsonData.contractAbi.abi);
   } catch (error) {
-    console.error('Error fetching ABI from safe');
+    console.error('Error fetching ABI from safe API');
   }
 };
 
-export const getAbiFromEtherscanApi = async (apiUrl: string, address: string) => {
-  const url = `${apiUrl}?module=contract&action=getabi&address=${address}`;
+export const getAbiFromEtherscanApi = async (apiUrl: string, address: string, apiKey?: string) => {
+  const url = `${apiUrl}?module=contract&action=getabi&address=${address}${apiKey ? '&apikey=' + apiKey : ''}`;
+
   try {
     const response = await fetch(url);
     const jsonData = await response.json();
     const formattedAbi = JSON.parse(jsonData.result);
     return JSON.stringify(formattedAbi);
   } catch (error) {
-    console.error('Error fetching ABI from etherscan');
+    console.error('Error fetching ABI from etherscan', error);
   }
 };
 
-export const getContractAbi = async (chain: string, apiUrl: string, contractAddress: string) => {
+export const getContractAbi = async (
+  chain: string,
+  apiUrl: string,
+  contractAddress: string,
+  etherscanApiKey?: string,
+) => {
   try {
     const chainName = chain === 'ethereum' ? 'mainnet' : chain;
     const safeAbiPromise = getAbiFromSafeApi(chainName, contractAddress);
-    const etherscanAbiPromise = getAbiFromEtherscanApi(apiUrl, contractAddress);
+    const etherscanAbiPromise = getAbiFromEtherscanApi(apiUrl, contractAddress, etherscanApiKey);
 
     const [safeAbi, etherscanAbi] = await Promise.all([safeAbiPromise, etherscanAbiPromise]);
 

@@ -16,7 +16,7 @@ export const STextarea = styled('textarea')(() => {
     background-color: inherit;
     padding: 1rem 1.4rem;
     width: 100%;
-    height: 18rem;
+    height: 12rem;
     font-weight: 400;
     color: ${currentTheme.textPrimary};
     opacity: 1;

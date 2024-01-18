@@ -26,7 +26,7 @@ type ContextType = {
   setNotification: (val: Notification) => void;
 
   selectedVault?: VaultData;
-  setSelectedVault: (val: VaultData) => void;
+  setSelectedVault: (val?: VaultData) => void;
 
   userAddress?: string;
   addresses: Addresses;

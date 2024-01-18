@@ -10,7 +10,7 @@ import { useTheme } from '~/hooks';
 
 interface FunctionDropdownProps {
   value: string;
-  setValue: (val: string) => void;
+  setValue: (selector: string, name: string) => void;
   setSignature: (val: string) => void;
   disabled?: boolean;
   abi: string;
@@ -23,7 +23,7 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
     return () => {
       const signature = getFunctionSelector(value);
       setSignature(signature);
-      setValue(value.name);
+      setValue(signature, value.name);
     };
   };
 
@@ -59,9 +59,9 @@ export function FunctionDropdown({ value, setValue, abi, setSignature, disabled 
         <SCustomScrollbar>
           {!!availableValues &&
             availableValues.map((value: AbiFunction) => (
-              <StyledMenuItem key={value.name} onClick={createHandleMenuClick(value)}>
-                {value.name}
-              </StyledMenuItem>
+              <FunctionMenuItem key={value.name} onClick={createHandleMenuClick(value)}>
+                {`${value.name} (${getFunctionSelector(value)})`}
+              </FunctionMenuItem>
             ))}
         </SCustomScrollbar>
       </Menu>
@@ -80,12 +80,12 @@ export const BasicStyledListbox = styled('ul')(() => {
     border: `1px solid ${currentTheme.textSecondaryDisabled}`,
     color: currentTheme.textSecondary,
     backgroundColor: currentTheme.backgroundSecondary,
-    width: '60rem',
+    width: '59.6rem',
     fontSize: '1.4rem',
     boxSizing: 'border-box',
     padding: '6px',
     margin: '12px 0',
-    borderRadius: '12px',
+    borderRadius: currentTheme.borderRadius,
     overflow: 'auto',
     outline: '0px',
 
@@ -93,4 +93,8 @@ export const BasicStyledListbox = styled('ul')(() => {
       width: '100%',
     },
   };
+});
+
+const FunctionMenuItem = styled(StyledMenuItem)({
+  textTransform: 'none',
 });

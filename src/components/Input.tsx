@@ -21,6 +21,7 @@ interface InputProps {
   removable?: boolean;
   customIconName?: IconName;
   isAutoFocus?: boolean;
+  addable?: boolean;
   onClick?: () => void;
   onKeyUp?: () => void;
   dataTestId?: string;
@@ -43,6 +44,7 @@ export const StyledInput = ({
   isAutoFocus,
   customIconName,
   dataTestId,
+  addable,
   onClick,
   onKeyUp,
 }: InputProps) => {
@@ -75,6 +77,7 @@ export const StyledInput = ({
         <SOutlinedInput
           data-test={dataTestId}
           isError={error}
+          isRemovable={!setValue && removable}
           fullWidth
           value={value}
           onChange={(e) => setValue && setValue(e.target.value)}
@@ -110,6 +113,14 @@ export const StyledInput = ({
                   <StyledText>{tokenSymbol}</StyledText>
                   <STextButton variant='text' onClick={onInputClick} disabled={disabled}>
                     Max
+                  </STextButton>
+                </AmountInputAdornment>
+              )}
+
+              {addable && !error && (
+                <AmountInputAdornment position='end'>
+                  <STextButton variant='text' onClick={onInputClick} disabled={disabled}>
+                    Add
                   </STextButton>
                 </AmountInputAdornment>
               )}
@@ -202,12 +213,26 @@ export const SBox = styled(Box)(({ disabled }: { disabled?: boolean }) => {
   };
 });
 
-export const SOutlinedInput = styled(InputBase)(({ isError }: { isError?: boolean }) => {
+export const SOutlinedInput = styled(InputBase)(({
+  isError,
+  isRemovable,
+}: {
+  isError?: boolean;
+  isRemovable?: boolean;
+}) => {
   const { currentTheme } = useTheme();
   const errorStyles = isError && {
     borderColor: currentTheme.error,
     '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
       borderColor: currentTheme.error,
+    },
+  };
+
+  const removableStyles = isRemovable && {
+    background: currentTheme.inputDisabledBackground,
+    color: currentTheme.textDisabled,
+    '&.MuiInputBase-root.MuiInputBase-colorPrimary.MuiInputBase-fullWidth:hover': {
+      borderColor: 'none',
     },
   };
 
@@ -241,6 +266,7 @@ export const SOutlinedInput = styled(InputBase)(({ isError }: { isError?: boolea
       },
     },
     ...errorStyles,
+    ...removableStyles,
   };
 });
 

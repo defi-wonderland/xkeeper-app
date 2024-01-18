@@ -36,10 +36,10 @@ export const Vault = () => {
       items: (
         <>
           <Tokens />
+          <EnabledRelays />
           {Object.entries(relays).map(([relayAddress, relayData]) => (
             <RelaySection relayAddress={relayAddress} relayData={relayData} key={relayAddress} />
           ))}
-          <EnabledRelays />
         </>
       ),
     },
@@ -49,12 +49,12 @@ export const Vault = () => {
     },
   ];
 
-  const handleEditAlias = () => {
+  const handleEditMetadata = () => {
     setSelectedItem({
       type: 'vault',
       selectedAddress: selectedVault?.address,
     });
-    setModalOpen(ModalType.EDIT_ALIAS);
+    setModalOpen(ModalType.ADD_METADATA);
   };
 
   const handleOpenAddMetadata = () => {
@@ -72,7 +72,7 @@ export const Vault = () => {
       <VaultContainer>
         {/* Vault Header */}
         <VaultHeader
-          handleEditAlias={handleEditAlias}
+          handleEditMetadata={handleEditMetadata}
           handleOpenAddMetadata={handleOpenAddMetadata}
           selectedVault={selectedVault}
           vaultTitle={vaultTitle}
