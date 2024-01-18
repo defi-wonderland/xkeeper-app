@@ -19,16 +19,19 @@ export const RelayModal = () => {
 
   const [jobsCount, setJobsCount] = useState<number>(0);
   const [jobsData, setJobsData] = useState<JobsData>([]);
-  const [isEditRelay, setIsEditRelay] = useState<boolean>(false);
 
   const [isError, setIsError] = useState<boolean>(false);
 
   const args = useMemo(() => [relayAddress, callersList, jobsData], [callersList, jobsData, relayAddress]);
+  const functionName = useMemo(
+    () => (selectedItem?.selectedAddress && selectedVault ? 'modifyRelay' : 'addRelay'),
+    [selectedItem?.selectedAddress, selectedVault],
+  );
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
-    functionName: 'approveRelayData',
-    args: args,
+    functionName,
+    args,
     notificationTitle: 'Relay successfuly approved',
     notificationMessage: getReceiptMessage(relayAddress, 'relay is now enabled'),
   });
@@ -45,7 +48,6 @@ export const RelayModal = () => {
       setCallersList(selectedRelay[1].callers);
       setJobsData(selectedRelay[1].jobsData);
       setJobsCount(selectedRelay[1].jobsData.length);
-      setIsEditRelay(true);
     }
   }, [selectedItem?.selectedAddress, selectedVault]);
 
@@ -56,7 +58,6 @@ export const RelayModal = () => {
       setCallersList([]);
       setJobsData([]);
       setJobsCount(0);
-      setIsEditRelay(false);
     }
   }, [modalOpen]);
 
@@ -87,7 +88,6 @@ export const RelayModal = () => {
           isLoading={isLoading}
           isError={isError}
           setIsError={setIsError}
-          isEditRelay={isEditRelay}
         />
 
         {/* Buttons Section */}

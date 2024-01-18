@@ -5,7 +5,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { isAddress } from 'viem';
 
-import { useTheme } from '~/hooks';
+import { useStateContext, useTheme } from '~/hooks';
 import { Icon, StyledTitle } from '~/components';
 import { CallerSection } from './CallerSection';
 import { JobSection } from './JobSection';
@@ -23,7 +23,6 @@ interface StyledAccordionProps {
   isLoading: boolean;
   isError: boolean;
   setIsError: (value: boolean) => void;
-  isEditRelay?: boolean;
 }
 
 export const StyledAccordion = ({
@@ -37,10 +36,11 @@ export const StyledAccordion = ({
   setJobsData,
   jobsCount,
   setJobsCount,
-  isEditRelay,
 }: StyledAccordionProps) => {
+  const { selectedItem } = useStateContext();
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
   const [callerExpanded, setCallerExpanded] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const jobsList = new Array(jobsData.length).fill(0);
 
   const handleAddCaller = () => {
@@ -49,6 +49,7 @@ export const StyledAccordion = ({
   };
 
   const handleAddJob = () => {
+    setIsEdit(true);
     const newJobsData = [...jobsData];
     newJobsData.push({ job: '', functionSelectors: [] });
     setCallerExpanded(false);
@@ -73,10 +74,12 @@ export const StyledAccordion = ({
 
   const isDefaultExpanded = useCallback(
     (index: number) => {
-      if (isEditRelay) return false;
+      if (!isEdit && selectedItem?.selectedAddress) {
+        return false;
+      }
       return index === jobsCount - 1;
     },
-    [isEditRelay, jobsCount],
+    [isEdit, jobsCount, selectedItem?.selectedAddress],
   );
 
   return (

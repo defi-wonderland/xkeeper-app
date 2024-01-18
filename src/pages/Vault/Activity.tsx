@@ -8,6 +8,7 @@ import { NoDataContainer } from '~/containers';
 import { Status } from '~/types';
 import {
   formatDataNumber,
+  getRelayName,
   getUsdBalance,
   handleOpenAddress,
   handleOpenTx,
@@ -56,8 +57,8 @@ export const Activity = () => {
             <TableHead>
               <TableRow>
                 <SColumnTitle>Hash</SColumnTitle>
-                <SColumnTitle align='left'>Jobs</SColumnTitle>
                 <SColumnTitle align='left'>Relay</SColumnTitle>
+                <SColumnTitle align='left'>Jobs</SColumnTitle>
                 <SColumnTitle align='left'>Caller</SColumnTitle>
                 <SColumnTitle align='left'>Payment</SColumnTitle>
                 <SColumnTitle align='left'>Date & Time</SColumnTitle>
@@ -74,39 +75,41 @@ export const Activity = () => {
                   <HashRow align='left'>
                     <STooltip text={row.hash} address>
                       <SText onClick={() => handleOpenTx(currentNetwork.scanner, row.hash)}>
-                        {truncateAddress(row.hash, 2)}
+                        {truncateAddress(row.hash, 4)}
                       </SText>
                     </STooltip>
                   </HashRow>
+
+                  {/* Relay */}
+                  <SymbolRow align='left'>
+                    <STooltip text={row.jobs[0].relay} address>
+                      <SText onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relay)}>
+                        {getRelayName(row.jobs[0].relay) ||
+                          aliasData[row.jobs[0].relay] ||
+                          truncateAddress(row.jobs[0].relay, 4)}
+                      </SText>
+                    </STooltip>
+                  </SymbolRow>
 
                   {/* Job */}
                   <SymbolRow align='left'>
                     {row.jobs.map((job, index) => (
                       <STooltip key={job.job + index} text={job.job} address>
                         <SText onClick={() => handleOpenAddress(currentNetwork.scanner, job.job)}>
-                          {aliasData[job.job] || truncateAddress(job.job, 2)}
+                          {aliasData[job.job] || truncateAddress(job.job, 4)}
                         </SText>
                       </STooltip>
                     ))}
                   </SymbolRow>
 
-                  {/* Relay */}
+                  {/* Caller */}
                   <SymbolRow align='left'>
-                    <STooltip text={row.jobs[0].relay} address>
-                      <SText onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relay)}>
-                        {aliasData[row.jobs[0].relay] || truncateAddress(row.jobs[0].relay, 2)}
+                    <STooltip text={row.jobs[0].relayCaller} address>
+                      <SText onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relayCaller)}>
+                        {truncateAddress(row.jobs[0].relayCaller, 4)}
                       </SText>
                     </STooltip>
                   </SymbolRow>
-
-                  {/* Caller */}
-                  <HashRow align='left'>
-                    <STooltip text={row.jobs[0].relayCaller} address>
-                      <SText onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relayCaller)}>
-                        {truncateAddress(row.jobs[0].relayCaller, 2)}
-                      </SText>
-                    </STooltip>
-                  </HashRow>
 
                   {/* Amount */}
                   <AmountRow align='left'>

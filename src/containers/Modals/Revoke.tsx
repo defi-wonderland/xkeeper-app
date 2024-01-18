@@ -12,8 +12,8 @@ export const RevokeModal = () => {
 
   const { requestStatus, handleSendTransaction, writeAsync } = useVault({
     contractAddress: selectedVault?.address,
-    functionName: 'revokeRelayData',
-    args: [selectedAddress, [], []],
+    functionName: 'deleteRelay',
+    args: [selectedAddress],
     notificationTitle: `Relay successfully revoked`,
     notificationMessage: getReceiptMessage(selectedAddress!, 'has been revoked and is no longer active'),
   });
