@@ -17,7 +17,7 @@
     "test": "yarn cypress run",
     "test:dev": "yarn cypress open",
     "test:app": "VITE_TEST=true yarn dev",
-    "test:fork": "eval $(grep '^VITE_RPC_URL' .env) && anvil --fork-url $VITE_RPC_URL --fork-block-number 10341674 --silent",
+    "test:fork": "eval $(grep '^VITE_RPC_URL' .env) && anvil --fork-url $VITE_RPC_URL --fork-block-number 10395099 --silent",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' 'cypress'",
     "lint:fix": "yarn run lint -- --fix",
     "prettier": "prettier src --check",

@@ -11,13 +11,16 @@ import { ModalType, Status } from '~/types';
 interface SendTransactionProps {
   contractAddress?: string;
   functionName:
+    | 'modifyRelay'
+    | 'addRelay'
     | 'acceptOwner'
-    | 'approveRelayData'
     | 'changeOwner'
     | 'exec'
     | 'withdrawFunds'
     | 'getRelayData'
-    | 'revokeRelayData'
+    | 'deleteRelay'
+    | 'modifyRelayCallers'
+    | 'modifyRelayJobs'
     | undefined;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

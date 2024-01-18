@@ -37,7 +37,7 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
             <StyledText onClick={handleCopy}>{truncateAddress(relayAddress)}</StyledText>
           </STooltip>
           <STooltip text={copied ? 'Copied!' : 'Copy Address'}>
-            <IconContainer>
+            <IconContainer onClick={handleCopy}>
               {!copied && <Icon name='copy' color={currentTheme.textDisabled} size='1.7rem' />}
               {!!copied && <Icon name='check' color={currentTheme.textDisabled} size='1.7rem' />}
             </IconContainer>
@@ -89,6 +89,9 @@ const TitleContainer = styled(Box)({
   minWidth: '100%',
   height: '4.5rem',
   div: {
+    p: {
+      cursor: 'pointer',
+    },
     display: 'flex',
     flexDirection: 'row',
     gap: '1rem',
