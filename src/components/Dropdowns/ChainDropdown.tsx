@@ -4,7 +4,7 @@ import { MenuButton } from '@mui/base/MenuButton';
 import { MenuItem, menuItemClasses } from '@mui/base/MenuItem';
 import { styled, css } from '@mui/system';
 import { blue, grey } from '@mui/material/colors';
-import { useSwitchNetwork } from 'wagmi';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 import { useStateContext, useTheme } from '~/hooks';
 import { ChainIcon, Icon, StyledText } from '~/components';
@@ -22,6 +22,7 @@ interface ChainDropdownProps {
 export function ChainDropdown({ chains, value, setValue, disabled, compact }: ChainDropdownProps) {
   const { setCurrentNetwork, availableChains } = useStateContext();
   const { currentTheme } = useTheme();
+  const { chain } = useNetwork();
   const { switchNetworkAsync } = useSwitchNetwork();
 
   const createHandleMenuClick = (chainId: string) => {
@@ -33,17 +34,22 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
   };
 
   const availableChainIds = Object.keys(chains);
+  const unsupportedChain = chain && !availableChainIds.includes(chain.id.toString());
 
-  const getBorderColor = (chainId: string) => ({
-    border: `${Number(chainId) === chains[value].id && currentTheme.border}`,
-  });
+  const getBorderColor = (chainId: string) => {
+    if (!unsupportedChain)
+      return {
+        border: `${Number(chainId) === chains[value].id && currentTheme.border}`,
+      };
+  };
 
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <DropdownTriggerButton disabled={disabled} compact={compact?.toString()}>
+      <DropdownTriggerButton isError={unsupportedChain} disabled={disabled} compact={compact?.toString()}>
         <ChainIcon chainName={chains[value].name} />
-        {!compact && <StyledText>{chains[value].name}</StyledText>}
+        {!compact && <StyledText>{unsupportedChain ? 'Wrong network' : chains[value].name}</StyledText>}
+        {compact && unsupportedChain && <StyledText>Wrong network</StyledText>}
         <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
       </DropdownTriggerButton>
 
@@ -53,7 +59,7 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
           <StyledMenuItem key={chainId} onClick={createHandleMenuClick(chainId)} sx={getBorderColor(chainId)}>
             <ChainIcon chainName={chains[chainId].name} />
             {chains[chainId].displayName}
-            {Number(chainId) === chains[value].id && (
+            {!unsupportedChain && Number(chainId) === chains[value].id && (
               <SIcon name='check' color={currentTheme.textSecondary} size='1.6rem' />
             )}
           </StyledMenuItem>
@@ -117,12 +123,23 @@ export const StyledMenuItem = styled(MenuItem)(() => {
 
 interface Props {
   compact?: string;
+  isError?: boolean;
 }
-export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => {
+export const DropdownTriggerButton = styled(MenuButton)(({ compact, isError }: Props) => {
   const { currentTheme } = useTheme();
   const iconSize = compact ? '3.15rem' : '2rem';
   const borderRadius = compact ? '10rem' : currentTheme.borderRadius;
   const padding = compact ? '0.6rem 0.8rem 0.6rem 0.6rem' : '1rem 1.4rem';
+  const errorStyles = isError && {
+    borderColor: currentTheme.error,
+    ['p, i:before']: {
+      color: currentTheme.error,
+    },
+    '&:hover:not(:disabled)': {
+      borderColor: currentTheme.error,
+    },
+  };
+
   return {
     borderRadius,
     padding,
@@ -166,6 +183,7 @@ export const DropdownTriggerButton = styled(MenuButton)(({ compact }: Props) => 
       height: iconSize,
       marginTop: '-0.1rem',
     },
+    ...errorStyles,
   };
 });
 

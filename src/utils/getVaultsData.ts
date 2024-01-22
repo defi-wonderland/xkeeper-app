@@ -144,7 +144,7 @@ const fetchAndFormatData = async (
     owner: owner?.result,
     relays: relaysData,
     tokens: tokensData,
-    nativeToken,
+    nativeToken: nativeToken?.result,
     name: name,
     description: description,
   };

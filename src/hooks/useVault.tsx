@@ -53,6 +53,7 @@ export const useVault = ({
     abi: vaultABI,
     functionName: functionName,
     args: args,
+    chainId: Number(currentNetwork.id),
   });
 
   const { writeAsync } = useContractWrite(config);

@@ -18,6 +18,7 @@ import {
 import { BigModal, TitleContainer as Header } from '~/containers';
 import { useStateContext, useVault, useTheme, useModal } from '~/hooks';
 import { ModalType, TokenData } from '~/types';
+import { truncateAddress } from '~/utils';
 
 export const WithdrawtModal = () => {
   const { selectedVault, currentNetwork, loading, userAddress } = useStateContext();
@@ -28,7 +29,7 @@ export const WithdrawtModal = () => {
   const [token, setToken] = useState<TokenData>({} as TokenData);
   const [amount, setAmount] = useState('');
 
-  const vaultName = selectedVault?.name;
+  const vaultName = selectedVault?.name || truncateAddress(selectedVault?.address);
   const network = currentNetwork.displayName;
 
   const amountE18 = useMemo(() => {
