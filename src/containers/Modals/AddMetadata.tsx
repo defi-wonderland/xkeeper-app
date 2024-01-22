@@ -11,14 +11,15 @@ import {
   BaseModal,
   Icon,
   StyledText,
+  ConfirmText,
 } from '~/components';
 import { useModal, useStateContext, useTheme, useXKeeperMetadata } from '~/hooks';
-import { ModalType } from '~/types';
+import { ModalType, Status } from '~/types';
 import { getConfig } from '~/config';
 
 export const AddMetadataModal = () => {
   const { addresses } = getConfig();
-  const { loading, selectedVault } = useStateContext();
+  const { selectedVault } = useStateContext();
   const { modalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
 
@@ -28,16 +29,17 @@ export const AddMetadataModal = () => {
   const vaultAddress = selectedVault?.address || '0x';
   const isEditMetadata = !!selectedVault?.name || !!selectedVault?.description;
 
-  const { handleSendTransaction, writeAsync } = useXKeeperMetadata({
+  const { handleSendTransaction, writeAsync, requestStatus } = useXKeeperMetadata({
     contractAddress: addresses.xKeeperMetadata,
     args: [vaultAddress, { name, description }],
     notificationTitle: 'Metadata successfully added',
     showReceipt: true,
   });
 
+  const isLoading = requestStatus === Status.LOADING;
+
   const handleConfirm = () => {
     handleSendTransaction();
-    setDescription('');
   };
 
   useEffect(() => {
@@ -73,6 +75,7 @@ export const AddMetadataModal = () => {
           label='Name'
           value={name}
           setValue={setName}
+          disabled={isLoading}
           placeholder='Vault name'
           dataTestId='name-metadata-input'
         />
@@ -81,6 +84,7 @@ export const AddMetadataModal = () => {
           <StyledInput
             label='Description'
             value={description}
+            disabled={isLoading}
             setValue={setDescription}
             placeholder='Short description and key urls'
             dataTestId='description-metadata-input'
@@ -88,17 +92,17 @@ export const AddMetadataModal = () => {
         </InputContainer>
 
         <ButtonsContainer>
-          <CancelButton variant='outlined' onClick={closeModal}>
+          <CancelButton variant='outlined' onClick={closeModal} disabled={isLoading}>
             Cancel
           </CancelButton>
 
           <ActiveButton
             variant='contained'
-            disabled={!writeAsync || loading || !description || !name}
+            disabled={!writeAsync || isLoading || !description || !name}
             onClick={handleConfirm}
             data-test='confirm-add-metadata-button'
           >
-            Confirm
+            <ConfirmText isLoading={isLoading} />
           </ActiveButton>
         </ButtonsContainer>
       </BigModal>
