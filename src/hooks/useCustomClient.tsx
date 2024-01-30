@@ -1,26 +1,24 @@
 import { useMemo } from 'react';
-import { PublicClient, useNetwork } from 'wagmi';
+import { PublicClient, useAccount } from 'wagmi';
 import { goerli, mainnet, optimism, arbitrum, polygon, sepolia } from 'wagmi/chains';
 import { Chain as WagmiChain, createPublicClient, custom, fallback, http } from 'viem';
 import 'viem/window';
 
 import { getConfig } from '~/config';
-import { useStateContext } from '~/hooks';
+import { Chains } from '~/types';
 
-export const useCustomClient = () => {
-  const { userAddress } = useStateContext();
-  const { TEST_MODE, DEFAULT_CHAIN, availableChains, ALCHEMY_KEY } = getConfig();
-  const { chain } = useNetwork();
+const { TEST_MODE, DEFAULT_CHAIN, availableChains, ALCHEMY_KEY } = getConfig();
+
+const getAlchemyProvider = (chainId: number, availableChains: Chains) => {
+  const apiUrl = availableChains[chainId]?.alchemyUrl || availableChains[DEFAULT_CHAIN]?.alchemyUrl;
+  return `${apiUrl}/${ALCHEMY_KEY}`;
+};
+
+export const useCustomClient = (chainId: number) => {
+  const { address: userAddress } = useAccount();
 
   const customClient = useMemo(() => {
-    const getAlchemyProvider = (chainId: number) => {
-      const apiUrl = availableChains[chainId]?.alchemyUrl || availableChains[DEFAULT_CHAIN]?.alchemyUrl;
-      return `${apiUrl}/${ALCHEMY_KEY}`;
-    };
-
-    const chainId = TEST_MODE ? DEFAULT_CHAIN : chain?.id || DEFAULT_CHAIN;
-
-    const alchemy = http(getAlchemyProvider(chainId), { batch: true });
+    const alchemy = http(getAlchemyProvider(chainId || DEFAULT_CHAIN, availableChains), { batch: true });
     const customTransport = custom(window.ethereum!);
 
     // this allows to use the connected wallet rpc provider
@@ -28,7 +26,6 @@ export const useCustomClient = () => {
 
     const selectedChain: WagmiChain =
       [goerli, mainnet, optimism, arbitrum, polygon, sepolia].find((chain) => chain?.id === chainId) || sepolia;
-
     const publicClient: PublicClient = createPublicClient({
       batch: { multicall: true },
       chain: selectedChain,
@@ -36,7 +33,7 @@ export const useCustomClient = () => {
     });
 
     return publicClient;
-  }, [TEST_MODE, DEFAULT_CHAIN, chain?.id, userAddress, availableChains, ALCHEMY_KEY]);
+  }, [chainId, userAddress]);
 
   return { publicClient: customClient };
 };
