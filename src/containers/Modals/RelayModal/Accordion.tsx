@@ -108,13 +108,7 @@ export const StyledAccordion = ({
 
       {jobsList.map((_value, index) => (
         <JobAccordionBox disableGutters key={jobsData[index]?.job} defaultExpanded={isDefaultExpanded(index)}>
-          <SAccordionSummary
-            expandIcon={
-              <>
-                <SIcon name='close' onClick={() => handleRemoveJob(index)} />
-              </>
-            }
-          >
+          <SAccordionSummary expandIcon={<SIcon name='close' onClick={() => !isLoading && handleRemoveJob(index)} />}>
             <STitle>
               Job {index + 1} {isAddress(jobsData[index]?.job) ? `(${truncateAddress(jobsData[index]?.job)})` : ''}
             </STitle>

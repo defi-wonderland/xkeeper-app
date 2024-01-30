@@ -3,7 +3,7 @@ import { TableBody, TableContainer, TableHead, TableRow, styled } from '@mui/mat
 
 import { Items, JobsData, ModalType } from '~/types';
 import { Icon, IconContainer, STooltip } from '~/components';
-import { useAlias, useModal, useStateContext, useTheme } from '~/hooks';
+import { useAlias, useModal, useSelectorName, useStateContext, useTheme } from '~/hooks';
 import { ColumnTitle, RowText, STable, STableRow } from '../Tokens';
 import { copyData, truncateAddress } from '~/utils';
 import { NoDataContainer } from '~/containers';
@@ -15,6 +15,7 @@ interface JobsTableProps {
 export const JobsTable = ({ jobsData }: JobsTableProps) => {
   const { currentTheme } = useTheme();
   const { setSelectedItem } = useStateContext();
+  const { selectors: selectorsName } = useSelectorName();
   const { aliasData } = useAlias();
   const { setModalOpen } = useModal();
 
@@ -90,7 +91,14 @@ export const JobsTable = ({ jobsData }: JobsTableProps) => {
                   <RowText align='left'>
                     {functionSelectors?.map((selector) => (
                       <STooltip text={selector} address key={selector}>
-                        <Text>{selector}</Text>
+                        <Text>
+                          {selectorsName[selector] && (
+                            <>
+                              {selectorsName[selector]} <span>{selector}</span>
+                            </>
+                          )}
+                          {!selectorsName[selector] && selector}
+                        </Text>
                       </STooltip>
                     ))}
                   </RowText>
@@ -110,15 +118,22 @@ const SColumnTitle = styled(ColumnTitle)({
   minWidth: '28rem',
 });
 
-const Text = styled('p')({
-  display: 'block',
-  margin: '0.2rem 0',
-  width: 'fit-content',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  maxWidth: '20rem',
-  cursor: 'pointer',
+const Text = styled('p')(() => {
+  const { currentTheme } = useTheme();
+  return {
+    display: 'block',
+    margin: '0.2rem 0',
+    width: 'fit-content',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '20rem',
+    cursor: 'pointer',
+    span: {
+      color: currentTheme.textSecondary,
+      marginLeft: '0.4rem',
+    },
+  };
 });
 
 const AddressContainer = styled('div')(() => {

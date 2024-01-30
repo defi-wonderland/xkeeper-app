@@ -37,6 +37,7 @@ export const useXKeeperMetadata = ({
     abi: xkeeperMetadataABI,
     functionName: 'setAutomationVaultMetadata',
     args: args,
+    chainId: currentNetwork.id,
   });
 
   const { writeAsync } = useContractWrite(config);
