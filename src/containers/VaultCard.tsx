@@ -122,6 +122,7 @@ const CardTitle = styled(StyledTitle)({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   maxWidth: '60%',
+  textTransform: 'none',
 
   '@media (max-width: 600px)': {
     maxWidth: '40%',
