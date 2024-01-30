@@ -29,7 +29,7 @@ export const useXKeeperMetadata = ({
 } => {
   const { currentNetwork, setNotification } = useStateContext();
   const { setModalOpen } = useModal();
-  const { publicClient } = useCustomClient();
+  const { publicClient } = useCustomClient(currentNetwork?.id);
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
 
   const { config } = usePrepareContractWrite({
