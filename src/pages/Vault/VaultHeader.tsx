@@ -210,6 +210,7 @@ export const Description = styled(StyledText)(() => {
   return {
     color: currentTheme.textSecondary,
     fontSize: '1.6rem',
+    wordBreak: 'break-all',
   };
 });
 

@@ -49,13 +49,6 @@ export const AddMetadataModal = () => {
     }
   }, [selectedVault?.description, selectedVault?.name]);
 
-  useEffect(() => {
-    if (modalOpen === ModalType.NONE) {
-      setName('');
-      setDescription('');
-    }
-  }, [modalOpen]);
-
   return (
     <BaseModal open={modalOpen === ModalType.ADD_METADATA}>
       <BigModal data-test='add-metadata-modal'>
