@@ -17,11 +17,11 @@ import {
 } from '~/components';
 import { BigModal, TitleContainer as Header } from '~/containers';
 import { useStateContext, useVault, useTheme, useModal } from '~/hooks';
-import { ModalType, TokenData } from '~/types';
+import { ModalType, Status, TokenData } from '~/types';
 import { truncateAddress } from '~/utils';
 
 export const WithdrawtModal = () => {
-  const { selectedVault, currentNetwork, loading, userAddress } = useStateContext();
+  const { selectedVault, currentNetwork, userAddress } = useStateContext();
   const { modalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
 
@@ -44,13 +44,15 @@ export const WithdrawtModal = () => {
     setAmount(token.balance);
   };
 
-  const { handleSendTransaction, writeAsync } = useVault({
+  const { handleSendTransaction, writeAsync, requestStatus } = useVault({
     contractAddress: selectedVault?.address,
     functionName: 'withdrawFunds',
     args: [token.address as Address, amountE18, widthdrawalAddress as Address],
     notificationTitle: 'Funds successfully withdrawn',
     showReceipt: true,
   });
+
+  const isLoading = requestStatus === Status.LOADING;
 
   useEffect(() => {
     if (userAddress) {
@@ -109,13 +111,13 @@ export const WithdrawtModal = () => {
           setValue={setWithdrawalAddress}
           error={!!widthdrawalAddress && !isAddress(widthdrawalAddress)}
           errorText='Invalid address'
-          disabled={loading}
+          disabled={isLoading}
         />
 
         {/* Token selector  */}
         <InputContainer>
           <InputLabel>Token</InputLabel>
-          <TokenDropdown tokens={selectedVault?.tokens} value={token} setValue={setToken} disabled={loading} />
+          <TokenDropdown tokens={selectedVault?.tokens} value={token} setValue={setToken} disabled={isLoading} />
         </InputContainer>
 
         {/* Amount field */}
@@ -128,20 +130,20 @@ export const WithdrawtModal = () => {
           description={AmountFieldDescription}
           onClick={handleMax}
           tokenSymbol={token.symbol}
-          disabled={loading}
+          disabled={isLoading}
         />
 
         <SButtonsContainer>
-          <CancelButton variant='outlined' disabled={loading} onClick={closeModal}>
+          <CancelButton variant='outlined' disabled={isLoading} onClick={closeModal}>
             Cancel
           </CancelButton>
 
           <ActiveButton
             variant='contained'
-            disabled={!writeAsync || loading || !Number(amount)}
+            disabled={!writeAsync || isLoading || !Number(amount)}
             onClick={handleSendTransaction}
           >
-            <ConfirmText isLoading={loading} />
+            <ConfirmText isLoading={isLoading} />
           </ActiveButton>
         </SButtonsContainer>
       </BigModal>
