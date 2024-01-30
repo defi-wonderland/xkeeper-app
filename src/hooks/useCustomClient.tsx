@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { PublicClient, useNetwork } from 'wagmi';
-import { goerli, mainnet, optimism, arbitrum, polygon } from 'wagmi/chains';
+import { goerli, mainnet, optimism, arbitrum, polygon, sepolia } from 'wagmi/chains';
 import { Chain as WagmiChain, createPublicClient, custom, fallback, http } from 'viem';
 import 'viem/window';
 
@@ -27,7 +27,7 @@ export const useCustomClient = () => {
     const transportFallback = fallback(userAddress ? [customTransport, alchemy] : [alchemy]);
 
     const selectedChain: WagmiChain =
-      [goerli, mainnet, optimism, arbitrum, polygon].find((chain) => chain?.id === chainId) || goerli;
+      [goerli, mainnet, optimism, arbitrum, polygon, sepolia].find((chain) => chain?.id === chainId) || sepolia;
 
     const publicClient: PublicClient = createPublicClient({
       batch: { multicall: true },

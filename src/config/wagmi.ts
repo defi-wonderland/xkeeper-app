@@ -2,7 +2,7 @@ import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { injectedWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 
 import { configureChains, createConfig } from 'wagmi';
-import { goerli, mainnet, optimism, arbitrum, polygon } from 'wagmi/chains';
+import { goerli, mainnet, optimism, arbitrum, polygon, sepolia } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { MockConnector } from 'wagmi/connectors/mock';
@@ -41,7 +41,7 @@ export const { chains: availableChains, publicClient } = (() => {
     );
   } else {
     return configureChains(
-      [goerli, mainnet, optimism, arbitrum, polygon],
+      [goerli, mainnet, optimism, arbitrum, polygon, sepolia],
       [alchemyProvider({ apiKey: ALCHEMY_KEY }), publicProvider()],
       { batch: { multicall: true } },
     );
