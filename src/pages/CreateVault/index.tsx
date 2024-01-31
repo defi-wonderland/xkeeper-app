@@ -51,8 +51,8 @@ export const CreateVault = () => {
 
           <DescriptionContainer>
             <Description>
-              Lorem ipsum dolor sit amet consectetur. Euismod blandit dictum lacus penatibus. In morbi et ut amet
-              consectetur arcu. Dui in netus eget nulla lorem nibh erat felis.
+              Your vault will store the tokens which pay for your automation, and will define which automation networks
+              are allowed to work your on-chain jobs.
             </Description>
           </DescriptionContainer>
         </Header>
