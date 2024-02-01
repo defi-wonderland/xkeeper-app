@@ -2,7 +2,7 @@ import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { injectedWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 
 import { configureChains, createConfig } from 'wagmi';
-import { goerli, mainnet, optimism, arbitrum, polygon, sepolia } from 'wagmi/chains';
+import { goerli } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { MockConnector } from 'wagmi/connectors/mock';
@@ -11,6 +11,7 @@ import { createWalletClient, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { getEnv } from './env';
+import { supportedChains } from '~/utils';
 
 const { PROJECT_ID, ALCHEMY_KEY, TEST_MODE, TEST_PRIVATE_KEY } = getEnv();
 
@@ -40,11 +41,9 @@ export const { chains: availableChains, publicClient } = (() => {
       { batch: { multicall: true } },
     );
   } else {
-    return configureChains(
-      [goerli, mainnet, optimism, arbitrum, polygon, sepolia],
-      [alchemyProvider({ apiKey: ALCHEMY_KEY }), publicProvider()],
-      { batch: { multicall: true } },
-    );
+    return configureChains(supportedChains, [alchemyProvider({ apiKey: ALCHEMY_KEY }), publicProvider()], {
+      batch: { multicall: true },
+    });
   }
 })();
 
