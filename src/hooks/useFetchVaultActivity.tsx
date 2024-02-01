@@ -10,8 +10,8 @@ import { EventData, Status } from '~/types';
  * @returns {EventData} data - Vault activity data
  */
 export const useFetchVaultActivity = () => {
-  const { selectedVault, vaults, setVaults, setSelectedVault } = useStateContext();
-  const { publicClient } = useCustomClient();
+  const { selectedVault, vaults, currentNetwork, setVaults, setSelectedVault } = useStateContext();
+  const { publicClient } = useCustomClient(currentNetwork?.id);
   const [requestStatus, setRequestStatus] = useState(Status.LOADING);
   const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
 

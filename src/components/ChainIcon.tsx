@@ -9,10 +9,9 @@ interface ChainIconProps {
 const Image = styled('img')`
   height: 2.4rem;
   width: 2.4rem;
-  border-radius: 100%;
   background-color: inherit;
   color: inherit;
-  border-radius: inherit;
+  border-radius: 100%;
   user-select: none;
   pointer-events: none;
 `;

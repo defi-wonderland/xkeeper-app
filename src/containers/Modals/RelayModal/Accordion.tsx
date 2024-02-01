@@ -88,7 +88,7 @@ export const StyledAccordion = ({
         <SAccordionSummary
           onClick={handleAddCaller}
           disabled={!isAddress(relayAddress)}
-          expandIcon={<Icon name={!callersList.length && addCallerOpen ? 'plus' : 'chevron-down'} />}
+          expandIcon={<Icon name='chevron-down' />}
         >
           <STitle>{callersList.length ? `Callers (${callersList.length})` : 'Add Callers'}</STitle>
         </SAccordionSummary>

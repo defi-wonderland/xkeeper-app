@@ -37,7 +37,7 @@ export const Activity = () => {
 
   const formatAmountTooltip = (tokenAddress: string, amount: string, recipient: string) => {
     const data = getTokenValues(tokenAddress, amount);
-    return `${amount}wei ${data.symbol} to ${truncateAddress(recipient)}`;
+    return `${amount} wei ${data.symbol} to ${truncateAddress(recipient)}`;
   };
 
   const formatTextAmount = (tokenAddress: string, amount: string) => {
@@ -169,7 +169,7 @@ const Text = styled('p')({
 });
 
 const SText = styled(Text)({
-  maxWidth: '12rem',
+  maxWidth: '14rem',
 });
 
 const SColumnTitle = styled(ColumnTitle)({
@@ -201,7 +201,7 @@ const SymbolRow = styled(SRowText)(() => {
 const AmountRow = styled(SRowText)(() => {
   return {
     cursor: 'pointer',
-    minWidth: '12rem',
+    minWidth: '9rem',
   };
 });
 
@@ -214,7 +214,7 @@ const ActivityRowText = styled(SRowText)(() => {
 const DateRowText = styled(ActivityRowText)(() => {
   return {
     minWidth: '15rem',
-    padding: '2.8rem 1rem',
+    padding: '2.8rem 0 2.8rem 1rem',
   };
 });
 

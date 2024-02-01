@@ -14,7 +14,7 @@ import { Status } from '~/types';
  */
 export const useFetchSelectedVault = () => {
   const { selectedVault, notification, setSelectedVault, currentNetwork } = useStateContext();
-  const { publicClient } = useCustomClient();
+  const { publicClient } = useCustomClient(currentNetwork?.id);
   const {
     DEFAULT_WETH_ADDRESS,
     addresses: { xKeeperMetadata },

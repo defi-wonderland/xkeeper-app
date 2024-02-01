@@ -184,7 +184,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
       {/* Selected function selectors */}
       {!!selectors.length && (
         <>
-          <SelectorsLabel>Selectors</SelectorsLabel>
+          <SelectorsLabel>Allowed selectors</SelectorsLabel>
           {selectors.map((selector, index) => (
             <StyledInput
               key={selector + index}

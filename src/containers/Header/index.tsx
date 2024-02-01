@@ -72,7 +72,7 @@ export const Header = () => {
       <HeaderContainer role='menu'>
         <Navbar>
           <NavigationLink disabled={modalOpen !== ModalType.NONE} to='/' text='xKeeper' sx={logoStyles} />
-          <NavigationLink to='/' text='Docs' sx={navigationLinkStyles} external />
+          <NavigationLink to='https://docs.xkeeper.network/' text='Docs' sx={navigationLinkStyles} external />
         </Navbar>
 
         <RightSection>

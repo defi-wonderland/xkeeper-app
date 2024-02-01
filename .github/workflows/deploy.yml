@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name == 'main' && 'Prod' || 'Dev' }}
+      url: ${{ steps.vercel-deployment.outputs.preview-url }}
 
     steps:
       - uses: actions/checkout@v3
@@ -35,6 +36,7 @@ jobs:
           VITE_ALCHEMY_KEY: ${{ secrets.VITE_ALCHEMY_KEY }}
           VITE_TEST_PRIVATE_KEY: ${{ secrets.VITE_TEST_PRIVATE_KEY }}
           VITE_PROJECT_ID: ${{ secrets.VITE_PROJECT_ID }}
+          VITE_ETHERSCAN_KEY: ${{ secrets.VITE_ETHERSCAN_KEY }}
 
       - uses: amondnet/vercel-action@v25
         id: vercel-deployment

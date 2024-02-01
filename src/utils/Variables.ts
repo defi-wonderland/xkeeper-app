@@ -1,3 +1,5 @@
+import { goerli, mainnet, optimism, arbitrum, polygon, sepolia } from 'wagmi/chains';
+
 /*=============================================
 =                Misc Variables               =
 =============================================*/
@@ -7,6 +9,8 @@ export const aliasKey = 'xkeeper-aliases';
 export const anyCaller = '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
 export const itemsPerPage = 7;
 export const vaultsPerBatch = 3;
+
+export const supportedChains = [goerli, mainnet, optimism, arbitrum, polygon, sepolia];
 
 /*=============================================
 =               Style Variables               =

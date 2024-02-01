@@ -199,7 +199,6 @@ const TokenContainer = styled('div')({
   alignItems: 'center',
   justifyContent: 'start',
   gap: '1.2rem',
-  cursor: 'pointer',
 });
 
 const ColumnText = styled(StyledText)(() => {

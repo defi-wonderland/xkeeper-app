@@ -53,7 +53,6 @@ export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
   const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS, TEST_MODE: IS_TEST } = getConfig();
-  const { publicClient } = useCustomClient();
   const { modalOpen } = useModal();
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -64,6 +63,8 @@ export const StateProvider = ({ children }: StateProps) => {
     () => (availableChains[chainId]?.alchemyUrl ? availableChains[chainId] : availableChains[DEFAULT_CHAIN]),
     [DEFAULT_CHAIN, availableChains, chainId],
   );
+  const [currentNetwork, setCurrentNetwork] = useState<Chain>(defaultCurrentNetwork);
+  const { publicClient } = useCustomClient(currentNetwork?.id || chainId);
 
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
@@ -73,7 +74,6 @@ export const StateProvider = ({ children }: StateProps) => {
   const [totalRequestCount, setTotalRequestCount] = useState<number>();
   const [requestAmount, setRequestAmount] = useState<number>(vaultsPerBatch);
 
-  const [currentNetwork, setCurrentNetwork] = useState<Chain>(defaultCurrentNetwork);
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
