@@ -214,7 +214,7 @@ const ActivityRowText = styled(SRowText)(() => {
 const DateRowText = styled(ActivityRowText)(() => {
   return {
     minWidth: '15rem',
-    padding: '2.8rem 0 2.8rem  1rem ',
+    padding: '2.8rem 0 2.8rem 1rem',
   };
 });
 
