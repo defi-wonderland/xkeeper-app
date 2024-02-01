@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.ref_name == 'main' && 'Prod' || 'Dev' }}
+      url: ${{ steps.vercel-deployment.outputs.preview-url }}
 
     steps:
       - uses: actions/checkout@v3
