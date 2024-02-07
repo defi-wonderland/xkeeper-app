@@ -1,0 +1,42 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "automationVaults",
+      "inputs": [
+        { "name": "_startFrom", "type": "uint256", "internalType": "uint256" },
+        { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "_list", "type": "address[]", "internalType": "address[]" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "deployAutomationVault",
+      "inputs": [
+        { "name": "_owner", "type": "address", "internalType": "address" },
+        { "name": "_nativeToken", "type": "address", "internalType": "address" },
+        { "name": "_salt", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "_automationVault", "type": "address", "internalType": "contract IAutomationVault" }],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "totalAutomationVaults",
+      "inputs": [],
+      "outputs": [{ "name": "_totalAutomationVaults", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "DeployAutomationVault",
+      "inputs": [
+        { "name": "_owner", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_automationVault", "type": "address", "indexed": true, "internalType": "address" }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "AutomationVaultFactory_Create2Failed", "inputs": [] }
+  ]
+}

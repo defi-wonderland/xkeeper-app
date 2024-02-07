@@ -1,0 +1,268 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "NATIVE_TOKEN",
+      "inputs": [],
+      "outputs": [{ "name": "_nativeToken", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    { "type": "function", "name": "acceptOwner", "inputs": [], "outputs": [], "stateMutability": "nonpayable" },
+    {
+      "type": "function",
+      "name": "addRelay",
+      "inputs": [
+        { "name": "_relay", "type": "address", "internalType": "address" },
+        { "name": "_callers", "type": "address[]", "internalType": "address[]" },
+        {
+          "name": "_jobsData",
+          "type": "tuple[]",
+          "internalType": "struct IAutomationVault.JobData[]",
+          "components": [
+            { "name": "job", "type": "address", "internalType": "address" },
+            { "name": "functionSelectors", "type": "bytes4[]", "internalType": "bytes4[]" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "changeOwner",
+      "inputs": [{ "name": "_pendingOwner", "type": "address", "internalType": "address" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "deleteRelay",
+      "inputs": [{ "name": "_relay", "type": "address", "internalType": "address" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "exec",
+      "inputs": [
+        { "name": "_relayCaller", "type": "address", "internalType": "address" },
+        {
+          "name": "_execData",
+          "type": "tuple[]",
+          "internalType": "struct IAutomationVault.ExecData[]",
+          "components": [
+            { "name": "job", "type": "address", "internalType": "address" },
+            { "name": "jobData", "type": "bytes", "internalType": "bytes" }
+          ]
+        },
+        {
+          "name": "_feeData",
+          "type": "tuple[]",
+          "internalType": "struct IAutomationVault.FeeData[]",
+          "components": [
+            { "name": "feeRecipient", "type": "address", "internalType": "address" },
+            { "name": "feeToken", "type": "address", "internalType": "address" },
+            { "name": "fee", "type": "uint256", "internalType": "uint256" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getRelayData",
+      "inputs": [{ "name": "_relay", "type": "address", "internalType": "address" }],
+      "outputs": [
+        { "name": "_callers", "type": "address[]", "internalType": "address[]" },
+        {
+          "name": "_jobsData",
+          "type": "tuple[]",
+          "internalType": "struct IAutomationVault.JobData[]",
+          "components": [
+            { "name": "job", "type": "address", "internalType": "address" },
+            { "name": "functionSelectors", "type": "bytes4[]", "internalType": "bytes4[]" }
+          ]
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "modifyRelay",
+      "inputs": [
+        { "name": "_relay", "type": "address", "internalType": "address" },
+        { "name": "_callers", "type": "address[]", "internalType": "address[]" },
+        {
+          "name": "_jobsData",
+          "type": "tuple[]",
+          "internalType": "struct IAutomationVault.JobData[]",
+          "components": [
+            { "name": "job", "type": "address", "internalType": "address" },
+            { "name": "functionSelectors", "type": "bytes4[]", "internalType": "bytes4[]" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "modifyRelayCallers",
+      "inputs": [
+        { "name": "_relay", "type": "address", "internalType": "address" },
+        { "name": "_callers", "type": "address[]", "internalType": "address[]" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "modifyRelayJobs",
+      "inputs": [
+        { "name": "_relay", "type": "address", "internalType": "address" },
+        {
+          "name": "_jobsData",
+          "type": "tuple[]",
+          "internalType": "struct IAutomationVault.JobData[]",
+          "components": [
+            { "name": "job", "type": "address", "internalType": "address" },
+            { "name": "functionSelectors", "type": "bytes4[]", "internalType": "bytes4[]" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [{ "name": "_owner", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "pendingOwner",
+      "inputs": [],
+      "outputs": [{ "name": "_pendingOwner", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "relays",
+      "inputs": [],
+      "outputs": [{ "name": "_listRelays", "type": "address[]", "internalType": "address[]" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "withdrawFunds",
+      "inputs": [
+        { "name": "_token", "type": "address", "internalType": "address" },
+        { "name": "_amount", "type": "uint256", "internalType": "uint256" },
+        { "name": "_receiver", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "AcceptOwner",
+      "inputs": [{ "name": "_owner", "type": "address", "indexed": true, "internalType": "address" }],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ApproveJob",
+      "inputs": [{ "name": "_job", "type": "address", "indexed": true, "internalType": "address" }],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ApproveJobSelector",
+      "inputs": [
+        { "name": "_job", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_functionSelector", "type": "bytes4", "indexed": true, "internalType": "bytes4" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ApproveRelay",
+      "inputs": [{ "name": "_relay", "type": "address", "indexed": true, "internalType": "address" }],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ApproveRelayCaller",
+      "inputs": [
+        { "name": "_relay", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_caller", "type": "address", "indexed": true, "internalType": "address" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ChangeOwner",
+      "inputs": [{ "name": "_pendingOwner", "type": "address", "indexed": true, "internalType": "address" }],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "DeleteRelay",
+      "inputs": [{ "name": "_relay", "type": "address", "indexed": true, "internalType": "address" }],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "IssuePayment",
+      "inputs": [
+        { "name": "_relay", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_relayCaller", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_feeRecipient", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_feeToken", "type": "address", "indexed": false, "internalType": "address" },
+        { "name": "_fee", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "JobExecuted",
+      "inputs": [
+        { "name": "_relay", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_relayCaller", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_job", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_jobData", "type": "bytes", "indexed": false, "internalType": "bytes" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "NativeTokenReceived",
+      "inputs": [
+        { "name": "_sender", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_amount", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "WithdrawFunds",
+      "inputs": [
+        { "name": "_token", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "_amount", "type": "uint256", "indexed": false, "internalType": "uint256" },
+        { "name": "_receiver", "type": "address", "indexed": true, "internalType": "address" }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "AutomationVault_ExecFailed", "inputs": [] },
+    { "type": "error", "name": "AutomationVault_NativeTokenTransferFailed", "inputs": [] },
+    { "type": "error", "name": "AutomationVault_NotApprovedJobSelector", "inputs": [] },
+    { "type": "error", "name": "AutomationVault_NotApprovedRelayCaller", "inputs": [] },
+    { "type": "error", "name": "AutomationVault_OnlyOwner", "inputs": [] },
+    { "type": "error", "name": "AutomationVault_OnlyPendingOwner", "inputs": [] },
+    { "type": "error", "name": "AutomationVault_RelayAlreadyApproved", "inputs": [] },
+    { "type": "error", "name": "AutomationVault_RelayZero", "inputs": [] }
+  ]
+}
