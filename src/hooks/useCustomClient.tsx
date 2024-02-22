@@ -8,16 +8,16 @@ import { getConfig } from '~/config';
 import { Chains } from '~/types';
 import { supportedChains } from '~/utils';
 
-const { TEST_MODE, DEFAULT_CHAIN, availableChains, ALCHEMY_KEY } = getConfig();
-
-const getAlchemyProvider = (chainId: number, availableChains: Chains) => {
-  const activeChain = chainId || DEFAULT_CHAIN;
-  const apiUrl = availableChains[activeChain]?.alchemyUrl;
-  return `${apiUrl}/${ALCHEMY_KEY}`;
-};
-
 export const useCustomClient = (chainId: number) => {
+  const { TEST_MODE, DEFAULT_CHAIN, availableChains, ALCHEMY_KEY } = getConfig();
   const { address: userAddress } = useAccount();
+
+  const getAlchemyProvider = (chainId: number, availableChains: Chains) => {
+    const activeChain = chainId || DEFAULT_CHAIN;
+
+    const apiUrl = availableChains[activeChain]?.alchemyUrl;
+    return `${apiUrl}/${ALCHEMY_KEY}`;
+  };
 
   const customClient = useMemo(() => {
     const alchemy = http(getAlchemyProvider(chainId || DEFAULT_CHAIN, availableChains), { batch: true });
