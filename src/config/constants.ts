@@ -51,14 +51,6 @@ const constants: Constants = {
       apiUrl: 'https://api-optimistic.etherscan.io/api',
       alchemyUrl: 'https://optimism-mainnet.g.alchemy.com/v2',
     },
-    '5': {
-      displayName: 'Goerli',
-      name: 'goerli',
-      id: 5,
-      scanner: 'https://goerli.etherscan.io',
-      apiUrl: 'https://api-goerli.etherscan.io/api',
-      alchemyUrl: 'https://eth-goerli.alchemyapi.io/v2',
-    },
     '11155111': {
       displayName: 'Sepolia',
       name: 'sepolia',
