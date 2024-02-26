@@ -8,13 +8,13 @@ const constants: Constants = {
   vaultFactoryVersion: 'V1.0.0',
 
   addresses: {
-    AutomationVaultFactory: '0xFfA518751B1489BA60f30274F86C5B2fa67a568b',
-    xKeeperMetadata: '0x4208102475d40bE64E8610BA7C87A7F7b961e35d',
+    AutomationVaultFactory: '0xe1D23cc6F3415d425005454983d4B150786c9240',
+    xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
     relays: {
-      Keep3rRelay: '0x9D11bB1Eb9EF71a62285cc4DDA777b3EbEb80F71',
-      Keep3rBondedRelay: '0x8422F45a763a2b608D8a748D52886ab825329d95',
-      GelatoRelay: '0x0e35eae5ea725eb86415e99308a460888908753f',
-      OpenRelay: '0x5f1e19C9748e99ec382F62F2D0988bB83ea2DF9E',
+      Keep3rRelay: '0x06a909dB922eC583B9f3D1597bCE42C97f2371Fb',
+      Keep3rBondedRelay: '0xBa6CA456a5E17E6387a233fA14Bf33eefA165ddE',
+      GelatoRelay: '0x29CB3097985b4A3bBe34AFfcE61A4eAC9FE13317',
+      OpenRelay: '0x21a3C0E82aFB836B68b9C857901A3fE38352347A',
     },
   },
 
