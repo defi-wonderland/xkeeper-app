@@ -10,7 +10,7 @@ import {
   SIcon,
   BasicStyledListbox,
 } from '~/components';
-import { useTheme } from '~/hooks';
+import { useStateContext, useTheme } from '~/hooks';
 import { getRelayName } from '~/utils';
 
 interface RelayDropdownProps {
@@ -30,6 +30,7 @@ export function RelayDropdown({
   customRelay,
   setCustomRelay,
 }: RelayDropdownProps) {
+  const { currentNetwork } = useStateContext();
   const { currentTheme } = useTheme();
 
   const createHandleMenuClick = (value: string) => {
@@ -65,7 +66,7 @@ export function RelayDropdown({
                 data-test={`relay-dropdown-option-${index}`}
                 onClick={createHandleMenuClick(value)}
               >
-                {getRelayName(value)}
+                {getRelayName(value, currentNetwork?.id)}
               </StyledMenuItem>
             ))}
         </SCustomScrollbar>

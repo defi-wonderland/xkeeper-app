@@ -84,7 +84,7 @@ export const Activity = () => {
                   <SymbolRow align='left'>
                     <STooltip text={row.jobs[0].relay} address>
                       <SText onClick={() => handleOpenAddress(currentNetwork.scanner, row.jobs[0].relay)}>
-                        {getRelayName(row.jobs[0].relay) ||
+                        {getRelayName(row.jobs[0].relay, currentNetwork?.id) ||
                           aliasData[row.jobs[0].relay] ||
                           truncateAddress(row.jobs[0].relay, 4)}
                       </SText>

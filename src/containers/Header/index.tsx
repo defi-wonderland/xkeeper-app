@@ -11,7 +11,7 @@ export const Header = () => {
   const { modalOpen } = useModal();
   const { setTheme, theme, currentTheme } = useTheme();
 
-  const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
+  const [selectedChain, setSelectedChain] = useState(currentNetwork?.id.toString());
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleThemeChange = () => {
@@ -51,7 +51,7 @@ export const Header = () => {
   const menuIcon = menuOpen ? 'close' : 'mobile-menu';
 
   useEffect(() => {
-    setSelectedChain(currentNetwork.id.toString());
+    setSelectedChain(currentNetwork?.id.toString());
   }, [currentNetwork]);
 
   // Close menu when clicking outside

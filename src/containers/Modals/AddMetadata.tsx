@@ -19,7 +19,7 @@ import { getConfig } from '~/config';
 
 export const AddMetadataModal = () => {
   const { addresses } = getConfig();
-  const { selectedVault } = useStateContext();
+  const { selectedVault, currentNetwork } = useStateContext();
   const { modalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
 
@@ -30,7 +30,7 @@ export const AddMetadataModal = () => {
   const isEditMetadata = !!selectedVault?.name || !!selectedVault?.description;
 
   const { handleSendTransaction, writeAsync, requestStatus } = useXKeeperMetadata({
-    contractAddress: addresses.xKeeperMetadata,
+    contractAddress: addresses[currentNetwork?.id].xKeeperMetadata,
     args: [vaultAddress, { name, description }],
     notificationTitle: 'Metadata successfully added',
     showReceipt: true,

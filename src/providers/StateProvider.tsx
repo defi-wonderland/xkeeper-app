@@ -84,24 +84,23 @@ export const StateProvider = ({ children }: StateProps) => {
       const chainName = getChainName(publicClient);
 
       const prices = await getPrices(chainName, tokenAddresses);
-      const vaultsData = await getVaults(publicClient, addresses.AutomationVaultFactory, startIndex, amountOfVaults);
+      const vaultsData = await getVaults(
+        publicClient,
+        addresses[currentNetwork?.id].AutomationVaultFactory,
+        startIndex,
+        amountOfVaults,
+      );
       const formattedVaultsData = await getVaultsData(
         publicClient,
         vaultsData,
         tokens,
         prices,
-        addresses.xKeeperMetadata,
+        addresses[currentNetwork?.id].xKeeperMetadata,
       );
 
       return formattedVaultsData;
     },
-    [
-      DEFAULT_WETH_ADDRESS,
-      addresses.AutomationVaultFactory,
-      addresses.xKeeperMetadata,
-      currentNetwork?.id,
-      publicClient,
-    ],
+    [DEFAULT_WETH_ADDRESS, addresses, currentNetwork?.id, publicClient],
   );
 
   const fetchVaulsDataWithPagination = useCallback(
@@ -143,7 +142,10 @@ export const StateProvider = ({ children }: StateProps) => {
       try {
         if ((!totalRequestCount && !vaults.length) || reset) {
           setLoading(true);
-          const totalRequestCount = await getTotalVaults(publicClient, addresses.AutomationVaultFactory);
+          const totalRequestCount = await getTotalVaults(
+            publicClient,
+            addresses[currentNetwork?.id].AutomationVaultFactory,
+          );
           const newRequestAmount = Math.min(vaultsPerBatch, totalRequestCount);
 
           const newData = await fetchVaulsDataWithPagination(totalRequestCount - newRequestAmount, newRequestAmount);

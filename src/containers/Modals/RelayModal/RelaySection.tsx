@@ -19,14 +19,17 @@ export const RelaySection = ({ relayAddress, setRelayAddress, isLoading }: Relay
   const { addresses } = getConfig();
   const { modalOpen } = useModal();
   const [customRelay, setCustomRelay] = useState(false);
-  const { selectedItem } = useStateContext();
+  const { selectedItem, currentNetwork } = useStateContext();
   const { selectedAddress: selectedRelayAddress } = selectedItem || {};
 
-  const availableValues = useMemo(() => [...Object.values(addresses.relays), 'Choose relay'], [addresses.relays]);
+  const availableValues = useMemo(
+    () => [...Object.values(addresses[currentNetwork?.id].relays), 'Choose relay'],
+    [addresses, currentNetwork?.id],
+  );
 
   const dropdownValue = useMemo(
-    () => getRelayName(relayAddress, selectedRelayAddress ? 'Custom relay' : 'Choose relay'),
-    [relayAddress, selectedRelayAddress],
+    () => getRelayName(relayAddress, currentNetwork?.id, selectedRelayAddress ? 'Custom relay' : 'Choose relay'),
+    [currentNetwork?.id, relayAddress, selectedRelayAddress],
   );
 
   const handleCustomRelayAddress = () => {

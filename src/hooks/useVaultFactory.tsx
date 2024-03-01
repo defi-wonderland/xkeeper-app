@@ -35,7 +35,7 @@ export const useVaultFactory = ({
   );
 
   const { config } = usePrepareContractWrite({
-    address: addresses.AutomationVaultFactory,
+    address: addresses[currentNetwork?.id].AutomationVaultFactory,
     abi: vaultFactoryABI,
     functionName: 'deployAutomationVault',
     args: args,
@@ -50,11 +50,14 @@ export const useVaultFactory = ({
       if (writeAsync) {
         const writeResult = await writeAsync();
         await publicClient.waitForTransactionReceipt(writeResult);
-        const totalRequestCount = await getTotalVaults(publicClient, addresses.AutomationVaultFactory);
+        const totalRequestCount = await getTotalVaults(
+          publicClient,
+          addresses[currentNetwork?.id].AutomationVaultFactory,
+        );
 
         // Fetch the newly created vault
         const result = await publicClient.readContract({
-          address: addresses.AutomationVaultFactory,
+          address: addresses[currentNetwork?.id].AutomationVaultFactory,
           abi: vaultFactoryABI,
           functionName: 'automationVaults',
           args: [BigInt(totalRequestCount - 1), 1n],
