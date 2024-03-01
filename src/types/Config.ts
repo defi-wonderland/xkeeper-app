@@ -21,13 +21,15 @@ export interface Constants {
 }
 
 export interface Addresses {
-  AutomationVaultFactory: Address;
-  xKeeperMetadata: Address;
-  relays: {
-    GelatoRelay: Address;
-    OpenRelay: Address;
-    Keep3rRelay: Address;
-    Keep3rBondedRelay: Address;
+  [key: string | number]: {
+    AutomationVaultFactory: Address;
+    xKeeperMetadata: Address;
+    relays: {
+      GelatoRelay: Address;
+      OpenRelay: Address;
+      Keep3rRelay: Address;
+      Keep3rBondedRelay: Address;
+    };
   };
 }
 

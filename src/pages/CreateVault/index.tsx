@@ -22,7 +22,7 @@ export const CreateVault = () => {
   const { availableChains, userAddress, currentNetwork } = useStateContext();
 
   const [vaultOwner, setVaultOwner] = useState(userAddress || '');
-  const [selectedChain, setSelectedChain] = useState(currentNetwork.id.toString());
+  const [selectedChain, setSelectedChain] = useState(currentNetwork?.id.toString());
   const { requestStatus, handleSendTransaction, writeAsync } = useVaultFactory({
     ownerAddress: vaultOwner as Address,
     selectedChain,
@@ -35,7 +35,7 @@ export const CreateVault = () => {
   }, [userAddress]);
 
   useEffect(() => {
-    setSelectedChain(currentNetwork.id.toString());
+    setSelectedChain(currentNetwork?.id.toString());
   }, [currentNetwork]);
 
   return (

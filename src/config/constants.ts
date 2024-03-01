@@ -8,13 +8,45 @@ const constants: Constants = {
   vaultFactoryVersion: 'V1.0.0',
 
   addresses: {
-    AutomationVaultFactory: '0xFfA518751B1489BA60f30274F86C5B2fa67a568b',
-    xKeeperMetadata: '0x4208102475d40bE64E8610BA7C87A7F7b961e35d',
-    relays: {
-      Keep3rRelay: '0x9D11bB1Eb9EF71a62285cc4DDA777b3EbEb80F71',
-      Keep3rBondedRelay: '0x8422F45a763a2b608D8a748D52886ab825329d95',
-      GelatoRelay: '0x0e35eae5ea725eb86415e99308a460888908753f',
-      OpenRelay: '0x5f1e19C9748e99ec382F62F2D0988bB83ea2DF9E',
+    '11155111': {
+      AutomationVaultFactory: '0xa9C4c7295519C8aE3A69D6d84252de6948666bd4',
+      relays: {
+        GelatoRelay: '0xe012118BA9678ceB3B7104C9bD7cc6b8Cf0a90DC',
+        Keep3rRelay: '0xB0CB8E6Fe8F655d46eE0910332C263ddB61FF9a0',
+        Keep3rBondedRelay: '0xaDe1cE131609702FdDb68f6142fc1c74f80F4c5f',
+        OpenRelay: '0xc461d22DCDd8538E8025AAfA439B5BddA8C69B15',
+      },
+      xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
+    },
+    '10': {
+      AutomationVaultFactory: '0xa9C4c7295519C8aE3A69D6d84252de6948666bd4',
+      relays: {
+        GelatoRelay: '0xe012118BA9678ceB3B7104C9bD7cc6b8Cf0a90DC',
+        OpenRelay: '0xc461d22DCDd8538E8025AAfA439B5BddA8C69B15',
+        Keep3rRelay: '0xfACd8867002605d16DaEb87955F443EE53a0893b',
+        Keep3rBondedRelay: '0x10Ddf0A7051e238311A1b858acA26C4115f1c3EF',
+      },
+      xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
+    },
+    '137': {
+      AutomationVaultFactory: '0xa9C4c7295519C8aE3A69D6d84252de6948666bd4',
+      relays: {
+        GelatoRelay: '0xe012118BA9678ceB3B7104C9bD7cc6b8Cf0a90DC',
+        OpenRelay: '0xc461d22DCDd8538E8025AAfA439B5BddA8C69B15',
+        Keep3rRelay: '0xfACd8867002605d16DaEb87955F443EE53a0893b',
+        Keep3rBondedRelay: '0x10Ddf0A7051e238311A1b858acA26C4115f1c3EF',
+      },
+      xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
+    },
+    '1': {
+      AutomationVaultFactory: '0xa9C4c7295519C8aE3A69D6d84252de6948666bd4',
+      relays: {
+        GelatoRelay: '0xe012118BA9678ceB3B7104C9bD7cc6b8Cf0a90DC',
+        OpenRelay: '0xc461d22DCDd8538E8025AAfA439B5BddA8C69B15',
+        Keep3rRelay: '0xeBe2B03A83FAF02C0f4f113E6C85a3A95f107E51',
+        Keep3rBondedRelay: '0x5b564DA8EA72b79676EA9a6571DA0d62D29B6AA2',
+      },
+      xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
     },
   },
 
@@ -26,14 +58,6 @@ const constants: Constants = {
       scanner: 'https://etherscan.io',
       apiUrl: 'https://api.etherscan.io/api',
       alchemyUrl: 'https://eth-mainnet.alchemyapi.io/v2',
-    },
-    '42161': {
-      displayName: 'Arbitrum One',
-      name: 'arbitrum',
-      id: 42161,
-      scanner: 'https://arbiscan.io',
-      apiUrl: 'https://api.arbiscan.io/api',
-      alchemyUrl: 'https://arb-mainnet.g.alchemy.com/v2',
     },
     '137': {
       displayName: 'Polygon',
@@ -50,14 +74,6 @@ const constants: Constants = {
       scanner: 'https://optimistic.etherscan.io',
       apiUrl: 'https://api-optimistic.etherscan.io/api',
       alchemyUrl: 'https://optimism-mainnet.g.alchemy.com/v2',
-    },
-    '5': {
-      displayName: 'Goerli',
-      name: 'goerli',
-      id: 5,
-      scanner: 'https://goerli.etherscan.io',
-      apiUrl: 'https://api-goerli.etherscan.io/api',
-      alchemyUrl: 'https://eth-goerli.alchemyapi.io/v2',
     },
     '11155111': {
       displayName: 'Sepolia',
