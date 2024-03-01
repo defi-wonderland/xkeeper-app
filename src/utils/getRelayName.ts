@@ -1,21 +1,19 @@
 import { getConstants } from '~/config/constants';
 
-export const getRelayName = (relayAddress: string, customName?: string) => {
-  const {
-    relays: { GelatoRelay, OpenRelay, Keep3rRelay, Keep3rBondedRelay },
-  } = getConstants().addresses;
+export const getRelayName = (relayAddress: string, chainId: number | string, customName?: string) => {
+  const { addresses } = getConstants();
 
   switch (relayAddress.toLowerCase()) {
-    case GelatoRelay.toLowerCase():
+    case addresses[chainId].relays.GelatoRelay.toLowerCase():
       return 'Gelato Relay';
 
-    case OpenRelay.toLowerCase():
+    case addresses[chainId].relays.OpenRelay.toLowerCase():
       return 'Open Relay';
 
-    case Keep3rRelay.toLowerCase():
+    case addresses[chainId].relays.Keep3rRelay.toLowerCase():
       return 'Keep3r Relay';
 
-    case Keep3rBondedRelay.toLowerCase():
+    case addresses[chainId].relays.Keep3rBondedRelay.toLowerCase():
       return 'Keep3r Bonded Relay';
 
     default:

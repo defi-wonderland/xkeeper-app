@@ -15,7 +15,7 @@ interface RelayHeaderProps {
 export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
   const { currentTheme } = useTheme();
   const { aliasData } = useAlias();
-  const { userAddress, selectedVault } = useStateContext();
+  const { userAddress, selectedVault, currentNetwork } = useStateContext();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -31,7 +31,7 @@ export const RelayHeader = ({ relayAddress, callers }: RelayHeaderProps) => {
     <SectionHeader>
       <TitleContainer>
         <Box>
-          <StyledTitle>{aliasData[relayAddress] || getRelayName(relayAddress)}</StyledTitle>
+          <StyledTitle>{aliasData[relayAddress] || getRelayName(relayAddress, currentNetwork?.id)}</StyledTitle>
 
           <STooltip text={relayAddress} address>
             <StyledText onClick={handleCopy}>{truncateAddress(relayAddress)}</StyledText>

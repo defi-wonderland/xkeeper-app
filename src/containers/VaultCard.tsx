@@ -12,7 +12,7 @@ interface VaultCardProps {
 }
 
 export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
-  const { userAddress } = useStateContext();
+  const { userAddress, currentNetwork } = useStateContext();
   const { currentTheme } = useTheme();
   const { aliasData } = useAlias();
   const { name, totalValue, relays, chain, owner, address } = vaultData;
@@ -57,7 +57,10 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
           <ChipsContainer>
             {!!activeRelays.length &&
               activeRelays.map((relayAddress) => (
-                <RelayChip text={aliasData[relayAddress] || getRelayName(relayAddress)} key={relayAddress} />
+                <RelayChip
+                  text={aliasData[relayAddress] || getRelayName(relayAddress, currentNetwork?.id)}
+                  key={relayAddress}
+                />
               ))}
 
             {!activeRelays.length && <NoRelayChip text='No active relays' />}

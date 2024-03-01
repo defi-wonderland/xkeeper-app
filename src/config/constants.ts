@@ -8,13 +8,45 @@ const constants: Constants = {
   vaultFactoryVersion: 'V1.0.0',
 
   addresses: {
-    AutomationVaultFactory: '0xe1D23cc6F3415d425005454983d4B150786c9240',
-    xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
-    relays: {
-      Keep3rRelay: '0x06a909dB922eC583B9f3D1597bCE42C97f2371Fb',
-      Keep3rBondedRelay: '0xBa6CA456a5E17E6387a233fA14Bf33eefA165ddE',
-      GelatoRelay: '0x29CB3097985b4A3bBe34AFfcE61A4eAC9FE13317',
-      OpenRelay: '0x21a3C0E82aFB836B68b9C857901A3fE38352347A',
+    '11155111': {
+      AutomationVaultFactory: '0xa9C4c7295519C8aE3A69D6d84252de6948666bd4',
+      relays: {
+        GelatoRelay: '0xe012118BA9678ceB3B7104C9bD7cc6b8Cf0a90DC',
+        Keep3rRelay: '0xB0CB8E6Fe8F655d46eE0910332C263ddB61FF9a0',
+        Keep3rBondedRelay: '0xaDe1cE131609702FdDb68f6142fc1c74f80F4c5f',
+        OpenRelay: '0xc461d22DCDd8538E8025AAfA439B5BddA8C69B15',
+      },
+      xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
+    },
+    '10': {
+      AutomationVaultFactory: '0xa9C4c7295519C8aE3A69D6d84252de6948666bd4',
+      relays: {
+        GelatoRelay: '0xe012118BA9678ceB3B7104C9bD7cc6b8Cf0a90DC',
+        OpenRelay: '0xc461d22DCDd8538E8025AAfA439B5BddA8C69B15',
+        Keep3rRelay: '0xfACd8867002605d16DaEb87955F443EE53a0893b',
+        Keep3rBondedRelay: '0x10Ddf0A7051e238311A1b858acA26C4115f1c3EF',
+      },
+      xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
+    },
+    '137': {
+      AutomationVaultFactory: '0xa9C4c7295519C8aE3A69D6d84252de6948666bd4',
+      relays: {
+        GelatoRelay: '0xe012118BA9678ceB3B7104C9bD7cc6b8Cf0a90DC',
+        OpenRelay: '0xc461d22DCDd8538E8025AAfA439B5BddA8C69B15',
+        Keep3rRelay: '0xfACd8867002605d16DaEb87955F443EE53a0893b',
+        Keep3rBondedRelay: '0x10Ddf0A7051e238311A1b858acA26C4115f1c3EF',
+      },
+      xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
+    },
+    '1': {
+      AutomationVaultFactory: '0xa9C4c7295519C8aE3A69D6d84252de6948666bd4',
+      relays: {
+        GelatoRelay: '0xe012118BA9678ceB3B7104C9bD7cc6b8Cf0a90DC',
+        OpenRelay: '0xc461d22DCDd8538E8025AAfA439B5BddA8C69B15',
+        Keep3rRelay: '0xeBe2B03A83FAF02C0f4f113E6C85a3A95f107E51',
+        Keep3rBondedRelay: '0x5b564DA8EA72b79676EA9a6571DA0d62D29B6AA2',
+      },
+      xKeeperMetadata: '0x96f57C654f07dda2B7d65dD98150158Bd5d764db',
     },
   },
 
@@ -26,14 +58,6 @@ const constants: Constants = {
       scanner: 'https://etherscan.io',
       apiUrl: 'https://api.etherscan.io/api',
       alchemyUrl: 'https://eth-mainnet.alchemyapi.io/v2',
-    },
-    '42161': {
-      displayName: 'Arbitrum One',
-      name: 'arbitrum',
-      id: 42161,
-      scanner: 'https://arbiscan.io',
-      apiUrl: 'https://api.arbiscan.io/api',
-      alchemyUrl: 'https://arb-mainnet.g.alchemy.com/v2',
     },
     '137': {
       displayName: 'Polygon',
