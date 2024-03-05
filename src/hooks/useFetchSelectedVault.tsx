@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Address } from 'wagmi';
+import { Address, usePublicClient } from 'wagmi';
 
-import { useStateContext, useCustomClient } from '~/hooks';
+import { useStateContext } from '~/hooks';
 import { getChainName, getPrices, getTokenList, getVaultsData } from '~/utils';
 import { getConfig } from '~/config';
 import { Status } from '~/types';
@@ -14,7 +14,7 @@ import { Status } from '~/types';
  */
 export const useFetchSelectedVault = () => {
   const { selectedVault, notification, setSelectedVault, currentNetwork } = useStateContext();
-  const { publicClient } = useCustomClient(currentNetwork?.id);
+  const publicClient = usePublicClient();
   const { DEFAULT_ETH_ADDRESS, addresses } = getConfig();
 
   const { address } = useParams();

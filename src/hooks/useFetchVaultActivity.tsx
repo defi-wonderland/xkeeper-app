@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
+import { usePublicClient } from 'wagmi';
 
-import { useCustomClient, useStateContext } from '~/hooks';
+import { useStateContext } from '~/hooks';
 import { getVaultEvents } from '~/utils';
 import { EventData, Status } from '~/types';
 
@@ -10,8 +11,8 @@ import { EventData, Status } from '~/types';
  * @returns {EventData} data - Vault activity data
  */
 export const useFetchVaultActivity = () => {
-  const { selectedVault, vaults, currentNetwork, setVaults, setSelectedVault } = useStateContext();
-  const { publicClient } = useCustomClient(currentNetwork?.id);
+  const { selectedVault, vaults, setVaults, setSelectedVault } = useStateContext();
+  const publicClient = usePublicClient();
   const [requestStatus, setRequestStatus] = useState(Status.LOADING);
   const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
 

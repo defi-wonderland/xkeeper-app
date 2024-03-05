@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount, useNetwork, usePublicClient } from 'wagmi';
 
 import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
 import {
@@ -12,7 +12,6 @@ import {
   getChainName,
 } from '~/utils';
 import { getConfig } from '~/config';
-import { useCustomClient } from '~/hooks';
 import { useModal } from '~/hooks';
 
 type ContextType = {
@@ -43,6 +42,9 @@ type ContextType = {
   setVaults: (val: VaultData[]) => void;
 
   updateVaultsList: () => Promise<void>;
+
+  handleLoad: (reset?: boolean) => void;
+  resetVaults: () => void;
 };
 
 interface StateProps {
@@ -64,7 +66,7 @@ export const StateProvider = ({ children }: StateProps) => {
     [DEFAULT_CHAIN, availableChains, chainId],
   );
   const [currentNetwork, setCurrentNetwork] = useState<Chain>(defaultCurrentNetwork);
-  const { publicClient } = useCustomClient(currentNetwork?.id || chainId);
+  const publicClient = usePublicClient({ chainId: currentNetwork.id });
 
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
@@ -219,6 +221,8 @@ export const StateProvider = ({ children }: StateProps) => {
         vaults,
         setVaults,
         updateVaultsList,
+        handleLoad,
+        resetVaults,
       }}
     >
       {children}
