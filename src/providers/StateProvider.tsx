@@ -52,7 +52,7 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS, TEST_MODE: IS_TEST } = getConfig();
+  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_ETH_ADDRESS, TEST_MODE: IS_TEST } = getConfig();
   const { modalOpen } = useModal();
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -80,7 +80,7 @@ export const StateProvider = ({ children }: StateProps) => {
   const loadVaultData = useCallback(
     async (startIndex: number, amountOfVaults: number) => {
       const tokens = getTokenList(currentNetwork?.id);
-      const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
+      const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
       const chainName = getChainName(publicClient);
 
       const prices = await getPrices(chainName, tokenAddresses);
@@ -100,7 +100,7 @@ export const StateProvider = ({ children }: StateProps) => {
 
       return formattedVaultsData;
     },
-    [DEFAULT_WETH_ADDRESS, addresses, currentNetwork?.id, publicClient],
+    [DEFAULT_ETH_ADDRESS, addresses, currentNetwork?.id, publicClient],
   );
 
   const fetchVaulsDataWithPagination = useCallback(

@@ -15,7 +15,7 @@ import { Status } from '~/types';
 export const useFetchSelectedVault = () => {
   const { selectedVault, notification, setSelectedVault, currentNetwork } = useStateContext();
   const { publicClient } = useCustomClient(currentNetwork?.id);
-  const { DEFAULT_WETH_ADDRESS, addresses } = getConfig();
+  const { DEFAULT_ETH_ADDRESS, addresses } = getConfig();
 
   const { address } = useParams();
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
@@ -23,7 +23,7 @@ export const useFetchSelectedVault = () => {
   const loadSelectedVault = useCallback(async () => {
     try {
       const tokens = getTokenList(currentNetwork?.id);
-      const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
+      const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
       const chainName = getChainName(publicClient);
 
       const prices = await getPrices(chainName, tokenAddressList);
@@ -39,7 +39,7 @@ export const useFetchSelectedVault = () => {
     } catch (error) {
       console.error(`Error loading vault ${address}:`, error);
     }
-  }, [DEFAULT_WETH_ADDRESS, address, addresses, currentNetwork?.id, publicClient, setSelectedVault]);
+  }, [DEFAULT_ETH_ADDRESS, address, addresses, currentNetwork?.id, publicClient, setSelectedVault]);
 
   // Load vault data when there is no selected vault
   useEffect(() => {

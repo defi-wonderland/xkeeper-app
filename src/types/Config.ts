@@ -40,6 +40,10 @@ export interface Chain {
   id: number;
   apiUrl: string;
   alchemyUrl: string;
+  nativeToken: {
+    symbol: string;
+    name: string;
+  };
 }
 
 export interface Chains {

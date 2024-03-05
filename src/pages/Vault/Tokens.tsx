@@ -12,6 +12,8 @@ export const Tokens = () => {
   const { setModalOpen } = useModal();
   const { DEFAULT_ETH_ADDRESS } = getConfig();
 
+  const hasBalance = selectedVault?.tokens.some((token) => !!token.balance);
+
   const openTokenContract = (address: string) => {
     if (address === DEFAULT_ETH_ADDRESS) return;
     window.open(`${currentNetwork.scanner}/token/${address}`, '_blank');
@@ -45,7 +47,7 @@ export const Tokens = () => {
         </ButtonsContainer>
       </SectionHeader>
 
-      {!!Number(selectedVault?.totalValue) && (
+      {hasBalance && (
         <TableContainer>
           <STable aria-label='tokens table'>
             <TableHead>
