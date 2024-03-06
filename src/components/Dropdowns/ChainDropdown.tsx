@@ -1,3 +1,4 @@
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Dropdown } from '@mui/base/Dropdown';
 import { Menu } from '@mui/base/Menu';
 import { MenuButton } from '@mui/base/MenuButton';
@@ -20,18 +21,22 @@ interface ChainDropdownProps {
 }
 
 export function ChainDropdown({ chains, value, setValue, disabled, compact }: ChainDropdownProps) {
-  const { setCurrentNetwork, availableChains, handleLoad, resetVaults } = useStateContext();
+  const { setCurrentNetwork, availableChains } = useStateContext();
   const { currentTheme } = useTheme();
   const { chain } = useNetwork();
   const { switchNetworkAsync } = useSwitchNetwork();
+  const { chain: currentChainName } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const createHandleMenuClick = (chainId: string) => {
     return async () => {
+      const pathName = location.pathname.replace(currentChainName || '', availableChains[chainId].name);
+      navigate(pathName, { replace: true });
+
       switchNetworkAsync && (await switchNetworkAsync(Number(chainId)));
       setCurrentNetwork(availableChains[chainId]);
       setValue(chainId);
-      resetVaults();
-      handleLoad(true);
     };
   };
 
