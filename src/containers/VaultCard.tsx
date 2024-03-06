@@ -12,14 +12,15 @@ interface VaultCardProps {
 }
 
 export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
-  const { userAddress, currentNetwork } = useStateContext();
+  const { userAddress, currentNetwork, availableChains } = useStateContext();
   const { currentTheme } = useTheme();
   const { aliasData } = useAlias();
-  const { name, totalValue, relays, chain, owner, address } = vaultData;
+  const { name, totalValue, relays, owner, address } = vaultData;
 
   const activeRelays = Object.keys(relays);
   const vaultAlias = aliasData[address];
   const vaultName = name ? name : truncateAddress(address);
+  const chainIcon = availableChains[currentNetwork.id].name;
 
   return (
     <SContainer onClick={onClick}>
@@ -39,7 +40,7 @@ export const VaultCard = ({ vaultData, onClick }: VaultCardProps) => {
                 </InfoChip>
               )}
 
-              <ChainIcon chainName={chain} />
+              <ChainIcon chainName={chainIcon} />
             </SBox>
           </TitleContainer>
 
