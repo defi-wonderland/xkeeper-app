@@ -22,6 +22,7 @@ export const Vault = () => {
   const chainId = Object.values(availableChains).find((c) => c.name === chain)?.id;
 
   const { requestStatus, data: selectedVault } = useFetchSelectedVault();
+  const owner = selectedVault?.owner;
 
   const chainName = currentNetwork.displayName;
   const vaultAddress = selectedVault?.address || '';
@@ -88,7 +89,7 @@ export const Vault = () => {
           chainName={chainName}
         />
 
-        <BasicTabs sections={sections} isLoading={requestStatus === Status.LOADING} />
+        {owner && <BasicTabs sections={sections} isLoading={requestStatus === Status.LOADING} />}
       </VaultContainer>
 
       {/* Back To Top Button */}

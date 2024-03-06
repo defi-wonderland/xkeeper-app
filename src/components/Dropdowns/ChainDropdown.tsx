@@ -31,12 +31,13 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
 
   const createHandleMenuClick = (chainId: string) => {
     return async () => {
-      const pathName = location.pathname.replace(currentChainName || '', availableChains[chainId].name);
-      navigate(pathName, { replace: true });
-
       switchNetworkAsync && (await switchNetworkAsync(Number(chainId)));
       setCurrentNetwork(availableChains[chainId]);
       setValue(chainId);
+
+      const pathName = location.pathname.replace(currentChainName || '', availableChains[chainId].name);
+      navigate(pathName, { replace: true });
+      pathName.includes('vault') && document.location.reload();
     };
   };
 
