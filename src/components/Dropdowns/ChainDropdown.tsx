@@ -20,7 +20,7 @@ interface ChainDropdownProps {
 }
 
 export function ChainDropdown({ chains, value, setValue, disabled, compact }: ChainDropdownProps) {
-  const { setCurrentNetwork, availableChains } = useStateContext();
+  const { setCurrentNetwork, availableChains, handleLoad, resetVaults } = useStateContext();
   const { currentTheme } = useTheme();
   const { chain } = useNetwork();
   const { switchNetworkAsync } = useSwitchNetwork();
@@ -30,6 +30,8 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
       switchNetworkAsync && (await switchNetworkAsync(Number(chainId)));
       setCurrentNetwork(availableChains[chainId]);
       setValue(chainId);
+      resetVaults();
+      handleLoad(true);
     };
   };
 

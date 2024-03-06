@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount, useNetwork, usePublicClient } from 'wagmi';
 
 import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
 import {
@@ -12,7 +12,6 @@ import {
   getChainName,
 } from '~/utils';
 import { getConfig } from '~/config';
-import { useCustomClient } from '~/hooks';
 import { useModal } from '~/hooks';
 
 type ContextType = {
@@ -43,6 +42,9 @@ type ContextType = {
   setVaults: (val: VaultData[]) => void;
 
   updateVaultsList: () => Promise<void>;
+
+  handleLoad: (reset?: boolean) => void;
+  resetVaults: () => void;
 };
 
 interface StateProps {
@@ -52,7 +54,7 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_WETH_ADDRESS, TEST_MODE: IS_TEST } = getConfig();
+  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_ETH_ADDRESS, TEST_MODE: IS_TEST } = getConfig();
   const { modalOpen } = useModal();
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -64,7 +66,7 @@ export const StateProvider = ({ children }: StateProps) => {
     [DEFAULT_CHAIN, availableChains, chainId],
   );
   const [currentNetwork, setCurrentNetwork] = useState<Chain>(defaultCurrentNetwork);
-  const { publicClient } = useCustomClient(currentNetwork?.id || chainId);
+  const publicClient = usePublicClient({ chainId: currentNetwork.id });
 
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
@@ -80,7 +82,7 @@ export const StateProvider = ({ children }: StateProps) => {
   const loadVaultData = useCallback(
     async (startIndex: number, amountOfVaults: number) => {
       const tokens = getTokenList(currentNetwork?.id);
-      const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_WETH_ADDRESS];
+      const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
       const chainName = getChainName(publicClient);
 
       const prices = await getPrices(chainName, tokenAddresses);
@@ -100,7 +102,7 @@ export const StateProvider = ({ children }: StateProps) => {
 
       return formattedVaultsData;
     },
-    [DEFAULT_WETH_ADDRESS, addresses, currentNetwork?.id, publicClient],
+    [DEFAULT_ETH_ADDRESS, addresses, currentNetwork?.id, publicClient],
   );
 
   const fetchVaulsDataWithPagination = useCallback(
@@ -219,6 +221,8 @@ export const StateProvider = ({ children }: StateProps) => {
         vaults,
         setVaults,
         updateVaultsList,
+        handleLoad,
+        resetVaults,
       }}
     >
       {children}

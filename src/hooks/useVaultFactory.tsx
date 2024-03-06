@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react';
-import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { useNavigate } from 'react-router-dom';
 import { TransactionExecutionError } from 'viem';
 
-import { useStateContext, useCustomClient } from '~/hooks';
+import { useStateContext } from '~/hooks';
 import { vaultFactoryABI } from '~/generated';
 import { getTotalVaults, getViewTransaction, getSalt } from '~/utils';
 import { getConfig } from '~/config';
@@ -26,7 +26,7 @@ export const useVaultFactory = ({
   const { setNotification, currentNetwork, setSelectedVault } = useStateContext();
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
   const { addresses, DEFAULT_ETH_ADDRESS } = getConfig();
-  const { publicClient } = useCustomClient(currentNetwork?.id);
+  const publicClient = usePublicClient();
   const navigate = useNavigate();
 
   const args = useMemo(

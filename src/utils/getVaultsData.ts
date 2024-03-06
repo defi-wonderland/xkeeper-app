@@ -116,7 +116,8 @@ const fetchAndFormatData = async (
   const tokensResult = multicallResult.slice(4) as CallResult[];
 
   const chainName = getChainName(publicClient);
-  tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, prices);
+  const chainId = publicClient.chain.id;
+  tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, chainId, prices);
 
   if (relays?.result?.length) {
     const relayEnabledCallers = relays.result.map((relayAddress: Address) => ({

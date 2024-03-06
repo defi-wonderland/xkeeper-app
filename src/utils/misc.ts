@@ -51,7 +51,7 @@ export function formatDataNumber(
   let res: number = Number.parseFloat(input);
   if (res === 0) return `${currency ? '$0' : '0'}`;
 
-  if (decimals !== 0) res = Number.parseFloat(formatUnits(BigInt(input), decimals));
+  if (decimals !== 0) res = Number.parseFloat(formatUnits(BigInt(res), decimals));
 
   if (res < 0.01) return `${currency ? '$' : ''}<0.01`;
 

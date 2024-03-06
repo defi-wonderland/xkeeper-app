@@ -58,6 +58,10 @@ const constants: Constants = {
       scanner: 'https://etherscan.io',
       apiUrl: 'https://api.etherscan.io/api',
       alchemyUrl: 'https://eth-mainnet.alchemyapi.io/v2',
+      nativeToken: {
+        symbol: 'ETH',
+        name: 'Ether',
+      },
     },
     '137': {
       displayName: 'Polygon',
@@ -66,6 +70,10 @@ const constants: Constants = {
       scanner: 'https://polygonscan.com',
       apiUrl: 'https://api.polygonscan.com/api',
       alchemyUrl: 'https://polygon-mainnet.g.alchemy.com/v2',
+      nativeToken: {
+        symbol: 'MATIC',
+        name: 'Polygon',
+      },
     },
     '10': {
       displayName: 'OP Mainnet',
@@ -74,6 +82,10 @@ const constants: Constants = {
       scanner: 'https://optimistic.etherscan.io',
       apiUrl: 'https://api-optimistic.etherscan.io/api',
       alchemyUrl: 'https://optimism-mainnet.g.alchemy.com/v2',
+      nativeToken: {
+        symbol: 'ETH',
+        name: 'Ether',
+      },
     },
     '11155111': {
       displayName: 'Sepolia',
@@ -82,6 +94,10 @@ const constants: Constants = {
       scanner: 'https://sepolia.etherscan.io',
       apiUrl: 'https://api-sepolia.etherscan.io/api',
       alchemyUrl: 'https://eth-sepolia.g.alchemy.com/v2',
+      nativeToken: {
+        symbol: 'ETH',
+        name: 'Ether',
+      },
     },
   },
 };
