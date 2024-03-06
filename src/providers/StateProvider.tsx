@@ -170,11 +170,6 @@ export const StateProvider = ({ children }: StateProps) => {
     setVaults([]);
   }, []);
 
-  // Load vaults on load
-  useEffect(() => {
-    handleLoad();
-  }, [handleLoad]);
-
   // Update current network when chain changes
   useEffect(() => {
     if (chain?.id) setCurrentNetwork(availableChains[chainId]);

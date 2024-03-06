@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -14,9 +15,11 @@ import { VaultHeader } from './VaultHeader';
 import { EnabledRelays } from './EnabledRelays';
 
 export const Vault = () => {
-  const { userAddress, currentNetwork, setSelectedItem } = useStateContext();
+  const { userAddress, currentNetwork, availableChains, setSelectedItem, handleLoad } = useStateContext();
   const { setModalOpen } = useModal();
   const { aliasData } = useAlias();
+  const { chain } = useParams();
+  const chainId = Object.values(availableChains).find((c) => c.name === chain)?.id;
 
   const { requestStatus, data: selectedVault } = useFetchSelectedVault();
 
@@ -60,6 +63,11 @@ export const Vault = () => {
   const handleOpenAddMetadata = () => {
     setModalOpen(ModalType.ADD_METADATA);
   };
+
+  useEffect(() => {
+    if (currentNetwork?.id !== chainId) return;
+    handleLoad();
+  }, [chainId, currentNetwork?.id, handleLoad]);
 
   return (
     <PageContainer>

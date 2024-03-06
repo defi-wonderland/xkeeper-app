@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -16,7 +16,8 @@ import { InfiniteScroll, useStateContext, useTheme } from '~/hooks';
 import { VaultCard } from '~/containers';
 
 export const Landing = () => {
-  const { userAddress, setSelectedVault, loading, vaults, updateVaultsList, currentNetwork } = useStateContext();
+  const { userAddress, loading, vaults, currentNetwork, updateVaultsList, setSelectedVault, handleLoad } =
+    useStateContext();
   const { currentTheme } = useTheme();
 
   const [searchValue, setSearchValue] = useState('');
@@ -79,6 +80,10 @@ export const Landing = () => {
     }),
     [loading, ownedVaults],
   );
+
+  useEffect(() => {
+    handleLoad();
+  }, [handleLoad]);
 
   return (
     <HomeContainer>
