@@ -1,5 +1,6 @@
 import { Address } from 'viem';
 import { PublicClient, erc20ABI } from 'wagmi';
+import { getConfig } from '~/config';
 
 import { vaultABI, vaultFactoryABI, xkeeperMetadataABI } from '~/generated';
 import { CallResult, PriceData, RelayData, RelayResult, Token, TokenData, VaultData } from '~/types';
@@ -79,6 +80,7 @@ const fetchAndFormatData = async (
   tokens: TokenData[];
   description: string;
 }> => {
+  const { availableChains } = getConfig();
   const vaultContract = { address: vaultAddress, abi: vaultABI };
 
   const metadataContract = { address: xKeeperMetadata, abi: xkeeperMetadataABI, args: [vaultAddress] };
@@ -115,7 +117,7 @@ const fetchAndFormatData = async (
 
   const tokensResult = multicallResult.slice(4) as CallResult[];
 
-  const chainName = getChainName(publicClient);
+  const chainName = getChainName(publicClient, availableChains);
   const chainId = publicClient.chain.id;
   tokensData = formatTokensData(tokens, tokensResult, ethBalance, chainName, chainId, prices);
 

@@ -83,7 +83,7 @@ export const StateProvider = ({ children }: StateProps) => {
     async (startIndex: number, amountOfVaults: number) => {
       const tokens = getTokenList(currentNetwork?.id);
       const tokenAddresses = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
-      const chainName = getChainName(publicClient);
+      const chainName = getChainName(publicClient, availableChains);
 
       const prices = await getPrices(chainName, tokenAddresses);
       const vaultsData = await getVaults(
@@ -102,7 +102,7 @@ export const StateProvider = ({ children }: StateProps) => {
 
       return formattedVaultsData;
     },
-    [DEFAULT_ETH_ADDRESS, addresses, currentNetwork?.id, publicClient],
+    [DEFAULT_ETH_ADDRESS, addresses, availableChains, currentNetwork?.id, publicClient],
   );
 
   const fetchVaulsDataWithPagination = useCallback(

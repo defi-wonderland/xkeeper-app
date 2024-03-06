@@ -2,7 +2,7 @@ import { Address, Hex, formatUnits, parseUnits } from 'viem';
 import { PublicClient } from 'wagmi';
 
 import { vaultABI } from '~/generated';
-import { AliasData, EventData, TokenData } from '~/types';
+import { AliasData, Chains, EventData, TokenData } from '~/types';
 
 export const truncateAddress = (address?: string, chars = 4) => {
   if (!address) return '-';
@@ -170,7 +170,7 @@ export const getVaultEvents = async (
 };
 
 // Get the current chain name, if sepolia return ethereum
-export const getChainName = (publicClient: PublicClient) => {
-  const currentChain = publicClient.chain.name.toLowerCase();
-  return currentChain === 'sepolia' ? 'ethereum' : currentChain;
+export const getChainName = (publicClient: PublicClient, availableChains: Chains) => {
+  const currentChain = publicClient.chain.id;
+  return availableChains[currentChain]?.name;
 };

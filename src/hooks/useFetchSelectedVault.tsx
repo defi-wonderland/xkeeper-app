@@ -30,7 +30,7 @@ export const useFetchSelectedVault = () => {
       setCurrentNetwork(availableChains[chainId || DEFAULT_CHAIN]);
       const tokens = getTokenList(chainId);
       const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
-      const chainName = getChainName(publicClient);
+      const chainName = getChainName(publicClient, availableChains);
 
       const prices = await getPrices(chainName, tokenAddressList);
       const vaultData = await getVaultsData(
