@@ -13,11 +13,15 @@ import { Status } from '~/types';
  * @returns {VaultData} data - Vault data
  */
 export const useFetchSelectedVault = () => {
-  const { selectedVault, notification, setSelectedVault, currentNetwork } = useStateContext();
-  const publicClient = usePublicClient();
-  const { DEFAULT_ETH_ADDRESS, addresses } = getConfig();
+  const { selectedVault, notification, setSelectedVault, currentNetwork, availableChains } = useStateContext();
+  const { address, chain } = useParams();
 
-  const { address } = useParams();
+  const chainId = Object.values(availableChains).find((c) => c.name === chain)?.id;
+  const publicClient = usePublicClient({
+    chainId,
+  });
+
+  const { DEFAULT_ETH_ADDRESS, addresses } = getConfig();
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
 
   const loadSelectedVault = useCallback(async () => {

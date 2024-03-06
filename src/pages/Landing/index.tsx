@@ -16,7 +16,7 @@ import { InfiniteScroll, useStateContext, useTheme } from '~/hooks';
 import { VaultCard } from '~/containers';
 
 export const Landing = () => {
-  const { userAddress, setSelectedVault, loading, vaults, updateVaultsList } = useStateContext();
+  const { userAddress, setSelectedVault, loading, vaults, updateVaultsList, currentNetwork } = useStateContext();
   const { currentTheme } = useTheme();
 
   const [searchValue, setSearchValue] = useState('');
@@ -41,7 +41,7 @@ export const Landing = () => {
         items: searchedVaults.length ? (
           searchedVaults.map((vault, index) => (
             <NavigationLink
-              to={'/vault/' + vault.address}
+              to={currentNetwork.name + '/vault/' + vault.address}
               key={vault.address + '-' + index}
               dataTestId={`vault-card-${index}`}
             >
@@ -53,7 +53,7 @@ export const Landing = () => {
         ),
       },
     ],
-    [loading, searchedVaults, setSelectedVault],
+    [currentNetwork.name, loading, searchedVaults, setSelectedVault],
   );
 
   const myVaultSection = useMemo(

@@ -17,7 +17,7 @@ const AppRouter = () => {
     <Routes>
       <Route element={<AppLayout />}>
         <Route path='/' element={<Landing />} />
-        <Route path='/vault/:address' element={<Vault />} />
+        <Route path='/:chain/vault/:address' element={<Vault />} />
         <Route path='/create' element={<CreateVault />} />
       </Route>
     </Routes>
