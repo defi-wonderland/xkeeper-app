@@ -1,7 +1,6 @@
 export * from './InfiniteScroll';
 export * from './useAbi';
 export * from './ScrollToTop';
-export * from './useCustomClient';
 export * from './useFetchSelectedVault';
 export * from './useFetchVaultActivity';
 export * from './useSelectorName';

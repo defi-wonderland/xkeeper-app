@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Address, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { Address, useContractWrite, usePrepareContractWrite, usePublicClient } from 'wagmi';
 import { WriteContractResult } from 'wagmi/actions';
 import { TransactionExecutionError } from 'viem';
 
-import { useCustomClient, useModal, useStateContext } from '~/hooks';
+import { useModal, useStateContext } from '~/hooks';
 import { getViewTransaction } from '~/utils';
 import { vaultABI } from '~/generated';
 import { ModalType, Status } from '~/types';
@@ -45,7 +45,7 @@ export const useVault = ({
 } => {
   const { currentNetwork, setNotification } = useStateContext();
   const { setModalOpen } = useModal();
-  const { publicClient } = useCustomClient(currentNetwork?.id);
+  const publicClient = usePublicClient();
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
 
   const { config } = usePrepareContractWrite({
