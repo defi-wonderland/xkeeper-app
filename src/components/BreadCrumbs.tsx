@@ -2,6 +2,7 @@ import { Box, Breadcrumbs, IconButton, styled } from '@mui/material';
 
 import { useTheme } from '~/hooks';
 import { Icon, NavigationLink, StyledText } from '~/components';
+import { useParams } from 'react-router-dom';
 
 interface BreadCrumbsProps {
   currentPage: string;
@@ -10,10 +11,11 @@ interface BreadCrumbsProps {
 
 export const BreadCrumbs = ({ currentPage, previousPage }: BreadCrumbsProps) => {
   const { currentTheme } = useTheme();
+  const { chain } = useParams();
 
   const breadcrumbs = [
     <PreviousPage key='1' sx={{ color: currentTheme.textDisabled }}>
-      <NavigationLink to='/'>{previousPage}</NavigationLink>
+      <NavigationLink to={`/${chain}`}>{previousPage}</NavigationLink>
     </PreviousPage>,
     <CurrentPage key='2' sx={{ color: currentTheme.infoChipColor }}>
       {currentPage}
@@ -23,7 +25,7 @@ export const BreadCrumbs = ({ currentPage, previousPage }: BreadCrumbsProps) => 
   return (
     <BreadCrumbsContainer>
       {/* Back Button */}
-      <NavigationLink to='/'>
+      <NavigationLink to={`/${chain}`}>
         <BackBtn
           sx={{ background: currentTheme.backgroundPrimary, border: `1px solid ${currentTheme.backButtonBorderColor}` }}
         >

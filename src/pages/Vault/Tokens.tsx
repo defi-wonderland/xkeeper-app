@@ -12,7 +12,7 @@ export const Tokens = () => {
   const { setModalOpen } = useModal();
   const { DEFAULT_ETH_ADDRESS } = getConfig();
 
-  const hasBalance = selectedVault?.tokens.some((token) => !!token.balance);
+  const hasBalance = selectedVault?.tokens.some((token) => !!Number(token.balance));
 
   const openTokenContract = (address: string) => {
     if (address === DEFAULT_ETH_ADDRESS) return;

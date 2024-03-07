@@ -33,6 +33,9 @@ export const VaultHeader = ({
 }: VaultHeaderProps) => {
   const { vaultFactoryVersion } = getConfig();
   const { currentTheme } = useTheme();
+  const descriptionText = selectedVault?.owner
+    ? 'Define your vault metadata for keepers to better understand your jobs.'
+    : 'This vault does not exist.';
 
   return (
     <div>
@@ -82,7 +85,8 @@ export const VaultHeader = ({
           {!selectedVault?.description && (
             <DescriptionChip>
               <Icon name='exclamation-triangle' size='2.4rem' color={currentTheme.warningChipColor} />
-              Define your vault metadata for keepers to better understand your jobs.
+              {descriptionText}
+
               {userAddress && selectedVault?.owner === userAddress && (
                 // Add vault metadata button
                 <DescriptionButton
