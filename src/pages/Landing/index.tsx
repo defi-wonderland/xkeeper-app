@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   SearchInput,
@@ -14,10 +15,26 @@ import {
 } from '~/components';
 import { InfiniteScroll, useStateContext, useTheme } from '~/hooks';
 import { VaultCard } from '~/containers';
+import { getConfig } from '~/config';
 
 export const Landing = () => {
-  const { userAddress, setSelectedVault, loading, vaults, updateVaultsList } = useStateContext();
+  const {
+    userAddress,
+    loading,
+    vaults,
+    currentNetwork,
+    availableChains,
+    updateVaultsList,
+    setSelectedVault,
+    setCurrentNetwork,
+    handleLoad,
+    resetVaults,
+  } = useStateContext();
+  const { DEFAULT_CHAIN } = getConfig();
   const { currentTheme } = useTheme();
+  const navigate = useNavigate();
+  const { chain } = useParams();
+  const chainId = Object.values(availableChains).find((c) => c.name === chain)?.id;
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -41,7 +58,7 @@ export const Landing = () => {
         items: searchedVaults.length ? (
           searchedVaults.map((vault, index) => (
             <NavigationLink
-              to={'/vault/' + vault.address}
+              to={`/${currentNetwork.name}/vault/${vault.address}`}
               key={vault.address + '-' + index}
               dataTestId={`vault-card-${index}`}
             >
@@ -53,7 +70,7 @@ export const Landing = () => {
         ),
       },
     ],
-    [loading, searchedVaults, setSelectedVault],
+    [currentNetwork.name, loading, searchedVaults, setSelectedVault],
   );
 
   const myVaultSection = useMemo(
@@ -62,7 +79,7 @@ export const Landing = () => {
       items: ownedVaults.length ? (
         ownedVaults.map((vault, index) => (
           <NavigationLink
-            to={'/vault/' + vault.address}
+            to={`/${currentNetwork.name}/vault/${vault.address}`}
             key={vault.address + '-' + index}
             dataTestId={`vault-card-${index}`}
           >
@@ -77,8 +94,20 @@ export const Landing = () => {
         />
       ),
     }),
-    [loading, ownedVaults],
+    [currentNetwork.name, loading, ownedVaults],
   );
+
+  useEffect(() => {
+    const path = chain ? `/${chain}` : `/${availableChains[DEFAULT_CHAIN].name}`;
+    navigate(path, { replace: true });
+    setCurrentNetwork(availableChains[chainId || '1']);
+  }, [DEFAULT_CHAIN, availableChains, chain, chainId, navigate, setCurrentNetwork]);
+
+  useEffect(() => {
+    if (currentNetwork?.id !== chainId) return;
+    resetVaults();
+    handleLoad(true);
+  }, [chainId, currentNetwork?.id, handleLoad, resetVaults]);
 
   return (
     <HomeContainer>
@@ -87,7 +116,7 @@ export const Landing = () => {
         <SearchInput placeholder='Vault name or address' value={searchValue} setValue={setSearchValue} />
 
         {/* Create Vault Button */}
-        <NavigationLink to='/create'>
+        <NavigationLink to={`/${currentNetwork.name}/create`}>
           <CreateVaultBtn variant='contained' size='large' data-test='create-vault-btn'>
             <SIcon name='plus' size='1.8rem' color={currentTheme.actionButtonColor} />
             Create Vault

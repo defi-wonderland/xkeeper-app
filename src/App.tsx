@@ -17,8 +17,9 @@ const AppRouter = () => {
     <Routes>
       <Route element={<AppLayout />}>
         <Route path='/' element={<Landing />} />
-        <Route path='/vault/:address' element={<Vault />} />
-        <Route path='/create' element={<CreateVault />} />
+        <Route path='/:chain' element={<Landing />} />
+        <Route path='/:chain/vault/:address' element={<Vault />} />
+        <Route path='/:chain/create' element={<CreateVault />} />
       </Route>
     </Routes>
   );
@@ -26,6 +27,7 @@ const AppRouter = () => {
 
 export const App = () => {
   const { theme: mode, currentTheme } = useTheme();
+
   const theme = useMemo(() => getMuiGLobalConfig(currentTheme, mode), [currentTheme, mode]);
 
   return (

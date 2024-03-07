@@ -1,4 +1,4 @@
-import tokenList from '~/assets/tokens.json';
+import tokenList from '~/data/tokens.json';
 import { Token } from '~/types';
 import { getConstants } from '~/config/constants';
 

@@ -13,18 +13,24 @@ import { Status } from '~/types';
  * @returns {VaultData} data - Vault data
  */
 export const useFetchSelectedVault = () => {
-  const { selectedVault, notification, setSelectedVault, currentNetwork } = useStateContext();
-  const publicClient = usePublicClient();
-  const { DEFAULT_ETH_ADDRESS, addresses } = getConfig();
+  const { selectedVault, notification, setSelectedVault, availableChains, setCurrentNetwork } = useStateContext();
+  const { DEFAULT_CHAIN } = getConfig();
+  const { address, chain } = useParams();
 
-  const { address } = useParams();
+  const chainId = Object.values(availableChains).find((c) => c.name === chain)?.id;
+  const publicClient = usePublicClient({
+    chainId,
+  });
+
+  const { DEFAULT_ETH_ADDRESS, addresses } = getConfig();
   const [requestStatus, setRequestStatus] = useState(Status.IDLE);
 
   const loadSelectedVault = useCallback(async () => {
     try {
-      const tokens = getTokenList(currentNetwork?.id);
+      setCurrentNetwork(availableChains[chainId || DEFAULT_CHAIN]);
+      const tokens = getTokenList(chainId);
       const tokenAddressList = [...tokens.map((token) => token.address), DEFAULT_ETH_ADDRESS];
-      const chainName = getChainName(publicClient);
+      const chainName = getChainName(publicClient, availableChains);
 
       const prices = await getPrices(chainName, tokenAddressList);
       const vaultData = await getVaultsData(
@@ -32,14 +38,24 @@ export const useFetchSelectedVault = () => {
         [address as Address],
         tokens,
         prices,
-        addresses[currentNetwork?.id].xKeeperMetadata,
+        addresses[chainId || DEFAULT_CHAIN].xKeeperMetadata,
       );
 
       setSelectedVault(vaultData[0]);
     } catch (error) {
       console.error(`Error loading vault ${address}:`, error);
     }
-  }, [DEFAULT_ETH_ADDRESS, address, addresses, currentNetwork?.id, publicClient, setSelectedVault]);
+  }, [
+    DEFAULT_CHAIN,
+    DEFAULT_ETH_ADDRESS,
+    address,
+    addresses,
+    availableChains,
+    chainId,
+    publicClient,
+    setCurrentNetwork,
+    setSelectedVault,
+  ]);
 
   // Load vault data when there is no selected vault
   useEffect(() => {

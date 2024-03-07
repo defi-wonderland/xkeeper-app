@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -14,11 +15,14 @@ import { VaultHeader } from './VaultHeader';
 import { EnabledRelays } from './EnabledRelays';
 
 export const Vault = () => {
-  const { userAddress, currentNetwork, setSelectedItem } = useStateContext();
+  const { userAddress, currentNetwork, availableChains, setSelectedItem, handleLoad } = useStateContext();
   const { setModalOpen } = useModal();
   const { aliasData } = useAlias();
+  const { chain } = useParams();
+  const chainId = Object.values(availableChains).find((c) => c.name === chain)?.id;
 
   const { requestStatus, data: selectedVault } = useFetchSelectedVault();
+  const owner = selectedVault?.owner;
 
   const chainName = currentNetwork.displayName;
   const vaultAddress = selectedVault?.address || '';
@@ -61,6 +65,11 @@ export const Vault = () => {
     setModalOpen(ModalType.ADD_METADATA);
   };
 
+  useEffect(() => {
+    if (currentNetwork?.id !== chainId) return;
+    handleLoad();
+  }, [chainId, currentNetwork?.id, handleLoad]);
+
   return (
     <PageContainer>
       {/* Component that contains all modals */}
@@ -80,7 +89,7 @@ export const Vault = () => {
           chainName={chainName}
         />
 
-        <BasicTabs sections={sections} isLoading={requestStatus === Status.LOADING} />
+        {owner && <BasicTabs sections={sections} isLoading={requestStatus === Status.LOADING} />}
       </VaultContainer>
 
       {/* Back To Top Button */}

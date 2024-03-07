@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { usePublicClient } from 'wagmi';
 
 import { useStateContext } from '~/hooks';
@@ -11,8 +12,14 @@ import { EventData, Status } from '~/types';
  * @returns {EventData} data - Vault activity data
  */
 export const useFetchVaultActivity = () => {
-  const { selectedVault, vaults, setVaults, setSelectedVault } = useStateContext();
-  const publicClient = usePublicClient();
+  const { selectedVault, vaults, setVaults, setSelectedVault, currentNetwork, availableChains } = useStateContext();
+  const { chain } = useParams();
+  const chainId = Object.values(availableChains).find((c) => c.name === chain)?.id;
+
+  const publicClient = usePublicClient({
+    chainId: chainId || currentNetwork?.id,
+  });
+
   const [requestStatus, setRequestStatus] = useState(Status.LOADING);
   const [events, setEvents] = useState<EventData[]>(selectedVault?.events || []);
 

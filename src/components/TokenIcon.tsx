@@ -21,8 +21,10 @@ const Image = styled('img')`
 
 export const TokenIcon = ({ chainName, tokenAddress }: TokenIconProps) => {
   const { DEFAULT_ETH_ADDRESS } = getConstants();
+  const nativeTokenIcon = chainName === 'polygon' ? 'polygon' : 'ethereum';
+
   const customSrc = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainName}/assets/${tokenAddress}/logo.png`;
-  const ethSrc = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainName}/info/logo.png`;
+  const ethSrc = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${nativeTokenIcon}/info/logo.png`;
 
   return (
     <Image
