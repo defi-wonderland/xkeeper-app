@@ -1,4 +1,4 @@
-import { mainnet, optimism, polygon, sepolia } from 'wagmi/chains';
+import { optimism, optimismSepolia } from 'wagmi/chains';
 
 /*=============================================
 =                Misc Variables               =
@@ -10,7 +10,7 @@ export const anyCaller = '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
 export const itemsPerPage = 7;
 export const vaultsPerBatch = 3;
 
-export const supportedChains = [mainnet, optimism, polygon, sepolia];
+export const supportedChains = [optimism, optimismSepolia];
 
 /*=============================================
 =               Style Variables               =

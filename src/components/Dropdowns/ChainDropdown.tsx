@@ -55,7 +55,7 @@ export function ChainDropdown({ chains, value, setValue, disabled, compact }: Ch
     <Dropdown>
       {/* Dropdown button */}
       <DropdownTriggerButton isError={unsupportedChain} disabled={disabled} compact={compact?.toString()}>
-        <ChainIcon chainName={chains[value].name} />
+        <ChainIcon chainName={unsupportedChain ? 'default' : chains[value].name} />
         {!compact && <StyledText>{unsupportedChain ? 'Wrong network' : chains[value].name}</StyledText>}
         {compact && unsupportedChain && <StyledText>Wrong network</StyledText>}
         <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />
