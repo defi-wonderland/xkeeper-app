@@ -169,7 +169,7 @@ export const getVaultEvents = async (
   return uniqueEvents;
 };
 
-// Get the current chain name, if sepolia return ethereum
+// Get the current chain name, if OP Sepolia return ethereum
 export const getChainName = (publicClient: PublicClient, availableChains: Chains) => {
   const currentChain = publicClient.chain.id;
   return availableChains[currentChain]?.name;
