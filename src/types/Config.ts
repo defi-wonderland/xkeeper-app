@@ -14,7 +14,6 @@ export interface Constants {
   DEFAULT_CHAIN: number;
   DEFAULT_THEME: ThemeName;
   DEFAULT_ETH_ADDRESS: string;
-  DEFAULT_WETH_ADDRESS: string;
   addresses: Addresses;
   availableChains: Chains;
   vaultFactoryVersion: string;

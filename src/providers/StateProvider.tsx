@@ -66,7 +66,7 @@ export const StateProvider = ({ children }: StateProps) => {
     [DEFAULT_CHAIN, availableChains, chainId],
   );
   const [currentNetwork, setCurrentNetwork] = useState<Chain>(defaultCurrentNetwork);
-  const publicClient = usePublicClient({ chainId: currentNetwork.id });
+  const publicClient = usePublicClient({ chainId: currentNetwork?.id });
 
   const [notification, setNotification] = useState<Notification>({ open: false });
   const [selectedVault, setSelectedVault] = useState<VaultData>();
