@@ -2,7 +2,6 @@ import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { injectedWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 
 import { configureChains, createConfig, sepolia } from 'wagmi';
-import { optimismSepolia } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { MockConnector } from 'wagmi/connectors/mock';
