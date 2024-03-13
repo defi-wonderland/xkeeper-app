@@ -30,7 +30,7 @@ const getWallets = () => {
 export const { chains: availableChains, publicClient } = (() => {
   if (TEST_MODE) {
     return configureChains(
-      [sepolia, optimismSepolia],
+      [sepolia],
       [
         jsonRpcProvider({
           rpc: () => ({
