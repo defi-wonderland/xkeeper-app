@@ -1,7 +1,7 @@
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { injectedWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 
-import { configureChains, createConfig } from 'wagmi';
+import { configureChains, createConfig, sepolia } from 'wagmi';
 import { optimismSepolia } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
@@ -30,7 +30,7 @@ const getWallets = () => {
 export const { chains: availableChains, publicClient } = (() => {
   if (TEST_MODE) {
     return configureChains(
-      [optimismSepolia],
+      [sepolia, optimismSepolia],
       [
         jsonRpcProvider({
           rpc: () => ({
@@ -63,7 +63,7 @@ const testConfig = {
   connectors: [
     new MockConnector({
       options: {
-        chainId: optimismSepolia.id,
+        chainId: sepolia.id,
         walletClient: createWalletClient({
           account: privateKeyToAccount(TEST_PRIVATE_KEY),
           transport: http('http://127.0.0.1:8545'),
