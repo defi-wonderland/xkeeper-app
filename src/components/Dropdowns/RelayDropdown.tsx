@@ -48,13 +48,13 @@ export function RelayDropdown({
   return (
     <Dropdown>
       {/* Dropdown button */}
-      <DropdownTriggerButton disabled={disabled} data-test='relay-dropdown-button'>
+      <SButton disabled={disabled} data-test='relay-dropdown-button'>
         <StyledText>
           {customRelay && 'Custom relay'}
           {!customRelay && value}
         </StyledText>
         {!disabled && <SIcon name='chevron-down' color={currentTheme.textDisabled} size='2rem' />}
-      </DropdownTriggerButton>
+      </SButton>
 
       {/* Dropdown Options */}
       <Menu slots={{ listbox: BasicStyledListbox }}>
@@ -78,4 +78,10 @@ export function RelayDropdown({
 const SCustomScrollbar = styled(CustomScrollbar)({
   padding: '0.2rem',
   maxHeight: '17rem',
+});
+
+const SButton = styled(DropdownTriggerButton)({
+  p: {
+    textTransform: 'capitalize',
+  },
 });
