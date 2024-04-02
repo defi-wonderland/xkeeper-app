@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useNetwork } from 'wagmi';
 
 import {
   SearchInput,
@@ -30,6 +31,7 @@ export const Landing = () => {
     handleLoad,
     resetVaults,
   } = useStateContext();
+  const { chain: accountChain } = useNetwork();
   const { DEFAULT_CHAIN } = getConfig();
   const { currentTheme } = useTheme();
   const navigate = useNavigate();
@@ -108,6 +110,12 @@ export const Landing = () => {
     resetVaults();
     handleLoad(true);
   }, [chainId, currentNetwork?.id, handleLoad, resetVaults]);
+
+  useEffect(() => {
+    if (chain !== currentNetwork.name) {
+      navigate(`/${currentNetwork.name}`, { replace: true });
+    }
+  }, [accountChain, chain, currentNetwork, navigate]);
 
   return (
     <HomeContainer>
