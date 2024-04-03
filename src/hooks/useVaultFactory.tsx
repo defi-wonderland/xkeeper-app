@@ -67,7 +67,7 @@ export const useVaultFactory = ({
         setSelectedVault();
 
         // Redirects to the newly created vault
-        if (result && result.length) navigate('/vault/' + result[result.length - 1]);
+        if (result && result.length) navigate(`/${currentNetwork.name}/vault/${result[result.length - 1]}`);
 
         setNotification({
           open: true,
