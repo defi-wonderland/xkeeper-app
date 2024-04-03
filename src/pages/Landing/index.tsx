@@ -97,17 +97,26 @@ export const Landing = () => {
     [currentNetwork.name, loading, ownedVaults],
   );
 
+  // Redirect to default chain if chain is not available and set current network as default chain
   useEffect(() => {
     const path = chain ? `/${chain}` : `/${availableChains[DEFAULT_CHAIN].name}`;
     navigate(path, { replace: true });
     setCurrentNetwork(availableChains[chainId || '1']);
   }, [DEFAULT_CHAIN, availableChains, chain, chainId, navigate, setCurrentNetwork]);
 
+  // Reset vaults and load vaults on chain change
   useEffect(() => {
     if (currentNetwork?.id !== chainId) return;
     resetVaults();
     handleLoad(true);
   }, [chainId, currentNetwork?.id, handleLoad, resetVaults]);
+
+  // If the chain in the URL is not the same as the current network, redirect to the current network of the user
+  useEffect(() => {
+    if (chain !== currentNetwork.name) {
+      navigate(`/${currentNetwork.name}`, { replace: true });
+    }
+  }, [chain, currentNetwork, navigate]);
 
   return (
     <HomeContainer>
