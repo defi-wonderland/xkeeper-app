@@ -115,6 +115,7 @@ export const StyledAccordion = ({
             isError={isError}
             setIsError={setIsError}
             isEdit={!!relayAddress}
+            relayAddress={relayAddress}
           />
         </SAccordionDetails>
       </AccordionBox>

@@ -8,6 +8,7 @@ import { anyCaller } from '~/utils';
 import { ModalType } from '~/types';
 
 interface CallerSectionProps {
+  relayAddress: string;
   callersList: string[];
   setCallersList: (value: string[]) => void;
   isLoading: boolean;
@@ -16,11 +17,27 @@ interface CallerSectionProps {
   isEdit: boolean;
 }
 
-export const CallerSection = ({ callersList, setCallersList, isLoading, setIsError }: CallerSectionProps) => {
-  const { selectedVault, selectedItem } = useStateContext();
+export const CallerSection = ({
+  relayAddress,
+  callersList,
+  setCallersList,
+  isLoading,
+  setIsError,
+}: CallerSectionProps) => {
+  const { selectedVault, selectedItem, addresses, currentNetwork } = useStateContext();
   const { modalOpen } = useModal();
   const [callerAddress, setCallerAddress] = useState<string>('');
   const [allowAnyCaller, setAllowAnyCaller] = useState(false);
+
+  /**
+   *  If the relay address is the GelatoRelay, we disable the allowAnyCaller switch
+   *  This is because the GelatoRelay has a special exec function that requires fee data
+   *  and we don't want to allow any caller to call this function
+   */
+  const allowAnyCallerDisabled = useMemo(
+    () => addresses[currentNetwork.id].relays.GelatoRelay === relayAddress,
+    [addresses, currentNetwork.id, relayAddress],
+  );
 
   const callerIsRepeated = useMemo(() => {
     return !allowAnyCaller && callersList.includes(callerAddress);
@@ -87,7 +104,7 @@ export const CallerSection = ({ callersList, setCallersList, isLoading, setIsErr
       />
       <CallersContainer>
         <Container>
-          <SSwitch disabled={isLoading} onClick={handleToggle} />
+          <SSwitch disabled={allowAnyCallerDisabled || isLoading} onClick={handleToggle} />
           <ToggleText>Allow any caller</ToggleText>
         </Container>
       </CallersContainer>
