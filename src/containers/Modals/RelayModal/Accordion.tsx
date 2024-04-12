@@ -10,7 +10,7 @@ import { Icon, StyledTitle } from '~/components';
 import { CallerSection } from './CallerSection';
 import { JobSection } from './JobSection';
 import { truncateAddress } from '~/utils';
-import { JobsData } from '~/types';
+import { JobsData, RelayData } from '~/types';
 
 interface StyledAccordionProps {
   relayAddress: string;
@@ -23,6 +23,7 @@ interface StyledAccordionProps {
   isLoading: boolean;
   isError: boolean;
   setIsError: (value: boolean) => void;
+  defaultData: RelayData;
 }
 
 export const StyledAccordion = ({
@@ -36,6 +37,7 @@ export const StyledAccordion = ({
   setJobsData,
   jobsCount,
   setJobsCount,
+  defaultData,
 }: StyledAccordionProps) => {
   const { selectedItem } = useStateContext();
   const [addCallerOpen, setAddCallerOpen] = useState<boolean>(true);
@@ -82,6 +84,17 @@ export const StyledAccordion = ({
     [isEdit, jobsCount, selectedItem?.selectedAddress],
   );
 
+  const isDisabled = useCallback(
+    (index: number) => defaultData[relayAddress]?.jobsData.length === index + 1,
+    [defaultData, relayAddress],
+  );
+
+  const handleDelete = (index: number) => {
+    if (!isDisabled(index) && !isLoading) {
+      handleRemoveJob(index);
+    }
+  };
+
   return (
     <AccordionContainer>
       <AccordionBox disableGutters expanded={callerExpanded}>
@@ -108,7 +121,7 @@ export const StyledAccordion = ({
 
       {jobsList.map((_value, index) => (
         <JobAccordionBox disableGutters key={jobsData[index]?.job} defaultExpanded={isDefaultExpanded(index)}>
-          <SAccordionSummary expandIcon={<SIcon name='close' onClick={() => !isLoading && handleRemoveJob(index)} />}>
+          <SAccordionSummary expandIcon={<SIcon name='close' onClick={() => handleDelete(index)} />}>
             <STitle>
               Job {index + 1} {isAddress(jobsData[index]?.job) ? `(${truncateAddress(jobsData[index]?.job)})` : ''}
             </STitle>
@@ -116,7 +129,13 @@ export const StyledAccordion = ({
 
           <SAccordionDetails>
             {/* Job section */}
-            <JobSection jobIndex={index} isLoading={isLoading} jobsData={jobsData} setJobsData={setJobsData} />
+            <JobSection
+              jobIndex={index}
+              isLoading={isLoading}
+              jobsData={jobsData}
+              setJobsData={setJobsData}
+              disabled={isDisabled(index)}
+            />
           </SAccordionDetails>
         </JobAccordionBox>
       ))}

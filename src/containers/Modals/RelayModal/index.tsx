@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, styled } from '@mui/material';
+import { isAddress } from 'viem';
 
 import { ActiveButton, BaseModal, CancelButton, StyledTitle, CloseButton, ConfirmText, Icon } from '~/components';
 import { useModal, useStateContext, useTheme, useVault } from '~/hooks';
@@ -10,7 +11,7 @@ import { StyledAccordion } from './Accordion';
 import { RelaySection } from './RelaySection';
 
 export const RelayModal = () => {
-  const { selectedVault, selectedItem } = useStateContext();
+  const { selectedVault, selectedItem, defaultData } = useStateContext();
   const { modalOpen, closeModal } = useModal();
   const { currentTheme } = useTheme();
 
@@ -61,6 +62,14 @@ export const RelayModal = () => {
     }
   }, [modalOpen]);
 
+  useEffect(() => {
+    if (isAddress(relayAddress)) {
+      setCallersList(defaultData[relayAddress]?.callers || []);
+      setJobsData(defaultData[relayAddress]?.jobsData || []);
+      setJobsCount(defaultData[relayAddress]?.jobsData.length || 0);
+    }
+  }, [defaultData, relayAddress]);
+
   return (
     <BaseModal open={modalOpen === ModalType.ADD_RELAY}>
       <BigModal>
@@ -88,6 +97,7 @@ export const RelayModal = () => {
           isLoading={isLoading}
           isError={isError}
           setIsError={setIsError}
+          defaultData={defaultData}
         />
 
         {/* Buttons Section */}

@@ -8,12 +8,13 @@ import { JobsData, ModalType } from '~/types';
 
 interface JobSectionProps {
   jobIndex: number;
+  disabled?: boolean;
   isLoading: boolean;
   jobsData: JobsData;
   setJobsData: (value: JobsData) => void;
 }
 
-export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSectionProps) => {
+export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData, disabled }: JobSectionProps) => {
   const { modalOpen } = useModal();
   const { getAbi, abi: abiData } = useAbi();
   const { selectors: selectorsName, setSelectorName } = useSelectorName();
@@ -22,6 +23,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
   const [searchAbi, setSearchAbi] = useState(true);
   const [functionSelector, setFunctionSelector] = useState('');
   const [selectors, setSelectors] = useState<string[]>(jobsData[jobIndex]?.functionSelectors || []);
+  const isDisabled = useMemo(() => disabled || isLoading, [disabled, isLoading]);
 
   const CONTRACT_METHOD = 'a';
   const RAW_SELECTOR = 'b';
@@ -109,7 +111,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
         placeholder='Enter job address...'
         value={jobAddress}
         setValue={handleChangeJobAddress}
-        disabled={isLoading}
+        disabled={isDisabled}
         error={!!jobAddress && !isAddress(jobAddress)}
         errorText='Invalid address'
       />
@@ -120,13 +122,13 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
         value={abi}
         placeholder='Enter contract ABI...'
         spellCheck={false}
-        disabled={isLoading || selectedValue === RAW_SELECTOR}
+        disabled={isDisabled || selectedValue === RAW_SELECTOR}
         onChange={(e) => setAbi(e.target.value)}
       />
 
       {/* Radio Buttons section */}
       <RadioContainer>
-        <BtnContainer onClick={() => !isLoading && handleChange(CONTRACT_METHOD)}>
+        <BtnContainer onClick={() => !isDisabled && handleChange(CONTRACT_METHOD)}>
           {/* Choose function button */}
           <Radio
             data-test='choose-function-button'
@@ -134,20 +136,20 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
             value={CONTRACT_METHOD}
             name='radio-buttons'
             inputProps={{ 'aria-label': CONTRACT_METHOD }}
-            disabled={isLoading}
+            disabled={isDisabled}
           />
           <InputLabel>Choose function</InputLabel>
         </BtnContainer>
 
         {/* Raw function selector */}
-        <BtnContainer onClick={() => !isLoading && handleChange(RAW_SELECTOR)}>
+        <BtnContainer onClick={() => !isDisabled && handleChange(RAW_SELECTOR)}>
           <Radio
             data-test='raw-function-button'
             checked={selectedValue === RAW_SELECTOR}
             value={RAW_SELECTOR}
             name='radio-buttons'
             inputProps={{ 'aria-label': RAW_SELECTOR }}
-            disabled={isLoading}
+            disabled={isDisabled}
           />
           <InputLabel>Enter raw function selector</InputLabel>
         </BtnContainer>
@@ -161,7 +163,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
             setValue={setSelectorName}
             setSignature={addContractMethod}
             abi={abi}
-            disabled={!abi || isLoading}
+            disabled={!abi || isDisabled}
           />
         </DropdownContainer>
       )}
@@ -173,7 +175,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
           value={functionSelector}
           setValue={setFunctionSelector}
           onClick={addNewSelector}
-          disabled={isLoading}
+          disabled={isDisabled}
           dataTestId='function-selector-input'
           error={selectorRepeated}
           errorText={errorText}
@@ -193,6 +195,7 @@ export const JobSection = ({ isLoading, jobIndex, jobsData, setJobsData }: JobSe
               onClick={() => removeSelector(index)}
               sx={{ mt: '-1rem' }}
               removable
+              disabled={isDisabled}
             />
           ))}
         </>
