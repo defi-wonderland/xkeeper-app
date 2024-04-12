@@ -173,7 +173,7 @@ const FirstSection = styled(Box)({
     flexDirection: 'column',
     gap: 0,
     marginBottom: '4rem',
-    'div:nth-child(2)': {
+    'div:nth-of-type(2)': {
       width: '100%',
     },
   },
