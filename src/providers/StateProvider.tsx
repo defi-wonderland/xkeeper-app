@@ -1,7 +1,7 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { useAccount, useNetwork, usePublicClient } from 'wagmi';
 
-import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem } from '~/types';
+import { ModalType, Addresses, Chains, VaultData, Notification, Chain, SelectedItem, RelayData } from '~/types';
 import {
   getPrices,
   getTokenList,
@@ -29,6 +29,7 @@ type ContextType = {
 
   userAddress?: string;
   addresses: Addresses;
+  defaultData: RelayData;
 
   currentNetwork: Chain;
   setCurrentNetwork: (val: Chain) => void;
@@ -54,7 +55,14 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const { addresses, availableChains, DEFAULT_CHAIN, DEFAULT_ETH_ADDRESS, TEST_MODE: IS_TEST } = getConfig();
+  const {
+    addresses,
+    defaultData,
+    availableChains,
+    DEFAULT_CHAIN,
+    DEFAULT_ETH_ADDRESS,
+    TEST_MODE: IS_TEST,
+  } = getConfig();
   const { modalOpen } = useModal();
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -206,6 +214,7 @@ export const StateProvider = ({ children }: StateProps) => {
         setNotification,
         userAddress: address,
         addresses,
+        defaultData: defaultData[currentNetwork?.id] || {},
         currentNetwork: currentNetwork || defaultCurrentNetwork,
         setCurrentNetwork,
         availableChains,

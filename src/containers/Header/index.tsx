@@ -144,7 +144,7 @@ const Navbar = styled(Box)({
   gap: '4rem',
 
   '@media (max-width: 600px)': {
-    'div:nth-child(2)': {
+    'div:nth-of-type(2)': {
       display: 'none',
     },
   },
@@ -159,7 +159,7 @@ const RightSection = styled(Box)({
   '@media (max-width: 600px)': {
     gap: '1.2rem',
 
-    'button:nth-child(1), button:nth-child(3)': {
+    'button:nth-of-type(1), button:nth-of-type(3)': {
       display: 'none',
     },
   },
@@ -208,7 +208,7 @@ const MobileMenuContainer = styled(Box)(() => {
     width: '100%',
     zIndex: `calc(${zIndex.HEADER} - 1)`,
 
-    'div:nth-child(1), button:nth-child(2)': {
+    'div:nth-of-type(1), button:nth-of-type(2)': {
       padding: '0 1.6rem',
     },
 

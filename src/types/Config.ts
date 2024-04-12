@@ -1,5 +1,6 @@
 import { Address } from 'viem';
 import { ThemeName } from './Theme';
+import { RelayData } from './Data';
 
 export interface Env {
   RPC_URL: string;
@@ -15,6 +16,7 @@ export interface Constants {
   DEFAULT_THEME: ThemeName;
   DEFAULT_ETH_ADDRESS: string;
   addresses: Addresses;
+  defaultData: { [chainId: string]: RelayData };
   availableChains: Chains;
   vaultFactoryVersion: string;
 }
@@ -29,6 +31,7 @@ export interface Addresses {
       Keep3rRelay: Address;
       Keep3rBondedRelay: Address;
     };
+    keep3rV2: Address;
   };
 }
 
